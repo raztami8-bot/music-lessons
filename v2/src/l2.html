@@ -1,0 +1,507 @@
+<nav class="topnav" aria-label="שיעורים"><a href="URL_L1">שיעור 1</a><span>שיעור 2</span><a href="URL_L3">שיעור 3</a></nav>
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <h1>צלילה לעומק הבס</h1>
+  <p class="lede">בשיעור 1 בנית ג׳אם שלם. עכשיו נשארים רק עם הבס ולומדים לעומק מה כל כפתור עושה, איך שלושת המתנדים עובדים יחד, ואיך יוצרים דגש גם בלי כפתור אקסנט. כמו קודם: <b>עושים</b>, <b>בודקים</b>, <b>מבינים</b>.</p>
+  <div class="meta"><span><b>זמן:</b> כשעה וחצי</span><span><b>דורש:</b> שיעור 1</span><span><b>מכשיר:</b> הבס <span class="label">volca bass</span></span></div>
+</header>
+
+<nav class="toc" aria-label="תוכן">
+  <b>תוכן השיעור</b>
+  <ol>
+    <li><a href="#s0">נקודת התחלה</a></li>
+    <li><a href="#s1">שלושה מתנדים וקיבוץ</a></li>
+    <li><a href="#s2">צורות גל ומרווחים</a></li>
+    <li><a href="#s3">מסנן, תהודה ומעטפת</a></li>
+    <li><a href="#s4">תנועה מחזורית</a></li>
+    <li><a href="#s5">דגש בלי אקסנט</a></li>
+    <li><a href="#s6">גלישות, שתיקות ודילוגים</a></li>
+    <li><a href="#s7">מתכוני אסיד</a></li>
+    <li><a href="#s8">שלושה תרגילים</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== 0 ===================== -->
+<section class="stage" id="s0">
+  <span class="stage-tag">לפני הכל</span>
+  <h2>נקודת התחלה</h2>
+
+  <article class="card">
+    <p>מתחילים ממצב הבסיס בעמוד 6 בחוברת שלך, כמו בסוף שלב 3 בשיעור 1:</p>
+    <ul class="checks">
+      <li>✓ הרצף עצור, כבל הסנכרון מנותק</li>
+      <li>✓ רק <kbd>VCO1</kbd> נשמע</li>
+      <li><span class="led"></span> נורה 8 כבויה (גל מסור)</li>
+      <li><span class="led"></span> נורה 11 כבויה (בלי החזקה)</li>
+      <li><span class="led on"></span> נורה 12 דולקת (מעטפת לעוצמה)</li>
+      <li>✓ <kbd>LFO INT</kbd> עד הסוף שמאלה</li>
+    </ul>
+    <p class="info">שכחת איך בודקים נורות, מה זה ״שעה 10״ או איך מחזיקים <kbd>FUNC</kbd>? הכול מוסבר בתחילת שיעור 1.</p>
+    <p class="warn">שני דברים שחשוב לדעת מראש: בבס אין כפתור אקסנט, ואין הקלטה של תנועות כפתורים בתוך הרצף. בשלב 5 נראה מה כן אפשר לעשות.</p>
+  </article>
+
+  <article class="card">
+    <h3>תזכורת: פס הייצור של הצליל</h3>
+    <div class="flow">
+      <div class="node"><h4>3 מתנדים</h4><p>שלושה מקורות צליל, כל אחד עם גובה וצורת גל משלו.</p><div class="ks"><kbd>VCO1</kbd><kbd>VCO2</kbd><kbd>VCO3</kbd></div></div>
+      <span class="to" aria-hidden="true">←</span>
+      <div class="node"><h4>מסנן אחד</h4><p>משותף לשלושתם.</p><div class="ks"><kbd>CUTOFF</kbd><kbd>PEAK</kbd></div></div>
+      <span class="to" aria-hidden="true">←</span>
+      <div class="node"><h4>עוצמה</h4><p>משותפת לשלושתם.</p></div>
+    </div>
+    <div class="flow">
+      <div class="node mod"><h4>מעטפת אחת</h4><p>מזיזה את המסנן ואת העוצמה בכל תו.</p><div class="ks"><kbd>ATTACK</kbd><kbd>DECAY/RELEASE</kbd><kbd>CUTOFF EG INT</kbd></div></div>
+      <div class="node mod"><h4>תנועה מחזורית</h4><p>יכולה להזיז עוצמה, גובה או מסנן.</p><div class="ks"><kbd>RATE</kbd><kbd>INT</kbd></div></div>
+    </div>
+    <p class="legend">השיעור הזה עובר על התחנות בסדר הזה, משמאל לימין בתרשים.</p>
+  </article>
+</section>
+
+<!-- ===================== 1 ===================== -->
+<section class="stage" id="s1">
+  <span class="stage-tag">שלב 1 · המתנדים</span>
+  <h2>שלושה מקורות וקיבוץ אחד</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.1</span><h3>שלושה מתנדים</h3><span class="label">VCO1 · VCO2 · VCO3</span></div>
+    <ol class="steps">
+      <li><div>מצא את שלושת לחצני המתנדים.<span class="where">בשורת הלחצנים האפורים, מימין ללחצן העיגול <kbd>●</kbd>.</span></div></li>
+      <li><div>לחיצה רגילה על אחד מהם <b>בוחרת</b> אותו לנגינה ולעריכה. לחץ על <kbd>VCO1</kbd>.</div></li>
+      <li><div>החזק <kbd>FUNC</kbd> והסתכל: לחצן מתנד מואר = נשמע, חשוך = מושתק. רק <kbd>VCO1</kbd> צריך להאיר.</div></li>
+      <li><div>להשתקה או ביטול השתקה: בזמן ש־<kbd>FUNC</kbd> מוחזק, לחץ על לחצן המתנד.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> נגיעה בקליד 1 משמיעה צליל בס אחד וברור.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>בבס יש שלושה <b>מתנדים</b>, אבל רק <b>מסנן אחד</b> ו<b>מעטפת אחת</b> לכולם. כלומר אלה לא שלושה סינתיסייזרים נפרדים: שלושה מקורות צליל שעוברים יחד באותו פס ייצור.</p>
+      <p>שתי פעולות שונות: <b>בחירה</b> קובעת על איזה מתנד אתה מנגן ועורך. <b>השתקה</b> קובעת אם שומעים אותו.</p>
+      <p class="acid"><b>לאסיד:</b> מתנד מסור אחד מספיק לקו חד. שניים נותנים עובי או מרווח. שלושה נפרדים מאפשרים שורות שונות, אבל מסבכים את העריכה.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.2</span><h3>קיבוץ</h3><span class="label">FUNC + 1 · 2 · 3</span></div>
+    <ol class="steps">
+      <li><div>הכר את שלוש האפשרויות. בוחרים אותן עם <kbd>FUNC</kbd> ואחד מהקלידים 1, 2 או 3:
+        <div class="tbl-box" style="margin-top:8px"><table>
+          <thead><tr><th>צירוף</th><th>מה קורה</th><th>טוב בשביל</th></tr></thead>
+          <tbody>
+            <tr><td><kbd>FUNC + 1</kbd></td><td>שלושה נפרדים</td><td>לימוד, שלוש שורות</td></tr>
+            <tr><td><kbd>FUNC + 2</kbd></td><td>1 ו־2 יחד, 3 נפרד</td><td>בס עבה ועליו קו נוסף</td></tr>
+            <tr><td><kbd>FUNC + 3</kbd></td><td>שלושתם יחד</td><td>אוניסון או אקורד</td></tr>
+          </tbody>
+        </table></div></div></li>
+      <li><div>נסה: החזק <kbd>FUNC</kbd> וגע ב־<kbd>3</kbd>. שחרר.</div></li>
+      <li><div>החזק <kbd>FUNC</kbd> ולחץ על <kbd>VCO2</kbd> כדי לבטל את ההשתקה שלו. שחרר.</div></li>
+      <li><div>גע בקליד 1.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אותו תו נשמע עבה יותר. שני מתנדים מנגנים אותו יחד.</div>
+    <p class="warn">לפני שינוי קיבוץ על רעיון שחשוב לך, שמור אותו. מעבר הלוך וחזור לא מבטיח שכל עריכה תישאר.</p>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p><b>קיבוץ</b> קובע אילו מתנדים חולקים את אותו רצף תווים. אין לו כפתור משלו, ואין לו נורה: הבדיקה היא באוזן. בתוך קבוצה, כל מתנד שומר על הגובה וצורת הגל שלו.</p>
+      <p class="acid"><b>לאסיד:</b> קיבוץ של כולם הוא הבסיס לאוניסון עבה ולאקורד שזז עם הקליד, שני הנושאים של השלב הבא.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 2 ===================== -->
+<section class="stage" id="s2">
+  <span class="stage-tag">שלב 2 · גלים ומרווחים</span>
+  <h2>מסור, מרובע, פעימות ואקורדים</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.1</span><h3>מסור מול מרובע</h3><span class="label">FUNC + 8 · 9 · 10</span></div>
+    <ol class="steps">
+      <li><div>השתק שוב את <kbd>VCO2</kbd> (<kbd>FUNC</kbd> + <kbd>VCO2</kbd>), כדי לשמוע רק מתנד אחד.</div></li>
+      <li><div>גע בקליד 1 וזכור את הצליל.</div></li>
+      <li><div>החזק <kbd>FUNC</kbd> וגע ב־<kbd>8</kbd>. הנורה תידלק. שחרר וגע שוב בקליד 1.</div></li>
+      <li><div>השווה, ואז החזר: <kbd>FUNC</kbd> + <kbd>8</kbd> עד שהנורה כבויה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שמעת הבדל: מסור זמזומי, מרובע חלול יותר. בסוף נורה 8 כבויה.</div>
+    <p class="info">קליד 8 שייך למתנד 1, קליד 9 למתנד 2, קליד 10 למתנד 3. נורה כבויה = מסור, דולקת = מרובע.</p>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>כל צליל מורכב מתדר יסוד ומ<b>הרמוניות</b>, תדרים גבוהים יותר שנותנים לו צבע. <b>גל מסור</b> מכיל את כולן, זוגיות ואי־זוגיות. <b>גל מרובע</b> מכיל בעיקר את האי־זוגיות, ולכן נשמע חלול.</p>
+      <p>כשהמסנן סגור, ההבדל מצטמצם, כי ההרמוניות הגבוהות שמבדילות בין הגלים נחתכות ממילא.</p>
+      <p class="acid"><b>לאסיד:</b> מסור הוא נקודת המוצא הקלאסית, כי הוא נותן למסנן הכי הרבה חומר לעצב. מרובע טוב לקווים עמומים או לניגוד.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.2</span><h3>אוניסון עם סטייה זעירה</h3><span class="label">PITCH 2</span></div>
+    <ol class="steps">
+      <li><div>ודא קיבוץ של כולם: <kbd>FUNC</kbd> + <kbd>3</kbd>.</div></li>
+      <li><div>בטל השתקה של <kbd>VCO2</kbd>, והשאר את <kbd>VCO3</kbd> מושתק.</div></li>
+      <li><div>מצא את כפתורי הגובה <kbd>PITCH 1</kbd> ו־<kbd>PITCH 2</kbd> וסובב את שניהם לשעה 12.<span class="where">כל כפתור גובה נמצא מעל לחצן המתנד שלו.</span></div></li>
+      <li><div>החזק קליד 1, וסובב את <kbd>PITCH 2</kbd> מעט מאוד ימינה. הרבה פחות משעה אחת.</div></li>
+    </ol>
+    <div class="target pos"><span class="knob" data-h="12">PITCH 1</span><span class="knob" data-h="12" data-note="שעה 12 ועוד קצת">PITCH 2</span></div>
+    <p class="poscap">כמו על המכשיר: PITCH 2 מימין ל־PITCH 1.</p>
+    <div class="ok"><b>הצלחת אם:</b> הצליל ״רחב״, עם פעימה איטית בתוכו, כמו ״ווא־ווא״ עדין. אם אתה שומע שני תווים נפרדים, חזור קרוב יותר למרכז.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>כששני גלים קרובים מאוד בגובה, הם מתחזקים ומחלישים זה את זה לסירוגין. זו תופעת ה<b>פעימות</b>. ככל שההפרש גדל, הפעימה מאיצה.</p>
+      <p>שים לב שזו תנועה בלי שום כפתור תנועה מחזורית: היא נוצרת מעצם ההפרש.</p>
+      <p class="acid"><b>לאסיד:</b> סטייה זעירה נותנת עובי בלי לפתוח את המסנן, כך שהקו נשאר חד.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.3</span><h3>מרווחים ואקורדים</h3><span class="label">PITCH 2 · PITCH 3</span></div>
+    <ol class="steps">
+      <li><div>החזק קליד 1. סובב לאט את <kbd>PITCH 2</kbd> ימינה, והקשב עד ששני התווים ״מתיישבים״ יחד בצליל פתוח ויציב. זו <b>קווינטה</b>. התצוגה יכולה לעזור אם היא מראה ערך.</div></li>
+      <li><div>בטל השתקה של <kbd>VCO3</kbd> וכוון את <kbd>PITCH 3</kbd> עד שהוא נשמע כמו אותו תו של מתנד 1, רק גבוה. זו <b>אוקטבה</b>.</div></li>
+      <li><div>נסה גרסה נוספת: מתנד 2 קרוב יותר, על <b>טרצה קטנה</b>, ומתנד 3 על קווינטה. עכשיו כל קליד מנגן אקורד מינורי.</div></li>
+      <li><div>בסיום: <kbd>PITCH 2</kbd> ו־<kbd>PITCH 3</kbd> לשעה 12, ו־<kbd>VCO2</kbd>, <kbd>VCO3</kbd> מושתקים.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כל נגיעה בקליד משמיעה כמה תווים יחד שנשמעים ״נכון״, וכשאתה מנגן קליד אחר, כל האקורד זז איתו.</div>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מרווח</th><th>חצאי טון</th><th>איך הוא נשמע</th></tr></thead>
+      <tbody>
+        <tr><td>טרצה קטנה</td><td class="n">3</td><td>אפל, עצוב</td></tr>
+        <tr><td>טרצה גדולה</td><td class="n">4</td><td>בהיר, שמח</td></tr>
+        <tr><td>קווינטה</td><td class="n">7</td><td>פתוח, חזק</td></tr>
+        <tr><td>אוקטבה</td><td class="n">12</td><td>אותו תו, גבוה יותר</td></tr>
+      </tbody>
+    </table></div>
+    <p class="warn">כפתור <kbd>OCTAVE</kbd> בוחר אזור לקלידים, לא מעביר מתנד אחד. לפי החוברת שלך, בוחרים אותו לפני כתיבת רצף.</p>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p><b>מרווח</b> הוא המרחק המוזיקלי בין שני תווים, ונמדד ב<b>חצאי טון</b>: מדרגה אחת על פסנתר. הטווח של כל כפתור גובה הוא אוקטבה למטה עד אוקטבה למעלה. שיעור 3 מסביר מרווחים לעומק בעזרת הקלידים.</p>
+      <p>זה לא פוליפוניה אמיתית: אי אפשר לנגן שני אקורדים שונים. האקורד ״קבוע״ וזז בשלמותו עם כל קליד.</p>
+      <p class="acid"><b>לאסיד:</b> קווינטה פתוחה היא צליל אסיד־רוק קלאסי. אקורד מינורי נותן לבס גוף הרמוני ואפל.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 3 ===================== -->
+<section class="stage" id="s3">
+  <span class="stage-tag">שלב 3 · המסנן והמעטפת</span>
+  <h2>השיחה בין חיתוך, תהודה ועומק</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.1</span><h3>שלושת הכפתורים של האסיד</h3><span class="label">CUTOFF · PEAK · CUTOFF EG INT</span></div>
+    <ol class="steps">
+      <li><div>קבע את נקודת ההתחלה: <kbd>CUTOFF</kbd> בשעה 10, <kbd>PEAK</kbd> בשעה 12, <kbd>CUTOFF EG INT</kbd> בשעה 1.</div></li>
+      <li><div>נגן כמה תווים, ושנה <b>רק</b> את <kbd>CUTOFF</kbd> בין שעה 9 ל־12. החזר לשעה 10.</div></li>
+      <li><div>עכשיו רק את <kbd>PEAK</kbd>: מ־12 לשעה 2. השאר ב־2.</div></li>
+      <li><div>עכשיו רק את <kbd>CUTOFF EG INT</kbd>: משעה 1 ל־2. השאר ב־2.</div></li>
+    </ol>
+    <div class="target pos"><span class="knob" data-h="2">PEAK</span><span class="knob" data-h="10">CUTOFF</span></div>
+    <p class="poscap">כמו על המכשיר: PEAK משמאל לכפתור הגדול. CUTOFF EG INT נמצא בשורה העליונה.</p>
+    <div class="ok"><b>הצלחת אם:</b> כל תו מתחיל בהיר ונסגר, עם צפצוף באזור החיתוך.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>שלושתם פועלים על אותו מסנן. <b>CUTOFF</b> קובע מאיפה המסנן מתחיל להחליש. <b>PEAK</b> מדגיש פס צר סביב הנקודה הזו. <b>CUTOFF EG INT</b> קובע כמה המעטפת פותחת את המסנן בכל תו.</p>
+      <p>הם תלויים זה בזה: אם CUTOFF פתוח מדי, אין לאן לפתוח, וה־EG INT כמעט לא נשמע. אם PEAK נמוך, הסיבוב רק מכהה ומבהיר.</p>
+      <p>שיפוע המסנן הנקוב הוא 12 דציבל לאוקטבה: על כל הכפלת תדר מעל החיתוך, הצליל נחלש בהדרגה. זה מעבר רך, לא קיר.</p>
+      <p class="acid"><b>לאסיד:</b> זה ״המשולש״ של הסגנון: נקודה סגורה למחצה, תהודה גבוהה, ופתיחה קצרה בכל תו.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.2</span><h3>עלייה, ירידה והחזקה</h3><span class="label">ATTACK · DECAY/RELEASE · FUNC + 11</span></div>
+    <ol class="steps">
+      <li><div>החזק <kbd>FUNC</kbd> וגע ב־<kbd>11</kbd> כדי להדליק את נורה 11. שחרר.</div></li>
+      <li><div>החזק קליד 1 שנייה שלמה, ואז שחרר. שים לב מתי הצליל נגמר.</div></li>
+      <li><div>החזר: <kbd>FUNC</kbd> + <kbd>11</kbd> עד שהנורה כבויה. החזק שוב את קליד 1.</div></li>
+      <li><div>ודא <kbd>ATTACK</kbd> עד הסוף שמאלה ו־<kbd>DECAY/RELEASE</kbd> בשעה 10.</div></li>
+    </ol>
+    <div class="target pos"><span class="knob" data-h="7">ATTACK</span><span class="knob" data-h="10">DECAY/RELEASE</span></div>
+    <div class="ok"><b>הצלחת אם:</b> עם נורה 11 דולקת, הצליל ממשיך כל עוד האצבע על הקליד. עם נורה כבויה, הוא דועך מיד גם כשהאצבע נשארת.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>בסינתיסייזרים רבים יש ארבעה כפתורי מעטפת. כאן יש שניים: <b>עלייה</b>, וזמן <b>ירידה</b> שמשמש גם לדעיכה וגם לשחרור.</p>
+      <p>נורה 11 קובעת את <b>ההחזקה</b>: דולקת, המעטפת מחכה שתשחרר את הקליד. כבויה, היא יורדת מיד אחרי העלייה.</p>
+      <p class="acid"><b>לאסיד:</b> רוצים תווים קצרים שנפתחים ונסגרים בכל צעד. עם החזקה, הצליל נמתח והקו מאבד את הדיבור.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.3</span><h3>מעטפת לעוצמה מול מעטפת לגוון</h3><span class="label">FUNC + 12 · CUTOFF EG INT</span></div>
+    <ol class="steps">
+      <li><div>נגן כמה תווים והקשב.</div></li>
+      <li><div>החזק <kbd>FUNC</kbd> וגע ב־<kbd>12</kbd> כדי לכבות את נורה 12. שחרר ונגן שוב.</div></li>
+      <li><div>החזר: <kbd>FUNC</kbd> + <kbd>12</kbd> עד שהנורה דולקת.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> עם נורה 12 דולקת, כל תו דועך גם בעוצמה וגם בגוון. כבויה, הגוון עדיין זז, אבל העוצמה פחות.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>אותה מעטפת יכולה להזיז שני דברים. נורה 12 קובעת אם היא מזיזה גם את <b>העוצמה</b>. CUTOFF EG INT קובע כמה היא מזיזה את <b>הגוון</b>, דרך המסנן. הם בלתי תלויים.</p>
+      <p>כיבוי 12 לא מבטיח עוצמה קבועה לגמרי, כי גם מסנן שנסגר מחליש את מה שאתה שומע.</p>
+      <p class="acid"><b>לאסיד:</b> בדרך כלל רוצים את שניהם יחד: כל תו ״נובח״.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 4 ===================== -->
+<section class="stage" id="s4">
+  <span class="stage-tag">שלב 4 · תנועה מחזורית</span>
+  <h2>מה זז, כמה, וכמה מהר</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.1</span><h3>בוחרים מה יזוז</h3><span class="label">FUNC + 4 · 5 · 6</span></div>
+    <ol class="steps">
+      <li><div>החזק <kbd>FUNC</kbd> והסתכל על נורות 4, 5 ו־6.</div></li>
+      <li><div>רק נורה 6 צריכה לדלוק. גע בקליד של כל נורה שלא כמו שצריך. שחרר.</div></li>
+    </ol>
+    <ul class="checks">
+      <li><span class="led"></span> 4: עוצמה, כבויה</li>
+      <li><span class="led"></span> 5: גובה, כבויה</li>
+      <li><span class="led on"></span> 6: מסנן, דולקת</li>
+    </ul>
+    <div class="ok"><b>הצלחת אם:</b> רק נורה 6 דולקת. עדיין לא שומעים תנועה, כי העומק בשמאל.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p><b>תנועה מחזורית</b> היא כמו יד שמסובבת כפתור הלוך וחזור, בלי קשר לתווים. קלידים 4 עד 6 קובעים <b>איזה</b> כפתור היא מסובבת, ואפשר כמה יחד.</p>
+      <p>על עוצמה היא יוצרת <b>טרמולו</b> (רעד בעוצמה). על גובה, <b>ויברטו</b> או ״וובל״. על המסנן, ״נשימה״ של הגוון.</p>
+      <p class="acid"><b>לאסיד:</b> באסיד הקלאסי התנועה העיקרית באה מהמעטפת ומהידיים. התנועה המחזורית היא תוספת.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.2</span><h3>מהירות, עומק וצורה</h3><span class="label">RATE · INT · FUNC + 7</span></div>
+    <ol class="steps">
+      <li><div>מצא את <kbd>RATE</kbd> ו־<kbd>INT</kbd> באזור LFO.<span class="where">מימין לכפתור הגדול: RATE משמאל, INT מימין.</span></div></li>
+      <li><div>סובב את <kbd>RATE</kbd> לשעה 9 ואת <kbd>INT</kbd> מעט ימינה מהקצה.</div></li>
+      <li><div>החזק קליד 1 והקשב.</div></li>
+      <li><div>החזק <kbd>FUNC</kbd> וגע ב־<kbd>7</kbd> כדי להחליף צורה. הקשב שוב, והחזר.</div></li>
+      <li><div>בסיום: <kbd>INT</kbd> עד הסוף שמאלה.</div></li>
+    </ol>
+    <div class="target pos"><span class="knob" data-h="9">RATE</span><span class="knob" data-h="8" data-note="מעט מהקצה">INT</span></div>
+    <p class="poscap">כמו על המכשיר: RATE משמאל, INT מימין.</p>
+    <div class="ok"><b>הצלחת אם:</b> הגוון נפתח ונסגר לבד. נורה 7 כבויה: תנועה חלקה. דולקת: קפיצה בין שני מצבים.</div>
+    <p class="info">אין תנועה? בדוק שנורה 6 דולקת ושה־INT לא בקצה השמאלי.</p>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p><b>RATE</b> קובע כמה מהר התנועה חוזרת. <b>INT</b> קובע כמה גדולה היא. קליד 7 בוחר <b>צורה</b>: כבוי = משולש חלק, דולק = מרובע קופצני.</p>
+      <p>לפי המדריך, תנועה משולשת לא מתחילה מחדש בכל תו, ותנועה מרובעת כן, חוץ מבצעד שאחרי גלישה.</p>
+      <p class="acid"><b>לאסיד:</b> מהירות איטית ועומק נמוך על המסנן נותנים נשימה עדינה מתחת לידיים. מהירות גבוהה נשמעת מחוספסת ולא מוזיקלית.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 5 ===================== -->
+<section class="stage" id="s5">
+  <span class="stage-tag">שלב 5 · דגש</span>
+  <h2>מה הבס כן מציע, ומה לא</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">5.1</span><h3>דגש בלי אקסנט</h3></div>
+    <p class="warn">בסינתיסייזר שהמציא את האסיד יש כפתור אקסנט שמדגיש צעדים נבחרים בעוצמה ובמסנן. בבס שלך אין כזה, ואין סימון אקסנט בצעדים. זו מגבלה אמיתית של המכשיר.</p>
+    <p>ארבע דרכים ליצור תחושת דגש בכל זאת:</p>
+    <ol class="steps">
+      <li><div><b>מעטפת קצרה ועומק מסנן גבוה:</b> כל תו מודגש באותה מידה, ״נובח״.</div></li>
+      <li><div><b>שתיקה לפני תו:</b> רווח שמכין את האוזן למכה שאחריו.</div></li>
+      <li><div><b>גלישה אל תו גבוה:</b> הדגשה מלודית.</div></li>
+      <li><div><b>סיבוב חי של PEAK:</b> דגש ידני ברגעים שבחרת.</div></li>
+    </ol>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p><b>אקסנט</b> הוא דגש אוטומטי על צעדים נבחרים ברצף. בלעדיו, הדגש בא מעיצוב הצליל, מהקצב ומהידיים.</p>
+      <p class="acid"><b>לאסיד:</b> זה סגנון אחר, לא פחות חומצי. מי שרוצה אקסנט אמיתי צריך מכשיר אחר.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">5.2</span><h3>אין הקלטת תנועות כפתורים</h3></div>
+    <p>במכשירים אחרים בסדרה אפשר להקליט סיבובי כפתורים לתוך הרצף. בבס, לפי החוברת והמדריך, לא. הרצף שומר תווים, גלישות וצעדים פעילים, וזהו.</p>
+    <ol class="steps">
+      <li><div>כדי לשמור <b>ביצוע</b>: הקלט את השמע במכשיר חיצוני.</div></li>
+      <li><div>כדי לשמור <b>צליל</b>: צלם את הלוח ורשום צורות גל, יעדי תנועה מחזורית, קיבוץ, השתקות ונורות 11 ו־12.</div></li>
+    </ol>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>שמירת רצף היא לא שמירת צליל מלאה.</p>
+      <p class="acid"><b>לאסיד:</b> הג׳אם בבס הוא ביצוע חי: הידיים על CUTOFF ו־PEAK בזמן שהרצף רץ.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 6 ===================== -->
+<section class="stage" id="s6">
+  <span class="stage-tag">שלב 6 · עריכת רצף</span>
+  <h2>גלישות, שתיקות ודילוגים</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">6.1</span><h3>גלישה בלי כפתור זמן</h3><span class="label">FUNC + STEP MODE</span></div>
+    <ol class="steps">
+      <li><div>כניסה: החזק <kbd>FUNC</kbd> ולחץ על <kbd>STEP MODE</kbd>. שחרר.</div></li>
+      <li><div>גע בצעדים <b>שמהם</b> יוצאים. הנורות שלהם יידלקו.</div></li>
+      <li><div>יציאה: <kbd>STEP MODE</kbd> פעם אחת.</div></li>
+      <li><div>לניקוי כל הגלישות של המתנד הנבחר, אם צריך: <kbd>FUNC</kbd> + <kbd>13</kbd>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> הגובה נמרח במקום לקפוץ, והתו שאליו מגיעים נשמע מחובר.</div>
+    <p class="warn">כש־<kbd>FUNC</kbd> מוחזק, קלידים 13 עד 16 הם פקודות מחיקה.</p>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>אין כפתור ״זמן גלישה״. הגלישה נמשכת <b>צעד אחד</b>, ולכן בקצב מהיר היא קצרה ובקצב איטי ארוכה. לפי המדריך, בצעד שאחרי גלישה המעטפת והתנועה המחזורית לא מתחילות מחדש.</p>
+      <p class="acid"><b>לאסיד:</b> שולטים בתחושה דרך הקצב ודרך בחירת הצעדים. גלישה אל תו גבוה נשמעת כמו גומייה שנמתחת. גלישה אל תו נמוך נשמעת כמו ״נפילה״.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">6.2</span><h3>שתיקה מול דילוג</h3><span class="label">STEP MODE · FUNC + ▶</span></div>
+    <h4>שתיקה: הזמן נשאר, התו נעלם</h4>
+    <ol class="steps">
+      <li><div>לחץ <kbd>STEP MODE</kbd>.</div></li>
+      <li><div>גע בצעד שיש בו תו. הנורה שלו תכבה.</div></li>
+      <li><div>לחץ <kbd>STEP MODE</kbd> שוב.</div></li>
+    </ol>
+    <p class="info">דרך נוספת: בזמן הקלטת צעדים, לחיצה על <kbd>●</kbd> במקום קליד כותבת שתיקה.</p>
+    <h4>דילוג: הצעד נעלם, התיבה מתקצרת</h4>
+    <ol class="steps">
+      <li><div>החזק <kbd>FUNC</kbd> ולחץ <kbd>▶</kbd>. שחרר. המשולש מהבהב.</div></li>
+      <li><div>גע בצעדים שתרצה לדלג עליהם, כדי לכבות אותם.</div></li>
+      <li><div>לחץ <kbd>FUNC</kbd> ליציאה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בשתיקה, הלולאה באותו אורך עם רווח. בדילוג, הלולאה קצרה יותר.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p><b>שתיקה</b> שומרת על 16 צעדים, ולכן הבס נשאר נעול לתופים. <b>דילוג</b> משנה את אורך הלולאה, ומול תופים של 16 צעדים היא תזוז קצת בכל תיבה.</p>
+      <p class="acid"><b>לאסיד:</b> שתיקות יוצרות ״אוויר״ בגרוב. דילוגים יוצרים מקצבים לא שגרתיים, אבל דורשים תכנון אם מנגנים עם תופים.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 7 ===================== -->
+<section class="stage" id="s7">
+  <span class="stage-tag">שלב 7 · מתכונים</span>
+  <h2>ארבע נקודות מוצא</h2>
+
+  <article class="card">
+    <p>מתוך עמודים 34 ו־35 בחוברת שלך, מותאמים לאסיד. בכולם: <b>החזקה כבויה</b> (11), <b>מעטפת לעוצמה דולקת</b> (12), <b>ATTACK עד הסוף שמאלה</b>.</p>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מתכון</th><th>מקור</th><th>DECAY</th><th>CUTOFF</th><th>PEAK</th><th>EG INT</th><th>LFO</th></tr></thead>
+      <tbody>
+        <tr><td><b>אסיד קלאסי</b></td><td>מסור × 1</td><td>10</td><td>9 עד 10</td><td>12, ואז 2</td><td>1, ואז 2</td><td>כבוי</td></tr>
+        <tr><td><b>אסיד נושם</b></td><td>מסור × 1</td><td>10</td><td>10</td><td>12</td><td>1</td><td>מסנן, איטי</td></tr>
+        <tr><td><b>אוניסון עבה</b></td><td>מסור × 2</td><td>10</td><td>11</td><td>12</td><td>12</td><td>כבוי, עם סטייה</td></tr>
+        <tr><td><b>מרובע עמום</b></td><td>מרובע × 1</td><td>9</td><td>9</td><td>שמאל</td><td>נמוך</td><td>כבוי</td></tr>
+      </tbody>
+    </table></div>
+    <p class="legend">המספרים הם שעות על הכפתור.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">7.1</span><h3>אסיד קלאסי</h3></div>
+    <ol class="steps">
+      <li><div>ודא: רק <kbd>VCO1</kbd> נשמע, נורות 8 ו־11 כבויות, 12 דולקת.</div></li>
+      <li><div>כוון לפי השורה הראשונה בטבלה.</div></li>
+    </ol>
+    <div class="target pos"><span class="knob" data-h="2">PEAK</span><span class="knob" data-h="10">CUTOFF</span><span class="knob" data-h="1">CUTOFF EG INT</span></div>
+    <div class="ok"><b>הצלחת אם:</b> כל תו עם ״וואו״ קצר וצפצוף.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p class="acid"><b>לאסיד:</b> זה הצליל שעליו בונים סיבובים. התחל ממנו לפני שמוסיפים מתנד שני או תנועה מחזורית.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">7.2</span><h3>אסיד נושם ואוניסון</h3></div>
+    <h4>נושם</h4>
+    <ol class="steps">
+      <li><div>מהאסיד הקלאסי: רק נורה 6 דולקת מבין 4 עד 7.</div></li>
+      <li><div><kbd>RATE</kbd> בשעה 9, <kbd>INT</kbd> נמוך.</div></li>
+    </ol>
+    <h4>אוניסון</h4>
+    <ol class="steps">
+      <li><div><kbd>FUNC</kbd> + <kbd>3</kbd>, ביטול השתקה של <kbd>VCO2</kbd>.</div></li>
+      <li><div><kbd>PITCH 2</kbd> זז מעט מאוד מהמרכז, כמו ב־2.2.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בנושם, הגוון זז לאט לבד. באוניסון, הצליל עבה עם פעימה עדינה.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p class="acid"><b>לאסיד:</b> הנשימה ממלאת תיבות שבהן הידיים נחות. האוניסון נותן גוף בלי לפתוח את המסנן.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 8 ===================== -->
+<section class="stage" id="s8">
+  <span class="stage-tag">שלב 8 · תרגילים</span>
+  <h2>שלושה קווים, מקל לקשה</h2>
+  <p class="info">בכל תרגיל: כותבים, מקשיבים, שומרים במקום זיכרון נפרד, ומצלמים את הלוח.</p>
+
+  <article class="card">
+    <div class="card-head"><span class="num">8.1</span><h3>תרגיל א · קל: שתי גלישות</h3></div>
+    <p><b>צליל:</b> אסיד קלאסי. אם מנגנים לבד, <kbd>TEMPO</kbd> של הבס סביב 128.</p>
+    <div class="grid-box"><div class="seq" data-keys="1,1,1,13,1,1,1,13,1,1,1,13,1,1,1,13" data-slides="3,11"></div></div>
+    <ol class="steps">
+      <li><div>מחיקה: <kbd>VCO1</kbd>, ואז <kbd>FUNC</kbd> + <kbd>15</kbd>.</div></li>
+      <li><div>כל 16 פעילים: <kbd>FUNC</kbd> + <kbd>▶</kbd>, הדלק כל נורה כבויה, <kbd>FUNC</kbd> ליציאה.</div></li>
+      <li><div>הקלטת צעדים: <kbd>FUNC</kbd> + <kbd>●</kbd>, ואז 16 נגיעות:
+        <div class="taps" id="l2a" data-keys="1,1,1,13,1,1,1,13,1,1,1,13,1,1,1,13" style="margin-top:10px"></div></div></li>
+      <li><div><kbd>FUNC</kbd> לסיום.</div></li>
+      <li><div>גלישות: <kbd>FUNC</kbd> + <kbd>STEP MODE</kbd>, גע ב־<kbd>3</kbd> וב־<kbd>11</kbd>, ואז <kbd>STEP MODE</kbd>.</div></li>
+      <li><div><kbd>▶</kbd> לשמיעה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בכל תיבה שתי מריחות כלפי מעלה, ושתי קפיצות רגילות.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>ארבעת הלה הגבוהים נמצאים <b>בצעד האחרון של כל פעימה</b>, רגע לפני שהפעימה הבאה מתחילה. הגלישות מובילות אל התו שלפני הפעימה השנייה והרביעית.</p>
+      <p class="acid"><b>לאסיד:</b> תו גבוה רגע לפני הפעימה נותן ״דחיפה״ קדימה, והגלישה אליו מוסיפה תנועה מלודית בלי אקסנט.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">8.2</span><h3>תרגיל ב · בינוני: אוניסון ושתיקות</h3></div>
+    <p><b>צליל:</b> אוניסון עבה משלב 7. <kbd>FUNC</kbd> + <kbd>3</kbd>, <kbd>VCO2</kbd> פתוח, <kbd>VCO3</kbd> מושתק, סטייה זעירה ב־<kbd>PITCH 2</kbd>.</p>
+    <div class="grid-box"><div class="seq" data-keys="1,1,1,-,13,1,-,1,1,1,1,-,13,1,-,1" data-slides="5"></div></div>
+    <ol class="steps">
+      <li><div>מחיקה וכל 16 פעילים, כמו בתרגיל א.</div></li>
+      <li><div>הקלטת צעדים: <kbd>FUNC</kbd> + <kbd>●</kbd>. במקום שמסומן <kbd>●</kbd>, לחץ על לחצן העיגול כדי לכתוב שתיקה:
+        <div class="taps" id="l2b" data-keys="1,1,1,-,13,1,-,1,1,1,1,-,13,1,-,1" style="margin-top:10px"></div></div></li>
+      <li><div><kbd>FUNC</kbd> לסיום.</div></li>
+      <li><div>גלישה אחת: <kbd>FUNC</kbd> + <kbd>STEP MODE</kbd>, גע ב־<kbd>5</kbd>, ואז <kbd>STEP MODE</kbd>.</div></li>
+      <li><div><kbd>▶</kbd> לשמיעה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בס רחב עם ארבעה רווחים בתיבה, ובצעדים 5 ו־6 הלה הגבוה ״נופל״ ברכות אל הנמוך.</div>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>השתיקות נופלות בצעדים 4, 7, 12 ו־15. לפני כל לה גבוה יש שתיקה, ולכן הגלישה כאן יוצאת <b>מהגבוה</b> שבצעד 5 אל הנמוך שבצעד 6: גלישה כלפי מטה.</p>
+      <p class="acid"><b>לאסיד:</b> השתיקות יוצרות דגש בלי אקסנט: האוזן מחכה לתו שאחרי הרווח. הסטייה בין המתנדים מוסיפה עובי, והמסנן נשאר חד.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">8.3</span><h3>תרגיל ג · מתקדם: דילוגים וקווינטה</h3></div>
+    <p><b>צליל:</b> אסיד קלאסי עם קיבוץ: <kbd>FUNC</kbd> + <kbd>3</kbd>, <kbd>VCO2</kbd> פתוח, <kbd>VCO3</kbd> מושתק.</p>
+    <div class="grid-box"><div class="seq" data-keys="1,1,13,x,1,1,13,x,1,1,13,x,1,1,13,x" data-slides="2,10" data-skip="4,8,12,16"></div></div>
+    <p class="legend">צעדים מקווקווים עם × הם צעדים מדולגים.</p>
+    <ol class="steps">
+      <li><div>מחיקה וכל 16 פעילים, כמו בתרגיל א.</div></li>
+      <li><div>הקלטת צעדים על כל 16. בצעדים 4, 8, 12, 16 כתוב 1, נדלג עליהם בהמשך:
+        <div class="taps" id="l2c" data-keys="1,1,13,1,1,1,13,1,1,1,13,1,1,1,13,1" style="margin-top:10px"></div></div></li>
+      <li><div><kbd>FUNC</kbd> לסיום.</div></li>
+      <li><div>דילוג: <kbd>FUNC</kbd> + <kbd>▶</kbd>, כבה את <kbd>4</kbd> <kbd>8</kbd> <kbd>12</kbd> <kbd>16</kbd>, ואז <kbd>FUNC</kbd>.</div></li>
+      <li><div>גלישות: <kbd>FUNC</kbd> + <kbd>STEP MODE</kbd>, גע ב־<kbd>2</kbd> וב־<kbd>10</kbd>, ואז <kbd>STEP MODE</kbd>.</div></li>
+      <li><div>קווינטה: החזק קליד 1 וכוון את <kbd>PITCH 2</kbd> לקווינטה מעל, כמו ב־2.3.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> לולאה של 12 צעדים, עם צליל פתוח של שני תווים ושתי מריחות לגבוה.</div>
+    <p class="warn">הלולאה כאן באורך 12. אל תסנכרן אותה עם התופים משיעור 1 בלי לתכנן מחדש.</p>
+    <div class="learn">
+      <span class="learn-tag">להבין</span>
+      <p>12 צעדים הם שלוש פעימות במקום ארבע. מול תופים של 16 צעדים, הקו ״יזוז״ ביחס לקיק בכל תיבה, ויחזור לנקודת ההתחלה רק אחרי שלוש תיבות של תופים. זה נקרא <b>פולימטר</b>.</p>
+      <p class="acid"><b>לאסיד:</b> שבירת הריבועיות של 16 והקווינטה הפתוחה נותנות קו אגרסיבי יותר, על אותם כפתורים בדיוק.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">8.4</span><h3>שמירה ותיעוד</h3><span class="label">FUNC + MEMORY</span></div>
+    <ol class="steps">
+      <li><div>אחרי כל תרגיל: החזק <kbd>FUNC</kbd>, לחץ <kbd>MEMORY</kbd>, שחרר, וגע בקליד של מקום פנוי בין 1 ל־8.</div></li>
+      <li><div>צלם את הלוח ורשום: נורות 4 עד 12, קיבוץ, והשתקות.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כל תרגיל שמור במקום משלו, עם צילום.</div>
+    <p class="warn">שמירה על מקום תפוס מחליפה את מה שהיה בו.</p>
+  </article>
+
+  <article class="card">
+    <h3>מקורות</h3>
+    <p class="legend">החוברת שלך על הבס: עמודים 6, 8 עד 12, 13 עד 21, 26 עד 29, 33 עד 35, 39. <a href="https://www.korg.com/us/support/download/manual/0/140/1958/">מדריך הבעלים הרשמי</a>. אין אקסנט ואין הקלטת תנועות כפתורים, לפי שניהם.</p>
+  </article>
+
+  <div class="endnav"><a href="URL_L1">→ לשיעור 1</a><a href="URL_L3">לשיעור 3 ←</a></div>
+</section>
