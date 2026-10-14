@@ -117,15 +117,15 @@ def page(n):
 <meta name="theme-color" content="#1d2433">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="שיעורי מוזיקה">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>{title} · שיעורי מוזיקה</title>
+<title>{title} · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
 </head>
 <body data-lesson="{n}">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<span class="sp"></span><button class="tb" id="wake" type="button">☀ להשאיר מסך דלוק</button></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ להשאיר מסך דלוק</button></div></div>
 <div class="wrap">
 {html}
 </div>
@@ -151,10 +151,10 @@ def hub(totals):
 <meta name="theme-color" content="#1d2433">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="שיעורי מוזיקה">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>שיעורי מוזיקה</title>
+<title>שיעורי מוזיקה · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
 <style>
@@ -173,7 +173,7 @@ def hub(totals):
 </head>
 <body>
 <div class="wrap">
-<header class="hero"><span class="k">לרז</span><h1>שיעורי מוזיקה</h1><p class="lede">בס חומצי ומכונת תופים, צעד אחר צעד. ההתקדמות נשמרת במכשיר שבו סימנת ״סיימתי״.</p></header>
+<header class="hero"><span class="k">גרסת קלוד</span><h1>שיעורי מוזיקה</h1><p class="lede">בס חומצי ומכונת תופים, צעד אחר צעד. ההתקדמות נשמרת במכשיר שבו סימנת ״סיימתי״.</p></header>
 <ul class="lessons">
 {items}</ul>
 <article class="card">
@@ -185,7 +185,7 @@ def hub(totals):
 </ol>
 <p class="info">באפליקציה מהמסך הבית, ההתקדמות נשמרת בנפרד מספארי.</p>
 </article>
-<p class="legend"><a href="../index.html">לגרסה הקודמת של השיעורים</a></p>
+<p class="legend"><a href="../index.html#grok">לגרסת גרוק של השיעורים</a></p>
 </div>
 <script src="app.js"></script>
 </body>

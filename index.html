@@ -20,6 +20,11 @@ header h1{margin:6px 0 0;font-size:1.9rem;line-height:1.2}
 .list h2{display:inline;margin:0;font-size:1.15rem}
 .list p{margin:8px 0 0;color:#5b6270;font-size:.95rem}
 .lbl{display:inline-block;direction:ltr;unicode-bidi:isolate;background:var(--ink);color:#fff;font-size:.75rem;padding:.1em .55em;border-radius:5px;margin-left:4px}
+.sec{font-size:1.25rem;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+.sec::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.cl{display:block;background:var(--ink);color:#fff;border-radius:14px;padding:16px 18px;text-decoration:none}
+.cl b{color:var(--gold)}
+.cl p{margin:6px 0 0;color:#c9cfdb;font-size:.95rem}
 </style>
 </head>
 <body>
@@ -28,7 +33,7 @@ header h1{margin:6px 0 0;font-size:1.9rem;line-height:1.2}
 <div class="k">לרז</div>
 <h1>שיעורי מוזיקה</h1>
 </header>
-<p style="margin:0 0 14px"><a href="v2/index.html" style="display:block;background:#ffb703;color:#1d2433;border-radius:14px;padding:14px 18px;text-decoration:none;font-weight:700">גרסה חדשה: שיעורים מותאמים לאייפד, עם מעקב התקדמות ←</a></p>
+<h2 class="sec" id="grok">גרסת גרוק</h2>
 <ul class="list">
 <li><a href="lessons/acid-lesson-1.html"><span class="n">1</span><h2>שיעור ג׳אם אסיד ראשון</h2>
 <p>תופים, בס חומצי וסוויפים חיים בקצב 128. <span class="lbl">Volca Beats</span> <span class="lbl">Volca Bass</span></p></a></li>
@@ -37,6 +42,9 @@ header h1{margin:6px 0 0;font-size:1.9rem;line-height:1.2}
 <li><a href="lessons/acid-lesson-3.html"><span class="n">3</span><h2>הקלידים של ה־Volca Bass</h2>
 <p>16 הקלידים כאוקטבה של פסנתר, אוקטבה, הקלטה, תפקידים כפולים, סולמות לאסיד ותרגילי ריף. <span class="lbl">Volca Bass</span></p></a></li>
 </ul>
+
+<h2 class="sec" id="claude">גרסת קלוד</h2>
+<a class="cl" href="claude/index.html"><b>שיעורים 1 עד 3 ←</b><p>מותאם לאייפד: פעולה ותאוריה זו לצד זו, צילומי המכשירים, מסך שלא נכבה, ומעקב התקדמות.</p></a>
 </div>
 </body>
 </html>
