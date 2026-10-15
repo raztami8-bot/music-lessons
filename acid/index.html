@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="חומצה">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>html{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>טבעת חומצה</title>
+<meta name="theme-color" content="#120d1f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* מכשיר כהה יחיד: טבעת גדולה כמרכז, לוח בקרה צדדי. עומק = תכלת קר, חומצה = ורוד לוהט, הסלמה = ענבר */
+:root{
+  --ink:#120d1f; --panel:#1a1430; --raise:#241c40; --line:#33284f;
+  --fg:#f1ebff; --dim:#9c91bd; --deep:#5cc8ff; --acid:#ff4fa3; --heat:#ffb02e;
+  --f-display:"Karantina","Assistant",system-ui,sans-serif;
+  --f-body:"Assistant",system-ui,-apple-system,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:15px;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overflow:hidden;
+  -webkit-tap-highlight-color:transparent}
+.app{height:100%;display:grid;grid-template-rows:auto 1fr;direction:rtl;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:10px;gap:10px;box-sizing:border-box}
+button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--deep);outline-offset:2px}
+
+/* שורה עליונה */
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:34px;line-height:1;letter-spacing:.5px;margin-inline-end:auto;
+  background:linear-gradient(90deg,var(--acid),var(--deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+.grp{display:flex;align-items:center;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.btn{background:var(--raise);border:1px solid var(--line);border-radius:9px;min-height:40px;min-width:40px;padding:0 12px;font-weight:600}
+.btn:active{transform:scale(.96)}
+.btn.on{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.play{min-width:92px;font-size:17px}
+.play.on{background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;min-width:44px;text-align:center;font-size:17px}
+.lbl{font-size:12px;color:var(--dim);letter-spacing:.3px;padding:0 4px}
+select{background:var(--raise);color:var(--fg);border:1px solid var(--line);border-radius:9px;min-height:40px;padding:0 8px;font:inherit}
+
+/* גוף */
+.main{display:grid;grid-template-columns:1fr minmax(320px,400px);gap:12px;min-height:0}
+.stage{position:relative;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+#ring{touch-action:none;display:block;max-width:100%}
+.tools{display:flex;gap:4px}
+.hint{color:var(--dim);font-size:13px;text-align:center;min-height:1.4em}
+.side{min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px;-webkit-overflow-scrolling:touch}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.cardhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cardhead h2{margin:0;font-family:var(--f-display);font-size:26px;font-weight:700;letter-spacing:.5px;line-height:1}
+
+/* מעבר */
+.morphwrap{direction:ltr;display:flex;flex-direction:column;gap:6px}
+.morphends{display:flex;justify-content:space-between;font-family:var(--f-display);font-size:22px;line-height:1}
+.morphends .a{color:var(--deep)} .morphends .b{color:var(--acid)}
+#morph{position:relative;height:64px;border-radius:14px;touch-action:none;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--deep) 35%,var(--ink)),color-mix(in srgb,var(--acid) 35%,var(--ink)));
+  border:1px solid var(--line);overflow:hidden}
+#morphKnob{position:absolute;top:6px;bottom:6px;width:16px;margin-left:-8px;border-radius:8px;background:var(--fg);
+  box-shadow:0 0 18px color-mix(in srgb,var(--fg) 50%,transparent);pointer-events:none}
+
+/* הסלמה */
+#rise{position:relative;min-height:84px;border-radius:14px;border:1px solid color-mix(in srgb,var(--heat) 60%,var(--line));
+  background:var(--raise);font-family:var(--f-display);font-size:34px;letter-spacing:1px;overflow:hidden;touch-action:none}
+#riseFill{position:absolute;inset:0;background:linear-gradient(0deg,var(--heat),var(--acid));transform-origin:bottom;transform:scaleY(0);opacity:.85}
+#rise span{position:relative}
+#rise small{position:relative;display:block;font-family:var(--f-body);font-size:12px;letter-spacing:0;color:var(--dim)}
+#rise.held small{color:var(--ink)}
+
+/* עולמות */
+.tabs{display:flex;gap:4px}
+.tab.deep.on{background:var(--deep);border-color:var(--deep);color:var(--ink)}
+.tab.acid.on{background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.knobs{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.knob{display:flex;flex-direction:column;gap:2px}
+.knob label{font-size:13px;color:var(--dim);display:flex;justify-content:space-between}
+.knob output{font-family:var(--f-num);font-size:12px;color:var(--fg)}
+input[type=range]{direction:ltr;-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;margin:0;touch-action:pan-y}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border-radius:50%;background:var(--accent,var(--deep));border:3px solid var(--ink)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--line)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent,var(--deep));border:3px solid var(--ink)}
+.wavebox{display:flex;flex-direction:column;gap:6px}
+#wave{width:100%;height:96px;border-radius:10px;background:var(--ink);border:1px solid var(--line);touch-action:none;display:block}
+.presets{display:flex;gap:4px;flex-wrap:wrap}
+.presets .btn{min-height:34px;font-size:14px;flex:1}
+.foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.foot .knob{flex:1;min-width:140px}
+
+/* שכבת פתיחה והודעות */
+#gate{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb,var(--ink) 92%,transparent);direction:rtl;padding:24px}
+.gatebox{max-width:440px;display:flex;flex-direction:column;gap:14px;text-align:center}
+.gatebox h1{margin:0;font-family:var(--f-display);font-size:64px;line-height:.95;
+  background:linear-gradient(90deg,var(--acid),var(--deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+.gatebox p{margin:0;color:var(--dim);line-height:1.55;text-wrap:balance}
+.go{min-height:64px;border-radius:16px;border:0;background:var(--acid);color:var(--ink);font-size:22px;font-weight:700}
+#toast{display:flex;align-items:center;gap:12px;position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:30;
+  background:var(--fg);color:var(--ink);padding:10px 16px;border-radius:12px;font-weight:600;direction:rtl;max-width:90vw;text-align:center}
+
+/* מסך צר או לאורך: הכל בטור אחד, הלוח נגלל */
+.tact{background:var(--ink);color:var(--fg);border:0;border-radius:9px;min-height:36px;padding:0 14px;font-weight:700}
+.slotrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+.slot{position:relative;overflow:hidden;min-width:54px;min-height:46px;font-family:var(--f-num);font-size:18px;color:var(--dim);background:var(--raise);border:1px dashed var(--line);border-radius:10px;-webkit-touch-callout:none}
+.slot.full{color:var(--fg);border:1px solid var(--dim)}
+.slot.cur{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.slot .prog{position:absolute;inset:auto 0 0 0;height:5px;background:var(--heat);transform:scaleX(0);transform-origin:right}
+.slot.arming .prog{transform:scaleX(1);transition:transform .65s linear}
+/* טלפון: טור אחד, הבקרות נגללות מתחת לטבעת */
+@media (max-width:700px){
+  body{overflow:auto}
+  .app{height:auto;min-height:100%}
+  .main{grid-template-columns:1fr}
+  .side{overflow:visible}
+}
+/* אייפד לאורך: טבעת גדולה למעלה, מתחתיה מעבר בטור אחד ועיצוב העולם בשניים */
+@media (min-width:701px) and (orientation:portrait){
+  .main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-content:start}
+  .side>.card:first-child{grid-column:1;grid-row:1}
+  .side>.foot{grid-column:1;grid-row:2;flex-direction:column;align-items:stretch}
+  #worldCard{grid-column:2;grid-row:1/span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;align-content:start;gap:10px 14px}
+  #worldCard>.cardhead{grid-column:1/-1}
+}
+/* אייפד לרוחב: טבעת מצד אחד, הבקרות בשני טורים מהצד השני, בלי גלילה */
+@media (min-width:1000px) and (min-height:700px) and (orientation:landscape){
+  .main{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+  .side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:start}
+  .side>.card:first-child{grid-column:1;grid-row:1}
+  .side>.foot{grid-column:1;grid-row:2;flex-direction:column;align-items:stretch}
+  #worldCard{grid-column:2;grid-row:1/span 2}
+  #worldCard .cardhead h2{font-size:22px;white-space:nowrap}
+}
+/* טלפון לרוחב: גלילה רגילה */
+@media (max-height:520px) and (orientation:landscape){
+  body{overflow:auto}
+  .app{height:auto;min-height:100%}
+  .side{overflow:visible}
+}
+/* מסך גדול: הכל גדול יותר לאצבעות */
+@media (min-width:900px) and (min-height:700px){
+  body{font-size:16px}
+  .btn,select{min-height:48px;min-width:48px}
+  .brand{font-size:40px}
+  #morph{height:78px}
+  #rise{min-height:100px}
+  .slot{min-width:64px;min-height:54px}
+  .knob label{font-size:14px}
+  .hint{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){.btn:active{transform:none}}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">טבעת חומצה</div>
+    <button class="btn play" id="play" type="button">▶ נגן</button>
+    <div class="grp" aria-label="קצב">
+      <button class="btn" id="bpmDown" type="button" aria-label="האט">−</button>
+      <span class="num" id="bpmVal">128</span>
+      <button class="btn" id="bpmUp" type="button" aria-label="האץ">+</button>
+      <button class="btn" id="tap" type="button">הקש</button>
+    </div>
+    <div class="grp">
+      <span class="lbl">סולם</span>
+      <select id="root" aria-label="תו בסיס"></select>
+      <select id="scale" aria-label="סוג סולם">
+        <option value="minor">מינורי</option>
+        <option value="phryg">פריגי</option>
+        <option value="dorian">דורי</option>
+      </select>
+      <button class="btn" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
+      <span class="num" id="octVal">0</span>
+      <button class="btn" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="stage">
+      <canvas id="ring" aria-label="טבעת של 16 צעדים"></canvas>
+      <div class="tools" role="group" aria-label="כלי עריכה">
+        <button class="btn tool on" data-tool="pitch" type="button">תו</button>
+        <button class="btn tool" data-tool="acc" type="button">הדגשה</button>
+        <button class="btn tool" data-tool="sl" type="button">גלישה</button>
+        <button class="btn" id="mutate" type="button">מוטציה</button>
+        <button class="btn" id="fresh" type="button">חדש</button>
+      </div>
+      <div class="slotrow" role="group" aria-label="זיכרון">
+        <span class="lbl">זיכרון</span>
+        <button class="btn slot" data-slot="0" type="button">1<i class="prog"></i></button>
+        <button class="btn slot" data-slot="1" type="button">2<i class="prog"></i></button>
+        <button class="btn slot" data-slot="2" type="button">3<i class="prog"></i></button>
+        <button class="btn slot" data-slot="3" type="button">4<i class="prog"></i></button>
+        <span class="lbl">גע לטעינה, החזק לשמירה</span>
+      </div>
+      <div class="hint" id="hint">גע בנקודה להדליק או לכבות, גרור החוצה לתו גבוה. החזק את המרכז ללכלוך.</div>
+    </section>
+
+    <aside class="side">
+      <div class="card">
+        <div class="cardhead"><h2>מעבר</h2><button class="btn" id="tilt" type="button">הטיה</button></div>
+        <div class="morphwrap">
+          <div class="morphends"><span class="a">עומק</span><span class="b">חומצה</span></div>
+          <div id="morph" role="slider" aria-label="מעבר בין עומק לחומצה" aria-valuemin="0" aria-valuemax="100" tabindex="0"><div id="morphKnob"></div></div>
+        </div>
+        <button id="rise" type="button"><div id="riseFill"></div><span>הסלמה</span><small>החזק לבנייה, שחרר לנחיתה על הפעמה</small></button>
+      </div>
+
+      <div class="card" id="worldCard">
+        <div class="cardhead">
+          <h2>עיצוב עולם</h2>
+          <div class="tabs">
+            <button class="btn tab deep on" data-world="deep" type="button">עומק</button>
+            <button class="btn tab acid" data-world="acid" type="button">חומצה</button>
+          </div>
+        </div>
+        <div class="knobs" id="knobs"></div>
+        <div class="wavebox">
+          <div class="cardhead"><span class="lbl">צורת הגל: צייר באצבע</span></div>
+          <canvas id="wave" aria-label="ציור צורת גל"></canvas>
+          <div class="presets">
+            <button class="btn" data-preset="warm" type="button">חם</button>
+            <button class="btn" data-preset="saw" type="button">משור</button>
+            <button class="btn" data-preset="square" type="button">ריבוע</button>
+            <button class="btn" data-preset="broken" type="button">שבור</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card foot">
+        <div class="knob"><label for="vol">עוצמה <output id="volOut"></output></label><input type="range" id="vol" min="0" max="100" step="1"></div>
+        <button class="btn" id="reset" type="button">איפוס</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="gate">
+  <div class="gatebox">
+    <h1>טבעת חומצה</h1>
+    <p>קו בס שרץ לבד בטבעת, ואתה מעצב אותו: עובר בין צליל עמוק ונקי לצליל חומצי ומלוכלך, בונה הסלמה ונוחת על הפעמה.</p>
+    <button class="go" id="start" type="button">▶ הפעל צליל</button>
+    <p>אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</p>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script>
+(()=>{
+"use strict";
+/* ---------- עזרים ---------- */
+const $=s=>document.querySelector(s);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const fin=(v,d)=>(typeof v==="number"&&isFinite(v))?v:d;
+const lerp=(a,b,t)=>a+(b-a)*t;
+const N=128, STEPS=16, DEGS=15;
+let toastT=0, toastAct=false, undoTok=0;
+function killUndo(){undoTok++; if(toastAct){toastAct=false;$("#toast").hidden=true}}
+function toast(msg,label,fn){const t=$("#toast");t.replaceChildren();toastAct=!!label;const sp=document.createElement("span");sp.textContent=msg;t.appendChild(sp);
+  if(label){const b=document.createElement("button");b.type="button";b.className="tact";b.textContent=label;
+    const tok=undoTok;b.addEventListener("click",()=>{t.hidden=true;toastAct=false;clearTimeout(toastT);if(tok===undoTok){try{fn()}catch(e){}}});t.appendChild(b)}
+  t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,label?5000:3200)}
+
+/* ---------- צורות גל ---------- */
+function presetWave(kind){
+  const w=new Array(N);
+  for(let n=0;n<N;n++){
+    const p=n/N;
+    if(kind==="saw") w[n]=1-2*p;
+    else if(kind==="square") w[n]=p<.5?.85:-.85;
+    else if(kind==="warm"){ // משור מעוגל: מעט הרמוניות
+      let s=0; for(let k=1;k<=6;k++) s+=Math.sin(2*Math.PI*k*p)/k*Math.pow(.8,k-1); w[n]=s*.75;
+    } else { // שבור: מדרגות לא סדירות וקפיצות
+      const seg=Math.floor(p*9); const lv=[.9,-.3,.6,-.95,.2,.75,-.6,.1,-.8][seg]; w[n]=lv*(1-.35*((p*9)%1));
+    }
+    w[n]=clamp(w[n],-1,1);
+  }
+  return w;
+}
+
+/* ---------- מצב ושמירה ---------- */
+const DEF_WORLDS={
+  deep:{cut:.38,res:.22,env:.32,dec:.55,drv:.12,sub:.75,dly:.22,fb:.35,wave:presetWave("warm")},
+  acid:{cut:.2,res:.86,env:.8,dec:.3,drv:.72,sub:.2,dly:.3,fb:.52,wave:presetWave("saw")}
+};
+const KNOBS=[["cut","מסנן"],["res","תהודה"],["env","מעטפת"],["dec","דעיכה"],["drv","לכלוך"],["sub","בס עמוק"],["dly","הד"],["fb","חזרות"]];
+function emptySteps(){const s=[];for(let i=0;i<STEPS;i++)s.push({on:false,deg:0,acc:false,sl:false});return s}
+function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב נסתר
+  const on=[1,0,1,1,0,1,1,0,1,0,1,1,0,1,0,1], deg=[0,0,7,0,0,3,0,0,0,0,10,7,0,5,0,12];
+  return on.map((v,i)=>({on:!!v,deg:v?deg[i]:0,acc:[0,6,11].includes(i),sl:[2,10].includes(i)}));
+}
+function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
+  worlds:JSON.parse(JSON.stringify(DEF_WORLDS))}}
+function sanitize(o){
+  const d=defaults(); if(!o||typeof o!=="object") return d;
+  const s={bpm:clamp(Math.round(fin(o.bpm,128)),60,200),root:clamp(Math.round(fin(o.root,9)),0,11),
+    scale:["minor","phryg","dorian"].includes(o.scale)?o.scale:"minor",oct:clamp(Math.round(fin(o.oct,0)),-2,2),
+    morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
+  for(let i=0;i<STEPS;i++){const q=(Array.isArray(o.steps)&&o.steps[i])||d.steps[i];
+    const on=!!q.on; s.steps.push({on,deg:clamp(Math.round(fin(q.deg,0)),0,DEGS-1),acc:on&&!!q.acc,sl:on&&!!q.sl})}
+  for(const k of ["deep","acid"]){const src=(o.worlds&&o.worlds[k])||{}; const w={};
+    for(const [p] of KNOBS) w[p]=clamp(fin(src[p],DEF_WORLDS[k][p]),0,1);
+    w.wave=(Array.isArray(src.wave)&&src.wave.length===N)?src.wave.map(v=>clamp(fin(v,0),-1,1)):DEF_WORLDS[k].wave.slice();
+    s.worlds[k]=w}
+  return s;
+}
+const KEY="acid-ring-v1";
+let S; try{S=sanitize(JSON.parse(localStorage.getItem(KEY)))}catch(e){S=defaults()}
+let saveT=0;
+function save(keepSlot){ if(!keepSlot&&typeof curSlot==="number"&&curSlot>=0){curSlot=-1;slotsUI()}
+  clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},400)}
+
+/* ---------- מיפוי פרמטרים ---------- */
+const MAP={
+  cut:v=>80*Math.pow(2,v*6.3), res:v=>.7+v*v*24, env:v=>v*4.5, dec:v=>.03+v*v*.6,
+  drv:v=>1+v*v*30, sub:v=>v*.9, dly:v=>v*.6, fb:v=>v*.8
+};
+const SHOW={cut:v=>Math.round(MAP.cut(v))+"", res:v=>Math.round(v*100)+"", env:v=>Math.round(v*100)+"", dec:v=>Math.round(MAP.dec(v)*1000)+"",
+  drv:v=>Math.round(v*100)+"", sub:v=>Math.round(v*100)+"", dly:v=>Math.round(v*100)+"", fb:v=>Math.round(v*100)+""};
+function mixed(){const a=S.worlds.deep,b=S.worlds.acid,m=S.morph,o={};for(const [p] of KNOBS)o[p]=lerp(a[p],b[p],m);return o}
+const SCALES={minor:[0,2,3,5,7,8,10],phryg:[0,1,3,5,7,8,10],dorian:[0,2,3,5,7,9,10]};
+function degHz(deg){const sc=SCALES[S.scale];const semi=sc[deg%7]+12*Math.floor(deg/7);
+  const midi=36+S.root+12*S.oct+semi; return 440*Math.pow(2,(midi-69)/12)}
+
+/* ---------- מנוע צליל ---------- */
+let ctx=null, E=null;
+let playing=false, nextTime=0, stepIdx=0, timer=0;
+let accStack=0, lastAccT=-9;
+let rise=0, riseHeld=false, dropArmed=false, dirt=0, dirtHeld=false, gateOpen=false, lastPlayedDeg=0;
+const visQ=[]; let curStep=-1, kick=0;
+
+function makeEngine(){
+  const c=ctx, nyq=c.sampleRate/2;
+  const e={nyq};
+  e.oscA=c.createOscillator(); e.oscB=c.createOscillator(); e.sub=c.createOscillator(); e.sub.type="sine";
+  e.gA=c.createGain(); e.gB=c.createGain();
+  e.vca=c.createGain(); e.vca.gain.value=0;
+  e.subVca=c.createGain(); e.subVca.gain.value=0; e.subLvl=c.createGain();
+  e.f1=c.createBiquadFilter(); e.f1.type="lowpass";
+  e.f2=c.createBiquadFilter(); e.f2.type="lowpass"; e.f2.Q.value=0;
+  e.pre=c.createGain(); e.shaper=c.createWaveShaper(); e.post=c.createGain();
+  const curve=new Float32Array(2048); for(let i=0;i<2048;i++){const x=i/1023.5-1;curve[i]=Math.tanh(x*2.2)/Math.tanh(2.2)}
+  e.shaper.curve=curve; e.shaper.oversample="4x";
+  e.dc=c.createBiquadFilter(); e.dc.type="highpass"; e.dc.frequency.value=28; e.dc.Q.value=.5;
+  e.bus=c.createGain();
+  e.dl=c.createDelay(2); e.fbG=c.createGain(); e.dlTone=c.createBiquadFilter(); e.dlTone.type="lowpass"; e.dlTone.frequency.value=2600; e.dlTone.Q.value=-3;
+  e.wet=c.createGain();
+  e.comp=c.createDynamicsCompressor();
+  e.comp.threshold.value=-8; e.comp.knee.value=4; e.comp.ratio.value=20; e.comp.attack.value=.002; e.comp.release.value=.12;
+  e.master=c.createGain(); e.bus.gain.value=.6;
+  e.clip=c.createWaveShaper(); const cc=new Float32Array(2048); for(let i=0;i<2048;i++){const x=(i/1023.5-1)*1.5;cc[i]=Math.tanh(x)} e.clip.curve=cc; e.clip.oversample="2x";
+  e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
+  // ניתוב
+  e.oscA.connect(e.gA); e.oscB.connect(e.gB); e.gA.connect(e.vca); e.gB.connect(e.vca);
+  e.vca.connect(e.f1); e.accDrv=c.createGain(); e.accDrv.gain.value=1;
+  e.f1.connect(e.f2); e.f2.connect(e.accDrv); e.accDrv.connect(e.pre); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc);
+  e.dc.connect(e.bus);
+  e.sub.connect(e.subVca); e.subVca.connect(e.subLvl); e.subLvl.connect(e.bus);
+  e.dc.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.fbG); e.fbG.connect(e.dl); e.dlTone.connect(e.wet); e.wet.connect(e.bus);
+  e.bus.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
+  const f=degHz(0); e.oscA.frequency.value=f; e.oscB.frequency.value=f; e.sub.frequency.value=subHz(f);
+  e.f1.frequency.value=800; e.f2.frequency.value=1200;
+  e.oscA.start(); e.oscB.start(); e.sub.start();
+  E=e; updateWave("deep"); updateWave("acid"); applyContinuous(true);
+}
+
+function waveFrom(arr){
+  const H=40, re=new Float32Array(H+1), im=new Float32Array(H+1); let energy=0;
+  for(let k=1;k<=H;k++){let a=0,b=0;for(let n=0;n<N;n++){const ph=2*Math.PI*k*n/N;a+=arr[n]*Math.cos(ph);b+=arr[n]*Math.sin(ph)}
+    re[k]=a*2/N; im[k]=b*2/N; energy+=re[k]*re[k]+im[k]*im[k]}
+  if(!(energy>1e-6)) return null;
+  try{return ctx.createPeriodicWave(re,im)}catch(e){return null}
+}
+function updateWave(world){
+  if(!E) return;
+  const pw=waveFrom(S.worlds[world].wave);
+  const osc=world==="deep"?E.oscA:E.oscB;
+  if(pw) osc.setPeriodicWave(pw); else osc.type="sawtooth";
+}
+
+const lastP=new WeakMap();
+function setP(param,v,tau){ if(!isFinite(v)) return; const o=lastP.get(param); if(o!==undefined&&Math.abs(o-v)<=Math.abs(v)*.002+1e-5) return; lastP.set(param,v); param.setTargetAtTime(v,ctx.currentTime,tau||.04) }
+function applyContinuous(now){
+  if(!E) return; const p=mixed(), tau=now?.005:.05, m=S.morph;
+  setP(E.gA.gain,Math.cos(m*Math.PI/2),tau); setP(E.gB.gain,Math.sin(m*Math.PI/2),tau);
+  const drive=MAP.drv(clamp(p.drv+dirt*.55+rise*.15,0,1));
+  setP(E.pre.gain,drive*.5,tau); setP(E.post.gain,1/Math.sqrt(drive*.5+.5),tau);
+  setP(E.subLvl.gain,MAP.sub(p.sub),tau);
+  const stepDur=60/S.bpm/4;
+  setP(E.dl.delayTime,clamp(stepDur*3,.05,1.9),.2);
+  setP(E.fbG.gain,clamp(MAP.fb(p.fb)+rise*.12,0,.8),tau);
+  setP(E.wet.gain,clamp(MAP.dly(p.dly)+rise*.25,0,.9),tau);
+  setP(E.master.gain,Math.pow(S.vol/100,1.6)*.9,tau);
+}
+
+function subHz(f){return f/2>=30?f/2:f}
+function hash(i,salt){const x=Math.sin(i*127.1+salt*311.7)*43758.5453;return x-Math.floor(x)}
+
+function playNote(t,deg,acc,legato,slideOut,stepDur){
+  const p=mixed(); const f=clamp(degHz(deg),20,4000), fsub=subHz(f); const fr=E.oscA.frequency, fb2=E.oscB.frequency, fs=E.sub.frequency;
+  if(legato){ fr.setTargetAtTime(f,t,.035); fb2.setTargetAtTime(f,t,.035); fs.setTargetAtTime(fsub,t,.035) }
+  else { fr.setValueAtTime(f,t); fb2.setValueAtTime(f,t); fs.setValueAtTime(fsub,t) }
+  // הדגשה: בעיטת מסנן של אוקטבה ומעלה, הנערמת כשהדגשות צמודות, ותוספת לכלוך לאותו תו
+  if(acc){ accStack=(t-lastAccT<=stepDur*2.05)?Math.min(accStack+.55,1.8):0; lastAccT=t } 
+  const kickOct=acc?1+accStack:0;
+  const lvl=acc?.78:.5, subL=acc?.95:.8;
+  const riseMul=Math.pow(2,rise*2.6);
+  const base=clamp(MAP.cut(p.cut)*riseMul*(acc?Math.pow(2,accStack*.5):1),40,E.nyq*.42);
+  const q=clamp(MAP.res(clamp(p.res+rise*.25,0,1))+(acc?3+accStack*2:0),.5,28);
+  E.f1.Q.setTargetAtTime(q,t,.02);
+  if(legato){
+    E.vca.gain.setTargetAtTime(lvl,t,.01); E.subVca.gain.setTargetAtTime(subL,t,.01);
+  } else {
+    E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
+    E.vca.gain.setTargetAtTime(lvl,t,.0025); E.subVca.gain.setTargetAtTime(subL,t,.004);
+    const peak=clamp(base*Math.pow(2,MAP.env(p.env)+kickOct),40,Math.min(16000,E.nyq*.45));
+    const ad=E.accDrv.gain; ad.cancelScheduledValues(t);
+    if(acc){ ad.setTargetAtTime(1.9+accStack*.4,t,.002); ad.setTargetAtTime(1,t+stepDur*.6,.04) } else ad.setTargetAtTime(1,t,.01);
+    const dec=MAP.dec(p.dec)*(acc?.7:1);
+    for(const fl of [E.f1,E.f2]){const k=fl===E.f2?1.6:1;
+      fl.frequency.setTargetAtTime(clamp(peak*k,40,E.nyq*.45),t,.0015);
+      fl.frequency.setTargetAtTime(clamp(base*k,40,E.nyq*.45),t+.006,dec)}
+  }
+  if(!slideOut){ const r=t+stepDur*.55; E.vca.gain.setTargetAtTime(0,r,.012); E.subVca.gain.setTargetAtTime(0,r,.02); gateOpen=false }
+  else gateOpen=true;
+}
+
+function scheduleStep(i,t){
+  const stepDur=60/S.bpm/4, st=S.steps[i];
+  let on=st.on, deg=st.deg, acc=st.acc, sl=st.sl, isDrop=false;
+  if(dropArmed && i===0){ dropArmed=false; isDrop=true; rise=0; on=true; acc=true; sl=false; if(!st.on) deg=0; riseUI() }
+  else if(!on && rise>0 && hash(i,1)<rise*.85){ on=true; deg=hash(i,2)<.5?lastPlayedDeg:clamp(lastPlayedDeg+7,0,DEGS-1); acc=hash(i,3)<rise*.5; sl=false }
+  const legato=gateOpen&&on&&!isDrop;
+  if(gateOpen&&!on){ E.vca.gain.setTargetAtTime(0,t,.012); E.subVca.gain.setTargetAtTime(0,t,.02); gateOpen=false }
+  if(on){ playNote(t,deg,acc,legato,sl,stepDur); lastPlayedDeg=deg }
+  if(!document.hidden){ visQ.push({i,t,on,acc,st:acc?accStack:0}); if(visQ.length>64) visQ.splice(0,visQ.length-32) }
+}
+
+function tick(){
+  if(!playing||!ctx) return;
+  const now=ctx.currentTime, was=riseHeld||rise>0;
+  if(nextTime<now-.25){ nextTime=now+.05 } // אחרי השהיה או הפרעה: לא לרוץ להשלים תווים שפוספסו
+  while(nextTime<now+.12){
+    if(riseHeld) rise=Math.min(1,rise+1/64); // מגיע לשיא אחרי 4 תיבות
+    scheduleStep(stepIdx,nextTime);
+    nextTime+=60/S.bpm/4; stepIdx=(stepIdx+1)%STEPS;
+  }
+  if(was||riseHeld||rise>0) applyContinuous();
+}
+
+async function ensureAudio(){
+  if(!ctx){
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){ toast("הדפדפן הזה לא תומך בצליל"); return false }
+    try{ if(navigator.audioSession) navigator.audioSession.type="playback" }catch(e){}
+    ctx=new AC({latencyHint:"interactive"});
+    try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}
+    makeEngine();
+    ctx.onstatechange=()=>{ if(ctx.state!=="running"&&playing) toast("הצליל נעצר. גע במסך כדי להמשיך") };
+  }
+  if(ctx.state!=="running"){ try{await ctx.resume()}catch(e){} }
+  return ctx.state==="running";
+}
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) return; if(ctx&&ctx.state!=="running") ctx.resume().catch(()=>{}); if(playing) setWake(true) });
+for(const ev of ["pointerdown","touchend","click"]) document.addEventListener(ev,()=>{ if(ctx&&ctx.state!=="running") ctx.resume().catch(()=>{}) },true);
+
+let wake=null;
+async function setWake(on){ try{ if(on&&navigator.wakeLock&&!wake){wake=await navigator.wakeLock.request("screen");wake.addEventListener("release",()=>wake=null)} else if(!on&&wake){await wake.release();wake=null} }catch(e){wake=null} }
+
+async function togglePlay(){
+  if(!await ensureAudio()){ toast("לא הצלחתי להפעיל צליל. גע שוב"); return }
+  playing=!playing;
+  if(playing){ accStack=0; lastAccT=-9; stepIdx=0; nextTime=ctx.currentTime+.06; gateOpen=false; visQ.length=0; clearInterval(timer); timer=setInterval(tick,25); tick() }
+  else { clearInterval(timer); visQ.length=0; curStep=-1; const t=ctx.currentTime;
+    E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
+    E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); gateOpen=false;
+    riseHeld=false; dropArmed=false; rise=0; riseUI(); applyContinuous() }
+  setWake(playing); $("#play").classList.toggle("on",playing); $("#play").textContent=playing?"■ עצור":"▶ נגן";
+}
+function audition(deg){
+  if(playing||!ctx||ctx.state!=="running") return;
+  const t=ctx.currentTime+.01; gateOpen=false; playNote(t,deg,false,false,false,.22);
+}
+
+/* ---------- טבעת ---------- */
+const ring=$("#ring"), rc=ring.getContext("2d");
+let RG={size:300,cx:150,cy:150,rMin:60,rMax:140,dpr:1};
+function sizeRing(){
+  const st=$(".stage"); const phone=matchMedia("(max-width:700px)").matches;
+  const tabP=!phone&&matchMedia("(orientation:portrait)").matches;
+  const w=st.clientWidth; const big=matchMedia("(min-width:900px) and (min-height:700px)").matches;
+  const short=matchMedia("(max-height:520px) and (orientation:landscape)").matches;
+  const h=phone?Math.min(w,innerHeight*.58):tabP?Math.min(w,innerHeight*.40):short?innerHeight*.85:st.clientHeight-(big?190:170);
+  const size=Math.max(220,Math.floor(Math.min(w,h)));
+  const dpr=Math.min(devicePixelRatio||1,2.5);
+  ring.style.width=size+"px"; ring.style.height=size+"px"; ring.width=size*dpr; ring.height=size*dpr;
+  const R=size/2; RG={size,cx:R,cy:R,rMin:R*.36,rMax:R*.93,dpr};
+}
+const stepAng=i=>-Math.PI/2+i*2*Math.PI/STEPS;
+const degR=d=>RG.rMin+(d/(DEGS-1))*(RG.rMax-RG.rMin);
+const rDeg=r=>clamp(Math.round((r-RG.rMin)/(RG.rMax-RG.rMin)*(DEGS-1)),0,DEGS-1);
+function polar(e){const b=ring.getBoundingClientRect();const x=e.clientX-b.left-RG.cx,y=e.clientY-b.top-RG.cy;
+  let a=Math.atan2(y,x)+Math.PI/2; if(a<0)a+=2*Math.PI; return{r:Math.hypot(x,y),i:Math.round(a/(2*Math.PI/STEPS))%STEPS}}
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+let C={};
+function readColors(){C={ink:css("--ink"),line:css("--line"),fg:css("--fg"),dim:css("--dim"),deep:css("--deep"),acid:css("--acid"),heat:css("--heat"),raise:css("--raise")}}
+function mixHex(a,b,t){const pa=parseInt(a.slice(1),16),pb=parseInt(b.slice(1),16);
+  const r=Math.round(lerp(pa>>16,pb>>16,t)),g=Math.round(lerp(pa>>8&255,pb>>8&255,t)),bl=Math.round(lerp(pa&255,pb&255,t));
+  return `rgb(${r},${g},${bl})`}
+
+let phase=0;
+function drawRing(){
+  const {size,cx,cy,rMin,rMax,dpr}=RG; const g=rc; g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,size,size);
+  const acc=mixHex(C.deep,C.acid,S.morph); const hot=rise>0?mixHex(C.acid,C.heat,rise):acc;
+  // מעגלי עזר
+  g.lineWidth=1; g.strokeStyle=C.line;
+  for(let d=0;d<DEGS;d+=7){g.beginPath();g.arc(cx,cy,degR(d),0,2*Math.PI);g.stroke()}
+  for(let i=0;i<STEPS;i++){const a=stepAng(i);g.globalAlpha=i%4===0?.9:.35;g.beginPath();
+    g.moveTo(cx+Math.cos(a)*rMin*.92,cy+Math.sin(a)*rMin*.92);g.lineTo(cx+Math.cos(a)*rMax*1.03,cy+Math.sin(a)*rMax*1.03);g.stroke()}
+  g.globalAlpha=1;
+  // מחוג
+  if(curStep>=0){const a=stepAng(curStep);g.strokeStyle=hot;g.lineWidth=3;g.globalAlpha=.55;g.beginPath();
+    g.moveTo(cx+Math.cos(a)*rMin*.9,cy+Math.sin(a)*rMin*.9);g.lineTo(cx+Math.cos(a)*rMax*1.04,cy+Math.sin(a)*rMax*1.04);g.stroke();g.globalAlpha=1}
+  // קו המנגינה וגלישות
+  for(let i=0;i<STEPS;i++){const s=S.steps[i];if(!s.on||!s.sl)continue;const n=S.steps[(i+1)%STEPS],tail=!n.on;
+    const a1=stepAng(i),a2=tail?a1+(2*Math.PI/STEPS)*.5:stepAng(i+1),r1=degR(s.deg),r2=tail?r1:degR(n.deg);g.strokeStyle=acc;g.lineWidth=4;g.globalAlpha=.7;g.beginPath();
+    for(let k=0;k<=12;k++){const t=k/12,a=lerp(a1,a2,t),r=lerp(r1,r2,t);const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;k?g.lineTo(x,y):g.moveTo(x,y)}
+    g.stroke();g.globalAlpha=1}
+  // נקודות
+  const base=Math.max(7,size*.026);
+  for(let i=0;i<STEPS;i++){const s=S.steps[i],a=stepAng(i);
+    const r=s.on?degR(s.deg):(rMax+rMin)/2; const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+    const live=i===curStep&&s.on; const rad=base*(s.acc?1.35:1)*(live?1.35:1);
+    if(s.on){g.fillStyle=live?C.fg:acc;g.beginPath();g.arc(x,y,rad,0,2*Math.PI);g.fill();
+      if(s.acc){g.strokeStyle=C.fg;g.lineWidth=2;g.beginPath();g.arc(x,y,rad+4,0,2*Math.PI);g.stroke()}}
+    else{g.strokeStyle=C.dim;g.lineWidth=1.5;g.globalAlpha=.5;g.beginPath();g.arc(x,y,base*.55,0,2*Math.PI);g.stroke();g.globalAlpha=1}}
+  // כתם במרכז: מתעוות עם תהודה, לכלוך והסלמה
+  const p=mixed(); phase+=.02+rise*.05; kick*=.9;
+  const br=rMin*.7*(1+kick*.18); const wob=.04+p.res*.14+dirt*.2+rise*.15; const lobes=3+Math.round(p.drv*5+dirt*4);
+  const grd=g.createRadialGradient(cx,cy,br*.1,cx,cy,br*1.2);grd.addColorStop(0,dirt>0?C.heat:C.fg);grd.addColorStop(.35,hot);grd.addColorStop(1,C.ink);
+  g.fillStyle=grd;g.beginPath();
+  for(let k=0;k<=64;k++){const a=k/64*2*Math.PI;const r=br*(1+wob*Math.sin(a*lobes+phase*2)+wob*.5*Math.sin(a*(lobes+2)-phase*3));
+    const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;k?g.lineTo(x,y):g.moveTo(x,y)}
+  g.closePath();g.fill();
+}
+
+const drags=new Map(); let tool="pitch";
+ring.addEventListener("pointerdown",e=>{
+  e.preventDefault(); ring.setPointerCapture(e.pointerId);
+  const {r,i}=polar(e);
+  if(r<RG.rMin*.8){ dirtHeld=true; drags.set(e.pointerId,{dirt:true}); return }
+  const s=S.steps[i];
+  if(tool==="pitch"){
+    const d={i,wasOn:s.on,moved:false,r0:r};
+    if(!s.on){ s.on=true; s.deg=rDeg(r); s.acc=false; s.sl=false; d.moved=true; audition(s.deg) }
+    drags.set(e.pointerId,d);
+  } else {
+    if(!s.on){ toast("כאן אין תו. מקם תו קודם, במצב ״תו״"); return }
+    s[tool]=!s[tool]; killUndo(); audition(s.deg); save();
+  }
+});
+ring.addEventListener("pointermove",e=>{
+  const d=drags.get(e.pointerId); if(!d||d.dirt) return;
+  const {r}=polar(e); if(!d.moved&&Math.abs(r-d.r0)<8) return;
+  d.moved=true; const s=S.steps[d.i]; const nd=rDeg(r); if(nd!==s.deg){ s.deg=nd; audition(nd) }
+});
+function clearDrags(){for(const [id,d] of drags) if(!d.dirt) drags.delete(id)}
+function endDrag(e){
+  const d=drags.get(e.pointerId); if(!d) return; drags.delete(e.pointerId);
+  if(d.dirt){ if(![...drags.values()].some(x=>x.dirt)) dirtHeld=false; return }
+  killUndo();
+  if(!d.moved&&d.wasOn&&e.type==="pointerup"){ const s=S.steps[d.i]; s.on=false; s.acc=false; s.sl=false }
+  save();
+}
+ring.addEventListener("pointerup",endDrag); ring.addEventListener("pointercancel",endDrag); ring.addEventListener("lostpointercapture",endDrag);
+
+document.querySelectorAll(".tool").forEach(b=>b.addEventListener("click",()=>{
+  tool=b.dataset.tool; document.querySelectorAll(".tool").forEach(x=>x.classList.toggle("on",x===b));
+  $("#hint").textContent=tool==="pitch"?"גע בנקודה להדליק או לכבות, גרור החוצה לתו גבוה. החזק את המרכז ללכלוך."
+    :tool==="acc"?"גע בנקודה כדי להדגיש אותה: חזקה יותר ופותחת יותר את המסנן."
+    :"גע בנקודה כדי שתגלוש לתו הבא בלי להתחיל מחדש.";
+}));
+$("#mutate").addEventListener("click",()=>{
+  killUndo(); clearDrags();
+  for(let k=0;k<3;k++){const i=Math.floor(Math.random()*STEPS),s=S.steps[i],r=Math.random();
+    if(r<.3||!s.on){ if(s.on){s.on=false;s.acc=false;s.sl=false} else {s.on=true;s.acc=false;s.sl=false} }
+    else if(r<.65) s.deg=clamp(s.deg+[-7,-2,-1,1,2,7][Math.floor(Math.random()*6)],0,DEGS-1);
+    else if(r<.85) s.acc=!s.acc; else s.sl=!s.sl}
+  save();
+});
+$("#fresh").addEventListener("click",()=>{
+  killUndo(); clearDrags(); const prev=S.steps.map(x=>({...x})); S.steps=emptySteps(); save();
+  toast("הטבעת נקייה. גע בה כדי למקם תווים","בטל",()=>{clearDrags();S.steps=prev;save()});
+});
+
+/* ---------- מעבר והטיה ---------- */
+const morphEl=$("#morph"), knob=$("#morphKnob");
+function morphUI(){knob.style.left=(S.morph*100)+"%";morphEl.setAttribute("aria-valuenow",Math.round(S.morph*100))}
+function setMorph(v){S.morph=clamp(fin(v,S.morph),0,1);morphUI();applyContinuous();save()}
+let morphPid=null;
+morphEl.addEventListener("pointerdown",e=>{e.preventDefault();morphPid=e.pointerId;morphEl.setPointerCapture(e.pointerId);moveMorph(e)});
+morphEl.addEventListener("pointermove",e=>{if(e.pointerId===morphPid)moveMorph(e)});
+const endMorph=e=>{if(e.pointerId===morphPid)morphPid=null};
+morphEl.addEventListener("pointerup",endMorph);morphEl.addEventListener("pointercancel",endMorph);
+function moveMorph(e){const b=morphEl.getBoundingClientRect();if(tiltOn)tiltOff();setMorph((e.clientX-b.left)/b.width)}
+morphEl.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowDown")setMorph(S.morph-.05);if(e.key==="ArrowRight"||e.key==="ArrowUp")setMorph(S.morph+.05)});
+
+let tiltOn=false, tiltCenter=null, tiltBase=.5, tiltGot=false, tiltTimer=0;
+function tiltAxis(ev){const ang=(screen.orientation&&typeof screen.orientation.angle==="number")?screen.orientation.angle:(window.orientation||0);
+  const b=fin(ev.beta,0),g=fin(ev.gamma,0);
+  if(ang===90)return b; if(ang===-90||ang===270)return -b; if(ang===180)return -g; return g}
+function onTilt(ev){ if(ev.beta==null&&ev.gamma==null) return; tiltGot=true; const v=tiltAxis(ev);
+  if(tiltCenter===null){tiltCenter=v;tiltBase=S.morph}
+  S.morph=clamp(tiltBase+(v-tiltCenter)/50,0,1); morphUI(); applyContinuous() }
+function tiltOff(){clearTimeout(tiltTimer);tiltOn=false;window.removeEventListener("deviceorientation",onTilt);$("#tilt").classList.remove("on");save()}
+$("#tilt").addEventListener("click",async()=>{
+  if(tiltOn){tiltOff();return}
+  if(typeof DeviceOrientationEvent==="undefined"){toast("המכשיר הזה לא מדווח על הטיה");return}
+  try{ if(typeof DeviceOrientationEvent.requestPermission==="function"){
+      const r=await DeviceOrientationEvent.requestPermission(); if(r!=="granted"){toast("לא התקבל אישור להטיה");return} } }
+  catch(e){toast("ההטיה לא זמינה בדף הזה");return}
+  tiltOn=true; tiltCenter=null; tiltGot=false; window.addEventListener("deviceorientation",onTilt); $("#tilt").classList.add("on");
+  toast("הטה את המכשיר ימינה ושמאלה. גע במחוון כדי לעצור");
+  clearTimeout(tiltTimer); tiltTimer=setTimeout(()=>{ if(tiltOn&&!tiltGot){ tiltOff(); toast("ההטיה לא מגיעה לדף הזה. בדף באתר שלך היא תעבוד") } },1800);
+});
+
+/* ---------- הסלמה ---------- */
+const riseBtn=$("#rise"), riseFill=$("#riseFill");
+function riseUI(){riseFill.style.transform=`scaleY(${rise})`;riseBtn.classList.toggle("held",riseHeld&&rise>.15)}
+riseBtn.addEventListener("pointerdown",e=>{e.preventDefault();riseBtn.setPointerCapture(e.pointerId);
+  if(!playing){toast("הסלמה עובדת בזמן נגינה");return} riseHeld=true; dropArmed=false; riseUI()});
+const riseEnd=()=>{ if(!riseHeld) return; riseHeld=false; if(rise>.05) dropArmed=true; else rise=0; riseUI() };
+riseBtn.addEventListener("pointerup",riseEnd); riseBtn.addEventListener("pointercancel",riseEnd); riseBtn.addEventListener("lostpointercapture",riseEnd);
+riseBtn.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* ---------- עולמות, ידיות וצורת גל ---------- */
+const knobsEl=$("#knobs");
+KNOBS.forEach(([k,name])=>{const d=document.createElement("div");d.className="knob";
+  d.innerHTML=`<label for="k_${k}">${name} <output id="o_${k}"></output></label><input type="range" id="k_${k}" min="0" max="1000" step="1">`;
+  knobsEl.appendChild(d);
+  const inp=d.querySelector("input");
+  inp.addEventListener("input",()=>{const v=clamp(inp.value/1000,0,1);S.worlds[S.edit][k]=v;$("#o_"+k).textContent=SHOW[k](v);applyContinuous();save()});
+});
+function worldUI(){
+  const w=S.worlds[S.edit]; const col=S.edit==="deep"?"var(--deep)":"var(--acid)";
+  $("#worldCard").style.setProperty("--accent",col);
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.world===S.edit));
+  KNOBS.forEach(([k])=>{$("#k_"+k).value=Math.round(w[k]*1000);$("#o_"+k).textContent=SHOW[k](w[k])});
+  drawWave();
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{S.edit=b.dataset.world;worldUI();save(true)}));
+
+const wc=$("#wave"), wg=wc.getContext("2d");
+function sizeWave(){const dpr=Math.min(devicePixelRatio||1,2.5);const w=Math.max(100,wc.clientWidth);wc.width=w*dpr;wc.height=96*dpr;drawWave()}
+function drawWave(){
+  const dpr=wc.width/Math.max(1,wc.clientWidth), W=wc.clientWidth, H=96; wg.setTransform(dpr,0,0,dpr,0,0); wg.clearRect(0,0,W,H);
+  wg.strokeStyle=C.line;wg.lineWidth=1;wg.beginPath();wg.moveTo(0,H/2);wg.lineTo(W,H/2);wg.stroke();
+  const arr=S.worlds[S.edit].wave; wg.strokeStyle=S.edit==="deep"?C.deep:C.acid; wg.lineWidth=2.5; wg.lineJoin="round"; wg.beginPath();
+  for(let n=0;n<N;n++){const x=n/(N-1)*W,y=H/2-arr[n]*(H/2-6);n?wg.lineTo(x,y):wg.moveTo(x,y)} wg.stroke();
+}
+let wavePid=null,lastIdx=-1,waveDirty=false;
+function wavePoint(e){const b=wc.getBoundingClientRect();const idx=clamp(Math.round((e.clientX-b.left)/b.width*(N-1)),0,N-1);
+  const v=clamp(1-2*(e.clientY-b.top)/b.height,-1,1)*1.08; const arr=S.worlds[S.edit].wave;
+  if(lastIdx<0)arr[idx]=clamp(v,-1,1); else{const a=Math.min(lastIdx,idx),z=Math.max(lastIdx,idx),v0=arr[lastIdx];
+    for(let n=a;n<=z;n++){const t=z===a?1:(n-lastIdx)/(idx-lastIdx);arr[n]=clamp(lerp(v0,v,clamp(t,0,1)),-1,1)}}
+  lastIdx=idx; drawWave(); if(!waveDirty){waveDirty=true;setTimeout(()=>{waveDirty=false;updateWave(S.edit)},60)}}
+wc.addEventListener("pointerdown",e=>{e.preventDefault();wavePid=e.pointerId;wc.setPointerCapture(e.pointerId);lastIdx=-1;wavePoint(e)});
+wc.addEventListener("pointermove",e=>{if(e.pointerId===wavePid)wavePoint(e)});
+const waveEnd=e=>{if(e.pointerId!==wavePid)return;wavePid=null;lastIdx=-1;updateWave(S.edit);save()};
+wc.addEventListener("pointerup",waveEnd);wc.addEventListener("pointercancel",waveEnd);
+document.querySelectorAll("[data-preset]").forEach(b=>b.addEventListener("click",()=>{S.worlds[S.edit].wave=presetWave(b.dataset.preset);drawWave();updateWave(S.edit);save()}));
+
+/* ---------- שורה עליונה ---------- */
+const NOTES=["דו","דו#","רה","רה#","מי","פה","פה#","סול","סול#","לה","לה#","סי"];
+NOTES.forEach((n,i)=>{const o=document.createElement("option");o.value=i;o.textContent=n;$("#root").appendChild(o)});
+function topUI(){$("#bpmVal").textContent=S.bpm;$("#octVal").textContent=(S.oct>0?"+":"")+S.oct;$("#root").value=S.root;$("#scale").value=S.scale;
+  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol)}
+function setBpm(v){S.bpm=clamp(Math.round(v),60,200);topUI();applyContinuous();save()}
+function repeatBtn(el,fn){let holdT=0;const stop=()=>{clearTimeout(holdT);clearInterval(holdT)};
+  el.addEventListener("pointerdown",e=>{e.preventDefault();fn();stop();holdT=setTimeout(()=>{holdT=setInterval(fn,70)},380)});
+  ["pointerup","pointercancel","pointerleave"].forEach(t=>el.addEventListener(t,stop))}
+repeatBtn($("#bpmDown"),()=>setBpm(S.bpm-1)); repeatBtn($("#bpmUp"),()=>setBpm(S.bpm+1));
+let taps=[];
+$("#tap").addEventListener("pointerdown",e=>{e.preventDefault();const t=performance.now();if(taps.length&&t-taps[taps.length-1]>2000)taps=[];
+  taps.push(t);if(taps.length>5)taps.shift();if(taps.length>=4){const d=(taps[taps.length-1]-taps[0])/(taps.length-1);if(d>0)setBpm(60000/d)}});
+$("#octDown").addEventListener("click",()=>{S.oct=clamp(S.oct-1,-2,2);topUI();save()});
+$("#octUp").addEventListener("click",()=>{S.oct=clamp(S.oct+1,-2,2);topUI();save()});
+$("#root").addEventListener("change",e=>{S.root=clamp(+e.target.value||0,0,11);save()});
+$("#scale").addEventListener("change",e=>{S.scale=SCALES[e.target.value]?e.target.value:"minor";save()});
+$("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#volOut").textContent=Math.round(S.vol);applyContinuous();save(true)});
+$("#play").addEventListener("click",togglePlay);
+let resetArm=0;
+$("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
+  resetArm=0;const keepSteps=S.steps;S=defaults();S.steps=keepSteps;topUI();worldUI();morphUI();if(E){updateWave("deep");updateWave("acid")}applyContinuous();save()});
+$("#start").addEventListener("click",async()=>{const ok=await ensureAudio();$("#gate").hidden=true;if(!ok)toast("גע בכפתור הנגינה כדי להפעיל צליל")});
+
+/* ---------- משבצות זיכרון ---------- */
+const SKEY="acid-ring-slots-v1";
+let slots=[null,null,null,null], curSlot=-1;
+try{const a=JSON.parse(localStorage.getItem(SKEY));if(Array.isArray(a))slots=[0,1,2,3].map(i=>(a[i]&&typeof a[i]==="object")?sanitize(a[i]):null)}catch(e){}
+function saveSlots(){try{localStorage.setItem(SKEY,JSON.stringify(slots));return true}catch(e){return false}}
+function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
+function slotsUI(){document.querySelectorAll(".slot").forEach(b=>{const i=+b.dataset.slot;b.classList.toggle("full",!!slots[i]);b.classList.toggle("cur",i===curSlot)})}
+function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlot=i; slotsUI();
+  const ok=saveSlots();
+  if(!ok) toast("השמירה לא נכתבה לדפדפן. היא תחזיק עד שתסגור את הדף");
+  else if(old) toast(`זיכרון ${i+1} הוחלף`,"בטל",()=>{slots[i]=old;saveSlots();if(curSlot===i)curSlot=-1;slotsUI()});
+  else toast(`נשמר בזיכרון ${i+1}`)}
+function loadSlot(i){
+  if(!slots[i])return; const v=sanitize(slots[i]); killUndo(); clearDrags();
+  if(tiltOn)tiltOff();
+  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
+  topUI();worldUI();morphUI(); if(E){updateWave("deep");updateWave("acid")} applyContinuous();
+  curSlot=i; slotsUI(); save(true);
+}
+document.querySelectorAll(".slot").forEach(b=>{
+  const i=+b.dataset.slot; let tm=0, active=false, held=false, pid=null;
+  const stop=()=>{clearTimeout(tm);b.classList.remove("arming")};
+  b.addEventListener("pointerdown",e=>{e.preventDefault(); if(active) return; pid=e.pointerId; try{b.setPointerCapture(e.pointerId)}catch(_){}
+    active=true;held=false;b.classList.add("arming");clearTimeout(tm);
+    tm=setTimeout(()=>{if(!active)return;held=true;b.classList.remove("arming");saveSlot(i)},650)});
+  b.addEventListener("pointerup",e=>{if(!active||e.pointerId!==pid)return;active=false;stop();
+    if(!held){ if(slots[i]) loadSlot(i); else toast(`זיכרון ${i+1} ריק. החזק אותו כדי לשמור בו`) }});
+  const cancel=e=>{if(!active||e.pointerId!==pid)return;active=false;stop()};
+  b.addEventListener("pointercancel",cancel); b.addEventListener("lostpointercapture",cancel);
+  b.addEventListener("contextmenu",e=>e.preventDefault());
+});
+
+/* ---------- לולאת ציור ---------- */
+function frame(){
+  if(ctx){const now=ctx.currentTime;while(visQ.length&&visQ[0].t<=now){const v=visQ.shift();curStep=v.i;if(v.on)kick=v.acc?1+v.st*.45:.6}}
+  if(dirtHeld&&dirt<1){dirt=Math.min(1,dirt+.06);applyContinuous()}else if(!dirtHeld&&dirt>0){dirt=Math.max(0,dirt-.08);applyContinuous()}
+  if(riseHeld||rise>0)riseUI();
+  drawRing(); requestAnimationFrame(frame);
+}
+let rzT=0; function onResize(){clearTimeout(rzT);rzT=setTimeout(()=>{sizeRing();sizeWave()},80)}
+addEventListener("resize",onResize); addEventListener("orientationchange",onResize);
+
+readColors(); topUI(); worldUI(); morphUI(); riseUI(); slotsUI(); sizeRing(); sizeWave();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{sizeRing();sizeWave()}).catch(()=>{});
+requestAnimationFrame(frame);
+})();
+</script>
+<script>if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
+</body>
+</html>
