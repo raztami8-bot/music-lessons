@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0d0c0a">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="תסיסה">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>תסיסה · מחולל קווי אסיד</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app" data-tab="gen">
+<header class="top">
+  <h1>תסיסה</h1>
+  <button class="btn play" id="play" type="button" aria-pressed="false" aria-label="נגן">▶</button>
+  <div class="grp"><button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button><span class="num" id="bpmVal">132</span><button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button></div>
+  <select class="btn sel" id="key" aria-label="טוניקה"></select>
+  <select class="btn sel" id="scale" aria-label="סולם"></select>
+  <button class="btn" id="beat" type="button" aria-pressed="false">תוף</button>
+  <button class="btn" id="sync" type="button" aria-pressed="false">⇄<span class="lg"> סנכרון</span></button>
+  <button class="btn rec" id="rec" type="button" aria-pressed="false">⏺<span class="lg"> הקלט</span></button>
+</header>
+<section class="steps" id="steps" dir="ltr" aria-label="16 צעדים"></section>
+<nav class="tabs" id="tabs"><button class="btn" data-t="gen" type="button" aria-pressed="true">יצירה</button><button class="btn" data-t="perf" type="button" aria-pressed="false">ביצוע</button></nav>
+<main class="panels">
+  <section class="gen panel">
+    <div class="genrow">
+      <button class="btn big" id="gen" type="button">צור</button>
+      <button class="btn" id="mutate" type="button">שנה קצת</button>
+      <div class="vars" id="vars" dir="ltr"><button class="btn" type="button" aria-pressed="true">A</button><button class="btn" type="button">B</button><button class="btn" type="button">C</button><button class="btn" type="button">D</button></div>
+    </div>
+    <div class="sliders">
+      <label>צפיפות<input type="range" id="gDensity" min="0" max="100" value="70"></label>
+      <label>גלישות<input type="range" id="gSlide" min="0" max="100" value="30"></label>
+      <label>הדגשות<input type="range" id="gAccent" min="0" max="100" value="35"></label>
+      <label>קפיצות אוקטבה<input type="range" id="gOct" min="0" max="100" value="30"></label>
+      <label>הפסקות<input type="range" id="gRest" min="0" max="100" value="20"></label>
+    </div>
+    <div class="readout"><code id="notes" dir="ltr"></code><button class="btn" id="copy" type="button">העתק</button></div>
+    <p class="tip">לחיצה על צעד נועלת אותו (🔒). "צור" מחליף רק צעדים לא נעולים. לחיצה ארוכה על צעד מכבה/מדליקה אותו.</p>
+  </section>
+  <section class="perf panel">
+    <div class="xy" id="xy" dir="ltr"><span class="ax ax-x">CUTOFF →</span><span class="ax ax-y">RESONANCE ↑</span><i id="dot"></i></div>
+    <div class="knobs" dir="ltr">
+      <label><bdi>ENV MOD</bdi><input type="range" id="envmod" min="0" max="100" value="55"></label>
+      <label><bdi>DECAY</bdi><input type="range" id="decay" min="0" max="100" value="40"></label>
+      <label><bdi>ACCENT</bdi><input type="range" id="accent" min="0" max="100" value="60"></label>
+      <label><bdi>DRIVE</bdi><input type="range" id="drive" min="0" max="100" value="25"></label>
+      <label><bdi>DELAY</bdi><input type="range" id="delay" min="0" max="100" value="20"></label>
+      <label class="wave"><bdi>WAVE</bdi><button class="btn" id="wave" type="button">SAW</button></label>
+    </div>
+    <div class="holds">
+      <div class="tr" id="tr" dir="ltr"></div>
+      <div class="fx" dir="ltr"><button class="btn hold" id="half" type="button">½</button><button class="btn hold" id="dbl" type="button">×2</button><button class="btn hold" id="freeze" type="button">FREEZE</button></div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+</div>
+<script src="sync.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
