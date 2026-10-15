@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#110f17">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="גרוב">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>מכונת גרוב</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h1>מכונת גרוב</h1></div>
+  <button class="btn play" id="play" type="button">▶ נגן</button>
+  <div class="grp" aria-label="קצב">
+    <button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button>
+    <span class="num" id="bpmVal">124</span>
+    <button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button>
+    <button class="btn" id="tap" type="button">הקש</button>
+  </div>
+  <div class="grp" aria-label="הקלטה">
+    <button class="btn rec" id="rec" type="button" aria-pressed="false" aria-label="הקלט">⏺ הקלט</button>
+    <button class="btn" id="takesBtn" type="button">הקלטות</button>
+  </div>
+  <button class="btn sync" id="sync" type="button" aria-pressed="false" title="סנכרון קצב והפעלה עם הכלים האחרים שפתוחים">⇄<span class="lbl-long"> סנכרון</span></button>
+  <span class="meter" aria-hidden="true"><i id="meterFill"></i></span>
+</header>
+
+<main class="main">
+  <section class="seq">
+    <div class="seqhead">
+      <div class="vars" role="group" aria-label="וריאציות">
+        <span class="lbl">וריאציה</span>
+        <button class="btn var" data-var="0" type="button">א<i class="prog"></i></button>
+        <button class="btn var" data-var="1" type="button">ב<i class="prog"></i></button>
+        <button class="btn var" data-var="2" type="button">ג<i class="prog"></i></button>
+        <button class="btn var" data-var="3" type="button">ד<i class="prog"></i></button>
+      </div>
+      <div class="edits">
+        <button class="btn" id="mutate" type="button">מוטציה</button>
+        <button class="btn" id="clear" type="button">נקה</button>
+      </div>
+    </div>
+    <div class="grid" id="grid" dir="ltr" aria-label="16 צעדים לכל תוף, צעד 1 משמאל"></div>
+    <div class="hint" id="hint">גע בצעד: דלוק, מודגש, כבוי. גרור לצייר. החזק וריאציה כדי להעתיק אליה את הנוכחית.</div>
+    <div class="slotrow" role="group" aria-label="זיכרון">
+      <span class="lbl">זיכרון</span>
+      <button class="btn slot" data-slot="0" type="button">1<i class="prog"></i></button>
+      <button class="btn slot" data-slot="1" type="button">2<i class="prog"></i></button>
+      <button class="btn slot" data-slot="2" type="button">3<i class="prog"></i></button>
+      <button class="btn slot" data-slot="3" type="button">4<i class="prog"></i></button>
+      <span class="lbl">גע לטעינה, החזק לשמירה</span>
+    </div>
+  </section>
+
+  <aside class="side scroll-y" id="side">
+    <div class="card perf">
+      <div class="cardhead"><h2>אנרגיה</h2><span class="lbl" id="layers"></span></div>
+      <div class="sld big" id="energy" data-key="energy" role="slider" tabindex="0" aria-label="אנרגיה" aria-valuemin="0" aria-valuemax="100"><div class="fill"></div><div class="ticks" aria-hidden="true"></div><div class="thumb"></div></div>
+      <button class="fillbtn" id="fill" type="button"><span class="ff" id="fillFill"></span><b>מילוי</b><small>החזק לגלגול, שחרר לנחיתה על תחילת התיבה</small></button>
+      <div class="row2">
+        <div class="ctl"><label>סווינג <output id="o_swing"></output></label><div class="sld" data-key="swing" role="slider" tabindex="0" aria-label="סווינג"><div class="fill"></div><div class="thumb"></div></div></div>
+        <div class="ctl"><label>לכלוך <output id="o_drive"></output></label><div class="sld" data-key="drive" role="slider" tabindex="0" aria-label="לכלוך"><div class="fill"></div><div class="thumb"></div></div></div>
+      </div>
+    </div>
+
+    <div class="card part" id="partCard">
+      <div class="cardhead"><h2 id="partName">בעיטה</h2><button class="btn" id="audition" type="button">▶ שמע</button></div>
+      <div class="ctls" id="partCtls"></div>
+    </div>
+
+    <div class="card foot">
+      <div class="ctl"><label>עוצמה <output id="o_vol"></output></label><div class="sld" data-key="vol" role="slider" tabindex="0" aria-label="עוצמה"><div class="fill"></div><div class="thumb"></div></div></div>
+      <button class="btn" id="reset" type="button" title="איפוס הצליל וההגדרות">↻ איפוס</button>
+    </div>
+  </aside>
+</main>
+</div>
+
+<div id="takes" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הקלטות">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>הקלטות</h2><button class="btn" id="takesClose" type="button">סגור</button></div>
+    <p class="lbl" id="takesEmpty">עוד אין הקלטות. לחץ ⏺ הקלט, נגן, ולחץ שוב כדי לעצור.</p>
+    <ul id="takeList"></ul>
+  </div>
+</div>
+
+<div id="gate" class="start scroll-y">
+  <div class="gatebox">
+    <div class="logo big" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1>מכונת גרוב</h1>
+    <p>מכונת תופים אנלוגית: בעיטה, מחיאה, היי־האטים, טום ורים. מציירים צעדים, ומרימים את האנרגיה מבעיטה לבד עד גרוב מלא.</p>
+    <button class="go" id="start" type="button">▶ הפעל צליל</button>
+    <p class="small">אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</p>
+    <p class="small" id="installHint" hidden>להתקנה: שתף ← הוסף למסך הבית. אחרי זה היא עובדת גם בלי אינטרנט.</p>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script src="engine.js"></script>
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

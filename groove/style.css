@@ -1,0 +1,213 @@
+/* מכונת גרוב · מכשיר כהה יחיד. הדף לא זז: רק הלוח הצדדי נגלל כשצריך.
+   צבע לכל תוף: בעיטה כתום, מחיאה ורוד, סגור צהוב, פתוח ענבר, טום טורקיז, רים סגול */
+:root{
+  --ink:#110f17; --body:#1a1722; --panel:#211d2b; --raise:#2c2738; --line:#3a3348; --well:#15121c;
+  --fg:#f3eefb; --dim:#9a92ad; --hot:#ff6a3d; --rec:#ff4f5e; --ok:#7be0b0;
+  --kick:#ff6a3d; --clap:#ff5fa8; --ch:#ffd84a; --oh:#ffa733; --tom:#3fd6c4; --rim:#a68bff;
+  --f-display:"Arial Black","Segoe UI Black",system-ui,-apple-system,sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI","Arial Hebrew",Arial,sans-serif;
+  --f-num:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --head:132px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:15px}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
+:focus-visible{outline:2px solid var(--ch);outline-offset:2px}
+.scroll-y{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
+
+.app{position:absolute;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;
+  padding:calc(8px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));
+  background:radial-gradient(60% 50% at 90% 0%,rgba(255,106,61,.10),transparent 60%),radial-gradient(50% 50% at 0% 100%,rgba(63,214,196,.07),transparent 60%),var(--ink)}
+
+/* ---- שורה עליונה ---- */
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.brand{display:flex;align-items:center;gap:8px;margin-inline-end:auto}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:24px;letter-spacing:.3px;line-height:1;
+  background:linear-gradient(90deg,var(--kick),var(--ch));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:28px;height:28px;flex:none}
+.logo i{border-radius:4px;background:var(--raise)}
+.logo i:nth-child(1){background:var(--kick)} .logo i:nth-child(4){background:var(--ch)}
+.logo.big{width:76px;height:76px;gap:7px;margin:0 auto}
+.logo.big i{border-radius:10px}
+.grp{display:flex;align-items:center;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px}
+.btn{background:var(--raise);border:1px solid var(--line);border-radius:10px;min-height:40px;min-width:40px;padding:0 12px;font-weight:700;white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .08s,transform .06s}
+.btn:active,.btn.press{transform:scale(.96)}
+.btn.on{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.btn.sq{padding:0;font-size:20px}
+.play{min-width:96px;font-size:17px}
+.play.on{background:var(--hot);border-color:var(--hot);color:var(--ink)}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;min-width:46px;text-align:center;font-size:18px;font-weight:600}
+.lbl{font-size:12px;color:var(--dim);letter-spacing:.2px;padding:0 4px}
+.rec.on{background:var(--rec);border-color:var(--rec);color:var(--ink);font-family:var(--f-num)}
+.sync.on{background:var(--ok);border-color:var(--ok);color:var(--ink)}
+.sync.follow{box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 40%,transparent)}
+.meter{width:10px;height:40px;border-radius:5px;background:var(--well);border:1px solid var(--line);position:relative;overflow:hidden;flex:none}
+.meter i{position:absolute;inset:auto 0 0 0;height:100%;background:linear-gradient(0deg,var(--ok),var(--ch) 70%,var(--rec));transform-origin:bottom;transform:scaleY(0)}
+
+/* ---- גוף ---- */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,360px);gap:12px;min-height:0}
+.seq{min-height:0;display:flex;flex-direction:column;gap:8px;background:var(--body);border:1px solid var(--line);border-radius:18px;padding:10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.seqhead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.vars,.edits{display:flex;align-items:center;gap:4px}
+.var{position:relative;overflow:hidden;min-width:48px;font-size:18px}
+.var.cur{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.var.next{border-color:var(--ch);animation:blink .5s steps(2) infinite}
+@keyframes blink{50%{border-color:var(--line)}}
+.prog{position:absolute;inset:auto 0 0 0;height:5px;background:var(--ch);transform:scaleX(0);transform-origin:right}
+.arming .prog{transform:scaleX(1);transition:transform .6s linear}
+
+/* רשת הצעדים: תמיד משמאל לימין, צעד 1 משמאל, כמו בוולקות */
+.grid{direction:ltr;flex:1;min-height:0;display:grid;grid-template-rows:repeat(6,minmax(40px,80px));align-content:center;gap:7px;touch-action:none}
+.row{display:grid;grid-template-columns:var(--head) 2px repeat(4,minmax(0,1fr)) 2px repeat(4,minmax(0,1fr)) 2px repeat(4,minmax(0,1fr)) 2px repeat(4,minmax(0,1fr));gap:4px;align-items:stretch;--c:var(--fg)}
+.row>.st{grid-column:var(--gc);grid-row:1}
+.row>.ph{grid-column:1;grid-row:1}
+.row.dimmed .st{opacity:.38}
+.row.dimmed .ph .nm{opacity:.55}
+.ph{display:flex;gap:4px;align-items:stretch;min-width:0}
+.ph .nm{flex:1;min-width:0;direction:rtl;text-align:right;display:flex;align-items:center;gap:6px;padding:0 8px;border-radius:10px;
+  background:var(--raise);border:1px solid var(--line);font-weight:800;font-size:14px;overflow:hidden;white-space:nowrap}
+.ph .nm::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 8px var(--c)}
+.ph .nm.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,var(--raise))}
+.ph .ms{min-width:30px;padding:0;font-size:12px;border-radius:8px}
+.ph .ms.m.on{background:var(--rec);border-color:var(--rec);color:var(--ink)}
+.ph .ms.s.on{background:var(--ch);border-color:var(--ch);color:var(--ink)}
+.st{position:relative;border-radius:8px;background:var(--well);border:1px solid var(--line);min-width:0}
+.st.b::after{content:attr(data-n);position:absolute;top:3px;left:5px;font:600 10px var(--f-num);color:var(--dim);opacity:.8}
+.st.on{background:color-mix(in srgb,var(--c) 55%,var(--well));border-color:color-mix(in srgb,var(--c) 70%,transparent)}
+.st.acc{background:var(--c);border-color:var(--fg);box-shadow:0 0 12px color-mix(in srgb,var(--c) 60%,transparent)}
+.st.acc::before{content:"";position:absolute;inset:auto 22% 5px 22%;height:3px;border-radius:2px;background:var(--ink);opacity:.6}
+.st.on::after,.st.acc::after{color:var(--ink)}
+.st.now{outline:2px solid var(--fg);outline-offset:-1px}
+.st.flash{filter:brightness(1.6)}
+.hint{color:var(--dim);font-size:13px;text-align:center;min-height:1.3em}
+.slotrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+.slot{position:relative;overflow:hidden;min-width:54px;font-family:var(--f-num);font-size:18px;color:var(--dim);border-style:dashed}
+.slot.full{color:var(--fg);border-style:solid;border-color:var(--dim)}
+.slot.cur{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+
+/* ---- לוח צדדי ---- */
+.side{min-height:0;display:flex;flex-direction:column;gap:10px;padding-bottom:6px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.cardhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cardhead h2{margin:0;font-family:var(--f-display);font-size:20px;font-weight:900;line-height:1}
+.part{--c:var(--kick)}
+.part .cardhead h2{color:var(--c)}
+.ctls{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.ctl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ctl label{font-size:13px;color:var(--dim);display:flex;justify-content:space-between;gap:6px}
+.ctl output{font-family:var(--f-num);font-size:12px;color:var(--fg)}
+.ctl.wide{grid-column:1/-1}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+
+/* מחוון מגע: אצבע במקום = ערך, תמיד משמאל לימין */
+.sld{--v:.5;--a:var(--c,var(--ch));position:relative;height:34px;direction:ltr;touch-action:none;cursor:pointer}
+.sld::before{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;background:var(--line)}
+.sld .fill{position:absolute;left:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;width:calc(var(--v)*100%);background:var(--a)}
+.sld .thumb{position:absolute;top:50%;left:calc(var(--v)*100%);width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:var(--fg);border:3px solid var(--ink);box-shadow:0 0 0 1px var(--line)}
+.sld.drag .thumb{transform:scale(1.15)}
+.sld.center .fill{left:calc(var(--l,.5)*100%);width:calc(var(--w,0)*100%)}
+.sld.center::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:14px;margin:-7px 0 0 -1px;background:var(--dim)}
+.sld.big{height:64px;border-radius:14px;background:var(--well);border:1px solid var(--line);overflow:hidden}
+.sld.big::before{display:none}
+.sld.big .fill{top:0;bottom:0;height:auto;margin:0;border-radius:0;background:linear-gradient(90deg,var(--kick),var(--clap) 45%,var(--tom) 75%,var(--rim));opacity:.75}
+.sld.big .thumb{width:14px;height:auto;top:5px;bottom:5px;margin:0 0 0 -7px;border-radius:7px;border:0;box-shadow:0 0 16px rgba(255,255,255,.5)}
+.ticks{position:absolute;inset:0;pointer-events:none}
+.ticks span{position:absolute;bottom:6px;width:8px;height:8px;margin-left:-4px;border-radius:50%;border:2px solid var(--ink)}
+.fillbtn{position:relative;overflow:hidden;min-height:84px;border-radius:14px;border:1px solid color-mix(in srgb,var(--clap) 60%,var(--line));background:var(--raise);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;touch-action:none;-webkit-touch-callout:none}
+.fillbtn b{position:relative;font-family:var(--f-display);font-size:28px;font-weight:900;letter-spacing:.5px}
+.fillbtn small{position:relative;font-size:12px;color:var(--dim)}
+.fillbtn .ff{position:absolute;inset:0;background:linear-gradient(90deg,var(--clap),var(--oh));transform-origin:left;transform:scaleX(0);opacity:.85}
+.fillbtn.held small,.fillbtn.land small{color:var(--ink)}
+.fillbtn.land{border-color:var(--ch)}
+.foot{flex-direction:row;align-items:center}
+.foot .ctl{flex:1}
+
+/* ---- שכבת פתיחה, הודעות והקלטות ---- */
+#gate{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--ink) 94%,transparent);padding:24px}
+.gatebox{max-width:440px;display:flex;flex-direction:column;gap:14px;text-align:center}
+.gatebox h1{margin:0;font-family:var(--f-display);font-size:52px;font-weight:900;line-height:1;
+  background:linear-gradient(90deg,var(--kick),var(--ch));-webkit-background-clip:text;background-clip:text;color:transparent}
+.gatebox p{margin:0;color:var(--dim);line-height:1.55;text-wrap:balance}
+.gatebox .small{font-size:13px}
+.go{min-height:64px;border-radius:16px;border:0;background:var(--hot);color:var(--ink);font-size:22px;font-weight:800}
+#toast{display:flex;align-items:center;gap:12px;position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:30;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.5);
+  background:var(--fg);color:var(--ink);padding:10px 16px;border-radius:12px;font-weight:700;max-width:90vw;text-align:center}
+.tact{pointer-events:auto;background:var(--ink);color:var(--fg);border:0;border-radius:9px;min-height:36px;padding:0 14px;font-weight:700}
+.sheet{position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--ink) 82%,transparent);padding:24px 16px}
+.sheetbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;width:min(580px,100%);max-height:80vh;display:flex;flex-direction:column;gap:10px}
+#takeList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.take{display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--raise);flex-wrap:wrap}
+.take .nm{flex:1;min-width:120px;font-weight:700}
+.take .nm small{display:block;color:var(--dim);font-family:var(--f-num);font-weight:500;font-size:12px}
+.take .acts{display:flex;gap:6px}
+.take .del.arm{background:var(--rec);border-color:var(--rec);color:var(--ink)}
+
+/* ---- אייפד לרוחב / מסך גדול: הכל גדול יותר לאצבעות ---- */
+@media (min-width:900px) and (min-height:700px){
+  body{font-size:16px}
+  .btn{min-height:46px;min-width:46px}
+  .brand h1{font-size:28px}
+  .meter{height:46px}
+  :root{--head:178px}
+  .ph .ms{min-width:36px;font-size:13px}
+  .ph .nm{font-size:15px}
+}
+/* ---- אייפד לאורך: רשת רחבה למעלה, מתחתיה ביצוע וצליל בשני טורים ---- */
+@media (min-width:701px) and (orientation:portrait){
+  .main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .grid{flex:none;grid-template-rows:repeat(6,74px)}
+  :root{--head:164px}
+  .side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:start}
+  .side>.perf{grid-column:1;grid-row:1}
+  .side>.part{grid-column:2;grid-row:1/span 2}
+  .side>.foot{grid-column:1;grid-row:2}
+}
+/* ---- טלפון: כל תוף בשתי שורות של שמונה (1–8, 9–16), הלוח נגלל מתחת ---- */
+@media (max-width:700px){
+  .app{gap:8px;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+  .main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:8px}
+  .top{gap:6px}
+  .brand h1{font-size:20px}
+  .logo{width:22px;height:22px;gap:2px}
+  .btn{min-height:38px;min-width:38px;padding:0 9px}
+  .play{min-width:78px}
+  .num{min-width:38px;font-size:16px}
+  .meter{height:38px}
+  .seq{padding:8px;gap:6px;border-radius:14px}
+  .var{min-width:40px}
+  :root{--head:66px}
+  .grid{flex:none;grid-template-rows:none;gap:6px}
+  .row{grid-template-columns:var(--head) 1px repeat(4,minmax(0,1fr)) 1px repeat(4,minmax(0,1fr));grid-template-rows:28px 28px;gap:3px}
+  .row>.st{grid-column:var(--pc);grid-row:var(--pr)}
+  .row>.ph{grid-row:1/span 2}
+  .ph{flex-direction:column;gap:3px}
+  .ph .nm{font-size:12px;padding:0 5px;gap:4px;flex:1}
+  .ph .nm::before{width:7px;height:7px}
+  .ph .btns{display:flex;gap:3px}
+  .ph .ms{min-height:24px;min-width:0;flex:1;font-size:11px}
+  .hint{display:none}
+  .slot{min-width:46px;min-height:36px}
+  .slotrow .lbl:last-child{display:none}
+  .top .brand{flex:1 0 auto}
+  .meter{display:none}
+  .top .grp{padding:2px}
+  .lbl-long{display:none}
+  .grid{gap:5px}
+  .fillbtn{min-height:72px}
+}
+@media (min-width:701px){ .ph .btns{display:contents} }
+/* ---- טלפון לרוחב: הכל נגלל ---- */
+@media (max-height:520px) and (orientation:landscape){
+  .app{overflow-y:auto;-webkit-overflow-scrolling:touch;display:block}
+  .app>*+*{margin-top:8px}
+  .main{grid-template-columns:minmax(0,1fr) 300px}
+  .grid{flex:none;grid-template-rows:repeat(6,40px)}
+  .side{overflow:visible}
+}
+@media (prefers-reduced-motion:reduce){.btn:active{transform:none}.var.next{animation:none}}
