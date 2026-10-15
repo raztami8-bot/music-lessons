@@ -140,3 +140,110 @@
     });
   });
 })();
+
+/* ---------- practice mode ---------- */
+(function(){
+  var page=document.body.dataset.lesson; if(!page) return;
+  var POS="ml2:pos:l"+page, DONE="ml2:done";
+  function get(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+  function set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+
+  // Slides: every card, plus the photos placed right before it
+  var cards=[].slice.call(document.querySelectorAll(".wrap .card"));
+  if(!cards.length) return;
+  var slides=cards.map(function(c){
+    var nodes=[c], p=c.previousElementSibling;
+    while(p && p.matches("figure.photo")){ nodes.unshift(p); p=p.previousElementSibling; }
+    var sec=c.closest(".stage"), tag=sec&&sec.querySelector(".stage-tag"), h=null;
+    if(sec){ [].forEach.call(sec.querySelectorAll("h2"),function(x){ if(x.compareDocumentPosition(c)&Node.DOCUMENT_POSITION_FOLLOWING) h=x; }); }
+    var num=c.querySelector(".card-head .num"), t=c.querySelector(".card-head h3")||c.querySelector("h3");
+    return {nodes:nodes, card:c, stage:(tag?tag.textContent:"")+(h?" · "+h.textContent:""),
+      title:(num?num.textContent+" · ":"")+(t?t.textContent:(h?h.textContent:"")), id:c.dataset.id};
+  });
+
+  // Overlay
+  var pm=document.createElement("div"); pm.className="pm"; pm.hidden=true; pm.setAttribute("role","dialog"); pm.setAttribute("aria-label","מצב נגינה");
+  pm.innerHTML='<div class="pm-top"><button class="pm-x" id="pm-x" type="button" aria-label="יציאה ממצב נגינה">✕</button>'+
+    '<div class="pm-where"><small id="pm-stage"></small><b id="pm-title"></b></div><span class="pm-count" id="pm-count"></span></div>'+
+    '<div class="pm-bar"><span id="pm-bar"></span></div>'+
+    '<div class="pm-body" id="pm-body"><div class="pm-in" id="pm-in"></div></div>'+
+    '<div class="pm-bot"><button class="pm-nav" id="pm-prev" type="button">→ הקודם</button>'+
+    '<button class="pm-done" id="pm-done" type="button">סיימתי</button>'+
+    '<button class="pm-nav next" id="pm-next" type="button">הבא ←</button></div>';
+  document.body.appendChild(pm);
+  var $=function(id){ return document.getElementById(id); };
+  var holder=$("pm-in"), body=$("pm-body"), cur=-1, marks=[];
+
+  function putBack(){
+    if(cur<0) return;
+    slides[cur].nodes.forEach(function(n,i){ marks[i].parentNode.insertBefore(n,marks[i]); marks[i].remove(); });
+    marks=[];
+  }
+  function show(i){
+    i=Math.max(0,Math.min(slides.length-1,i));
+    putBack(); cur=i; var s=slides[i];
+    s.nodes.forEach(function(n){ var m=document.createComment("pm"); n.parentNode.insertBefore(m,n); marks.push(m); holder.appendChild(n); });
+    $("pm-stage").textContent=s.stage; $("pm-title").textContent=s.title;
+    $("pm-count").textContent=(i+1)+" מתוך "+slides.length;
+    $("pm-bar").style.width=Math.round((i+1)/slides.length*100)+"%";
+    $("pm-prev").disabled=(i===0);
+    $("pm-next").textContent=(i===slides.length-1)?"סיום ✓":"הבא ←";
+    paintDone(); body.scrollTop=0; set(POS,i);
+  }
+  function paintDone(){
+    var s=slides[cur], b=$("pm-done");
+    if(!s.id){ b.hidden=true; return; }
+    b.hidden=false; var on=!!get(DONE,{})[s.id];
+    b.classList.toggle("on",on); b.textContent=on?"✓ סיימתי":"סיימתי";
+  }
+  function open(i){
+    pm.hidden=false; document.documentElement.style.overflow="hidden";
+    show(i);
+    var wb=$("wake"); if(wb && !wb.hidden && !wb.dataset.want) wb.click();
+  }
+  function close(){
+    var c=slides[cur]&&slides[cur].card; putBack(); cur=-1;
+    pm.hidden=true; document.documentElement.style.overflow="";
+    if(c){ c.scrollIntoView({block:"start"}); window.scrollBy(0,-70); }
+  }
+  function next(){ if(cur===slides.length-1) close(); else show(cur+1); }
+  function prev(){ show(cur-1); }
+
+  $("pm-x").addEventListener("click",close);
+  $("pm-next").addEventListener("click",next);
+  $("pm-prev").addEventListener("click",prev);
+  $("pm-done").addEventListener("click",function(){
+    var s=slides[cur]; if(!s.id) return;
+    var b=s.card.querySelector(".donebtn"); if(b) b.click();  // same store as the page buttons
+    paintDone();
+    if(get(DONE,{})[s.id] && cur<slides.length-1) setTimeout(next,250);
+  });
+  document.addEventListener("keydown",function(e){
+    if(pm.hidden) return;
+    if(e.key==="Escape") close();
+    else if(e.key==="ArrowLeft"||e.key==="PageDown") next();
+    else if(e.key==="ArrowRight"||e.key==="PageUp") prev();
+  });
+
+  // Swipe: finger moves right = next (Hebrew page turn). Ignore swipes on sideways-scrolling boxes.
+  var sx=0, sy=0, skip=false;
+  body.addEventListener("touchstart",function(e){ var t=e.touches[0]; sx=t.clientX; sy=t.clientY;
+    skip=!!e.target.closest(".grid-box,.pads-box,.tbl-box,.taps,.zoom"); },{passive:true});
+  body.addEventListener("touchend",function(e){ if(skip) return; var t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.6){ if(dx>0) next(); else prev(); } },{passive:true});
+
+  // Entry points: toolbar button resumes, card buttons start from that card
+  var tb=$("playmode");
+  if(tb) tb.addEventListener("click",function(){
+    var i=get(POS,null);
+    if(i==null){ var d=get(DONE,{}); i=0; for(var k=0;k<slides.length;k++){ if(slides[k].id && !d[slides[k].id]){ i=k; break; } } }
+    open(i);
+  });
+  slides.forEach(function(s,i){
+    var head=s.card.querySelector(".card-head"); if(!head) return;
+    var b=document.createElement("button"); b.type="button"; b.className="cardplay"; b.textContent="▶ מכאן";
+    b.setAttribute("aria-label","מצב נגינה מהכרטיס הזה");
+    b.addEventListener("click",function(){ open(i); });
+    head.insertBefore(b, head.querySelector(".donebtn"));
+  });
+})();

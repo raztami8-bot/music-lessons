@@ -125,7 +125,7 @@ def page(n):
 <link rel="stylesheet" href="app.css">
 </head>
 <body data-lesson="{n}">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ להשאיר מסך דלוק</button></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ להשאיר מסך דלוק</button></div></div>
 <div class="wrap">
 {html}
 </div>
