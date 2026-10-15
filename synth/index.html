@@ -2,129 +2,104 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#16122a">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#120f22">
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="אווירות">
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>מכונת אווירות</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="app" id="app">
 
 <header class="top">
-  <h1>מכונת אווירות</h1>
-  <div class="presets" id="presets" role="group" aria-label="צלילים"></div>
-  <div class="top-actions">
-    <button class="pill" id="save" type="button">☆ שמור</button>
-    <button class="pill" id="help" type="button" aria-pressed="false">מה זה?</button>
-    <button class="pill rec" id="rec" type="button" aria-pressed="false">⏺ הקלטה</button>
+  <div class="brand"><span class="logo" aria-hidden="true"></span><h1>אווירות</h1></div>
+  <div class="presets scroll-x" id="presets" role="group" aria-label="צלילים"></div>
+  <div class="actions">
+    <button class="btn" id="save" type="button" title="שמור את הצליל">☆<span class="lbl"> שמור</span></button>
+    <button class="btn rec" id="rec" type="button" aria-pressed="false">⏺<span class="lbl"> הקלטה</span></button>
+    <button class="btn" id="help" type="button" aria-pressed="false">?<span class="lbl"> מה זה</span></button>
   </div>
 </header>
 
-<main class="panel">
+<main class="main">
   <section class="xy-wrap" aria-label="משטח מגע">
-    <canvas id="xy" aria-label="משטח בהירות וחלל. הזז אצבע: ימינה בהיר יותר, למעלה רחוק יותר"></canvas>
+    <canvas id="xy" aria-label="משטח: ימינה בהיר יותר, למעלה רחוק יותר"></canvas>
     <span class="ax ax-x">בהירות ←</span>
     <span class="ax ax-y">חלל ←</span>
-    <p class="explain xy-explain">גרור אצבע בזמן שאתה מנגן. ימינה פותח את המסנן, למעלה מוסיף הד. אפשר להחזיק אקורד עם ״החזקה״ ולשחק כאן בשתי ידיים.</p>
+    <p class="explain xy-explain">גרור אצבע בזמן נגינה. ימינה פותח את המסנן, למעלה מוסיף הד. עם ״החזקה״ היד השנייה פנויה לכאן.</p>
   </section>
 
-  <section class="ctrl">
+  <section class="panel">
     <div class="tabs" role="tablist" aria-label="מקטעים">
       <button type="button" role="tab" id="tab-sound" data-tab="sound" aria-selected="true">צליל</button>
       <button type="button" role="tab" id="tab-dirt" data-tab="dirt" aria-selected="false">לכלוך</button>
       <button type="button" role="tab" id="tab-time" data-tab="time" aria-selected="false">חלל וקצב</button>
     </div>
 
-    <div class="pane" data-pane="sound">
+    <div class="pane scroll-y" data-pane="sound">
       <div class="knobs" id="knobs-sound"></div>
-      <div class="rows">
-        <div class="row">
-          <span class="row-lbl">צורה</span>
-          <div class="seg" id="shape" role="group" aria-label="צורת גל">
-            <button type="button" data-v="0">חם</button><button type="button" data-v="1">בהיר</button><button type="button" data-v="2">חלול</button><button type="button" data-v="3">סופר</button><button type="button" data-v="4">מתכת</button>
-          </div>
-          <p class="explain">צורת הגל. חם רך, בהיר עשיר, חלול כמו קלרינט. סופר: חמישה מסורים מעט מכוונים זה מזה, הצליל העבה של טראנס. מתכת: גל שמוכפל בגל בגובה ״לא נכון״, ויוצא צלצול מתכתי.</p>
-        </div>
-        <div class="row">
-          <span class="row-lbl">קולות</span>
-          <div class="seg" id="mono" role="group" aria-label="קולות">
-            <button type="button" data-v="0">רבים</button><button type="button" data-v="1">קול אחד</button>
-          </div>
-          <p class="explain">קול אחד: כמו הבס שלך, תו אחד בכל פעם, והגובה גולש מתו לתו. ״גלישה״ קובעת כמה לאט.</p>
-        </div>
-        <div class="row">
-          <span class="row-lbl">אקורד</span>
-          <div class="seg" id="chord" role="group" aria-label="אקורד">
-            <button type="button" data-v="one">תו אחד</button><button type="button" data-v="min">מינורי</button><button type="button" data-v="maj">מז׳ורי</button><button type="button" data-v="sus">תלוי</button><button type="button" data-v="m7">שביעית</button><button type="button" data-v="oct">אוקטבות</button>
-          </div>
-          <p class="explain">נגיעה אחת מנגנת כמה תווים. מינורי אפל, מז׳ורי בהיר, תלוי פתוח ומרחף, שביעית רך וג׳אזי.</p>
-        </div>
-      </div>
+      <div class="opt"><span class="opt-lbl">צורה</span>
+        <div class="seg" id="shape" role="group" aria-label="צורת גל"><button type="button" data-v="0">חם</button><button type="button" data-v="1">בהיר</button><button type="button" data-v="2">חלול</button><button type="button" data-v="3">סופר</button><button type="button" data-v="4">מתכת</button></div>
+        <p class="explain">חם רך, בהיר עשיר, חלול כמו קלרינט. סופר: חמישה מסורים מעט מכוונים זה מזה, הצליל העבה של טראנס. מתכת: גל שמוכפל בגל בגובה ״לא נכון״, ויוצא צלצול.</p></div>
+      <div class="opt"><span class="opt-lbl">קולות</span>
+        <div class="seg" id="mono" role="group" aria-label="קולות"><button type="button" data-v="0">רבים</button><button type="button" data-v="1">קול אחד</button></div>
+        <p class="explain">קול אחד: תו אחד בכל פעם, והגובה גולש מתו לתו, כמו בבס שלך. ״גלישה״ קובעת כמה לאט.</p></div>
+      <div class="opt"><span class="opt-lbl">אקורד</span>
+        <div class="seg" id="chord" role="group" aria-label="אקורד"><button type="button" data-v="one">תו</button><button type="button" data-v="min">מינורי</button><button type="button" data-v="maj">מז׳ורי</button><button type="button" data-v="sus">תלוי</button><button type="button" data-v="m7">שביעית</button><button type="button" data-v="oct">אוקטבות</button></div>
+        <p class="explain">נגיעה אחת מנגנת כמה תווים. מינורי אפל, מז׳ורי בהיר, תלוי פתוח ומרחף, שביעית רך וג׳אזי.</p></div>
     </div>
 
-    <div class="pane" data-pane="dirt" hidden>
+    <div class="pane scroll-y" data-pane="dirt" hidden>
       <div class="knobs" id="knobs-dirt"></div>
-      <p class="explain show">הסדר כמו בשרשרת דוושות: הצליל עובר במסנן, אחר כך בלכלוך, בבוץ ובצבע, ובסוף במתכת.</p>
+      <p class="explain">כמו שרשרת דוושות: הצליל עובר במסנן, אחר כך בלכלוך, בבוץ ובצבע, ובסוף במתכת.</p>
     </div>
 
-    <div class="pane" data-pane="time" hidden>
+    <div class="pane scroll-y" data-pane="time" hidden>
       <div class="knobs" id="knobs-time"></div>
-      <div class="rows">
-        <div class="row">
-          <span class="row-lbl">קצב</span>
-          <div class="bpm" dir="ltr"><button type="button" class="pill sq" id="bpmDown" aria-label="להאט">−</button><span id="bpm" class="bpmv">128</span><button type="button" class="pill sq" id="bpmUp" aria-label="להאיץ">+</button><button type="button" class="pill" id="tap">הקש</button></div>
-          <p class="explain">כוון לאותו מספר כמו בתופים. ההשהיה, השער והארפג׳יאטור ננעלים על הקצב הזה. ״הקש״: גע בקצב של הקיק ארבע פעמים.</p>
-        </div>
-        <div class="row">
-          <span class="row-lbl">ארפג׳יו</span>
-          <div class="seg" id="arp" role="group" aria-label="ארפג׳יאטור">
-            <button type="button" data-v="off">כבוי</button><button type="button" data-v="up">עולה</button><button type="button" data-v="down">יורד</button><button type="button" data-v="updown">הלוך וחזור</button><button type="button" data-v="rand">אקראי</button>
-          </div>
-          <div class="seg" id="arpRate" role="group" aria-label="מהירות">
-            <button type="button" data-v="1">1/16</button><button type="button" data-v="2">1/8</button>
-          </div>
-          <p class="explain">מפרק את האקורד שאתה מחזיק לתווים שרצים בקצב. עם ״החזקה״ הוא ממשיך לבד, והידיים פנויות לכפתורים.</p>
-        </div>
-        <div class="row">
-          <span class="row-lbl">שער</span>
-          <div class="seg" id="gate" role="group" aria-label="שער טראנס">
-            <button type="button" data-v="off">כבוי</button><button type="button" data-v="trance">טראנס</button><button type="button" data-v="pulse">פעימה</button><button type="button" data-v="half">שמיניות</button>
-          </div>
-          <p class="explain">חותך את הצליל לפי תבנית של 16 צעדים, כמו הסיקוונסר של התופים. שטיח ארוך הופך לקצב ״מגמגם״ של טראנס.</p>
-        </div>
-      </div>
+      <div class="opt"><span class="opt-lbl">קצב</span>
+        <div class="bpm" dir="ltr"><button type="button" class="btn sq" id="bpmDown" aria-label="להאט">−</button><span id="bpm" class="bpmv">128</span><button type="button" class="btn sq" id="bpmUp" aria-label="להאיץ">+</button><button type="button" class="btn" id="tap">הקש</button></div>
+        <p class="explain">אותו מספר כמו בתופים. ההשהיה, השער והארפג׳יו ננעלים עליו. ״הקש״: ארבע נגיעות בקצב של הקיק.</p></div>
+      <div class="opt"><span class="opt-lbl">ארפג׳יו</span>
+        <div class="seg" id="arp" role="group" aria-label="ארפג׳יאטור"><button type="button" data-v="off">כבוי</button><button type="button" data-v="up">עולה</button><button type="button" data-v="down">יורד</button><button type="button" data-v="updown">הלוך וחזור</button><button type="button" data-v="rand">אקראי</button></div>
+        <div class="seg" id="arpRate" role="group" aria-label="מהירות"><button type="button" data-v="1">1/16</button><button type="button" data-v="2">1/8</button></div>
+        <p class="explain">מפרק את האקורד שאתה מחזיק לתווים רצים בקצב. עם ״החזקה״ הוא ממשיך לבד.</p></div>
+      <div class="opt"><span class="opt-lbl">שער</span>
+        <div class="seg" id="gate" role="group" aria-label="שער"><button type="button" data-v="off">כבוי</button><button type="button" data-v="trance">טראנס</button><button type="button" data-v="pulse">פעימה</button><button type="button" data-v="half">שמיניות</button></div>
+        <p class="explain">חותך את הצליל לפי תבנית של 16 צעדים. שטיח ארוך הופך לקצב מגמגם של טראנס.</p></div>
     </div>
   </section>
 </main>
 
-<footer class="kbd-area">
-  <div class="kbd-bar">
-    <button class="pill" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
-    <span class="oct" id="oct">אוקטבה 3</span>
-    <button class="pill" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
+<footer class="keys">
+  <div class="kbar">
+    <div class="grp" dir="ltr"><button class="btn sq" id="octDown" type="button" aria-label="אוקטבה למטה">−</button><span class="oct" id="oct">3</span><button class="btn sq" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button></div>
     <span class="chordname" id="chordname" aria-live="polite"></span>
     <span class="sp"></span>
-    <button class="pill hold" id="hold" type="button" aria-pressed="false">החזקה</button>
     <span class="meter" aria-hidden="true"><span id="meter"></span></span>
-    <button class="pill" id="panic" type="button">שקט</button>
-    <button class="pill sq" id="reset" type="button" aria-label="אתחול הצליל" title="אתחול הצליל">↻</button>
+    <button class="btn hold" id="hold" type="button" aria-pressed="false">החזקה</button>
+    <button class="btn" id="panic" type="button">שקט</button>
+    <button class="btn sq" id="reset" type="button" aria-label="אתחול הצליל" title="אתחול הצליל">↻</button>
   </div>
   <div class="kbd" id="kbd" dir="ltr" aria-label="מקלדת"></div>
 </footer>
 
+</div>
+
 <div class="start" id="start">
   <div class="start-in">
+    <span class="logo big" aria-hidden="true"></span>
     <h2>מכונת אווירות</h2>
-    <p>סינתיסייזר שמנגן כמה תווים יחד, עם הד, השהיה ומשטח מגע. גע במקלדת, החלק אצבע על המשטח, ובנה צלילים.</p>
+    <p>שטיחים, אסיד עבה, מתכת ובוץ. מקלדת, משטח מגע, ארפג׳יו ושער טראנס.</p>
     <button class="go" id="go" type="button">▶ התחל לנגן</button>
-    <small>אין צליל? הרם עוצמה, ובדוק שהמכשיר לא במצב שקט.</small>
+    <small>אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</small>
     <div class="install" id="install" hidden>
       <b>להתקנה כאפליקציה</b>
       <ol><li>גע בכפתור השיתוף של ספארי (ריבוע עם חץ למעלה).</li><li>בחר ״הוספה למסך הבית״.</li><li>פתח את ״אווירות״ מהמסך הבית.</li></ol>
@@ -134,7 +109,7 @@
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div class="recdone" id="recdone" hidden><span>ההקלטה מוכנה</span><a id="recfile" class="pill" download>שמור קובץ</a><button type="button" class="pill" id="recshare">שתף</button><button type="button" class="pill sq" id="recx" aria-label="סגירה">✕</button></div>
+<div class="recdone" id="recdone" hidden><span>ההקלטה מוכנה</span><a id="recfile" class="btn" download>שמור קובץ</a><button type="button" class="btn" id="recshare">שתף</button><button type="button" class="btn sq" id="recx" aria-label="סגירה">✕</button></div>
 
 <script src="engine.js"></script>
 <script src="app.js"></script>

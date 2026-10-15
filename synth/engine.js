@@ -25,7 +25,7 @@ function playbackSession(){
   try{ if(navigator.audioSession && navigator.audioSession.type!=="playback") navigator.audioSession.type="playback"; }catch(e){}
   if(navigator.audioSession) return;
   if(!silentEl){ silentEl=document.createElement("audio"); silentEl.setAttribute("playsinline",""); silentEl.loop=true; silentEl.src=silentWav(); }
-  var pr=silentEl.play(); if(pr&&pr.catch) pr.catch(function(){});
+  if(silentEl.paused){ var pr=silentEl.play(); if(pr&&pr.catch) pr.catch(function(){}); }
 }
 
 /* ---- graph ---- */
@@ -105,26 +105,23 @@ function reset(){
   start(); if(wasClock) setClock(true);
   return !!ctx;
 }
+var lastTouch=0;
 function watchdog(){
-  if(!ctx) return;
+  if(!ctx||document.hidden) return;
   var lv=level();
   if(lv<0 && Date.now()-health.last>3000){ health.last=Date.now(); reset(); if(window.Engine.onReset) window.Engine.onReset("נמצאה תקלה בצליל, הצליל אותחל"); return; }
-  if(ctx.state==="interrupted"||ctx.state==="suspended"){ health.bad++; try{ ctx.resume(); }catch(e){} }
-  else health.bad=0;
+  if(ctx.state!=="running"){
+    try{ ctx.resume(); }catch(e){}
+    if(Date.now()-lastTouch<8000) health.bad++; else health.bad=0;
+    if(health.bad>=3 && Date.now()-health.last>10000){ health.bad=0; health.last=Date.now(); reset(); if(window.Engine.onReset) window.Engine.onReset("הצליל הופעל מחדש. גע שוב במקלדת"); }
+  } else health.bad=0;
 }
 setInterval(watchdog,1000);
 function start(){
   if(!AC) return false;
   playbackSession();
   if(!ctx) build();
-  if(ctx.state!=="running"){
-    try{ var r=ctx.resume(); if(r&&r.catch) r.catch(function(){}); }catch(e){}
-    // iOS sometimes refuses to wake an old context. If it is still asleep shortly after a tap, start a fresh one.
-    var c0=ctx; setTimeout(function(){
-      if(ctx===c0 && ctx.state!=="running" && !document.hidden && Date.now()-health.last>6000){
-        health.last=Date.now(); reset(); if(window.Engine.onReset) window.Engine.onReset("הצליל הופעל מחדש. גע שוב במקלדת");
-      } },700);
-  }
+  if(ctx.state!=="running"){ try{ var r=ctx.resume(); if(r&&r.catch) r.catch(function(){}); }catch(e){} }
   if(!unlocked){ try{ var s=ctx.createBufferSource(); s.buffer=ctx.createBuffer(1,1,22050); s.connect(ctx.destination); s.start(0); unlocked=true; }catch(e){} }
   return true;
 }
@@ -198,12 +195,17 @@ function filterHit(t){
   var amt=P.env*4200; N.filter.detune.cancelScheduledValues(t); N.filter.detune.setValueAtTime(amt,t); N.filter.detune.setTargetAtTime(0,t,0.05+P.release*0.2);
 }
 function tuneComb(midi,t){ var per=1/hz(midi), d=per*Math.max(1,Math.ceil(0.004/per)); N.comb.delayTime.setTargetAtTime(Math.min(0.09,d),t,0.01); }
-var seq=0, mono=null, monoStack=[], MAXV=10;
+var seq=0, mono=null, monoStack=[], MAXOSC=64;
+function oscCount(){ var n=0; Object.keys(voices).forEach(function(k){ n+=voices[k].oscs.length; }); return n; }
 function steal(t){
-  var ids=Object.keys(voices); if(ids.length<MAXV) return;
+  var need=(P.shape===3?6:3), guard=0;
+  while(oscCount()+need>MAXOSC && guard++<20) stealOne(t);
+}
+function stealOne(t){
+  var ids=Object.keys(voices); if(!ids.length) return;
   ids.sort(function(a,b){ var A=voices[a],B=voices[b]; return (A.stopping===B.stopping)?A.t0-B.t0:(A.stopping?-1:1); });
   var victim=voices[ids[0]]; if(!victim) return;
-  try{ victim.out.gain.cancelScheduledValues(t); victim.out.gain.setTargetAtTime(0,t,0.008); victim.oscs.forEach(function(o){ try{ o.node.stop(t+0.05); }catch(e){} }); }catch(e){}
+  try{ victim.out.gain.cancelScheduledValues(t); victim.out.gain.setTargetAtTime(0,t,0.02); victim.oscs.forEach(function(o){ try{ o.node.stop(t+0.12); }catch(e){} }); }catch(e){}
   setTimeout(function(){ try{ victim.out.disconnect(); }catch(e){} },300);
   if(victim===mono){ mono=null; monoStack=[]; }
   delete voices[ids[0]];
@@ -227,8 +229,10 @@ function noteOnAt(midi,t){
 function release(v,t,key){
   if(!v||v.stopping) return; v.stopping=true;
   t=Math.max(t,ctx.currentTime); var r=releaseSec(P.release);
-  var el=t-v.t0, cur=el<v.a? v.peak*Math.max(0,el/v.a) : v.peak*(0.8+0.2*Math.exp(-(el-v.a)/0.6));
-  v.out.gain.cancelScheduledValues(t); v.out.gain.setValueAtTime(cur,t); v.out.gain.setTargetAtTime(0,t,r/4);
+  var gp=v.out.gain;
+  if(gp.cancelAndHoldAtTime){ gp.cancelAndHoldAtTime(t); }
+  else { var el=t-v.t0, cur=el<v.a? v.peak*Math.max(0,el/v.a) : v.peak*(0.8+0.2*Math.exp(-(el-v.a)/0.6)); gp.cancelScheduledValues(t); gp.setValueAtTime(cur,t); }
+  gp.setTargetAtTime(0,t,r/4);
   var end=t+r*1.6+0.05; v.oscs.forEach(function(o){ try{ o.node.stop(end); }catch(e){} });
   setTimeout(function(){ try{ v.out.disconnect(); }catch(e){} if(voices[key]===v) delete voices[key]; },(end-ctx.currentTime)*1000+200);
 }
@@ -276,7 +280,8 @@ function setClock(running,cb,gate){
 }
 
 function safe(fn,fallback){ return function(){ try{ return fn.apply(null,arguments); }catch(e){ if(window.console) console.warn("engine",e); return fallback; } }; }
-window.Engine={P:P,set:safe(set),start:safe(start,false),level:level,reset:reset,
+window.Engine={P:P,set:safe(set),start:safe(start,false),level:level,reset:reset,touched:function(){ lastTouch=Date.now(); },
+  live:function(){ return Object.keys(voices).filter(function(k){ return !voices[k].stopping; }).length; },
   recStream:function(){ start(); return N.rec?N.rec.stream:null; },
   noteOn:safe(function(m){ return noteOnAt(m,0); },null), noteOff:safe(function(id){ noteOffAt(id,0); }),
   noteOnAt:safe(noteOnAt,null), noteOffAt:safe(noteOffAt), allOff:safe(allOff), sounding:safe(sounding,{}), setClock:safe(setClock), gates:GATES,
