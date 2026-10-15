@@ -1,278 +1,12 @@
-/* Sound examples, notebook and glossary for the Claude version. Loaded after app.js. */
+/* Notebook and glossary for the Claude version. Loaded after app.js. */
 (function(){
 "use strict";
-var NOTES="ml2:notes", SOUNDS="ml2:sounds";
+var NOTES="ml2:notes";
 function get(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
 function set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 function list(s){ return (s||"").split(",").map(function(x){return x.trim();}).filter(Boolean); }
 function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
 var NS="http://www.w3.org/2000/svg";
-
-/* ---------- clock positions ---------- */
-// value 0..1 across the knob's travel: fully left (7) = 0, 12 = 0.5, fully right (5) = 1
-function hourToV(h){ var a=h===12?0:(h>=7?(h-12)*30:h*30); return (a+150)/300; }
-function vToText(v){
-  var h=Math.round((v*300-150)/30);
-  if(h<=-5) return "עד הסוף שמאלה"; if(h>=5) return "עד הסוף ימינה";
-  return "שעה "+(h===0?12:(h<0?12+h:h));
-}
-function dialSVG(v){
-  var a=(v*300-150)*Math.PI/180, x=(50+26*Math.sin(a)).toFixed(1), y=(50-26*Math.cos(a)).toFixed(1);
-  function p(d){ var r=d*Math.PI/180; return (50+42*Math.sin(r)).toFixed(1)+" "+(50-42*Math.cos(r)).toFixed(1); }
-  return '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M'+p(-150)+' A42 42 0 1 1 '+p(150)+'" fill="none" stroke="var(--line)" stroke-width="5" stroke-linecap="round"/>'+
-    '<circle cx="50" cy="50" r="28" fill="var(--surface)" stroke="var(--muted)" stroke-width="2.5"/>'+
-    '<line x1="50" y1="50" x2="'+x+'" y2="'+y+'" stroke="var(--pointer)" stroke-width="6" stroke-linecap="round"/></svg>';
-}
-
-/* ---------- the little bass synth ---------- */
-var Audio=(function(){
-  var ctx=null, out=null, noise=null, timer=null, playing=null, onStop=null;
-  var silentEl=null, unlocked=false;
-  // A short silent WAV, used to move iOS into "playback" audio so the ring/silent switch does not mute us.
-  function silentWav(){
-    var n=1600, buf=new Uint8Array(44+n), dv=new DataView(buf.buffer);
-    function str(o,t){ for(var i=0;i<t.length;i++) buf[o+i]=t.charCodeAt(i); }
-    str(0,"RIFF"); dv.setUint32(4,36+n,true); str(8,"WAVE"); str(12,"fmt ");
-    dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
-    dv.setUint32(24,8000,true); dv.setUint32(28,8000,true); dv.setUint16(32,1,true); dv.setUint16(34,8,true);
-    str(36,"data"); dv.setUint32(40,n,true); for(var i=0;i<n;i++) buf[44+i]=128;
-    var b=""; for(var j=0;j<buf.length;j++) b+=String.fromCharCode(buf[j]);
-    return "data:audio/wav;base64,"+btoa(b);
-  }
-  function iosPlayback(){
-    try{ if(navigator.audioSession && navigator.audioSession.type!=="playback") navigator.audioSession.type="playback"; }catch(e){}
-    if(navigator.audioSession) return;           // newer iOS: the line above is enough
-    if(!silentEl){ silentEl=document.createElement("audio"); silentEl.setAttribute("playsinline",""); silentEl.setAttribute("x-webkit-airplay","deny");
-      silentEl.preload="auto"; silentEl.loop=true; silentEl.src=silentWav(); }
-    var pr=silentEl.play(); if(pr&&pr.catch) pr.catch(function(){});
-  }
-  function ac(){
-    iosPlayback();
-    if(!ctx){
-      var C=window.AudioContext||window.webkitAudioContext; if(!C) return null;
-      ctx=new C(); out=ctx.createGain(); out.gain.value=0.5;
-      var comp=ctx.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=6;
-      out.connect(comp); comp.connect(ctx.destination);
-      var len=ctx.sampleRate; noise=ctx.createBuffer(1,len,ctx.sampleRate);
-      var d=noise.getChannelData(0); for(var i=0;i<len;i++) d[i]=Math.random()*2-1;
-    }
-    if(ctx.state!=="running"){ try{ var r=ctx.resume(); if(r&&r.catch) r.catch(function(){}); }catch(e){} }
-    if(!unlocked){   // iOS starts the audio only after something plays inside a tap
-      try{ var sb=ctx.createBufferSource(); sb.buffer=ctx.createBuffer(1,1,22050); sb.connect(ctx.destination); sb.start(0); unlocked=true; }catch(e){}
-    }
-    return ctx;
-  }
-  function running(){ return !!ctx && ctx.state==="running"; }
-  function hz(key){ return 110*Math.pow(2,(key-1)/12); }          // key 1 = A2
-  function cutHz(v){ return 45*Math.pow(2,v*8.2); }                // ~45 Hz to ~13 kHz
-  function att(v){ return 0.002+v*v*1.2; }
-  function dec(v){ return 0.03+v*v*2.2; }
-  function res(v){ return 0.7+Math.pow(v,1.4)*24; }                 // resonance, in dB
-
-  // One mono voice that stays alive for the whole loop, so slides can glide.
-  function makeVoice(p){
-    var c=ac(), o=c.createOscillator(), f=c.createBiquadFilter(), g=c.createGain();
-    o.type=p.wave==="square"?"square":"sawtooth"; f.type="lowpass"; g.gain.value=0;
-    o.connect(f); f.connect(g); g.connect(out); o.start();
-    return {o:o,f:f,g:g};
-  }
-  function trigger(v,p,t,key,glideFrom,stepDur){
-    var a=att(p.attack), d=dec(p.decay), base=cutHz(p.cutoff), top=Math.min(18000,base*Math.pow(2,p.eg*5.5));
-    v.o.type=p.wave==="square"?"square":"sawtooth";
-    v.f.Q.setValueAtTime(res(p.peak),t);
-    if(glideFrom){ v.o.frequency.setTargetAtTime(hz(key),t,Math.max(0.02,stepDur*0.25)); return; }
-    v.o.frequency.cancelScheduledValues(t); v.o.frequency.setValueAtTime(hz(key),t);
-    v.f.frequency.cancelScheduledValues(t); v.f.frequency.setValueAtTime(base,t);
-    v.f.frequency.linearRampToValueAtTime(top,t+a); v.f.frequency.setTargetAtTime(base,t+a,d/3);
-    v.g.gain.cancelScheduledValues(t); v.g.gain.setValueAtTime(0,t);
-    v.g.gain.linearRampToValueAtTime(p.ampeg===false?0.9:1,t+a);
-    if(p.ampeg===false) v.g.gain.setTargetAtTime(0.9,t+a,0.05); else v.g.gain.setTargetAtTime(0,t+a,d/3);
-  }
-  function release(v,t){ v.g.gain.cancelScheduledValues(t); v.g.gain.setTargetAtTime(0,t,0.015); }
-
-  function drum(kind,t){
-    var c=ctx;
-    if(kind==="kick"){
-      var o=c.createOscillator(), g=c.createGain(); o.type="sine";
-      o.frequency.setValueAtTime(160,t); o.frequency.exponentialRampToValueAtTime(45,t+0.09);
-      g.gain.setValueAtTime(1.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.32);
-      o.connect(g); g.connect(out); o.start(t); o.stop(t+0.35); return;
-    }
-    var s=c.createBufferSource(), fl=c.createBiquadFilter(), g2=c.createGain(); s.buffer=noise;
-    var len={clap:0.18,closed:0.05,open:0.32}[kind]||0.05;
-    if(kind==="clap"){ fl.type="bandpass"; fl.frequency.value=1200; fl.Q.value=1.2;
-      g2.gain.setValueAtTime(0,t); [0,0.012,0.024].forEach(function(o){ g2.gain.setValueAtTime(0.9,t+o); g2.gain.setTargetAtTime(0.15,t+o+0.003,0.004); });
-      g2.gain.setTargetAtTime(0,t+0.03,0.05);
-    } else { fl.type="highpass"; fl.frequency.value=7000; g2.gain.setValueAtTime(0.35,t); g2.gain.setTargetAtTime(0,t+0.005,len/3); }
-    s.connect(fl); fl.connect(g2); g2.connect(out); s.start(t); s.stop(t+len+0.3);
-  }
-
-  // pattern: {steps:[{key|null, slide:bool, drums:[]}], bpm}
-  function start(pattern,getParams,stopCb){
-    stop(); var c=ac(); if(!c) return false;
-    var stepDur=60/(pattern.bpm||128)/4, i=0, next=c.currentTime+0.06, v=null, prevSlide=false;
-    if(pattern.steps.some(function(s){return s.key;})) v=makeVoice(getParams());
-    playing={v:v}; onStop=stopCb||null;
-    timer=setInterval(function(){
-      while(next<c.currentTime+0.12){
-        var s=pattern.steps[i%pattern.steps.length], p=getParams();
-        if(s.key){ trigger(v,p,next,s.key,prevSlide,stepDur); prevSlide=!!s.slide; }
-        else if(v && s.key===null){ release(v,next); prevSlide=false; }
-        (s.drums||[]).forEach(function(k){ drum(k,next); });
-        if(p.kick && i%4===0 && !(s.drums||[]).length) drum("kick",next);
-        next+=stepDur; i++;
-      }
-    },25);
-    return true;
-  }
-  function stop(){
-    if(timer){ clearInterval(timer); timer=null; }
-    if(playing&&playing.v){ var v=playing.v, t=ctx.currentTime; release(v,t); v.o.stop(t+0.2); }
-    playing=null; if(silentEl){ try{ silentEl.pause(); }catch(e){} } var cb=onStop; onStop=null; if(cb) cb();
-  }
-  function note(key,p){
-    var c=ac(); if(!c) return; var v=makeVoice(p), t=c.currentTime+0.01;
-    trigger(v,p,t,key,false,0.12); v.o.stop(t+att(p.attack)+dec(p.decay)*2+0.3);
-  }
-  return {start:start, stop:stop, note:note, unlock:ac, running:running, available:function(){ return !!(window.AudioContext||window.webkitAudioContext); }};
-})();
-
-var IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-var ACID={wave:"saw",attack:7,decay:10,cutoff:10,peak:2,eg:1,kick:true};
-var LABEL={cutoff:"CUTOFF",peak:"PEAK",eg:"CUTOFF EG INT",decay:"DECAY/RELEASE",attack:"ATTACK"};
-var ORDER=["attack","decay","eg","peak","cutoff"];   // left to right, as on the bass panel
-function parseSet(s){
-  var o={}; Object.keys(ACID).forEach(function(k){ o[k]=ACID[k]; });
-  list(s).forEach(function(kv){ var a=kv.split(":"); var k=a[0], val=a[1];
-    if(k==="wave") o.wave=val; else if(k==="kick") o.kick=(val==="1"); else if(k==="ampeg") o.ampeg=(val!=="0"); else o[k]=+val; });
-  return o;
-}
-function toParams(st){
-  return {wave:st.wave, attack:hourToV(st.attack), decay:hourToV(st.decay), cutoff:hourToV(st.cutoff),
-    peak:hourToV(st.peak), eg:hourToV(st.eg), kick:st.kick, ampeg:st.ampeg};
-}
-function stepsFrom(keys,slides,skip){
-  var out=[];
-  keys.forEach(function(k,i){
-    var n=i+1; if(skip.indexOf(n)>-1 || k==="x") return;
-    out.push({key:k==="-"?null:+k, slide:slides.indexOf(n)>-1});
-  });
-  return out;
-}
-var LINE1="1,1,1,13,1,1,13,1,1,1,1,13,1,1,13,1";
-
-/* ---------- synth widget ---------- */
-var widgets=[];
-function stopAll(){ Audio.stop(); }
-function buildWidget(el,i){
-  var st=parseSet(el.dataset.set), ctrls=list(el.dataset.controls), keys=list(el.dataset.keys||LINE1),
-      slides=list(el.dataset.slides==null?"6,14":el.dataset.slides).map(Number), skip=list(el.dataset.skip).map(Number);
-  var useSlides=true, vals={};
-  ctrls.forEach(function(k){ if(LABEL[k]) vals[k]=hourToV(st[k]); });
-  var title=el.dataset.title||"שמע בדפדפן";
-  var h='<div class="sy-head"><span class="sy-ic" aria-hidden="true">🔊</span><b>'+esc(title)+'</b></div>';
-  h+='<div class="sy-row"><button class="sy-play" type="button" id="sy-play-'+i+'">▶ נגן</button>';
-  if(ctrls.indexOf("wave")>-1) h+='<div class="sy-seg" role="group" aria-label="צורת גל"><button type="button" data-wave="saw">מסור</button><button type="button" data-wave="square">מרובע</button></div>';
-  if(ctrls.indexOf("slides")>-1) h+='<button class="sy-tog on" type="button" data-tog="slides">עם גלישות</button>';
-  if(ctrls.indexOf("kick")>-1 || st.kick) h+='<button class="sy-tog'+(st.kick?' on':'')+'" type="button" data-tog="kick">עם קיק</button>';
-  h+='</div>';
-  if(IOS) h+='<p class="sy-hint">אין צליל? הרם את העוצמה בצד המכשיר, ובדוק שהאייפון לא במצב שקט.</p>';
-  var knobs=ORDER.filter(function(k){ return k in vals; });
-  if(knobs.length){
-    h+='<div class="sy-knobs">';
-    knobs.forEach(function(k){
-      h+='<label class="sy-k" for="sy-'+i+'-'+k+'"><span class="kn">'+LABEL[k]+'</span><span class="sy-dial" data-k="'+k+'"></span>'+
-        '<input type="range" min="0" max="1000" id="sy-'+i+'-'+k+'" data-k="'+k+'" dir="ltr" aria-label="'+LABEL[k]+'"><span class="sy-v" data-k="'+k+'"></span></label>';
-    });
-    h+='</div><p class="sy-hint">גרור את הפס מתחת לכפתור. ימינה = עם כיוון השעון.'+(el.dataset.target?' יעד: '+esc(el.dataset.target)+'.':'')+'</p>';
-  }
-  h+='<div class="sy-row sy-foot"><button class="sy-reset" type="button">חזרה להתחלה</button><button class="sy-save" type="button">☆ שמור לפנקס</button><span class="sy-msg" aria-live="polite"></span></div>';
-  el.innerHTML=h;
-
-  var play=el.querySelector(".sy-play"), msg=el.querySelector(".sy-msg");
-  function paintKnob(k){
-    el.querySelector('.sy-dial[data-k="'+k+'"]').innerHTML=dialSVG(vals[k]);
-    el.querySelector('.sy-v[data-k="'+k+'"]').textContent=vToText(vals[k]);
-    el.querySelector('input[data-k="'+k+'"]').value=Math.round(vals[k]*1000);
-  }
-  function paintWave(){ [].forEach.call(el.querySelectorAll("[data-wave]"),function(b){ b.classList.toggle("on",b.dataset.wave===st.wave); b.setAttribute("aria-pressed",b.dataset.wave===st.wave); }); }
-  function reset(){ var s0=parseSet(el.dataset.set); st.wave=s0.wave; st.kick=s0.kick;
-    knobs.forEach(function(k){ vals[k]=hourToV(s0[k]); paintKnob(k); }); paintWave();
-    var kt=el.querySelector('[data-tog="kick"]'); if(kt) kt.classList.toggle("on",!!st.kick);
-    var stg=el.querySelector('[data-tog="slides"]'); if(stg){ useSlides=true; stg.classList.add("on"); } }
-  knobs.forEach(paintKnob); paintWave();
-  [].forEach.call(el.querySelectorAll('input[type=range]'),function(r){
-    r.addEventListener("input",function(){ vals[r.dataset.k]=r.value/1000; paintKnob(r.dataset.k); });
-  });
-  [].forEach.call(el.querySelectorAll("[data-wave]"),function(b){ b.addEventListener("click",function(){ st.wave=b.dataset.wave; paintWave(); }); });
-  [].forEach.call(el.querySelectorAll("[data-tog]"),function(b){ b.addEventListener("click",function(){
-    b.classList.toggle("on"); if(b.dataset.tog==="kick") st.kick=b.classList.contains("on"); else useSlides=b.classList.contains("on"); }); });
-  el.querySelector(".sy-reset").addEventListener("click",reset);
-
-  function params(){ var p=toParams(st); Object.keys(vals).forEach(function(k){ p[k]=vals[k]; }); return p; }
-  var isOn=false;
-  function setOn(on){ isOn=on; play.textContent=on?"■ עצור":"▶ נגן"; play.classList.toggle("on",on); }
-  play.addEventListener("click",function(){
-    if(isOn){ stopAll(); return; }
-    var steps=stepsFrom(keys,useSlides?slides:[],skip);
-    if(!Audio.start({steps:steps,bpm:+(el.dataset.bpm||128)},params,function(){ setOn(false); })){ msg.textContent="הדפדפן הזה לא תומך בשמע."; return; }
-    setOn(true);
-  });
-  el.querySelector(".sy-save").addEventListener("click",function(){
-    var card=el.closest(".card"), t=card&&card.querySelector(".card-head h3"), n=card&&card.querySelector(".card-head .num");
-    var snap={wave:st.wave}; Object.keys(vals).forEach(function(k){ snap[k]=vToText(vals[k]); snap["_"+k]=vals[k]; });
-    var all=get(SOUNDS,[]);
-    all.unshift({t:Date.now(), lesson:document.body.dataset.lesson||"", from:(n?n.textContent+" ":"")+(t?t.textContent:"מעבדת צליל"),
-      keys:keys.join(","), slides:(useSlides?slides:[]).join(","), skip:skip.join(","), set:snap});
-    set(SOUNDS,all.slice(0,60)); msg.textContent="נשמר בפנקס";
-    setTimeout(function(){ msg.textContent=""; },2200);
-  });
-  widgets.push(el);
-}
-
-/* ---------- play buttons on step grids ---------- */
-var DRUMS={"קיק":"kick","קלאפ":"clap","סגור":"closed","פתוח":"open"};
-function addGridPlayers(){
-  [].forEach.call(document.querySelectorAll(".seq"),function(g,i){
-    var box=g.closest(".grid-box")||g, steps=null;
-    if(g.dataset.keys){
-      steps=stepsFrom(list(g.dataset.keys),list(g.dataset.slides).map(Number),list(g.dataset.skip).map(Number));
-    } else if(g.dataset.rows){
-      var rows=JSON.parse(g.dataset.rows), arr=[]; for(var s=1;s<=16;s++) arr.push({key:false,drums:[]});
-      var any=false;
-      rows.forEach(function(r){ var k=DRUMS[r[0]]; if(!k) return; any=true; r[1].forEach(function(n){ arr[n-1].drums.push(k); }); });
-      if(!any) return; steps=arr;
-    }
-    if(!steps) return;
-    var b=document.createElement("button"); b.type="button"; b.className="sy-gridplay"; b.id="gp-"+i;
-    b.textContent=g.dataset.keys?"▶ שמע את הקו":"▶ שמע את המקצב";
-    var on=false;
-    function setOn(x){ on=x; b.textContent=x?"■ עצור":(g.dataset.keys?"▶ שמע את הקו":"▶ שמע את המקצב"); b.classList.toggle("on",x); }
-    b.addEventListener("click",function(){
-      if(on){ stopAll(); return; }
-      var p=toParams(parseSet(g.dataset.keys?"":"kick:0")); if(g.dataset.keys) p.kick=true;
-      if(Audio.start({steps:steps,bpm:128},function(){ return p; },function(){ setOn(false); })) setOn(true);
-    });
-    box.parentNode.insertBefore(b,box.nextSibling);
-  });
-}
-
-/* ---------- tappable keyboard pads ---------- */
-function addPads(){
-  var p=toParams(parseSet("cutoff:12,peak:9,eg:12,decay:11,kick:0"));
-  [].forEach.call(document.querySelectorAll(".pads"),function(box){
-    [].forEach.call(box.querySelectorAll(".pad"),function(pad){
-      var n=+(pad.querySelector(".pn")||{}).textContent; if(!n) return;
-      pad.setAttribute("role","button"); pad.setAttribute("tabindex","0"); pad.classList.add("live");
-      pad.setAttribute("aria-label","נגן קליד "+n);
-      var fired=false;
-      function hit(){ Audio.note(n,p); pad.classList.add("hit"); setTimeout(function(){ pad.classList.remove("hit"); },160); }
-      pad.addEventListener("pointerdown",function(){ fired=false; if(Audio.running()){ fired=true; hit(); } });
-      pad.addEventListener("click",function(){ if(!fired) hit(); fired=false; });
-      pad.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); hit(); } });
-    });
-  });
-}
 
 /* ---------- notes per card ---------- */
 function addNotes(){
@@ -398,31 +132,17 @@ function renderGlossary(root){
 /* ---------- notebook page ---------- */
 var TITLES={"1":"שיעור 1","2":"שיעור 2","3":"שיעור 3"};
 function renderNotebook(root){
-  var sounds=get(SOUNDS,[]), notes=get(NOTES,{});
+  var notes=get(NOTES,{});
   var ids=Object.keys(notes).sort(function(a,b){ var x=a.split(":"),y=b.split(":"); return x[0]===y[0]?parseFloat(x[1])-parseFloat(y[1]):(x[0]<y[0]?-1:1); });
-  var h='<section class="stage"><h2>צלילים ששמרת</h2>';
-  if(!sounds.length) h+='<p class="info">עדיין אין. בכל נגן שמע בשיעורים יש כפתור ״☆ שמור לפנקס״. הצליל נשמר עם מיקומי הכפתורים, ותוכל לנגן אותו כאן ולהעתיק את המיקומים למכשיר.</p>';
-  sounds.forEach(function(s,i){
-    var knobs=ORDER.filter(function(k){ return s.set[k]; });
-    var setStr="wave:"+s.set.wave+","+knobs.map(function(k){ var v=s.set["_"+k], hr=Math.round((v*300-150)/30); hr=hr===0?12:(hr<0?12+hr:hr); return k+":"+hr; }).join(",");
-    h+='<article class="card"><div class="card-head"><h3>'+esc(s.from)+'</h3><small class="nb-date">'+new Date(s.t).toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"})+'</small>'+
-      '<button type="button" class="nb-del" data-i="'+i+'">מחיקה</button></div>'+
-      '<div class="tbl-box"><table><tbody>'+(s.set.wave==="square"?'<tr><td>צורת גל</td><td>מרובע</td></tr>':'')+knobs.map(function(k){ return '<tr><td><kbd>'+LABEL[k]+'</kbd></td><td>'+esc(s.set[k])+'</td></tr>'; }).join("")+'</tbody></table></div>'+
-      '<div class="synth" data-set="'+esc(setStr)+',kick:1" data-controls="'+knobs.join(",")+(knobs.length?",":"")+'wave" data-keys="'+esc(s.keys)+'" data-slides="'+esc(s.slides)+'" data-skip="'+esc(s.skip||"")+'" data-title="נגן את הצליל"></div></article>';
-  });
-  h+='</section><section class="stage"><h2>ההערות שלך</h2>';
+  var h='<section class="stage"><h2>ההערות שלך</h2>';
   if(!ids.length) h+='<p class="info">עדיין אין. בכל כרטיס בשיעורים יש כפתור ״✎ הערה״.</p>';
   ids.forEach(function(id){ var n=notes[id], parts=id.split(":");
     h+='<article class="card"><div class="card-head"><span class="num">'+esc(TITLES[n.lesson]||"")+'</span><h3><a href="lesson-'+esc(n.lesson)+'.html#'+esc(parts[0]+"-"+parts[1].replace(/\./g,"-"))+'">'+esc(n.title||id)+'</a></h3></div><p class="nb-text">'+esc(n.text).replace(/\n/g,"<br>")+'</p></article>'; });
   h+='</section><section class="stage"><h2>גיבוי</h2><article class="card"><p>הפנקס נשמר רק באייפד הזה. כדי לשמור עותק, העתק את הכול והדבק בפתקים או בהודעה לעצמך.</p>'+
     '<div class="sy-row"><button type="button" class="btn" id="nb-copy">העתק את כל הפנקס</button><span class="sy-msg" id="nb-msg" aria-live="polite"></span></div><textarea id="nb-text" class="nb-out" rows="6" readonly hidden></textarea></article></section>';
   root.innerHTML=h;
-  [].forEach.call(root.querySelectorAll(".nb-del"),function(b){ b.addEventListener("click",function(){
-    if(b.dataset.armed){ var all=get(SOUNDS,[]); all.splice(+b.dataset.i,1); set(SOUNDS,all); renderNotebook(root); initWidgets(root); }
-    else { b.dataset.armed="1"; b.textContent="למחוק? גע שוב"; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent="מחיקה"; } },3000); } }); });
   document.getElementById("nb-copy").addEventListener("click",function(){
     var lines=["הפנקס שלי · שיעורי מוזיקה",""];
-    sounds.forEach(function(s){ lines.push("צליל: "+s.from); ORDER.forEach(function(k){ if(s.set[k]) lines.push("  "+LABEL[k]+": "+s.set[k]); }); if(s.set.wave==="square") lines.push("  צורת גל: מרובע"); lines.push(""); });
     ids.forEach(function(id){ var n=notes[id]; lines.push((TITLES[n.lesson]||"")+" · "+(n.title||id)); lines.push("  "+n.text.replace(/\n/g,"\n  ")); lines.push(""); });
     var txt=lines.join("\n"), out=document.getElementById("nb-text"), m=document.getElementById("nb-msg");
     function fallback(){ out.hidden=false; out.value=txt; out.focus(); out.select(); m.textContent="סמן והעתק מהתיבה"; }
@@ -430,16 +150,7 @@ function renderNotebook(root){
   });
 }
 
-/* ---------- init ---------- */
-function initWidgets(root){ [].forEach.call((root||document).querySelectorAll(".synth"),function(el){ if(!el.dataset.ready){ el.dataset.ready="1"; buildWidget(el,widgets.length); } }); }
 var nb=document.getElementById("notebook"); if(nb) renderNotebook(nb);
 var gl=document.getElementById("glossary"); if(gl){ renderGlossary(gl); if(location.hash){ var t=document.getElementById(location.hash.slice(1)); if(t){ t.classList.add("hl"); t.scrollIntoView(); } } }
-if(Audio.available()){ initWidgets(); addGridPlayers(); addPads(); }
-else [].forEach.call(document.querySelectorAll(".synth"),function(el){ el.innerHTML='<p class="info">הדפדפן הזה לא תומך בשמע.</p>'; });
 addNotes(); linkTerms();
-if(Audio.available()){
-  var first=function(){ Audio.unlock(); document.removeEventListener("touchend",first,true); document.removeEventListener("click",first,true); };
-  document.addEventListener("touchend",first,true); document.addEventListener("click",first,true);
-}
-document.addEventListener("visibilitychange",function(){ if(document.hidden) stopAll(); });
 })();
