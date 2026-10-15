@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#07060d">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="כבידה">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>כבידה</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+  <header class="bar top">
+    <h1>כבידה</h1>
+    <div class="grp">
+      <button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button>
+      <span class="num" id="bpmVal">132</span>
+      <button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button>
+    </div>
+    <button class="btn" id="keyBtn" type="button">A מינור</button>
+  </header>
+  <main class="stage" id="stage"><canvas id="cv"></canvas>
+    <div class="hint" id="hint"><b>גע כדי להתחיל</b><span>החזק אצבע = צליל חי (ימינה/שמאלה גובה, למעלה/למטה צבע)</span><span>החלק וזרוק = כדור שמנגן בכל פגיעה בקיר</span><span>כמה אצבעות = אקורד</span></div>
+  </main>
+  <nav class="bar bot">
+    <button class="btn" id="beat" type="button" aria-pressed="false">♥ פעימה</button>
+    <button class="btn" id="tilt" type="button" aria-pressed="false">↯ הטיה</button>
+    <button class="btn" id="sync" type="button" aria-pressed="false">⇄ סנכרון</button>
+    <button class="btn rec" id="rec" type="button" aria-pressed="false">⏺ הקלט</button>
+    <button class="btn" id="clear" type="button">✕ נקה</button>
+  </nav>
+</div>
+<script src="sync.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
