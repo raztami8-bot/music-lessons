@@ -227,25 +227,35 @@ function onHold(el,down0,up){
 function slider(el,o){
   let tid=null, mode=null, x0=0, y0=0;
   const pane=el.closest(".scroll-y");
-  const valAt=x=>{ const r=el.getBoundingClientRect(); return clamp((x-r.left)/r.width,0,1) };
-  const setX=x=>{ let v=valAt(x); if(o.center&&Math.abs(v-.5)<.035) v=.5; o.set(v); paint() };
+  // מחוון אנכי (פיידר) כשהוא גבוה מרוחבו: למעלה = יותר
+  const vert=()=>el.clientHeight>el.clientWidth*1.5;
+  let ly=0;
+  const valAt=x=>{ const r=el.getBoundingClientRect(); return vert()?clamp((r.bottom-ly)/r.height,0,1):clamp((x-r.left)/r.width,0,1) };
+  const setX=(x,y)=>{ if(y!==undefined) ly=y; let v=valAt(x); if(o.center&&Math.abs(v-.5)<.035) v=.5; o.set(v); paint() };
   function paint(){ const v=o.get(); el.style.setProperty("--v",v); if(o.center){ el.style.setProperty("--l",Math.min(v,.5)); el.style.setProperty("--w",Math.abs(v-.5)) }
     el.setAttribute("aria-valuenow",Math.round(v*100)); if(o.show) o.show(v) }
   el.addEventListener("touchstart",e=>{ if(tid!==null) return; const t=e.changedTouches[0]; tid=t.identifier; x0=t.clientX; y0=t.clientY;
     const scrolls=pane&&pane.scrollHeight>pane.clientHeight+2;
-    if(!scrolls){ e.preventDefault(); mode="drag"; el.classList.add("drag"); setX(t.clientX) } else mode="wait" },{passive:false});
+    if(!scrolls){ e.preventDefault(); mode="drag"; el.classList.add("drag"); setX(t.clientX,t.clientY) } else mode="wait" },{passive:false});
   el.addEventListener("touchmove",e=>{ for(const t of e.changedTouches){ if(t.identifier!==tid) continue;
-    if(mode==="wait"){ const dx=t.clientX-x0, dy=t.clientY-y0; if(Math.abs(dx)>7||Math.abs(dy)>7){ if(Math.abs(dx)>Math.abs(dy)&&e.cancelable){ mode="drag"; el.classList.add("drag") } else mode="scroll" } }
-    if(mode==="drag"){ e.preventDefault(); setX(t.clientX) } } },{passive:false});
-  const tEnd=e=>{ for(const t of e.changedTouches){ if(t.identifier!==tid) continue; if(mode==="wait"&&e.type==="touchend") setX(t.clientX); tid=null; mode=null; el.classList.remove("drag"); if(o.done) o.done() } };
+    if(mode==="wait"){ const dx=t.clientX-x0, dy=t.clientY-y0; if(Math.abs(dx)>7||Math.abs(dy)>7){ if((vert()||Math.abs(dx)>Math.abs(dy))&&e.cancelable){ mode="drag"; el.classList.add("drag") } else mode="scroll" } }
+    if(mode==="drag"){ e.preventDefault(); setX(t.clientX,t.clientY) } } },{passive:false});
+  const tEnd=e=>{ for(const t of e.changedTouches){ if(t.identifier!==tid) continue; if(mode==="wait"&&e.type==="touchend") setX(t.clientX,t.clientY); tid=null; mode=null; el.classList.remove("drag"); if(o.done) o.done() } };
   el.addEventListener("touchend",tEnd); el.addEventListener("touchcancel",tEnd);
-  el.addEventListener("mousedown",e=>{ if(fromTouch()||e.button!==0) return; e.preventDefault(); el.classList.add("drag"); setX(e.clientX);
-    const mm=ev=>setX(ev.clientX), mu=()=>{ el.classList.remove("drag"); window.removeEventListener("mousemove",mm); window.removeEventListener("mouseup",mu); if(o.done) o.done() };
+  el.addEventListener("mousedown",e=>{ if(fromTouch()||e.button!==0) return; e.preventDefault(); el.classList.add("drag"); setX(e.clientX,e.clientY);
+    const mm=ev=>setX(ev.clientX,ev.clientY), mu=()=>{ el.classList.remove("drag"); window.removeEventListener("mousemove",mm); window.removeEventListener("mouseup",mu); if(o.done) o.done() };
     window.addEventListener("mousemove",mm); window.addEventListener("mouseup",mu) });
   el.addEventListener("keydown",e=>{ const d={ArrowRight:.02,ArrowUp:.02,ArrowLeft:-.02,ArrowDown:-.02}[e.key]; if(d){ e.preventDefault(); o.set(clamp(o.get()+d,0,1)); paint(); if(o.done) o.done() } });
   el.setAttribute("aria-valuemin","0"); el.setAttribute("aria-valuemax","100");
   paint(); return {paint};
 }
+
+/* ================= לוח צליל (נפתח לפי בקשה) ================= */
+const sideEl=$("#side"), soundBtn=$("#soundBtn");
+const soundOpen=()=>!sideEl.hidden;
+function openSound(on){ sideEl.hidden=!on; soundBtn.classList.toggle("on",on); soundBtn.setAttribute("aria-expanded",on) }
+onTap(soundBtn,()=>openSound(!soundOpen()));
+onTap($("#sideClose"),()=>openSound(false));
 
 /* ================= רשת הצעדים ================= */
 const gridEl=$("#grid"), cells=[], rows=[], names=[], mBtns=[], sBtns=[];
@@ -260,7 +270,7 @@ PARTS.forEach((p,pi)=>{
   cells.push([]);
   for(let i=0;i<STEPS;i++){ const c=document.createElement("div"); c.className="st"+(i%4===0?" b":""); c.dataset.pi=pi; c.dataset.i=i; if(i%4===0) c.dataset.n=i+1; const j=i%8; c.style.setProperty("--gc",3+Math.floor(i/4)*5+i%4); c.style.setProperty("--pc",3+Math.floor(j/4)*5+j%4); c.style.setProperty("--pr",1+Math.floor(i/8)); row.appendChild(c); cells[pi].push(c) }
   gridEl.appendChild(row);
-  onTap(nm,()=>{ S.sel=pi; partUI(); save(true); ensureAudio().then(ok=>{ if(ok) audition(pi) }) });
+  onTap(nm,()=>{ if(S.sel===pi&&!soundOpen()) openSound(true); S.sel=pi; partUI(); save(true); ensureAudio().then(ok=>{ if(ok) audition(pi) }) });
   onTap(m,()=>{ const pp=S.parts[p.id]; pp.mute=!pp.mute; mixUI(); save() });
   onTap(s,()=>{ const pp=S.parts[p.id]; pp.solo=!pp.solo; mixUI(); save() });
 });
@@ -333,8 +343,8 @@ onTap($("#clear"),()=>{ killUndo(); const prev=grid().map(r=>r.slice()); S.vars[
 
 /* ================= אנרגיה, מילוי, סווינג, לכלוך, עוצמה ================= */
 const ticks=$("#energy .ticks");
-PARTS.forEach(p=>{ if(!p.th) return; const s=document.createElement("span"); s.style.left=(p.th*100)+"%"; s.style.background=`var(${p.col})`; s.title=p.full||p.name; ticks.appendChild(s) });
-{ const s=document.createElement("span"); s.style.left=(GHOST_TH*100)+"%"; s.style.background="var(--fg)"; s.title="קישוטים"; ticks.appendChild(s) }
+PARTS.forEach(p=>{ if(!p.th) return; const s=document.createElement("span"); s.style.setProperty("--p",p.th); s.style.background=`var(${p.col})`; s.title=p.full||p.name; ticks.appendChild(s) });
+{ const s=document.createElement("span"); s.style.setProperty("--p",GHOST_TH); s.style.background="var(--fg)"; s.title="קישוטים"; ticks.appendChild(s) }
 const energySl=slider($("#energy"),{get:()=>S.energy,set:v=>{ S.energy=v; mixUI(); $("#layers").textContent=layersText() },done:()=>save(),show:()=>{ $("#layers").textContent=layersText() }});
 const sliders={energy:energySl};
 sliders.swing=slider($('.sld[data-key="swing"]'),{get:()=>S.swing,set:v=>{ S.swing=v },done:()=>save(),show:v=>{ $("#o_swing").textContent=Math.round(50+v*25)+"%" }});
@@ -446,7 +456,7 @@ function pickMime(){ if(typeof MediaRecorder==="undefined") return null;
   for(const m of ["audio/mp4","audio/webm;codecs=opus","audio/webm"]){ try{ if(MediaRecorder.isTypeSupported(m)) return m }catch(e){} } return "" }
 const fmtT=sec=>{ sec=Math.max(0,Math.round(fin(sec,0))); return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0") };
 function recUI(){ const b=$("#rec"), on=!!recr; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on);
-  if(on){ const t=(performance.now()-recStart)/1000; b.textContent="⏹ "+fmtT(t); if(t>REC_MAX) stopRec() } else b.textContent=matchMedia("(max-width:700px)").matches?"⏺":"⏺ הקלט";
+  if(on){ const t=(performance.now()-recStart)/1000; b.textContent="⏹ "+fmtT(t); if(t>REC_MAX) stopRec() } else b.textContent="⏺";
   $("#takesBtn").textContent=takes.length?`הקלטות ${takes.length}`:"הקלטות" }
 async function startRec(){
   if(recr||recBusy) return; recBusy=true;
