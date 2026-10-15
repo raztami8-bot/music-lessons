@@ -98,6 +98,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 #wave{width:100%;height:96px;border-radius:10px;background:var(--ink);border:1px solid var(--line);touch-action:none;display:block}
 .presets{display:flex;gap:4px;flex-wrap:wrap}
 .presets .btn{min-height:34px;font-size:14px;flex:1}
+.voicerow .btn{border-style:dashed}
+.voicerow .btn.on{background:var(--rec);border-color:var(--rec);border-style:solid;color:var(--ink)}
 .foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .foot .knob{flex:1;min-width:140px}
 
@@ -255,6 +257,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             <button class="btn" data-preset="square" type="button">ריבוע</button>
             <button class="btn" data-preset="broken" type="button">שבור</button>
           </div>
+          <div class="presets voicerow">
+            <button class="btn" id="voiceMic" type="button">● מהקול שלי</button>
+            <button class="btn" id="voiceFileBtn" type="button">מקובץ קול</button>
+            <input type="file" id="voiceFile" accept="audio/*" hidden>
+          </div>
         </div>
       </div>
 
@@ -293,10 +300,11 @@ const fin=(v,d)=>(typeof v==="number"&&isFinite(v))?v:d;
 const lerp=(a,b,t)=>a+(b-a)*t;
 const N=128, STEPS=16, DEGS=15;
 let toastT=0, toastAct=false, undoTok=0;
-function killUndo(){undoTok++; if(toastAct){toastAct=false;$("#toast").hidden=true}}
-function toast(msg,label,fn){const t=$("#toast");t.replaceChildren();toastAct=!!label;const sp=document.createElement("span");sp.textContent=msg;t.appendChild(sp);
+let toastUndo=false;
+function killUndo(){undoTok++; if(toastAct&&toastUndo){toastAct=false;$("#toast").hidden=true}}
+function toast(msg,label,fn,isUndo){const t=$("#toast");t.replaceChildren();toastAct=!!label;toastUndo=!!isUndo;const sp=document.createElement("span");sp.textContent=msg;t.appendChild(sp);
   if(label){const b=document.createElement("button");b.type="button";b.className="tact";b.textContent=label;
-    const tok=undoTok;b.addEventListener("click",()=>{t.hidden=true;toastAct=false;clearTimeout(toastT);if(tok===undoTok){try{fn()}catch(e){}}});t.appendChild(b)}
+    const tok=undoTok;b.addEventListener("click",()=>{t.hidden=true;toastAct=false;clearTimeout(toastT);if(!isUndo||tok===undoTok){try{fn()}catch(e){}}});t.appendChild(b)}
   t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,label?5000:3200)}
 
 /* ---------- צורות גל ---------- */
@@ -628,7 +636,7 @@ $("#mutate").addEventListener("click",()=>{
 });
 $("#fresh").addEventListener("click",()=>{
   killUndo(); clearDrags(); const prev=S.steps.map(x=>({...x})); S.steps=emptySteps(); save();
-  toast("הטבעת נקייה. גע בה כדי למקם תווים","בטל",()=>{clearDrags();S.steps=prev;save()});
+  toast("הטבעת נקייה. גע בה כדי למקם תווים","בטל",()=>{clearDrags();S.steps=prev;save()},true);
 });
 
 /* ---------- מעבר והטיה ---------- */
@@ -702,11 +710,99 @@ function wavePoint(e){const b=wc.getBoundingClientRect();const idx=clamp(Math.ro
   if(lastIdx<0)arr[idx]=clamp(v,-1,1); else{const a=Math.min(lastIdx,idx),z=Math.max(lastIdx,idx),v0=arr[lastIdx];
     for(let n=a;n<=z;n++){const t=z===a?1:(n-lastIdx)/(idx-lastIdx);arr[n]=clamp(lerp(v0,v,clamp(t,0,1)),-1,1)}}
   lastIdx=idx; drawWave(); if(!waveDirty){waveDirty=true;setTimeout(()=>{waveDirty=false;updateWave(S.edit)},60)}}
-wc.addEventListener("pointerdown",e=>{e.preventDefault();wavePid=e.pointerId;wc.setPointerCapture(e.pointerId);lastIdx=-1;wavePoint(e)});
+wc.addEventListener("pointerdown",e=>{e.preventDefault();killUndo();wavePid=e.pointerId;wc.setPointerCapture(e.pointerId);lastIdx=-1;wavePoint(e)});
 wc.addEventListener("pointermove",e=>{if(e.pointerId===wavePid)wavePoint(e)});
 const waveEnd=e=>{if(e.pointerId!==wavePid)return;wavePid=null;lastIdx=-1;updateWave(S.edit);save()};
 wc.addEventListener("pointerup",waveEnd);wc.addEventListener("pointercancel",waveEnd);
-document.querySelectorAll("[data-preset]").forEach(b=>b.addEventListener("click",()=>{S.worlds[S.edit].wave=presetWave(b.dataset.preset);drawWave();updateWave(S.edit);save()}));
+document.querySelectorAll("[data-preset]").forEach(b=>b.addEventListener("click",()=>{killUndo();S.worlds[S.edit].wave=presetWave(b.dataset.preset);drawWave();updateWave(S.edit);save()}));
+
+/* ---------- הקול הופך לצורת גל ---------- */
+// מוצאים את החלק החזק בהקלטה, מזהים את אורך המחזור שלו, ממצעים כמה מחזורים ודוחסים ל-128 נקודות
+function pcmToWave(data,sr){
+  const n=data.length, W=2048; if(!(n>=W)||!(sr>0)) return null;
+  let best=0,bi=0;
+  for(let i=0;i+W<=n;i+=512){let e=0;for(let k=i;k<i+W;k++)e+=data[k]*data[k];if(e>best){best=e;bi=i}}
+  if(!(Math.sqrt(best/W)>.004)) return {silent:true};
+  const seg=data.subarray(bi,bi+W), H=W/2;
+  const minLag=Math.max(2,Math.floor(sr/700)), maxLag=Math.min(Math.floor(sr/60),H);
+  let e0=0; for(let k=0;k<H;k++) e0+=seg[k]*seg[k];
+  let bestC=0, lag=0; const ncs=new Float32Array(maxLag+1);
+  for(let L=minLag;L<=maxLag;L++){let c=0,e1=0;for(let k=0;k<H;k++){const b=seg[k+L];c+=seg[k]*b;e1+=b*b}
+    const nc=c/Math.sqrt(e0*e1+1e-12); ncs[L]=nc; if(nc>bestC){bestC=nc;lag=L}}
+  for(let L=minLag;L<=maxLag;L++){ if(ncs[L]>=.9*bestC){ while(L<maxLag&&ncs[L+1]>ncs[L]) L++; lag=L; break } } // המחזור הקצר ביותר שמתאים, בלי טעות אוקטבה
+  const voiced=bestC>.5&&lag>0; if(!voiced) lag=Math.min(H,Math.max(minLag,Math.floor(sr/110)));
+  let start=0; for(let k=1;k<W-lag;k++){ if(seg[k-1]<=0&&seg[k]>0){start=k;break} }
+  const cycles=Math.max(1,Math.min(voiced?4:1,Math.floor((W-start-1)/lag)));
+  const out=new Array(N);
+  for(let j=0;j<N;j++){let v=0;for(let c=0;c<cycles;c++){const pos=start+c*lag+j*lag/N, i0=Math.floor(pos), f=pos-i0;
+    v+=seg[Math.min(W-1,i0)]*(1-f)+seg[Math.min(W-1,i0+1)]*f} out[j]=v/cycles}
+  let dc=0; for(const v of out) dc+=v; dc/=N; let pk=0; for(let j=0;j<N;j++){out[j]-=dc; pk=Math.max(pk,Math.abs(out[j]))}
+  if(!(pk>1e-6)) return {silent:true};
+  for(let j=0;j<N;j++) out[j]=clamp(out[j]/pk,-1,1);
+  for(let j=0;j<6;j++){const t=(j+1)/7; out[N-6+j]=lerp(out[N-6+j],out[0],t)} // סגירת הלולאה בלי קליק
+  return {wave:out,voiced};
+}
+function applyVoice(pcm,sr){
+  if(!pcm||!pcm.length){ toast("הצליל נקטע באמצע. נסה שוב"); return }
+  const r=pcmToWave(pcm,sr);
+  if(!r){ toast("ההקלטה קצרה מדי. נסה שוב"); return }
+  if(r.silent){ toast("לא שמעתי כלום. נסה שוב, קרוב יותר למיקרופון"); return }
+  const w=S.edit, prev=S.worlds[w].wave.slice();
+  S.worlds[w].wave=r.wave; drawWave(); updateWave(w); save(); audition(0);
+  toast(`הקול שלך הוא עכשיו צורת הגל של ${w==="deep"?"עולם העומק":"עולם החומצה"}`,"בטל",()=>{S.worlds[w].wave=prev; if(S.edit===w) drawWave(); updateWave(w); save()},true);
+}
+async function captureMic(sec){
+  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  let src=null, proc=null, mute=null;
+  try{
+    src=ctx.createMediaStreamSource(stream); proc=ctx.createScriptProcessor(2048,1,1); mute=ctx.createGain(); mute.gain.value=0;
+    const buf=new Float32Array(Math.ceil(ctx.sampleRate*sec)); let w=0;
+    await new Promise(res=>{ const to=setTimeout(res,(sec+2)*1000);
+      proc.onaudioprocess=e=>{ if(w>=buf.length) return; const d=e.inputBuffer.getChannelData(0); const k=Math.min(d.length,buf.length-w); buf.set(d.subarray(0,k),w); w+=k; if(w>=buf.length){clearTimeout(to);res()} };
+      src.connect(proc); proc.connect(mute); mute.connect(ctx.destination) });
+    return buf.subarray(0,w);
+  } finally {
+    stream.getTracks().forEach(t=>{try{t.stop()}catch(e){}});
+    for(const nd of [src,proc,mute]) if(nd) try{nd.disconnect()}catch(e){}
+    if(proc) proc.onaudioprocess=null;
+  }
+}
+let voiceBusy=false;
+function setSession(type){ try{ if(navigator.audioSession) navigator.audioSession.type=type }catch(e){} }
+$("#voiceMic").addEventListener("click",async()=>{
+  if(voiceBusy) return;
+  const b=$("#voiceMic");
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ toast("אין כאן גישה למיקרופון. אפשר לבחור קובץ קול","קובץ",()=>$("#voiceFile").click()); return }
+  if(recr){ toast("עצור קודם את ההקלטה, ואז הקלט את הקול"); return }
+  voiceBusy=true; b.classList.add("on"); b.textContent="מקשיב... אמור ״אההה״";
+  let muted=false;
+  try{
+    if(!await ensureAudio()) throw new Error("audio");
+    E.master.gain.setTargetAtTime(0,ctx.currentTime,.03); lastP.delete(E.master.gain); muted=true; // שקט לרגע, כדי שהמיקרופון ישמע רק אותך
+    setSession("play-and-record");
+    const pcm=await captureMic(1.6);
+    applyVoice(pcm,ctx.sampleRate);
+  } catch(e){
+    if(e&&(e.name==="NotAllowedError"||e.name==="SecurityError"||e.name==="NotFoundError")) toast("אין כאן גישה למיקרופון. אפשר לבחור קובץ קול","קובץ",()=>$("#voiceFile").click());
+    else toast("לא הצלחתי להקליט מהמיקרופון");
+  } finally {
+    setSession("playback"); if(ctx) ctx.resume().catch(()=>{});
+    if(muted){ lastP.delete(E.master.gain); applyContinuous() }
+    setTimeout(()=>{ if(ctx&&ctx.state!=="running") toast("הצליל נעצר אחרי המיקרופון","המשך",()=>{ ctx.resume().catch(()=>{}) }) },350);
+    voiceBusy=false; b.classList.remove("on"); b.textContent="● מהקול שלי";
+  }
+});
+$("#voiceFileBtn").addEventListener("click",()=>$("#voiceFile").click());
+$("#voiceFile").addEventListener("change",async e=>{
+  const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f) return;
+  if(f.size>8*1024*1024){ toast("הקובץ גדול מדי. בחר קטע קצר יותר"); return }
+  try{
+    if(!await ensureAudio()) throw new Error("audio");
+    const ab=await f.arrayBuffer();
+    const ab2=await new Promise((res,rej)=>{ try{ const p=ctx.decodeAudioData(ab,res,rej); if(p&&p.then) p.then(res,rej) }catch(err){ rej(err) } });
+    const ch=ab2.getChannelData(0); applyVoice(ch.subarray(0,Math.min(ch.length,Math.floor(ab2.sampleRate*20))),ab2.sampleRate);
+  } catch(err){ toast("לא הצלחתי לקרוא את קובץ הקול הזה") }
+});
 
 /* ---------- שורה עליונה ---------- */
 const NOTES=["דו","דו#","רה","רה#","מי","פה","פה#","סול","סול#","לה","לה#","סי"];
@@ -729,7 +825,7 @@ $("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#vo
 $("#play").addEventListener("click",togglePlay);
 let resetArm=0;
 $("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
-  resetArm=0;const keepSteps=S.steps;S=defaults();S.steps=keepSteps;topUI();worldUI();morphUI();if(E){updateWave("deep");updateWave("acid")}applyContinuous();save()});
+  resetArm=0;killUndo();const keepSteps=S.steps;S=defaults();S.steps=keepSteps;topUI();worldUI();morphUI();if(E){updateWave("deep");updateWave("acid")}applyContinuous();save()});
 $("#start").addEventListener("click",async()=>{const ok=await ensureAudio();$("#gate").hidden=true;if(!ok)toast("גע בכפתור הנגינה כדי להפעיל צליל")});
 
 /* ---------- משבצות זיכרון ---------- */
@@ -742,7 +838,7 @@ function slotsUI(){document.querySelectorAll(".slot").forEach(b=>{const i=+b.dat
 function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlot=i; slotsUI();
   const ok=saveSlots();
   if(!ok) toast("השמירה לא נכתבה לדפדפן. היא תחזיק עד שתסגור את הדף");
-  else if(old) toast(`זיכרון ${i+1} הוחלף`,"בטל",()=>{slots[i]=old;saveSlots();if(curSlot===i)curSlot=-1;slotsUI()});
+  else if(old) toast(`זיכרון ${i+1} הוחלף`,"בטל",()=>{slots[i]=old;saveSlots();if(curSlot===i)curSlot=-1;slotsUI()},true);
   else toast(`נשמר בזיכרון ${i+1}`)}
 function loadSlot(i){
   if(!slots[i])return; const v=sanitize(slots[i]); killUndo(); clearDrags();
@@ -802,7 +898,7 @@ function finishRec(r,chunks,dur){
   if(blob.size<2000||dur<1){ toast("ההקלטה קצרה מדי ולא נשמרה"); return }
   const t={id:Date.now()+"-"+Math.floor(Math.random()*1e6),name:`הקלטה ${++takeSeq}`,type,dur,created:Date.now(),blob};
   takes.unshift(t); recUI(); renderTakes();
-  t.saving=dbPut(t).then(ok=>{ toast(ok?`${t.name} נשמרה`:`${t.name} נשמרה עד שתסגור את הדף`,"פתח",openTakes); return ok });
+  t.saving=dbPut(t).then(ok=>{ if(ok&&playId!==t.id) t.blob=null; toast(ok?`${t.name} נשמרה`:`${t.name} נשמרה עד שתסגור את הדף`,"פתח",openTakes); return ok });
 }
 $("#rec").addEventListener("click",()=>{ recr?stopRec():startRec() });
 document.addEventListener("visibilitychange",()=>{ if(document.hidden&&recr) stopRec() }); // יוצאים מהאפליקציה: שומרים את מה שכבר הוקלט
