@@ -99,6 +99,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .presets{display:flex;gap:4px;flex-wrap:wrap}
 .presets .btn{min-height:34px;font-size:14px;flex:1}
 .voicerow .btn{border-style:dashed}
+.ftrow{display:flex;flex-direction:column;gap:4px}
+#ftypes .btn.on{background:var(--accent,var(--deep));border-color:var(--accent,var(--deep));color:var(--ink)}
 .voicerow .btn.on{background:var(--rec);border-color:var(--rec);border-style:solid;color:var(--ink)}
 .foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .foot .knob{flex:1;min-width:140px}
@@ -147,7 +149,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   .side>.card:first-child{grid-column:1;grid-row:1}
   .side>.foot{grid-column:1;grid-row:2;flex-direction:column;align-items:stretch}
   #worldCard{grid-column:2;grid-row:1/span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;align-content:start;gap:10px 14px}
-  #worldCard>.cardhead{grid-column:1/-1}
+  #worldCard>.cardhead,#worldCard>.ftrow{grid-column:1/-1}
 }
 /* אייפד לרוחב: טבעת מצד אחד, הבקרות בשני טורים מהצד השני, בלי גלילה */
 @media (min-width:1000px) and (min-height:700px) and (orientation:landscape){
@@ -247,6 +249,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             <button class="btn tab acid" data-world="acid" type="button">חומצה</button>
           </div>
         </div>
+        <div class="ftrow">
+          <span class="lbl">אופי מסנן</span>
+          <div class="presets" id="ftypes">
+            <button class="btn" data-ft="warm" type="button">חם</button>
+            <button class="btn" data-ft="hollow" type="button">חלול</button>
+            <button class="btn" data-ft="talk" type="button">מדבר</button>
+            <button class="btn" data-ft="metal" type="button">מתכת</button>
+          </div>
+        </div>
         <div class="knobs" id="knobs"></div>
         <div class="wavebox">
           <div class="cardhead"><span class="lbl">צורת הגל: צייר באצבע</span></div>
@@ -326,9 +337,10 @@ function presetWave(kind){
 
 /* ---------- מצב ושמירה ---------- */
 const DEF_WORLDS={
-  deep:{cut:.38,res:.22,env:.32,dec:.55,drv:.12,sub:.75,dly:.22,fb:.35,wave:presetWave("warm")},
-  acid:{cut:.2,res:.86,env:.8,dec:.3,drv:.72,sub:.2,dly:.3,fb:.52,wave:presetWave("saw")}
+  deep:{cut:.38,res:.22,env:.32,dec:.55,drv:.12,sub:.75,dly:.22,fb:.35,ft:"warm",wave:presetWave("warm")},
+  acid:{cut:.2,res:.86,env:.8,dec:.3,drv:.72,sub:.2,dly:.3,fb:.52,ft:"warm",wave:presetWave("saw")}
 };
+const FTYPES=["warm","hollow","talk","metal"];
 const KNOBS=[["cut","מסנן"],["res","תהודה"],["env","מעטפת"],["dec","דעיכה"],["drv","לכלוך"],["sub","בס עמוק"],["dly","הד"],["fb","חזרות"]];
 function emptySteps(){const s=[];for(let i=0;i<STEPS;i++)s.push({on:false,deg:0,acc:false,sl:false});return s}
 function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב נסתר
@@ -346,6 +358,7 @@ function sanitize(o){
     const on=!!q.on; s.steps.push({on,deg:clamp(Math.round(fin(q.deg,0)),0,DEGS-1),acc:on&&!!q.acc,sl:on&&!!q.sl})}
   for(const k of ["deep","acid"]){const src=(o.worlds&&o.worlds[k])||{}; const w={};
     for(const [p] of KNOBS) w[p]=clamp(fin(src[p],DEF_WORLDS[k][p]),0,1);
+    w.ft=FTYPES.includes(src.ft)?src.ft:"warm";
     w.wave=(Array.isArray(src.wave)&&src.wave.length===N)?src.wave.map(v=>clamp(fin(v,0),-1,1)):DEF_WORLDS[k].wave.slice();
     s.worlds[k]=w}
   return s;
@@ -375,6 +388,61 @@ let accStack=0, lastAccT=-9;
 let rise=0, riseHeld=false, dropArmed=false, dirt=0, dirtHeld=false, gateOpen=false, lastPlayedDeg=0;
 const visQ=[]; let curStep=-1, kick=0;
 
+/* ---------- אופי מסנן: ארבעה סוגים, אותן ידיות ---------- */
+const VOWELS=[[300,870,2240],[460,840,2500],[730,1090,2440],[530,1840,2480],[280,2250,2900]]; // או, אוֹ, א, אֶ, אי
+function vowelAt(hz){ const v=clamp(Math.log2(Math.max(hz,1)/80)/6.3,0,1)*(VOWELS.length-1), i=Math.min(VOWELS.length-2,Math.floor(v)), f=v-i;
+  return VOWELS[i].map((x,k)=>lerp(x,VOWELS[i+1][k],f)) }
+function makeUnit(c,type){
+  const nyq=c.sampleRate/2, cl=v=>clamp(fin(v,800),40,nyq*.45), nodes=[];
+  const mk=(kind,ty)=>{ const n=kind==="b"?c.createBiquadFilter():kind==="d"?c.createDelay(.1):c.createGain(); if(ty)n.type=ty; nodes.push(n); return n };
+  const u={type,input:mk("g"),output:mk("g"),pitch:()=>{},release:()=>{}};
+  const glide=(n,t,base,peak,dec)=>{ n.frequency.setTargetAtTime(cl(peak),t,.0015); n.frequency.setTargetAtTime(cl(base),t+.006,dec) };
+  if(type==="hollow"){ // פס צר באמצע
+    const b=mk("b","bandpass"), lp=mk("b","lowpass"); lp.Q.value=0; b.frequency.value=800; lp.frequency.value=2400;
+    u.input.connect(b); b.connect(lp); lp.connect(u.output); u.output.gain.value=2.9;
+    u.env=(t,base,peak,dec)=>{ glide(b,t,base,peak,dec); glide(lp,t,base*3,peak*3,dec) };
+    u.q=(t,qdb)=>b.Q.setTargetAtTime(clamp(1+qdb*.6,.5,18),t,.02);
+  } else if(type==="talk"){ // שלושה פורמנטים של פה: נפתח מ״או״ ל״אי״
+    const gains=[1,.6,.32], bps=gains.map((g,k)=>{ const b=mk("b","bandpass"), gg=mk("g"); gg.gain.value=g; b.frequency.value=VOWELS[2][k]; u.input.connect(b); b.connect(gg); gg.connect(u.output); return b });
+    u.output.gain.value=3;
+    u.env=(t,base,peak,dec)=>{ const fb=vowelAt(base), fp=vowelAt(peak); bps.forEach((b,k)=>glide(b,t,fb[k],fp[k],dec)) };
+    u.q=(t,qdb)=>{ const q=clamp(4+qdb*.45,2,16); bps.forEach(b=>b.Q.setTargetAtTime(q,t,.02)) };
+  } else if(type==="metal"){ // מהדהד בגובה התו
+    const inG=mk("g"), sum=mk("g"), dl=mk("d"), damp=mk("b","lowpass"), fbG=mk("g");
+    inG.gain.value=.5; damp.Q.value=-3; damp.frequency.value=3000; fbG.gain.value=.6; dl.delayTime.value=.01;
+    u.input.connect(inG); inG.connect(sum); sum.connect(dl); dl.connect(damp); damp.connect(fbG); fbG.connect(sum); sum.connect(u.output);
+    u.output.gain.value=.75;
+    u.env=(t,base,peak,dec)=>glide(damp,t,base*1.5,peak*1.5,dec);
+    u.q=(t,qdb)=>fbG.gain.setTargetAtTime(clamp(.55+qdb/28*.35,0,.9),t,.02);
+    u.release=t=>fbG.gain.setTargetAtTime(.3,t,.05); // אחרי שהתו נגמר הצלצול דועך, לא נתקע
+    let kk=1;
+    u.pitch=(t,f,leg)=>{ const minD=256/c.sampleRate; f=clamp(fin(f,110),20,4000);
+      if(!leg||kk/f<minD) kk=Math.ceil(minD*f); const d=clamp(kk/f,minD,.09);
+      dl.delayTime.setTargetAtTime(d,t,leg?.035:.003) };
+  } else { // חם: המסנן המקורי
+    const f1=mk("b","lowpass"), f2=mk("b","lowpass"); f2.Q.value=0; f1.frequency.value=800; f2.frequency.value=1200;
+    u.input.connect(f1); f1.connect(f2); f2.connect(u.output);
+    u.env=(t,base,peak,dec)=>{ glide(f1,t,base,peak,dec); glide(f2,t,base*1.6,peak*1.6,dec) };
+    u.q=(t,qdb)=>f1.Q.setTargetAtTime(clamp(qdb,.5,28),t,.02);
+  }
+  u.dispose=()=>{ for(const n of nodes) try{n.disconnect()}catch(e){} };
+  return u;
+}
+// החלפת מסנן בלי קליק: משתיקים את הנתיב, מחליפים, ומחזירים
+function setUnit(slot,type){
+  if(!E) return; const key=slot==="A"?"uA":"uB", sw=slot==="A"?E.swA:E.swB, old=E[key];
+  if(old&&old.type===type){ if(E.pend[slot]){ E.pend[slot].dispose(); E.pend[slot]=null; sw.gain.cancelScheduledValues(ctx.currentTime); sw.gain.setTargetAtTime(1,ctx.currentTime,.012) } return }
+  const u=makeUnit(ctx,type), p=mixed(), base=clamp(MAP.cut(p.cut),40,E.nyq*.42), now=ctx.currentTime;
+  u.env(now,base,base,.02); u.q(now,clamp(MAP.res(p.res),.5,28)); u.pitch(now,E.lastF||110,false);
+  if(!old){ E.vca.connect(u.input); u.output.connect(sw); E[key]=u; return }
+  if(E.pend[slot]) E.pend[slot].dispose();
+  E.pend[slot]=u; sw.gain.cancelScheduledValues(now); sw.gain.setTargetAtTime(0,now,.008);
+  setTimeout(()=>{ if(E.pend[slot]!==u){ return } E.pend[slot]=null;
+    const prev=E[key]; E.vca.connect(u.input); u.output.connect(sw); try{E.vca.disconnect(prev.input)}catch(e){} prev.dispose(); E[key]=u;
+    sw.gain.setTargetAtTime(1,ctx.currentTime,.012) },60);
+}
+function syncUnits(){ if(!E) return; for(const [slot,w] of [["A","deep"],["B","acid"]]){ const cur=E.pend[slot]||E[slot==="A"?"uA":"uB"]; if(!cur||cur.type!==S.worlds[w].ft) setUnit(slot,S.worlds[w].ft) } }
+
 function makeEngine(){
   const c=ctx, nyq=c.sampleRate/2;
   const e={nyq};
@@ -382,8 +450,7 @@ function makeEngine(){
   e.gA=c.createGain(); e.gB=c.createGain();
   e.vca=c.createGain(); e.vca.gain.value=0;
   e.subVca=c.createGain(); e.subVca.gain.value=0; e.subLvl=c.createGain();
-  e.f1=c.createBiquadFilter(); e.f1.type="lowpass";
-  e.f2=c.createBiquadFilter(); e.f2.type="lowpass"; e.f2.Q.value=0;
+  e.fsum=c.createGain(); e.swA=c.createGain(); e.swB=c.createGain(); e.gFA=c.createGain(); e.gFB=c.createGain(); e.pend={};
   e.pre=c.createGain(); e.shaper=c.createWaveShaper(); e.post=c.createGain();
   const curve=new Float32Array(2048); for(let i=0;i<2048;i++){const x=i/1023.5-1;curve[i]=Math.tanh(x*2.2)/Math.tanh(2.2)}
   e.shaper.curve=curve; e.shaper.oversample="4x";
@@ -398,16 +465,16 @@ function makeEngine(){
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
   // ניתוב
   e.oscA.connect(e.gA); e.oscB.connect(e.gB); e.gA.connect(e.vca); e.gB.connect(e.vca);
-  e.vca.connect(e.f1); e.accDrv=c.createGain(); e.accDrv.gain.value=1;
-  e.f1.connect(e.f2); e.f2.connect(e.accDrv); e.accDrv.connect(e.pre); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc);
+  e.accDrv=c.createGain(); e.accDrv.gain.value=1;
+  e.swA.connect(e.gFA); e.swB.connect(e.gFB); e.gFA.connect(e.fsum); e.gFB.connect(e.fsum); e.fsum.connect(e.accDrv); e.accDrv.connect(e.pre); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc);
   e.dc.connect(e.bus);
   e.sub.connect(e.subVca); e.subVca.connect(e.subLvl); e.subLvl.connect(e.bus);
   e.dc.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.fbG); e.fbG.connect(e.dl); e.dlTone.connect(e.wet); e.wet.connect(e.bus);
   e.bus.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
   const f=degHz(0); e.oscA.frequency.value=f; e.oscB.frequency.value=f; e.sub.frequency.value=subHz(f);
-  e.f1.frequency.value=800; e.f2.frequency.value=1200;
+  e.lastF=f;
   e.oscA.start(); e.oscB.start(); e.sub.start();
-  E=e; updateWave("deep"); updateWave("acid"); applyContinuous(true);
+  E=e; setUnit("A",S.worlds.deep.ft); setUnit("B",S.worlds.acid.ft); updateWave("deep"); updateWave("acid"); applyContinuous(true);
 }
 
 function waveFrom(arr){
@@ -429,6 +496,7 @@ function setP(param,v,tau){ if(!isFinite(v)) return; const o=lastP.get(param); i
 function applyContinuous(now){
   if(!E) return; const p=mixed(), tau=now?.005:.05, m=S.morph;
   setP(E.gA.gain,Math.cos(m*Math.PI/2),tau); setP(E.gB.gain,Math.sin(m*Math.PI/2),tau);
+  setP(E.gFA.gain,1-m,tau); setP(E.gFB.gain,m,tau); // ליניארי: שני מסננים זהים נשמעים בדיוק כמו מסנן אחד
   const drive=MAP.drv(clamp(p.drv+dirt*.55+rise*.15,0,1));
   setP(E.pre.gain,drive*.5,tau); setP(E.post.gain,1/Math.sqrt(drive*.5+.5),tau);
   setP(E.subLvl.gain,MAP.sub(p.sub),tau);
@@ -453,7 +521,7 @@ function playNote(t,deg,acc,legato,slideOut,stepDur){
   const riseMul=Math.pow(2,rise*2.6);
   const base=clamp(MAP.cut(p.cut)*riseMul*(acc?Math.pow(2,accStack*.5):1),40,E.nyq*.42);
   const q=clamp(MAP.res(clamp(p.res+rise*.25,0,1))+(acc?3+accStack*2:0),.5,28);
-  E.f1.Q.setTargetAtTime(q,t,.02);
+  E.lastF=f; for(const u of [E.uA,E.uB]) if(u){ u.q(t,q); u.pitch(t,f,legato) }
   if(legato){
     E.vca.gain.setTargetAtTime(lvl,t,.01); E.subVca.gain.setTargetAtTime(subL,t,.01);
   } else {
@@ -463,11 +531,9 @@ function playNote(t,deg,acc,legato,slideOut,stepDur){
     const ad=E.accDrv.gain; ad.cancelScheduledValues(t);
     if(acc){ ad.setTargetAtTime(1.9+accStack*.4,t,.002); ad.setTargetAtTime(1,t+stepDur*.6,.04) } else ad.setTargetAtTime(1,t,.01);
     const dec=MAP.dec(p.dec)*(acc?.7:1);
-    for(const fl of [E.f1,E.f2]){const k=fl===E.f2?1.6:1;
-      fl.frequency.setTargetAtTime(clamp(peak*k,40,E.nyq*.45),t,.0015);
-      fl.frequency.setTargetAtTime(clamp(base*k,40,E.nyq*.45),t+.006,dec)}
+    for(const u of [E.uA,E.uB]) if(u) u.env(t,base,peak,dec);
   }
-  if(!slideOut){ const r=t+stepDur*.55; E.vca.gain.setTargetAtTime(0,r,.012); E.subVca.gain.setTargetAtTime(0,r,.02); gateOpen=false }
+  if(!slideOut){ const r=t+stepDur*.55; E.vca.gain.setTargetAtTime(0,r,.012); E.subVca.gain.setTargetAtTime(0,r,.02); for(const u of [E.uA,E.uB]) if(u) u.release(r); gateOpen=false }
   else gateOpen=true;
 }
 
@@ -477,7 +543,7 @@ function scheduleStep(i,t){
   if(dropArmed && i===0){ dropArmed=false; isDrop=true; rise=0; on=true; acc=true; sl=false; if(!st.on) deg=0; riseUI() }
   else if(!on && rise>0 && hash(i,1)<rise*.85){ on=true; deg=hash(i,2)<.5?lastPlayedDeg:clamp(lastPlayedDeg+7,0,DEGS-1); acc=hash(i,3)<rise*.5; sl=false }
   const legato=gateOpen&&on&&!isDrop;
-  if(gateOpen&&!on){ E.vca.gain.setTargetAtTime(0,t,.012); E.subVca.gain.setTargetAtTime(0,t,.02); gateOpen=false }
+  if(gateOpen&&!on){ E.vca.gain.setTargetAtTime(0,t,.012); E.subVca.gain.setTargetAtTime(0,t,.02); for(const u of [E.uA,E.uB]) if(u) u.release(t); gateOpen=false }
   if(on){ playNote(t,deg,acc,legato,sl,stepDur); lastPlayedDeg=deg }
   if(!document.hidden){ visQ.push({i,t,on,acc,st:acc?accStack:0}); if(visQ.length>64) visQ.splice(0,visQ.length-32) }
 }
@@ -519,7 +585,7 @@ async function togglePlay(){
   if(playing){ accStack=0; lastAccT=-9; stepIdx=0; nextTime=ctx.currentTime+.06; gateOpen=false; visQ.length=0; clearInterval(timer); timer=setInterval(tick,25); tick() }
   else { clearInterval(timer); visQ.length=0; curStep=-1; const t=ctx.currentTime;
     E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
-    E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); gateOpen=false;
+    E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); for(const u of [E.uA,E.uB]) if(u) u.release(t); gateOpen=false;
     riseHeld=false; dropArmed=false; rise=0; riseUI(); applyContinuous() }
   setWake(playing||!!recr); $("#play").classList.toggle("on",playing); $("#play").textContent=playing?"■ עצור":"▶ נגן";
 }
@@ -692,8 +758,10 @@ function worldUI(){
   $("#worldCard").style.setProperty("--accent",col);
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.world===S.edit));
   KNOBS.forEach(([k])=>{$("#k_"+k).value=Math.round(w[k]*1000);$("#o_"+k).textContent=SHOW[k](w[k])});
+  document.querySelectorAll("#ftypes .btn").forEach(b=>b.classList.toggle("on",b.dataset.ft===w.ft));
   drawWave();
 }
+document.querySelectorAll("#ftypes .btn").forEach(b=>b.addEventListener("click",()=>{ killUndo(); S.worlds[S.edit].ft=b.dataset.ft; worldUI(); syncUnits(); save(); audition(0) }));
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{S.edit=b.dataset.world;worldUI();save(true)}));
 
 const wc=$("#wave"), wg=wc.getContext("2d");
@@ -825,7 +893,7 @@ $("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#vo
 $("#play").addEventListener("click",togglePlay);
 let resetArm=0;
 $("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
-  resetArm=0;killUndo();const keepSteps=S.steps;S=defaults();S.steps=keepSteps;topUI();worldUI();morphUI();if(E){updateWave("deep");updateWave("acid")}applyContinuous();save()});
+  resetArm=0;killUndo();const keepSteps=S.steps;S=defaults();S.steps=keepSteps;topUI();worldUI();morphUI();if(E){updateWave("deep");updateWave("acid");syncUnits()}applyContinuous();save()});
 $("#start").addEventListener("click",async()=>{const ok=await ensureAudio();$("#gate").hidden=true;if(!ok)toast("גע בכפתור הנגינה כדי להפעיל צליל")});
 
 /* ---------- משבצות זיכרון ---------- */
@@ -844,7 +912,7 @@ function loadSlot(i){
   if(!slots[i])return; const v=sanitize(slots[i]); killUndo(); clearDrags();
   if(tiltOn)tiltOff();
   S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
-  topUI();worldUI();morphUI(); if(E){updateWave("deep");updateWave("acid")} applyContinuous();
+  topUI();worldUI();morphUI(); if(E){updateWave("deep");updateWave("acid");syncUnits()} applyContinuous();
   curSlot=i; slotsUI(); save(true);
 }
 document.querySelectorAll(".slot").forEach(b=>{
