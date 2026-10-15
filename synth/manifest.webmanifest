@@ -1,0 +1,16 @@
+{
+  "name": "מכונת אווירות",
+  "short_name": "אווירות",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#16122a",
+  "theme_color": "#16122a",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#16122a">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="אווירות">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>מכונת אווירות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <h1>מכונת אווירות</h1>
+  <div class="presets" id="presets" role="group" aria-label="צלילים"></div>
+  <div class="top-actions">
+    <button class="pill" id="save" type="button">☆ שמור</button>
+    <button class="pill" id="help" type="button" aria-pressed="false">מה זה?</button>
+    <a class="pill" href="../index.html" aria-label="חזרה לשיעורים">שיעורים ←</a>
+  </div>
+</header>
+
+<main class="panel">
+  <section class="xy-wrap" aria-label="משטח מגע">
+    <canvas id="xy" aria-label="משטח בהירות וחלל. הזז אצבע: ימינה בהיר יותר, למעלה רחוק יותר"></canvas>
+    <span class="ax ax-x">בהירות ←</span>
+    <span class="ax ax-y">חלל ←</span>
+    <p class="explain xy-explain">גרור אצבע בזמן שאתה מנגן. ימינה פותח את המסנן, למעלה מוסיף הד. אפשר להחזיק אקורד עם ״החזקה״ ולשחק כאן בשתי ידיים.</p>
+  </section>
+
+  <section class="ctrl">
+    <div class="knobs" id="knobs"></div>
+    <div class="rows">
+      <div class="row">
+        <span class="row-lbl">צורה</span>
+        <div class="seg" id="shape" role="group" aria-label="צורת גל">
+          <button type="button" data-v="0">חם</button><button type="button" data-v="1">בהיר</button><button type="button" data-v="2">חלול</button>
+        </div>
+        <p class="explain">צורת הגל של המתנדים. חם רך ועגול, בהיר עשיר בהרמוניות, חלול כמו קלרינט.</p>
+      </div>
+      <div class="row">
+        <span class="row-lbl">אקורד</span>
+        <div class="seg" id="chord" role="group" aria-label="אקורד">
+          <button type="button" data-v="one">תו אחד</button><button type="button" data-v="min">מינורי</button><button type="button" data-v="maj">מז׳ורי</button><button type="button" data-v="sus">תלוי</button><button type="button" data-v="m7">שביעית</button><button type="button" data-v="oct">אוקטבות</button>
+        </div>
+        <p class="explain">נגיעה אחת מנגנת כמה תווים. מינורי: שורש, טרצה קטנה וקווינטה, אפל. מז׳ורי: טרצה גדולה, בהיר. תלוי: בלי טרצה, פתוח ומרחף. שביעית: מינורי ועוד תו, רך וג׳אזי.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="kbd-area">
+  <div class="kbd-bar">
+    <button class="pill" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
+    <span class="oct" id="oct">אוקטבה 3</span>
+    <button class="pill" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
+    <span class="chordname" id="chordname" aria-live="polite"></span>
+    <span class="sp"></span>
+    <button class="pill hold" id="hold" type="button" aria-pressed="false">החזקה</button>
+    <button class="pill" id="panic" type="button">שקט</button>
+  </div>
+  <div class="kbd" id="kbd" dir="ltr" aria-label="מקלדת"></div>
+</footer>
+
+<div class="start" id="start">
+  <div class="start-in">
+    <h2>מכונת אווירות</h2>
+    <p>סינתיסייזר שמנגן כמה תווים יחד, עם הד, השהיה ומשטח מגע. גע במקלדת, החלק אצבע על המשטח, ובנה צלילים.</p>
+    <button class="go" id="go" type="button">▶ התחל לנגן</button>
+    <small>אין צליל? הרם עוצמה, ובדוק שהמכשיר לא במצב שקט.</small>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
