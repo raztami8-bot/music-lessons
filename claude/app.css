@@ -283,3 +283,7 @@ figure.photo{margin:0;background:var(--surface);border:1px solid var(--line);bor
 .toolbar .in{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .toolbar .in::-webkit-scrollbar{display:none}
 .toolbar .tb,.toolbar .ver{flex:none;white-space:nowrap}
+.octbox{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
+.octbox .kn{font-family:var(--f-mono);font-weight:700;font-size:.82rem;color:var(--fg)}
+.octbox .display{font-size:1.15rem;letter-spacing:.06em}
+.octnote{font-size:.8rem;color:var(--muted);font-weight:600}
