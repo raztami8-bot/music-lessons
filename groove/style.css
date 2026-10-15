@@ -201,6 +201,97 @@ html,body{height:100dvh;touch-action:manipulation}
   .side{right:calc(max(10px,env(safe-area-inset-right,0px)) + 124px)}
 }
 
+/* ================= טלפון (אייפון) ================= */
+#moreClose,#pageBtn,.tabs,#moreBtn,#selM,#selS{display:none}
+@media (max-width:600px) and (orientation:portrait),(max-height:500px) and (orientation:landscape){
+  #moreBtn,#selM,#selS{display:inline-flex}
+  .btn{min-height:48px;min-width:48px;padding:0 10px;font-size:17px}
+  .app{gap:6px;padding:calc(6px + env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  /* השורה העליונה הופכת לתפריט "עוד" */
+  .top{display:none;position:fixed;z-index:16;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px));
+    flex-wrap:wrap;justify-content:center;gap:10px;padding:14px;border-radius:20px;background:var(--panel);border:1px solid var(--line);
+    box-shadow:0 0 0 100vmax rgba(0,0,0,.55);max-height:calc(100dvh - 20px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto}
+  body.more .top{display:flex}
+  .top .brand{flex:1 0 100%;margin:0}
+  .top .meter{display:none}
+  #moreClose{display:inline-flex;margin-inline-start:auto}
+  .top .brand{order:-2} 
+  .top .slotrow{flex:1 0 100%;justify-content:center}
+  .top .slotrow .lbl{display:block}
+  .seq{padding:4px;gap:6px;border-radius:14px}
+  .seqhead{gap:5px;justify-content:flex-start}
+  .var{min-width:48px;font-size:20px;flex:1}
+  .vars{flex:1}
+  .hint{display:none}
+  .ph .ms{display:none}
+  .ph .btns{display:none}
+  .side{padding:8px}
+  .card{padding:10px}
+  .cardhead h2{font-size:20px}
+  .ctls{gap:0 16px}
+}
+/* טלפון לאורך: תוף אחד בכל פעם, 16 צעדים בריבוע 4×4 (צעד 1 משמאל למעלה), לשוניות תופים */
+@media (max-width:600px) and (orientation:portrait){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto auto;grid-template-areas:"main" "rb" "ra"}
+  .tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+  .tab{--c:var(--fg);min-height:48px;min-width:0;padding:0 2px;border-radius:12px;border:1px solid var(--line);background:var(--raise);font:800 14px var(--f-body);color:var(--fg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;overflow:hidden;white-space:nowrap}
+  .tab::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c)}
+  .tab.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 30%,var(--raise))}
+  .tab.dimmed{opacity:.5}
+  .grid{display:flex;flex-direction:column;gap:0}
+  .row{display:none}
+  .row.selrow{display:grid;flex:1;min-height:0;gap:6px;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:48px repeat(4,minmax(0,1fr))}
+  .row.selrow>.st{grid-column:auto;grid-row:auto}
+  .row.selrow>.ph{grid-column:1/-1;grid-row:1;flex-direction:row}
+  .ph .nm{font-size:18px}
+  .row.selrow .ph .btns{display:flex;flex:0 0 auto;gap:6px;min-height:48px}
+  .row.selrow .ph .ms{display:inline-flex;min-width:56px}
+  .rail-a,.rail-b{flex-direction:row}
+  .rail-a .btn{min-height:60px}
+  .play{flex:1;min-width:0;font-size:22px}
+  .big2{min-width:60px;font-size:20px}
+  .big2 span{font-size:12px}
+  .fillbtn{min-width:104px;min-height:60px}
+  .fillbtn b{font-size:24px}
+  .fillbtn small{display:none}
+  .energy{flex-direction:row;align-items:stretch}
+  .elbl{display:none}
+  .sld.big{min-height:60px}
+  .side{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;max-height:calc(100dvh - 160px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+  .side .ctls{grid-template-columns:1fr 1fr}
+  #selM,#selS{display:none}
+}
+/* טלפון לרוחב: שמונה צעדים בשורה, כפתור עמוד 1–8 / 9–16, נגינה בצדדים */
+@media (max-height:500px) and (orientation:landscape){
+  .app{grid-template-columns:72px minmax(0,1fr) 88px;grid-template-rows:minmax(0,1fr);grid-template-areas:"ra main rb"}
+  #pageBtn{display:inline-flex;min-width:76px;font-family:var(--f-num)}
+  .grid.p2 #pageBtn{}
+  .seqhead .vars{flex:0 1 auto}
+  .var{flex:0 0 52px}
+  .seqhead{justify-content:space-between}
+  :root{--head:72px}
+  .grid{gap:4px}
+  .row{gap:4px;grid-template-rows:minmax(0,1fr);grid-template-columns:var(--head) repeat(4,minmax(0,1fr)) 4px repeat(4,minmax(0,1fr))}
+  .row>.ph{grid-row:1}
+  .row>.st{grid-row:1;grid-column:var(--pc)}
+  .row>.st:not(.h2){grid-column:calc(var(--pc) - 1)}
+  .row>.st.h2{grid-column:calc(var(--pc) - 1)}
+  .grid:not(.p2) .st.h2,.grid.p2 .st:not(.h2){display:none}
+  .ph .nm{min-height:0;padding:0 6px;font-size:14px;gap:5px}
+  .ph .nm::before{width:9px;height:9px}
+  .st.b::after{top:2px;left:4px;font-size:11px}
+  .rail{gap:6px}
+  .play{font-size:18px;flex:1.3}
+  .big2{font-size:20px;min-height:48px}
+  .big2 span{font-size:12px}
+  .fillbtn b{font-size:22px}
+  .fillbtn small{display:none}
+  .elbl{font-size:13px}
+  .side{top:calc(6px + env(safe-area-inset-top,0px));right:calc(max(8px,env(safe-area-inset-right,0px)) + 82px);width:auto;left:calc(max(8px,env(safe-area-inset-left,0px)) + 98px);max-height:calc(100dvh - 12px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+  .side .ctls{grid-template-columns:1fr 1fr 1fr}
+  .sld{height:48px}
+}
 /* ---- שכבת פתיחה, הודעות והקלטות ---- */
 #gate{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--ink) 94%,transparent);padding:24px}
 .gatebox{max-width:440px;display:flex;flex-direction:column;gap:14px;text-align:center}

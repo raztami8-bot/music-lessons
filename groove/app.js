@@ -8,7 +8,7 @@ const fin=(v,d)=>(typeof v==="number"&&isFinite(v))?v:d;
 const STEPS=16, NUDGE=.03; // תזמון: עד 30 אלפיות מוקדם או מאוחר
 
 /* ================= הדף לא זז ================= */
-const phoneLand=()=>matchMedia("(max-height:520px) and (orientation:landscape)").matches;
+const phoneLand=()=>false; // גם בטלפון הדף לא זז
 ["gesturestart","gesturechange","gestureend"].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
 document.addEventListener("dblclick",e=>e.preventDefault(),{passive:false});
 document.addEventListener("touchmove",e=>{ if(e.touches.length>1||!(e.target.closest&&e.target.closest(".scroll-y"))&&!phoneLand()) e.preventDefault() },{passive:false});
@@ -257,6 +257,24 @@ function openSound(on){ sideEl.hidden=!on; soundBtn.classList.toggle("on",on); s
 onTap(soundBtn,()=>openSound(!soundOpen()));
 onTap($("#sideClose"),()=>openSound(false));
 
+/* ================= טלפון: לשוניות תופים, עמודים, תפריט ================= */
+const isPhone=()=>matchMedia("(max-width:600px) and (orientation:portrait),(max-height:500px) and (orientation:landscape)").matches;
+const tabsEl=$("#tabs"), tabs=[];
+PARTS.forEach((p,pi)=>{ const b=document.createElement("button"); b.type="button"; b.className="tab"; b.textContent=p.name; b.style.setProperty("--c",`var(${p.col})`); tabs.push(b); tabsEl.appendChild(b);
+  onTap(b,()=>{ S.sel=pi; partUI(); save(true); ensureAudio().then(ok=>{ if(ok) audition(pi) }) }) });
+let page=0;
+onTap($("#pageBtn"),()=>{ page=1-page; $("#grid").classList.toggle("p2",page===1); $("#pageBtn").textContent=page?"9–16":"1–8" });
+onTap($("#selM"),()=>{ const pp=S.parts[PARTS[S.sel].id]; pp.mute=!pp.mute; mixUI(); save() });
+onTap($("#selS"),()=>{ const pp=S.parts[PARTS[S.sel].id]; pp.solo=!pp.solo; mixUI(); save() });
+const moreOpen=on=>{ document.body.classList.toggle("more",on); $("#moreBtn").classList.toggle("on",on) };
+onTap($("#moreBtn"),()=>moreOpen(!document.body.classList.contains("more")));
+onTap($("#moreClose"),()=>moreOpen(false));
+// בטלפון הזיכרון ו"נקה" עוברים לתפריט, ובאייפד חוזרים למקומם
+{ const sr=$(".slotrow"), cl=$("#clear"), home=$(".seqhead"), top=$(".top"), mc=$("#moreClose");
+  const place=()=>{ if(isPhone()){ top.insertBefore(sr,mc); top.insertBefore(cl,mc) } else { home.appendChild(sr); home.appendChild(cl); moreOpen(false) } };
+  matchMedia("(max-width:600px) and (orientation:portrait)").addEventListener("change",place);
+  matchMedia("(max-height:500px) and (orientation:landscape)").addEventListener("change",place); place() }
+
 /* ================= רשת הצעדים ================= */
 const gridEl=$("#grid"), cells=[], rows=[], names=[], mBtns=[], sBtns=[];
 PARTS.forEach((p,pi)=>{
@@ -268,7 +286,7 @@ PARTS.forEach((p,pi)=>{
   const s=document.createElement("button"); s.type="button"; s.className="btn ms s"; s.textContent="S"; s.title="סולו"; s.setAttribute("aria-label","סולו "+p.name); sBtns.push(s);
   bx.append(m,s); ph.append(nm,bx); row.appendChild(ph);
   cells.push([]);
-  for(let i=0;i<STEPS;i++){ const c=document.createElement("div"); c.className="st"+(i%4===0?" b":""); c.dataset.pi=pi; c.dataset.i=i; if(i%4===0) c.dataset.n=i+1; const j=i%8; c.style.setProperty("--gc",3+Math.floor(i/4)*5+i%4); c.style.setProperty("--pc",3+Math.floor(j/4)*5+j%4); c.style.setProperty("--pr",1+Math.floor(i/8)); row.appendChild(c); cells[pi].push(c) }
+  for(let i=0;i<STEPS;i++){ const c=document.createElement("div"); c.className="st"+(i%4===0?" b":"")+(i>=8?" h2":""); c.dataset.pi=pi; c.dataset.i=i; if(i%4===0) c.dataset.n=i+1; const j=i%8; c.style.setProperty("--gc",3+Math.floor(i/4)*5+i%4); c.style.setProperty("--pc",3+Math.floor(j/4)*5+j%4); c.style.setProperty("--pr",1+Math.floor(i/8)); row.appendChild(c); cells[pi].push(c) }
   gridEl.appendChild(row);
   onTap(nm,()=>{ if(S.sel===pi&&!soundOpen()) openSound(true); S.sel=pi; partUI(); save(true); ensureAudio().then(ok=>{ if(ok) audition(pi) }) });
   onTap(m,()=>{ const pp=S.parts[p.id]; pp.mute=!pp.mute; mixUI(); save() });
@@ -279,7 +297,8 @@ function gridUI(){ for(let pi=0;pi<NP;pi++) for(let i=0;i<STEPS;i++) paintCell(p
 function mixUI(){
   const anySolo=PARTS.some(p=>S.parts[p.id].solo);
   PARTS.forEach((p,pi)=>{ const pp=S.parts[p.id]; mBtns[pi].classList.toggle("on",pp.mute); sBtns[pi].classList.toggle("on",pp.solo);
-    rows[pi].classList.toggle("dimmed",pp.mute||(anySolo&&!pp.solo)||energyGain(pi)<=0); names[pi].classList.toggle("sel",pi===S.sel) });
+    rows[pi].classList.toggle("dimmed",pp.mute||(anySolo&&!pp.solo)||energyGain(pi)<=0); names[pi].classList.toggle("sel",pi===S.sel); rows[pi].classList.toggle("selrow",pi===S.sel); if(tabs[pi]){ tabs[pi].classList.toggle("sel",pi===S.sel); tabs[pi].classList.toggle("dimmed",pp.mute||(anySolo&&!pp.solo)) } });
+  { const pp=S.parts[PARTS[S.sel].id]; $("#selM").classList.toggle("on",pp.mute); $("#selS").classList.toggle("on",pp.solo) }
 }
 let curCol=-1;
 function nowStep(i){ if(i===curCol) return; if(curCol>=0) for(let pi=0;pi<NP;pi++) cells[pi][curCol].classList.remove("now"); curCol=i; if(i>=0) for(let pi=0;pi<NP;pi++) cells[pi][i].classList.add("now") }

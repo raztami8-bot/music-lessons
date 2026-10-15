@@ -31,6 +31,7 @@
   <button class="btn" id="takesBtn" type="button" aria-label="הקלטות">📁</button>
   <button class="btn sync" id="sync" type="button" aria-pressed="false" aria-label="סנכרון עם הכלים האחרים">⇄</button>
   <span class="meter" aria-hidden="true"><i id="meterFill"></i></span>
+  <button class="btn" id="moreClose" type="button" aria-label="סגור">✕</button>
 </header>
 
 <main class="main">
@@ -50,7 +51,9 @@
       <button class="btn slot" data-slot="3" type="button">4<i class="prog"></i></button>
     </div>
       <button class="btn" id="clear" type="button">נקה</button>
+      <button class="btn" id="pageBtn" type="button" dir="ltr" aria-label="עמוד צעדים">1–8</button>
     </div>
+    <div class="tabs" id="tabs" role="group" aria-label="תופים"></div>
     <div class="grid" id="grid" dir="ltr" aria-label="16 צעדים לכל תוף, צעד 1 משמאל"></div>
     <div class="hint" id="hint">גע: דלוק · מודגש · כבוי · גרור לצייר · גע שוב בשם התוף לעריכת הצליל</div>
   </section>
@@ -60,6 +63,7 @@
 <nav class="rail rail-a" aria-label="נגינה">
   <button class="btn play" id="play" type="button">▶ נגן</button>
   <button class="btn big2" id="mutate" type="button">🎲<span>מוטציה</span></button>
+  <button class="btn big2" id="moreBtn" type="button" aria-label="קצב, הקלטה וזיכרון">⋯<span>עוד</span></button>
   <button class="btn big2" id="soundBtn" type="button" aria-expanded="false">🎛<span>צליל</span></button>
 </nav>
 <!-- אזור אגודל שמאלי: אנרגיה ומילוי -->
@@ -73,7 +77,7 @@
 
 <aside class="side scroll-y" id="side" hidden aria-label="צליל">
   <div class="card part" id="partCard">
-    <div class="cardhead"><h2 id="partName">בעיטה</h2><button class="btn" id="audition" type="button">▶ שמע</button><button class="btn" id="sideClose" type="button" aria-label="סגור">✕</button></div>
+    <div class="cardhead"><h2 id="partName">בעיטה</h2><button class="btn" id="audition" type="button">▶ שמע</button><button class="btn ms m" id="selM" type="button" aria-label="השתק">M</button><button class="btn ms s" id="selS" type="button" aria-label="סולו">S</button><button class="btn" id="sideClose" type="button" aria-label="סגור">✕</button></div>
     <div class="ctls" id="partCtls"></div>
   </div>
   <div class="card">
