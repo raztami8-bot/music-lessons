@@ -20,7 +20,7 @@
 /* מכשיר כהה יחיד: טבעת גדולה כמרכז, לוח בקרה צדדי. עומק = תכלת קר, חומצה = ורוד לוהט, הסלמה = ענבר */
 :root{
   --ink:#120d1f; --panel:#1a1430; --raise:#241c40; --line:#33284f;
-  --fg:#f1ebff; --dim:#9c91bd; --deep:#5cc8ff; --acid:#ff4fa3; --heat:#ffb02e;
+  --fg:#f1ebff; --dim:#9c91bd; --deep:#5cc8ff; --acid:#ff4fa3; --heat:#ffb02e; --rec:#ff5a4f;
   --f-display:"Karantina","Assistant",system-ui,sans-serif;
   --f-body:"Assistant",system-ui,-apple-system,sans-serif;
   --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -113,6 +113,17 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   background:var(--fg);color:var(--ink);padding:10px 16px;border-radius:12px;font-weight:600;direction:rtl;max-width:90vw;text-align:center}
 
 /* מסך צר או לאורך: הכל בטור אחד, הלוח נגלל */
+.rec.on{background:var(--rec);border-color:var(--rec);color:var(--ink);font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.sheet{position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;direction:rtl;
+  background:color-mix(in srgb,var(--ink) 82%,transparent);padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.sheetbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;width:min(580px,100%);max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+#takeList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.take{display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--raise);flex-wrap:wrap}
+.take .nm{flex:1;min-width:120px;font-weight:600}
+.take .nm small{display:block;color:var(--dim);font-family:var(--f-num);font-weight:500;font-size:12px}
+.take .btn{min-height:42px}
+.take .acts{display:flex;gap:6px;flex-wrap:nowrap}
+.take .del.arm{background:var(--rec);border-color:var(--rec);color:var(--ink)}
 .tact{background:var(--ink);color:var(--fg);border:0;border-radius:9px;min-height:36px;padding:0 14px;font-weight:700}
 .slotrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
 .slot{position:relative;overflow:hidden;min-width:54px;min-height:46px;font-family:var(--f-num);font-size:18px;color:var(--dim);background:var(--raise);border:1px dashed var(--line);border-radius:10px;-webkit-touch-callout:none}
@@ -171,6 +182,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   <header class="top">
     <div class="brand">טבעת חומצה</div>
     <button class="btn play" id="play" type="button">▶ נגן</button>
+    <div class="grp" aria-label="הקלטה">
+      <button class="btn rec" id="rec" type="button" aria-pressed="false">⏺ הקלט</button>
+      <button class="btn" id="takesBtn" type="button">הקלטות</button>
+    </div>
     <div class="grp" aria-label="קצב">
       <button class="btn" id="bpmDown" type="button" aria-label="האט">−</button>
       <span class="num" id="bpmVal">128</span>
@@ -251,6 +266,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
 </div>
 
+<div id="takes" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הקלטות">
+  <div class="sheetbox">
+    <div class="cardhead"><h2>הקלטות</h2><button class="btn" id="takesClose" type="button">סגור</button></div>
+    <p class="lbl" id="takesEmpty">עוד אין הקלטות. לחץ ⏺ הקלט, נגן, ולחץ שוב כדי לעצור.</p>
+    <ul id="takeList"></ul>
+  </div>
+</div>
 <div id="gate">
   <div class="gatebox">
     <h1>טבעת חומצה</h1>
@@ -491,7 +513,7 @@ async function togglePlay(){
     E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
     E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); gateOpen=false;
     riseHeld=false; dropArmed=false; rise=0; riseUI(); applyContinuous() }
-  setWake(playing); $("#play").classList.toggle("on",playing); $("#play").textContent=playing?"■ עצור":"▶ נגן";
+  setWake(playing||!!recr); $("#play").classList.toggle("on",playing); $("#play").textContent=playing?"■ עצור":"▶ נגן";
 }
 function audition(deg){
   if(playing||!ctx||ctx.state!=="running") return;
@@ -742,6 +764,129 @@ document.querySelectorAll(".slot").forEach(b=>{
   b.addEventListener("contextmenu",e=>e.preventDefault());
 });
 
+/* ---------- הקלטת הניגון ---------- */
+let recr=null, recStart=0, recTick=0, takes=[], takeSeq=0, recBusy=false;
+const REC_MAX=20*60;
+function pickMime(){ if(typeof MediaRecorder==="undefined") return null;
+  for(const m of ["audio/mp4","audio/webm;codecs=opus","audio/webm"]){ try{ if(MediaRecorder.isTypeSupported(m)) return m }catch(e){} } return "" }
+const fmtT=sec=>{sec=Math.max(0,Math.round(fin(sec,0)));return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0")};
+function recUI(){
+  const b=$("#rec"), on=!!recr; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on);
+  if(on){ const t=(performance.now()-recStart)/1000; b.textContent="⏹ "+fmtT(t); if(t>REC_MAX) stopRec() } else b.textContent="⏺ הקלט";
+  $("#takesBtn").textContent=takes.length?`הקלטות ${takes.length}`:"הקלטות";
+}
+async function startRec(){
+  if(recr||recBusy) return; recBusy=true;
+  try{
+    if(!await ensureAudio()){ toast("לא הצלחתי להפעיל צליל. גע שוב"); return }
+    const mime=pickMime(); if(mime===null){ toast("המכשיר הזה לא תומך בהקלטה"); return }
+    if(!E.recDest){ E.recDest=ctx.createMediaStreamDestination(); E.clip.connect(E.recDest) }
+    let r; try{ r=new MediaRecorder(E.recDest.stream,mime?{mimeType:mime,audioBitsPerSecond:192000}:{}) }
+    catch(e){ try{ r=new MediaRecorder(E.recDest.stream) }catch(e2){ toast("ההקלטה לא הצליחה להתחיל"); return } }
+    const chunks=[], t0=performance.now(); let tEnd=0;
+    r.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data) };
+    r.onstop=()=>{ if(recr===r){ recr=null; clearInterval(recTick); recUI() } finishRec(r,chunks,((tEnd||performance.now())-t0)/1000) };
+    r.onerror=()=>{ if(recr===r) stopRec(); else { try{ if(r.state!=="inactive") r.stop() }catch(e){} } };
+    r.__end=()=>{ if(!tEnd) tEnd=performance.now() };
+    r.start(1000); recr=r; recStart=t0;
+    clearInterval(recTick); recTick=setInterval(recUI,250); recUI(); setWake(true);
+    if(!playing) toast("מקליט. לחץ נגן כדי שיהיה מה לשמוע");
+  } finally { recBusy=false }
+}
+function stopRec(){ const r=recr; if(!r) return; recr=null; r.__end(); clearInterval(recTick); recUI();
+  try{ if(r.state!=="inactive") r.stop() }catch(e){} if(!playing) setWake(false) }
+function finishRec(r,chunks,dur){
+  if(r.__done) return; r.__done=true;
+  const type=(r.mimeType||(chunks[0]&&chunks[0].type)||"audio/mp4").split(";")[0];
+  const blob=new Blob(chunks,{type}); chunks.length=0;
+  if(blob.size<2000||dur<1){ toast("ההקלטה קצרה מדי ולא נשמרה"); return }
+  const t={id:Date.now()+"-"+Math.floor(Math.random()*1e6),name:`הקלטה ${++takeSeq}`,type,dur,created:Date.now(),blob};
+  takes.unshift(t); recUI(); renderTakes();
+  t.saving=dbPut(t).then(ok=>{ toast(ok?`${t.name} נשמרה`:`${t.name} נשמרה עד שתסגור את הדף`,"פתח",openTakes); return ok });
+}
+$("#rec").addEventListener("click",()=>{ recr?stopRec():startRec() });
+document.addEventListener("visibilitychange",()=>{ if(document.hidden&&recr) stopRec() }); // יוצאים מהאפליקציה: שומרים את מה שכבר הוקלט
+
+/* שמירה בדפדפן: פרטי ההקלטות נטענים מיד, הצליל עצמו רק כשמנגנים או שומרים */
+const TDB="acid-ring-rec"; let dbP=null;
+function getDb(){ if(!dbP) dbP=new Promise(res=>{ try{ if(!window.indexedDB) return res(null);
+  const q=indexedDB.open(TDB,1);
+  q.onupgradeneeded=()=>{ try{ q.result.createObjectStore("meta",{keyPath:"id"}); q.result.createObjectStore("data",{keyPath:"id"}) }catch(e){} };
+  q.onsuccess=()=>res(q.result); q.onerror=()=>res(null); q.onblocked=()=>res(null) }catch(e){ res(null) } }); return dbP }
+function txDone(tx){ return new Promise(res=>{ tx.oncomplete=()=>res(true); tx.onerror=tx.onabort=()=>res(false) }) }
+async function dbPut(t){
+  const db=await getDb(); if(!db) return false;
+  const meta={id:t.id,name:t.name,type:t.type,dur:t.dur,created:t.created};
+  try{ const tx=db.transaction(["meta","data"],"readwrite"); tx.objectStore("data").put({id:t.id,blob:t.blob}); tx.objectStore("meta").put(meta); if(await txDone(tx)) return true }catch(e){}
+  try{ const buf=await t.blob.arrayBuffer(); const tx=db.transaction(["meta","data"],"readwrite"); tx.objectStore("data").put({id:t.id,buf,type:t.type}); tx.objectStore("meta").put(meta); return await txDone(tx) }catch(e){ return false }
+}
+async function dbDel(id){ const db=await getDb(); if(!db) return; try{ const tx=db.transaction(["meta","data"],"readwrite"); tx.objectStore("meta").delete(id); tx.objectStore("data").delete(id); await txDone(tx) }catch(e){} }
+async function dbMeta(){ const db=await getDb(); if(!db) return []; return new Promise(res=>{ try{ const q=db.transaction("meta","readonly").objectStore("meta").getAll();
+  q.onsuccess=()=>res((q.result||[]).filter(x=>x&&x.id).map(x=>({id:String(x.id),name:String(x.name||"הקלטה"),type:String(x.type||"audio/mp4"),dur:fin(x.dur,0),created:fin(x.created,0),blob:null})));
+  q.onerror=()=>res([]) }catch(e){ res([]) } }) }
+async function getBlob(t){
+  if(t.blob) return t.blob; const db=await getDb(); if(!db) return null;
+  return new Promise(res=>{ try{ const q=db.transaction("data","readonly").objectStore("data").get(t.id);
+    q.onsuccess=()=>{ const x=q.result; if(!x) return res(null); res(x.blob instanceof Blob?x.blob:(x.buf?new Blob([x.buf],{type:x.type||t.type}):null)) };
+    q.onerror=()=>res(null) }catch(e){ res(null) } });
+}
+dbMeta().then(list=>{ const ids=new Set(takes.map(t=>t.id)); takes=takes.concat(list.filter(t=>!ids.has(t.id))).sort((a,b)=>b.created-a.created);
+  for(const t of takes){ const m=/(\d+)\s*$/.exec(t.name); if(m) takeSeq=Math.max(takeSeq,+m[1]) } recUI(); renderTakes() });
+
+/* רשימת ההקלטות */
+const player=new Audio(); let playId=null, playUrl=null, playReq=0;
+function stopPlayer(){ playReq++; try{player.pause();player.removeAttribute("src");player.load()}catch(e){} playId=null; if(playUrl){ URL.revokeObjectURL(playUrl); playUrl=null } }
+player.addEventListener("ended",()=>{ stopPlayer(); renderTakes() });
+player.addEventListener("error",()=>{ if(playId){ stopPlayer(); renderTakes() } });
+async function togglePlayTake(t){
+  if(playId===t.id){ stopPlayer(); renderTakes(); return }
+  stopPlayer(); const req=playReq; playId=t.id; renderTakes();
+  const blob=await getBlob(t); if(req!==playReq) return;
+  if(!blob){ toast("לא מצאתי את הצליל של ההקלטה הזו"); stopPlayer(); renderTakes(); return }
+  playUrl=URL.createObjectURL(blob); player.src=playUrl;
+  player.play().catch(()=>{ if(req===playReq){ toast("לא הצלחתי לנגן את ההקלטה"); stopPlayer(); renderTakes() } });
+}
+function fileOf(t,blob){ const ext=/mp4/.test(t.type)?"mp4":"webm", n=(/(\d+)\s*$/.exec(t.name)||[0,1])[1]; const fname=`acid-ring-${n}.${ext}`;
+  let file=null; try{ file=new File([blob],fname,{type:t.type}) }catch(e){} return {fname,file} }
+async function shareFile(t,blob,{fname,file}){
+  try{ if(file&&navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:t.name}); return true } }
+  catch(e){ if(e&&e.name==="AbortError") return true; if(e&&e.name==="NotAllowedError"){ toast(`${t.name} מוכנה`,"שתף",()=>shareFile(t,blob,{fname,file})); return true } }
+  return false;
+}
+async function shareTake(t){
+  const blob=t.blob||await getBlob(t); if(!blob){ toast("לא מצאתי את הצליל של ההקלטה הזו"); return }
+  const f=fileOf(t,blob);
+  if(!(window.claude&&typeof window.claude.use==="function")){ if(await shareFile(t,blob,f)) return }
+  else { let dl=null; try{ dl=await window.claude.use("downloads") }catch(e){}
+    if(dl){ try{ await dl.save({filename:f.fname,data:blob}); return }catch(e){ if(e&&e.code==="declined") return } }
+    if(await shareFile(t,blob,f)) return }
+  try{ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=f.fname; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove() },5000) }catch(e){ toast("לא הצלחתי לשמור את הקובץ") }
+}
+function renderTakes(){
+  const ul=$("#takeList"); ul.replaceChildren(); $("#takesEmpty").hidden=takes.length>0;
+  for(const t of takes){
+    const li=document.createElement("li"); li.className="take";
+    const nm=document.createElement("div"); nm.className="nm"; nm.textContent=t.name;
+    const sm=document.createElement("small"); const d=new Date(t.created);
+    sm.textContent=fmtT(t.dur)+" · "+d.getDate()+"."+(d.getMonth()+1)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); nm.appendChild(sm);
+    const mk=(txt,cls,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=txt; b.addEventListener("click",fn); return b };
+    const pl=mk(playId===t.id?"■ עצור":"▶ נגן","pl",()=>togglePlayTake(t));
+    const sh=mk("שמור קובץ","sh",()=>shareTake(t));
+    let armT=0; const del=mk("מחק","del",async()=>{
+      if(!del.classList.contains("arm")){ del.classList.add("arm"); del.textContent="בטוח?"; clearTimeout(armT); armT=setTimeout(()=>{del.classList.remove("arm");del.textContent="מחק"},2500); return }
+      if(playId===t.id) stopPlayer(); takes=takes.filter(x=>x!==t); recUI(); renderTakes();
+      try{ await t.saving }catch(e){} await dbDel(t.id); t.blob=null });
+    const acts=document.createElement("div"); acts.className="acts"; acts.append(pl,sh,del); li.append(nm,acts); ul.appendChild(li);
+  }
+}
+function openTakes(){ renderTakes(); $("#takes").hidden=false }
+function closeTakes(){ $("#takes").hidden=true; stopPlayer() }
+$("#takesBtn").addEventListener("click",openTakes);
+$("#takesClose").addEventListener("click",closeTakes);
+$("#takes").addEventListener("click",e=>{ if(e.target.id==="takes") closeTakes() });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("#takes").hidden) closeTakes() });
+
 /* ---------- לולאת ציור ---------- */
 function frame(){
   if(ctx){const now=ctx.currentTime;while(visQ.length&&visQ[0].t<=now){const v=visQ.shift();curStep=v.i;if(v.on)kick=v.acc?1+v.st*.45:.6}}
@@ -749,10 +894,10 @@ function frame(){
   if(riseHeld||rise>0)riseUI();
   drawRing(); requestAnimationFrame(frame);
 }
-let rzT=0; function onResize(){clearTimeout(rzT);rzT=setTimeout(()=>{sizeRing();sizeWave()},80)}
+let rzT=0,rzT2=0; function onResize(){clearTimeout(rzT);clearTimeout(rzT2);rzT=setTimeout(()=>{sizeRing();sizeWave()},80);rzT2=setTimeout(()=>{sizeRing();sizeWave()},400)}
 addEventListener("resize",onResize); addEventListener("orientationchange",onResize);
 
-readColors(); topUI(); worldUI(); morphUI(); riseUI(); slotsUI(); sizeRing(); sizeWave();
+readColors(); topUI(); worldUI(); morphUI(); riseUI(); slotsUI(); recUI(); sizeRing(); sizeWave();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{sizeRing();sizeWave()}).catch(()=>{});
 requestAnimationFrame(frame);
 })();
