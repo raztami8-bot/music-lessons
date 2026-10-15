@@ -98,7 +98,16 @@ function setGate(v){ state.gate=v; seg("gate",v,setGate); refreshClock(); markCu
 });
 
 /* ---------- presets ---------- */
-function mine(){ return get("ambi:mine",[]); }
+function clean(pr){
+  if(!pr||typeof pr!=="object") return null;
+  var o={name:String(pr.name||"").slice(0,40)};
+  ALLKNOBS.forEach(function(k){ var v=+pr[k[0]]; o[k[0]]=isFinite(v)?Math.max(0,Math.min(1,v)):DEF[k[0]]; });
+  o.shape=[0,1,2,3,4].indexOf(+pr.shape)>-1?+pr.shape:0; o.mono=pr.mono?1:0;
+  o.chord=CHORDS[pr.chord]?pr.chord:"min"; o.arp=["off","up","down","updown","rand"].indexOf(pr.arp)>-1?pr.arp:"off";
+  o.rate=+pr.rate===2?2:1; o.gate=Engine.gates.hasOwnProperty(pr.gate)?pr.gate:"off";
+  return o;
+}
+function mine(){ var m=get("ambi:mine",[]); return Array.isArray(m)?m.map(clean).filter(Boolean):[]; }
 function loadPreset(pr){
   ALLKNOBS.forEach(function(k){ var v=pr[k[0]]!=null?pr[k[0]]:DEF[k[0]]; E.set(k[0],v); paintKnob(k[0]); });
   setShape(pr.shape!=null?pr.shape:0); setMono(pr.mono?1:0); setChord(pr.chord||"min");
@@ -221,7 +230,7 @@ function release(pid){
 function releaseAll(){ arpStop(); Object.keys(touches).forEach(function(k){ touches[k].ids.forEach(E.noteOff); }); touches={}; held.forEach(E.noteOff); held=[]; heldNotes=[]; E.allOff(); setTimeout(paintKeys,20); chordLabel(null); }
 function keyAt(x,y){ var el=document.elementFromPoint(x,y); return el&&el.closest?el.closest(".key"):null; }
 var kbd=$("kbd");
-kbd.addEventListener("pointerdown",function(e){ e.preventDefault(); var k=keyAt(e.clientX,e.clientY); if(!k) return; kbd.setPointerCapture(e.pointerId); press(e.pointerId,+k.dataset.m); });
+kbd.addEventListener("pointerdown",function(e){ e.preventDefault(); var k=keyAt(e.clientX,e.clientY); if(!k) return; try{ kbd.setPointerCapture(e.pointerId); }catch(x){} press(e.pointerId,+k.dataset.m); });
 kbd.addEventListener("pointermove",function(e){ var t=touches[e.pointerId]; if(!t) return; var k=keyAt(e.clientX,e.clientY);
   if(k && +k.dataset.m!==t.m){ var hold=state.hold; state.hold=false; release(e.pointerId); state.hold=hold; press(e.pointerId,+k.dataset.m); } });
 kbd.addEventListener("pointerup",function(e){ release(e.pointerId); });
@@ -239,9 +248,63 @@ $("hold").addEventListener("click",function(){
   if(!state.hold){ held.forEach(E.noteOff); held=[]; heldNotes=[]; setTimeout(paintKeys,20); chordLabel(null); }
 });
 $("panic").addEventListener("click",releaseAll);
+$("reset").addEventListener("click",function(){ releaseAll(); Engine.reset(); refreshClock(); toast("הצליל אותחל"); });
+Engine.onReset=function(msg){ touches={}; held=[]; heldNotes=[]; arpMonoId=null; refreshClock(); paintKeys(); toast(msg); };
+window.addEventListener("error",function(){ toast("משהו השתבש. אם אין צליל, גע ב־↻"); });
+window.addEventListener("unhandledrejection",function(){ /* ignored on purpose: iOS rejects some audio promises harmlessly */ });
+
+/* ---------- level meter ---------- */
+(function meterLoop(){
+  var el=$("meter"), box=el.parentNode;
+  function frame(){
+    if(!document.hidden){ var lv=Engine.level(); box.classList.toggle("bad",lv<0); el.style.width=Math.min(100,Math.round(Math.max(0,lv)*260))+"%"; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- recording ---------- */
+var rec=null, recChunks=[], recT0=0, recTimer=null, recBlob=null;
+function recType(){
+  if(!window.MediaRecorder) return null;
+  var t=["audio/mp4","audio/webm;codecs=opus","audio/webm"];
+  for(var i=0;i<t.length;i++){ try{ if(MediaRecorder.isTypeSupported(t[i])) return t[i]; }catch(e){} }
+  return "";
+}
+$("rec").addEventListener("click",function(){
+  var b=this;
+  if(rec){ try{ rec.stop(); }catch(e){} return; }
+  var type=recType(), stream=Engine.recStream();
+  if(type===null||!stream){ toast("המכשיר הזה לא תומך בהקלטה מתוך הדפדפן"); return; }
+  try{ rec=type?new MediaRecorder(stream,{mimeType:type}):new MediaRecorder(stream); }catch(e){ rec=null; toast("ההקלטה לא הצליחה להתחיל"); return; }
+  recChunks=[];
+  rec.ondataavailable=function(e){ if(e.data&&e.data.size) recChunks.push(e.data); };
+  rec.onstop=function(){
+    clearInterval(recTimer); b.classList.remove("on"); b.textContent="⏺ הקלטה"; b.setAttribute("aria-pressed",false);
+    var mt=(rec&&rec.mimeType)||type||"audio/webm"; rec=null;
+    recBlob=new Blob(recChunks,{type:mt}); if(!recBlob.size){ toast("ההקלטה ריקה"); return; }
+    var ext=mt.indexOf("mp4")>-1?"m4a":"webm", name="אווירות-"+new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")+"."+ext;
+    var a=$("recfile"); if(a.href) URL.revokeObjectURL(a.href); a.href=URL.createObjectURL(recBlob); a.download=name; a.dataset.name=name;
+    var canShare=false; try{ canShare=!!(navigator.canShare&&navigator.canShare({files:[new File([recBlob],name,{type:mt})]})); }catch(e){}
+    $("recshare").hidden=!canShare; $("recdone").hidden=false;
+  };
+  rec.start(1000); recT0=Date.now(); b.classList.add("on"); b.setAttribute("aria-pressed",true);
+  recTimer=setInterval(function(){ var s=Math.floor((Date.now()-recT0)/1000); b.textContent="⏹ "+Math.floor(s/60)+":"+("0"+s%60).slice(-2); },500);
+  b.textContent="⏹ 0:00";
+});
+$("recshare").addEventListener("click",function(){
+  var a=$("recfile"); if(!recBlob) return;
+  try{ navigator.share({files:[new File([recBlob],a.dataset.name,{type:recBlob.type})],title:"אווירות"}).catch(function(){}); }catch(e){}
+});
+$("recx").addEventListener("click",function(){ $("recdone").hidden=true; });
+
+/* ---------- keep the screen on while playing ---------- */
+var lock=null;
+function wake(){ if(!("wakeLock" in navigator)||document.hidden) return; navigator.wakeLock.request("screen").then(function(l){ lock=l; }).catch(function(){}); }
+document.addEventListener("visibilitychange",function(){ if(!document.hidden && $("start").hidden) wake(); });
 
 /* ---------- tempo ---------- */
-function setBpm(v){ v=Math.max(60,Math.min(190,Math.round(v))); E.set("bpm",v); $("bpm").textContent=v; put("ambi:bpm",v); }
+function setBpm(v){ v=+v; if(!isFinite(v)) v=128; v=Math.max(60,Math.min(190,Math.round(v))); E.set("bpm",v); $("bpm").textContent=v; put("ambi:bpm",v); }
 $("bpmDown").addEventListener("click",function(){ setBpm(P.bpm-1); });
 $("bpmUp").addEventListener("click",function(){ setBpm(P.bpm+1); });
 var taps=[];
@@ -255,17 +318,22 @@ $("tap").addEventListener("click",function(){
 function toast(t){ var el=$("toast"); el.textContent=t; el.classList.add("show"); clearTimeout(el._t); el._t=setTimeout(function(){ el.classList.remove("show"); },1800); }
 $("go").addEventListener("click",function(){
   if(!E.available()){ $("go").textContent="הדפדפן הזה לא תומך בשמע"; return; }
-  E.start(); $("start").hidden=true; sizeXY(); buildKeys(); refreshClock();
+  E.start(); $("start").hidden=true; sizeXY(); buildKeys(); refreshClock(); wake();
   var ids=[57,60,64].map(function(n){ return E.noteOn(n); });
   setTimeout(function(){ ids.forEach(E.noteOff); paintKeys(); },700); paintKeys();
 });
 document.addEventListener("pointerdown",function(){ if($("start").hidden){ E.start(); } },true);
-document.addEventListener("visibilitychange",function(){ if(document.hidden){ releaseAll(); E.setClock(false); } else refreshClock(); });
+document.addEventListener("visibilitychange",function(){ if(document.hidden){ if(!rec){ releaseAll(); E.setClock(false); } } else { E.start(); refreshClock(); } });
 
 /* ---------- init ---------- */
+(function(){
+  var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  var standalone=navigator.standalone||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
+  if(ios&&!standalone) $("install").hidden=false;
+})();
 buildKnobs();
 setBpm(get("ambi:bpm",128));
-var last=get("ambi:last",null);
+var last=clean(get("ambi:last",null));
 loadPreset(last||PRESETS[0]);
 if(last && !PRESETS.concat(mine()).some(function(p){ return p.name===last.name; })) state.current="";
 paintPresets();

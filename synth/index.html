@@ -23,7 +23,7 @@
   <div class="top-actions">
     <button class="pill" id="save" type="button">☆ שמור</button>
     <button class="pill" id="help" type="button" aria-pressed="false">מה זה?</button>
-    <a class="pill" href="../index.html" aria-label="חזרה לשיעורים">שיעורים ←</a>
+    <button class="pill rec" id="rec" type="button" aria-pressed="false">⏺ הקלטה</button>
   </div>
 </header>
 
@@ -112,7 +112,9 @@
     <span class="chordname" id="chordname" aria-live="polite"></span>
     <span class="sp"></span>
     <button class="pill hold" id="hold" type="button" aria-pressed="false">החזקה</button>
+    <span class="meter" aria-hidden="true"><span id="meter"></span></span>
     <button class="pill" id="panic" type="button">שקט</button>
+    <button class="pill sq" id="reset" type="button" aria-label="אתחול הצליל" title="אתחול הצליל">↻</button>
   </div>
   <div class="kbd" id="kbd" dir="ltr" aria-label="מקלדת"></div>
 </footer>
@@ -123,10 +125,16 @@
     <p>סינתיסייזר שמנגן כמה תווים יחד, עם הד, השהיה ומשטח מגע. גע במקלדת, החלק אצבע על המשטח, ובנה צלילים.</p>
     <button class="go" id="go" type="button">▶ התחל לנגן</button>
     <small>אין צליל? הרם עוצמה, ובדוק שהמכשיר לא במצב שקט.</small>
+    <div class="install" id="install" hidden>
+      <b>להתקנה כאפליקציה</b>
+      <ol><li>גע בכפתור השיתוף של ספארי (ריבוע עם חץ למעלה).</li><li>בחר ״הוספה למסך הבית״.</li><li>פתח את ״אווירות״ מהמסך הבית.</li></ol>
+      <small>אחרי ההתקנה היא נפתחת על כל המסך ועובדת גם בלי אינטרנט.</small>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="recdone" id="recdone" hidden><span>ההקלטה מוכנה</span><a id="recfile" class="pill" download>שמור קובץ</a><button type="button" class="pill" id="recshare">שתף</button><button type="button" class="pill sq" id="recx" aria-label="סגירה">✕</button></div>
 
 <script src="engine.js"></script>
 <script src="app.js"></script>

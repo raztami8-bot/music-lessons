@@ -125,3 +125,31 @@ button{font:inherit;color:inherit}
 .bpmv{font-family:var(--f-display);font-size:1.6rem;min-width:56px;text-align:center;color:var(--glow);font-variant-numeric:tabular-nums}
 .pill#tap.on{background:var(--glow2);border-color:var(--glow2);color:#0f2a27}
 .seg + .seg{margin-inline-start:6px}
+
+/* level meter, recording, install hint */
+.meter{width:56px;height:8px;border-radius:99px;background:var(--track);overflow:hidden;flex:none}
+.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--glow2),var(--glow));border-radius:99px;transition:width .06s linear}
+.meter.bad{background:#7a2333}
+.pill.rec.on{background:#e0475b;border-color:#e0475b;color:#fff;font-variant-numeric:tabular-nums;animation:recpulse 1.2s ease-in-out infinite}
+@keyframes recpulse{50%{box-shadow:0 0 18px rgba(224,71,91,.6)}}
+.recdone{position:fixed;left:50%;transform:translateX(-50%);top:calc(64px + env(safe-area-inset-top,0px));z-index:21;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+  background:var(--panel2);border:1px solid var(--glow);border-radius:16px;padding:10px 12px;max-width:calc(100vw - 24px);box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.recdone[hidden]{display:none}
+.recdone span{font-weight:700}
+.install{margin-top:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;text-align:right;display:flex;flex-direction:column;gap:6px;width:100%}
+.install[hidden]{display:none}
+.install ol{margin:0;padding-inline-start:20px;color:var(--ink);line-height:1.6}
+
+/* phone held sideways: keep the keyboard big, let the panel scroll */
+@media (orientation:landscape) and (max-height:500px){
+  body{overflow-y:auto}
+  .top{padding-block:6px}
+  .top h1{display:none}
+  .panel{flex:none;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);height:auto;min-height:230px}
+  .xy-wrap{min-height:220px}
+  .ctrl{overflow:visible}
+  .kbd-area{position:sticky;bottom:0;z-index:5;background:var(--bg);padding-top:6px}
+  .kbd{height:clamp(120px,40vh,170px)}
+  .kn-dial{width:50px}
+}
+@media (prefers-reduced-motion:reduce){.pill.rec.on{animation:none}.meter span{transition:none}}

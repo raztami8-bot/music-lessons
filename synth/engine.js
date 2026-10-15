@@ -83,14 +83,48 @@ function build(){
   N.revFromDelay=g(0.35); N.delOut.connect(N.revFromDelay); N.revFromDelay.connect(N.rev);
 
   N.comp=ctx.createDynamicsCompressor(); N.comp.threshold.value=-14; N.comp.ratio.value=4; N.comp.attack.value=0.01; N.comp.release.value=0.25;
-  N.master.connect(N.comp); N.comp.connect(ctx.destination);
+  N.master.connect(N.comp);
+  N.limit=ctx.createWaveShaper(); N.limit.curve=(function(){ var n=1024,c=new Float32Array(n); for(var i=0;i<n;i++){ var x=i*2/n-1; c[i]=Math.tanh(x*1.2)/Math.tanh(1.2); } return c; })();
+  N.comp.connect(N.limit); N.limit.connect(ctx.destination);
+  N.meter=ctx.createAnalyser(); N.meter.fftSize=512; N.limit.connect(N.meter); N.buf=new Float32Array(512);
+  try{ N.rec=ctx.createMediaStreamDestination(); N.limit.connect(N.rec); }catch(e){ N.rec=null; }
   lastDrive=-1; apply(true);
 }
+var health={bad:0,last:0};
+function level(){
+  if(!ctx||!N.meter) return 0;
+  N.meter.getFloatTimeDomainData(N.buf); var sum=0;
+  for(var i=0;i<N.buf.length;i++){ var x=N.buf[i]; if(x!==x||!isFinite(x)) return -1; sum+=x*x; }
+  return Math.sqrt(sum/N.buf.length);
+}
+// Rebuild the whole sound graph from scratch. Used when iOS breaks the audio or something blows up.
+function reset(){
+  var wasClock=!!clock.timer; if(clock.timer){ clearInterval(clock.timer); clock.timer=null; }
+  try{ if(ctx) ctx.close(); }catch(e){}
+  ctx=null; N={}; voices={}; mono=null; monoStack=[]; unlocked=false;
+  start(); if(wasClock) setClock(true);
+  return !!ctx;
+}
+function watchdog(){
+  if(!ctx) return;
+  var lv=level();
+  if(lv<0 && Date.now()-health.last>3000){ health.last=Date.now(); reset(); if(window.Engine.onReset) window.Engine.onReset("נמצאה תקלה בצליל, הצליל אותחל"); return; }
+  if(ctx.state==="interrupted"||ctx.state==="suspended"){ health.bad++; try{ ctx.resume(); }catch(e){} }
+  else health.bad=0;
+}
+setInterval(watchdog,1000);
 function start(){
   if(!AC) return false;
   playbackSession();
   if(!ctx) build();
-  if(ctx.state!=="running"){ try{ var r=ctx.resume(); if(r&&r.catch) r.catch(function(){}); }catch(e){} }
+  if(ctx.state!=="running"){
+    try{ var r=ctx.resume(); if(r&&r.catch) r.catch(function(){}); }catch(e){}
+    // iOS sometimes refuses to wake an old context. If it is still asleep shortly after a tap, start a fresh one.
+    var c0=ctx; setTimeout(function(){
+      if(ctx===c0 && ctx.state!=="running" && !document.hidden && Date.now()-health.last>6000){
+        health.last=Date.now(); reset(); if(window.Engine.onReset) window.Engine.onReset("הצליל הופעל מחדש. גע שוב במקלדת");
+      } },700);
+  }
   if(!unlocked){ try{ var s=ctx.createBufferSource(); s.buffer=ctx.createBuffer(1,1,22050); s.connect(ctx.destination); s.start(0); unlocked=true; }catch(e){} }
   return true;
 }
@@ -105,8 +139,9 @@ var lastDrive=-1;
 function apply(now){
   if(!ctx) return;
   var t=ctx.currentTime, k=now?0.001:0.04;
-  N.filter.frequency.setTargetAtTime(cutoffHz(P.bright),t,k);
-  N.filter.Q.setTargetAtTime(0.5+Math.pow(P.reso,1.5)*18,t,k);
+  var head=Math.pow(2,(P.env*4200+P.breath*2200)/1200);           // how far env + breath can push the filter up
+  N.filter.frequency.setTargetAtTime(Math.min(cutoffHz(P.bright),17000/head),t,k);
+  N.filter.Q.setTargetAtTime(0.5+Math.pow(P.reso,1.5)*16,t,k);
   N.lfo.frequency.setTargetAtTime(0.07+P.breath*0.35,t,k);
   N.lfoAmt.gain.setTargetAtTime(P.breath*2200,t,k);
   if(Math.abs(P.drive-lastDrive)>0.01){ N.shaper.curve=driveCurve(P.drive); lastDrive=P.drive; }
@@ -162,8 +197,17 @@ function filterHit(t){
   if(P.env<0.01) return;
   var amt=P.env*4200; N.filter.detune.cancelScheduledValues(t); N.filter.detune.setValueAtTime(amt,t); N.filter.detune.setTargetAtTime(0,t,0.05+P.release*0.2);
 }
-function tuneComb(midi,t){ N.comb.delayTime.setTargetAtTime(1/(hz(midi)*2),t,0.01); }
-var seq=0, mono=null, monoStack=[];
+function tuneComb(midi,t){ var per=1/hz(midi), d=per*Math.max(1,Math.ceil(0.004/per)); N.comb.delayTime.setTargetAtTime(Math.min(0.09,d),t,0.01); }
+var seq=0, mono=null, monoStack=[], MAXV=10;
+function steal(t){
+  var ids=Object.keys(voices); if(ids.length<MAXV) return;
+  ids.sort(function(a,b){ var A=voices[a],B=voices[b]; return (A.stopping===B.stopping)?A.t0-B.t0:(A.stopping?-1:1); });
+  var victim=voices[ids[0]]; if(!victim) return;
+  try{ victim.out.gain.cancelScheduledValues(t); victim.out.gain.setTargetAtTime(0,t,0.008); victim.oscs.forEach(function(o){ try{ o.node.stop(t+0.05); }catch(e){} }); }catch(e){}
+  setTimeout(function(){ try{ victim.out.disconnect(); }catch(e){} },300);
+  if(victim===mono){ mono=null; monoStack=[]; }
+  delete voices[ids[0]];
+}
 function noteOnAt(midi,t){
   if(!start()) return null;
   t=Math.max(t||0,ctx.currentTime+0.005);
@@ -176,9 +220,9 @@ function noteOnAt(midi,t){
       mono.oscs.forEach(function(o){ o.node.frequency.setTargetAtTime(f*o.ratio,t,g/3); }); mono.midi=midi;
       return id;
     }
-    mono=makeVoice(midi,t); envOn(mono,t); voices["m"]=mono; return id;
+    steal(t); mono=makeVoice(midi,t); envOn(mono,t); voices["m"]=mono; return id;
   }
-  var v=makeVoice(midi,t); envOn(v,t); voices[id]=v; return id;
+  steal(t); var v=makeVoice(midi,t); envOn(v,t); voices[id]=v; return id;
 }
 function release(v,t,key){
   if(!v||v.stopping) return; v.stopping=true;
@@ -212,25 +256,30 @@ var GATES={
 var clock={timer:null,step:0,next:0,cb:null,gate:"off"};
 function stepDur(){ return beat()/4; }
 function tick(){
+  if(!ctx) return;
+  if(clock.next<ctx.currentTime-0.25) clock.next=ctx.currentTime+0.02;   // came back from a pause: skip, don't burst
   var la=ctx.currentTime+0.12;
   while(clock.next<la){
     var t=clock.next, sd=stepDur(), s=clock.step%16, pat=GATES[clock.gate];
-    if(pat){ var on=pat[s]; N.gate.gain.setTargetAtTime(on?1:0.06,t,0.004); }
+    if(pat && N.gate){ var on=pat[s]; N.gate.gain.setTargetAtTime(on?1:0.06,t,0.004); }
     if(clock.cb) clock.cb(clock.step,t,sd);
     clock.next+=sd; clock.step++;
   }
 }
 function setClock(running,cb,gate){
+  if(running && !ctx) start();
   if(gate!=null) clock.gate=gate;
   if(cb!==undefined) clock.cb=cb;
-  if(running && !clock.timer){ if(!start()) return; clock.step=0; clock.next=ctx.currentTime+0.06; clock.timer=setInterval(tick,25); }
+  if(running && !clock.timer){ if(!ctx) return; clock.step=0; clock.next=ctx.currentTime+0.06; clock.timer=setInterval(tick,25); }
   if(!running && clock.timer){ clearInterval(clock.timer); clock.timer=null; }
   if(ctx && (!running || !GATES[clock.gate])) N.gate.gain.setTargetAtTime(1,ctx.currentTime,0.01);
 }
 
-window.Engine={P:P,set:set,start:start,
-  noteOn:function(m){ return noteOnAt(m,0); }, noteOff:function(id){ noteOffAt(id,0); },
-  noteOnAt:noteOnAt, noteOffAt:noteOffAt, allOff:allOff, sounding:sounding, setClock:setClock, gates:GATES,
+function safe(fn,fallback){ return function(){ try{ return fn.apply(null,arguments); }catch(e){ if(window.console) console.warn("engine",e); return fallback; } }; }
+window.Engine={P:P,set:safe(set),start:safe(start,false),level:level,reset:reset,
+  recStream:function(){ start(); return N.rec?N.rec.stream:null; },
+  noteOn:safe(function(m){ return noteOnAt(m,0); },null), noteOff:safe(function(id){ noteOffAt(id,0); }),
+  noteOnAt:safe(noteOnAt,null), noteOffAt:safe(noteOffAt), allOff:safe(allOff), sounding:safe(sounding,{}), setClock:safe(setClock), gates:GATES,
   now:function(){ return ctx?ctx.currentTime:0; },
   available:function(){ return !!AC; }, running:function(){ return !!ctx&&ctx.state==="running"; }};
 })();
