@@ -36,21 +36,69 @@
   </section>
 
   <section class="ctrl">
-    <div class="knobs" id="knobs"></div>
-    <div class="rows">
-      <div class="row">
-        <span class="row-lbl">צורה</span>
-        <div class="seg" id="shape" role="group" aria-label="צורת גל">
-          <button type="button" data-v="0">חם</button><button type="button" data-v="1">בהיר</button><button type="button" data-v="2">חלול</button>
+    <div class="tabs" role="tablist" aria-label="מקטעים">
+      <button type="button" role="tab" id="tab-sound" data-tab="sound" aria-selected="true">צליל</button>
+      <button type="button" role="tab" id="tab-dirt" data-tab="dirt" aria-selected="false">לכלוך</button>
+      <button type="button" role="tab" id="tab-time" data-tab="time" aria-selected="false">חלל וקצב</button>
+    </div>
+
+    <div class="pane" data-pane="sound">
+      <div class="knobs" id="knobs-sound"></div>
+      <div class="rows">
+        <div class="row">
+          <span class="row-lbl">צורה</span>
+          <div class="seg" id="shape" role="group" aria-label="צורת גל">
+            <button type="button" data-v="0">חם</button><button type="button" data-v="1">בהיר</button><button type="button" data-v="2">חלול</button><button type="button" data-v="3">סופר</button><button type="button" data-v="4">מתכת</button>
+          </div>
+          <p class="explain">צורת הגל. חם רך, בהיר עשיר, חלול כמו קלרינט. סופר: חמישה מסורים מעט מכוונים זה מזה, הצליל העבה של טראנס. מתכת: גל שמוכפל בגל בגובה ״לא נכון״, ויוצא צלצול מתכתי.</p>
         </div>
-        <p class="explain">צורת הגל של המתנדים. חם רך ועגול, בהיר עשיר בהרמוניות, חלול כמו קלרינט.</p>
+        <div class="row">
+          <span class="row-lbl">קולות</span>
+          <div class="seg" id="mono" role="group" aria-label="קולות">
+            <button type="button" data-v="0">רבים</button><button type="button" data-v="1">קול אחד</button>
+          </div>
+          <p class="explain">קול אחד: כמו הבס שלך, תו אחד בכל פעם, והגובה גולש מתו לתו. ״גלישה״ קובעת כמה לאט.</p>
+        </div>
+        <div class="row">
+          <span class="row-lbl">אקורד</span>
+          <div class="seg" id="chord" role="group" aria-label="אקורד">
+            <button type="button" data-v="one">תו אחד</button><button type="button" data-v="min">מינורי</button><button type="button" data-v="maj">מז׳ורי</button><button type="button" data-v="sus">תלוי</button><button type="button" data-v="m7">שביעית</button><button type="button" data-v="oct">אוקטבות</button>
+          </div>
+          <p class="explain">נגיעה אחת מנגנת כמה תווים. מינורי אפל, מז׳ורי בהיר, תלוי פתוח ומרחף, שביעית רך וג׳אזי.</p>
+        </div>
       </div>
-      <div class="row">
-        <span class="row-lbl">אקורד</span>
-        <div class="seg" id="chord" role="group" aria-label="אקורד">
-          <button type="button" data-v="one">תו אחד</button><button type="button" data-v="min">מינורי</button><button type="button" data-v="maj">מז׳ורי</button><button type="button" data-v="sus">תלוי</button><button type="button" data-v="m7">שביעית</button><button type="button" data-v="oct">אוקטבות</button>
+    </div>
+
+    <div class="pane" data-pane="dirt" hidden>
+      <div class="knobs" id="knobs-dirt"></div>
+      <p class="explain show">הסדר כמו בשרשרת דוושות: הצליל עובר במסנן, אחר כך בלכלוך, בבוץ ובצבע, ובסוף במתכת.</p>
+    </div>
+
+    <div class="pane" data-pane="time" hidden>
+      <div class="knobs" id="knobs-time"></div>
+      <div class="rows">
+        <div class="row">
+          <span class="row-lbl">קצב</span>
+          <div class="bpm" dir="ltr"><button type="button" class="pill sq" id="bpmDown" aria-label="להאט">−</button><span id="bpm" class="bpmv">128</span><button type="button" class="pill sq" id="bpmUp" aria-label="להאיץ">+</button><button type="button" class="pill" id="tap">הקש</button></div>
+          <p class="explain">כוון לאותו מספר כמו בתופים. ההשהיה, השער והארפג׳יאטור ננעלים על הקצב הזה. ״הקש״: גע בקצב של הקיק ארבע פעמים.</p>
         </div>
-        <p class="explain">נגיעה אחת מנגנת כמה תווים. מינורי: שורש, טרצה קטנה וקווינטה, אפל. מז׳ורי: טרצה גדולה, בהיר. תלוי: בלי טרצה, פתוח ומרחף. שביעית: מינורי ועוד תו, רך וג׳אזי.</p>
+        <div class="row">
+          <span class="row-lbl">ארפג׳יו</span>
+          <div class="seg" id="arp" role="group" aria-label="ארפג׳יאטור">
+            <button type="button" data-v="off">כבוי</button><button type="button" data-v="up">עולה</button><button type="button" data-v="down">יורד</button><button type="button" data-v="updown">הלוך וחזור</button><button type="button" data-v="rand">אקראי</button>
+          </div>
+          <div class="seg" id="arpRate" role="group" aria-label="מהירות">
+            <button type="button" data-v="1">1/16</button><button type="button" data-v="2">1/8</button>
+          </div>
+          <p class="explain">מפרק את האקורד שאתה מחזיק לתווים שרצים בקצב. עם ״החזקה״ הוא ממשיך לבד, והידיים פנויות לכפתורים.</p>
+        </div>
+        <div class="row">
+          <span class="row-lbl">שער</span>
+          <div class="seg" id="gate" role="group" aria-label="שער טראנס">
+            <button type="button" data-v="off">כבוי</button><button type="button" data-v="trance">טראנס</button><button type="button" data-v="pulse">פעימה</button><button type="button" data-v="half">שמיניות</button>
+          </div>
+          <p class="explain">חותך את הצליל לפי תבנית של 16 צעדים, כמו הסיקוונסר של התופים. שטיח ארוך הופך לקצב ״מגמגם״ של טראנס.</p>
+        </div>
       </div>
     </div>
   </section>

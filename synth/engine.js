@@ -1,13 +1,14 @@
 /* מכונת אווירות · מנוע הצליל
-   Polyphonic pad synth: 2 detuned oscillators + sub per voice, shared low-pass filter with a slow LFO ("breath"),
-   stereo chorus, convolution reverb ("space") and ping-pong delay ("echo"). */
+   voices → filter (env + breath) → drive → mud → color → metal comb → trance gate → chorus → space / echo → out
+   Voices: warm, bright, hollow, super (5 saws), metal (ring modulation). Optional mono voice with glide.
+   A 16th-note clock drives the trance gate and lets the page run an arpeggiator in time. */
 (function(){
 "use strict";
 var AC=window.AudioContext||window.webkitAudioContext;
 var ctx=null, N={}, voices={}, unlocked=false, silentEl=null;
 
-// Parameters are all 0..1, except shape (0 warm, 1 bright, 2 hollow)
-var P={bright:.45,reso:.15,attack:.55,release:.6,width:.55,breath:.25,space:.6,echo:.15,shape:0,volume:.8};
+var P={bright:.45,reso:.15,env:.2,attack:.55,release:.6,width:.55,breath:.25,glide:.3,
+       space:.6,echo:.15,drive:0,mud:0,color:.7,metal:0,shape:0,mono:false,volume:.8,bpm:128};
 
 /* ---- iPhone/iPad: play through the silent switch, and unlock inside a tap ---- */
 function silentWav(){
@@ -34,6 +35,11 @@ function impulse(sec,decay){
     for(var i=0;i<len;i++){ var t=i/len; d[i]=(Math.random()*2-1)*Math.pow(1-t,decay)*(i<sr*0.004?i/(sr*0.004):1); } }
   return b;
 }
+function driveCurve(a){
+  var n=2048, c=new Float32Array(n), k=a*a*60, asym=a*0.12;
+  for(var i=0;i<n;i++){ var x=i*2/n-1; var y=((1+k)*x)/(1+k*Math.abs(x)); c[i]=y+asym*y*y*(y>0?1:-0.6); }
+  return c;
+}
 function build(){
   ctx=new AC({latencyHint:"interactive"});
   var g=function(v){ var x=ctx.createGain(); x.gain.value=v; return x; };
@@ -42,32 +48,43 @@ function build(){
   N.lfo=ctx.createOscillator(); N.lfo.type="sine"; N.lfoAmt=g(0); N.lfo.connect(N.lfoAmt); N.lfoAmt.connect(N.filter.detune); N.lfo.start();
   N.bus.connect(N.filter);
 
-  // chorus: two short delays swayed by a slow LFO, one per ear
-  N.pre=g(1); N.dry=g(1); N.filter.connect(N.dry); N.dry.connect(N.pre);
+  // dirt: drive → mud (low shelf) → color (tone)
+  N.drvIn=g(1); N.shaper=ctx.createWaveShaper(); N.shaper.oversample="4x"; N.drvOut=g(1);
+  N.mud=ctx.createBiquadFilter(); N.mud.type="lowshelf"; N.mud.frequency.value=150;
+  N.mudMid=ctx.createBiquadFilter(); N.mudMid.type="peaking"; N.mudMid.frequency.value=380; N.mudMid.Q.value=0.8;
+  N.color=ctx.createBiquadFilter(); N.color.type="lowpass"; N.color.Q.value=0.4;
+  N.filter.connect(N.drvIn); N.drvIn.connect(N.shaper); N.shaper.connect(N.drvOut);
+  N.drvOut.connect(N.mud); N.mud.connect(N.mudMid); N.mudMid.connect(N.color);
+
+  // metal: a tuned comb resonator, retuned to each new note
+  N.gate=g(1); N.combDry=g(1); N.comb=ctx.createDelay(0.1); N.comb.delayTime.value=1/220; N.combFb=g(0); N.combWet=g(0);
+  N.combTone=ctx.createBiquadFilter(); N.combTone.type="highpass"; N.combTone.frequency.value=180;
+  N.color.connect(N.combDry); N.combDry.connect(N.gate);
+  N.color.connect(N.comb); N.comb.connect(N.combTone); N.combTone.connect(N.combFb); N.combFb.connect(N.comb); N.comb.connect(N.combWet); N.combWet.connect(N.gate);
+
+  // chorus
+  N.pre=g(1); N.dry=g(1); N.gate.connect(N.dry); N.dry.connect(N.pre);
   N.dL=ctx.createDelay(0.1); N.dR=ctx.createDelay(0.1); N.dL.delayTime.value=0.018; N.dR.delayTime.value=0.026;
   N.chLfo=ctx.createOscillator(); N.chLfo.frequency.value=0.35; N.chDepth=g(0.003); N.chInv=g(-1);
   N.chLfo.connect(N.chDepth); N.chDepth.connect(N.dL.delayTime); N.chDepth.connect(N.chInv); N.chInv.connect(N.dR.delayTime); N.chLfo.start();
   N.chMerge=ctx.createChannelMerger(2); N.chWet=g(0.5);
-  N.filter.connect(N.dL); N.filter.connect(N.dR); N.dL.connect(N.chMerge,0,0); N.dR.connect(N.chMerge,0,1);
+  N.gate.connect(N.dL); N.gate.connect(N.dR); N.dL.connect(N.chMerge,0,0); N.dR.connect(N.chMerge,0,1);
   N.chMerge.connect(N.chWet); N.chWet.connect(N.pre);
 
-  N.master=g(0.8);
-  N.pre.connect(N.master);
-  // reverb
+  N.master=g(0.8); N.pre.connect(N.master);
   N.revSend=g(0); N.rev=ctx.createConvolver(); N.rev.buffer=impulse(4.6,2.8); N.revOut=g(0.9);
   N.pre.connect(N.revSend); N.revSend.connect(N.rev); N.rev.connect(N.revOut); N.revOut.connect(N.master);
-  // ping-pong delay with a darkening filter in the loop
-  N.delSend=g(0); N.d1=ctx.createDelay(2); N.d2=ctx.createDelay(2); N.d1.delayTime.value=0.375; N.d2.delayTime.value=0.375;
+  N.delSend=g(0); N.d1=ctx.createDelay(3); N.d2=ctx.createDelay(3);
   N.fb1=g(0.4); N.fb2=g(0.4); N.tone=ctx.createBiquadFilter(); N.tone.type="lowpass"; N.tone.frequency.value=3200;
   N.delMerge=ctx.createChannelMerger(2); N.delOut=g(0.8);
   N.pre.connect(N.delSend); N.delSend.connect(N.tone); N.tone.connect(N.d1);
   N.d1.connect(N.fb1); N.fb1.connect(N.d2); N.d2.connect(N.fb2); N.fb2.connect(N.d1);
   N.d1.connect(N.delMerge,0,0); N.d2.connect(N.delMerge,0,1); N.delMerge.connect(N.delOut); N.delOut.connect(N.master);
-  N.revSendFromDelay=g(0.35); N.delOut.connect(N.revSendFromDelay); N.revSendFromDelay.connect(N.rev);
+  N.revFromDelay=g(0.35); N.delOut.connect(N.revFromDelay); N.revFromDelay.connect(N.rev);
 
   N.comp=ctx.createDynamicsCompressor(); N.comp.threshold.value=-14; N.comp.ratio.value=4; N.comp.attack.value=0.01; N.comp.release.value=0.25;
   N.master.connect(N.comp); N.comp.connect(ctx.destination);
-  apply(true);
+  lastDrive=-1; apply(true);
 }
 function start(){
   if(!AC) return false;
@@ -79,63 +96,141 @@ function start(){
 }
 
 /* ---- parameter mapping ---- */
-function cutoffHz(v){ return 70*Math.pow(2,v*7.8); }          // ~70 Hz .. ~15 kHz
-function attackSec(v){ return 0.004+v*v*4; }
-function releaseSec(v){ return 0.08+v*v*7; }
+function cutoffHz(v){ return 70*Math.pow(2,v*7.8); }
+function attackSec(v){ return 0.003+v*v*4; }
+function releaseSec(v){ return 0.06+v*v*7; }
+function glideSec(v){ return 0.01+v*v*0.5; }
+function beat(){ return 60/P.bpm; }
+var lastDrive=-1;
 function apply(now){
   if(!ctx) return;
   var t=ctx.currentTime, k=now?0.001:0.04;
   N.filter.frequency.setTargetAtTime(cutoffHz(P.bright),t,k);
-  N.filter.Q.setTargetAtTime(0.5+Math.pow(P.reso,1.5)*14,t,k);
+  N.filter.Q.setTargetAtTime(0.5+Math.pow(P.reso,1.5)*18,t,k);
   N.lfo.frequency.setTargetAtTime(0.07+P.breath*0.35,t,k);
   N.lfoAmt.gain.setTargetAtTime(P.breath*2200,t,k);
+  if(Math.abs(P.drive-lastDrive)>0.01){ N.shaper.curve=driveCurve(P.drive); lastDrive=P.drive; }
+  N.drvIn.gain.setTargetAtTime(1+P.drive*5,t,k);
+  N.drvOut.gain.setTargetAtTime(1/(1+P.drive*2.6),t,k);
+  N.mud.gain.setTargetAtTime(P.mud*14,t,k);
+  N.mudMid.gain.setTargetAtTime(P.mud*5,t,k);
+  N.color.frequency.setTargetAtTime(900*Math.pow(2,P.color*4.4),t,k);
+  N.combFb.gain.setTargetAtTime(P.metal*0.9,t,k);
+  N.combWet.gain.setTargetAtTime(P.metal*0.8,t,k);
+  N.combDry.gain.setTargetAtTime(1-P.metal*0.35,t,k);
   N.chWet.gain.setTargetAtTime(0.15+P.width*0.75,t,k);
   N.chDepth.gain.setTargetAtTime(0.001+P.width*0.005,t,k);
   N.revSend.gain.setTargetAtTime(Math.pow(P.space,1.3)*1.1,t,k);
   N.dry.gain.setTargetAtTime(1-P.space*0.35,t,k);
   N.delSend.gain.setTargetAtTime(P.echo*0.7,t,k);
   N.fb1.gain.setTargetAtTime(0.2+P.echo*0.45,t,k); N.fb2.gain.setTargetAtTime(0.2+P.echo*0.45,t,k);
+  var dt=beat()*0.75; N.d1.delayTime.setTargetAtTime(dt,t,0.05); N.d2.delayTime.setTargetAtTime(dt,t,0.05);   // dotted eighth, in time with the beat
   N.master.gain.setTargetAtTime(P.volume,t,k);
-  // detune is live on sounding voices too
-  Object.keys(voices).forEach(function(id){ var v=voices[id]; if(!v.stopping){ v.o1.detune.setTargetAtTime(-P.width*22,t,k); v.o2.detune.setTargetAtTime(P.width*22,t,k); } });
+  Object.keys(voices).forEach(function(id){ var v=voices[id]; if(!v.stopping) v.oscs.forEach(function(o){ if(o.spread!=null) o.node.detune.setTargetAtTime(o.spread*P.width*22,t,k); }); });
 }
-function set(key,val){ P[key]=val; apply(false); }
+function set(key,val){ P[key]=val; if(key==="mono" && !val) dropMono(); apply(false); }
 
 /* ---- voices ---- */
-var SHAPES=[["triangle","sawtooth",0.55],["sawtooth","sawtooth",1],["square","square",0.6]];
 function hz(midi){ return 440*Math.pow(2,(midi-69)/12); }
-var seq=0;
-function noteOn(midi){
-  if(!start()) return null;
-  var t=ctx.currentTime+0.005, sh=SHAPES[P.shape]||SHAPES[0], f=hz(midi);
-  var out=ctx.createGain(); out.gain.value=0;
-  var o1=ctx.createOscillator(), o2=ctx.createOscillator(), sub=ctx.createOscillator();
-  var g2=ctx.createGain(), gs=ctx.createGain();
-  o1.type=sh[0]; o2.type=sh[1]; sub.type="sine";
-  o1.frequency.value=f; o2.frequency.value=f; sub.frequency.value=f/2;
-  o1.detune.value=-P.width*22; o2.detune.value=P.width*22;
-  g2.gain.value=sh[2]; gs.gain.value=midi<60?0.35:0.18;
-  o1.connect(out); o2.connect(g2); g2.connect(out); sub.connect(gs); gs.connect(out); out.connect(N.bus);
-  var a=attackSec(P.attack), peak=0.5;
-  out.gain.setValueAtTime(0,t); out.gain.linearRampToValueAtTime(peak,t+a);
-  out.gain.setTargetAtTime(peak*0.8,t+a,0.6);
-  o1.start(t); o2.start(t); sub.start(t);
-  var id=++seq; voices[id]={o1:o1,o2:o2,sub:sub,out:out,midi:midi,t0:t,a:a,peak:peak};
-  return id;
+function makeVoice(midi,t){
+  var f=hz(midi), out=ctx.createGain(); out.gain.value=0;
+  var oscs=[], mix=ctx.createGain(); mix.connect(out);
+  function osc(type,ratio,spread,gain,dest){
+    var o=ctx.createOscillator(), gg=ctx.createGain(); o.type=type; o.frequency.value=f*ratio;
+    if(spread!=null) o.detune.value=spread*P.width*22;
+    gg.gain.value=gain; o.connect(gg); gg.connect(dest||mix); o.start(t); oscs.push({node:o,ratio:ratio,spread:spread}); return o;
+  }
+  var s=P.shape;
+  if(s===0){ osc("triangle",1,-1,1); osc("sawtooth",1,1,.55); }
+  else if(s===1){ osc("sawtooth",1,-1,1); osc("sawtooth",1,1,1); }
+  else if(s===2){ osc("square",1,-1,.6); osc("square",1,1,.6); }
+  else if(s===3){ [-2,-1,0,1,2].forEach(function(sp){ osc("sawtooth",1,sp*1.6,sp===0?.6:.42); }); }
+  else { // metal: a saw ring-modulated by an off-ratio sine, plus a little of the plain saw
+    var ring=ctx.createGain(); ring.gain.value=0; ring.connect(mix);
+    osc("sawtooth",1,-1,1,ring); var m=osc("sine",2.76,null,1,ring.gain); osc("sawtooth",1,1,.3);
+  }
+  osc("sine",.5,null,midi<60?.35:.18);
+  out.connect(N.bus);
+  return {oscs:oscs,out:out,midi:midi,t0:t,peak:.5,a:attackSec(P.attack)};
 }
-function noteOff(id){
-  var v=voices[id]; if(!v||v.stopping) return; v.stopping=true;
-  var t=ctx.currentTime, r=releaseSec(P.release);
-  // estimate where the envelope is now, then fade from there (Safari has no cancelAndHold everywhere)
+function envOn(v,t){
+  var a=v.a=attackSec(P.attack);
+  v.out.gain.cancelScheduledValues(t); v.out.gain.setValueAtTime(0,t); v.out.gain.linearRampToValueAtTime(v.peak,t+a);
+  v.out.gain.setTargetAtTime(v.peak*0.8,t+a,0.6); v.t0=t;
+}
+function filterHit(t){
+  if(P.env<0.01) return;
+  var amt=P.env*4200; N.filter.detune.cancelScheduledValues(t); N.filter.detune.setValueAtTime(amt,t); N.filter.detune.setTargetAtTime(0,t,0.05+P.release*0.2);
+}
+function tuneComb(midi,t){ N.comb.delayTime.setTargetAtTime(1/(hz(midi)*2),t,0.01); }
+var seq=0, mono=null, monoStack=[];
+function noteOnAt(midi,t){
+  if(!start()) return null;
+  t=Math.max(t||0,ctx.currentTime+0.005);
+  tuneComb(midi,t); filterHit(t);
+  var id=++seq;
+  if(P.mono){
+    monoStack.push({id:id,midi:midi});
+    if(mono && !mono.stopping){
+      var g=glideSec(P.glide), f=hz(midi);
+      mono.oscs.forEach(function(o){ o.node.frequency.setTargetAtTime(f*o.ratio,t,g/3); }); mono.midi=midi;
+      return id;
+    }
+    mono=makeVoice(midi,t); envOn(mono,t); voices["m"]=mono; return id;
+  }
+  var v=makeVoice(midi,t); envOn(v,t); voices[id]=v; return id;
+}
+function release(v,t,key){
+  if(!v||v.stopping) return; v.stopping=true;
+  t=Math.max(t,ctx.currentTime); var r=releaseSec(P.release);
   var el=t-v.t0, cur=el<v.a? v.peak*Math.max(0,el/v.a) : v.peak*(0.8+0.2*Math.exp(-(el-v.a)/0.6));
   v.out.gain.cancelScheduledValues(t); v.out.gain.setValueAtTime(cur,t); v.out.gain.setTargetAtTime(0,t,r/4);
-  var end=t+r*1.6+0.05; v.o1.stop(end); v.o2.stop(end); v.sub.stop(end);
-  setTimeout(function(){ try{ v.out.disconnect(); }catch(e){} delete voices[id]; },(end-t)*1000+200);
+  var end=t+r*1.6+0.05; v.oscs.forEach(function(o){ try{ o.node.stop(end); }catch(e){} });
+  setTimeout(function(){ try{ v.out.disconnect(); }catch(e){} if(voices[key]===v) delete voices[key]; },(end-ctx.currentTime)*1000+200);
 }
-function allOff(){ Object.keys(voices).forEach(function(id){ noteOff(+id); }); }
+function noteOffAt(id,t){
+  if(!ctx) return; t=t||ctx.currentTime;
+  if(voices[id]){ release(voices[id],t,id); return; }
+  var i=monoStack.findIndex(function(x){ return x.id===id; }); if(i<0) return;
+  var wasTop=(i===monoStack.length-1); monoStack.splice(i,1);
+  if(!mono) return;
+  if(!monoStack.length){ release(mono,t,"m"); mono=null; }
+  else if(wasTop){ var top=monoStack[monoStack.length-1], g=glideSec(P.glide), f=hz(top.midi);
+    mono.oscs.forEach(function(o){ o.node.frequency.setTargetAtTime(f*o.ratio,t,g/3); }); mono.midi=top.midi; tuneComb(top.midi,t); }
+}
+function dropMono(){ if(mono){ release(mono,ctx.currentTime,"m"); mono=null; } monoStack=[]; }
+function allOff(){ if(!ctx) return; Object.keys(voices).forEach(function(id){ release(voices[id],ctx.currentTime,id); }); mono=null; monoStack=[]; }
 function sounding(){ var m={}; Object.keys(voices).forEach(function(id){ if(!voices[id].stopping) m[voices[id].midi]=1; }); return m; }
 
-window.Engine={P:P,set:set,start:start,noteOn:noteOn,noteOff:noteOff,allOff:allOff,sounding:sounding,
-  available:function(){ return !!AC; }, running:function(){ return !!ctx&&ctx.state==="running"; },
-  suspendSilent:function(){ if(silentEl) try{ silentEl.pause(); }catch(e){} }};
+/* ---- clock: 16th notes, trance gate, callback for the arpeggiator ---- */
+var GATES={
+  off:null,
+  trance:[1,0,1,1, 0,1,1,0, 1,0,1,1, 0,1,0,1],
+  pulse:[1,1,0,1, 1,1,0,1, 1,1,0,1, 1,1,0,1],
+  half:[1,1,0,0, 1,1,0,0, 1,1,0,0, 1,1,0,0]
+};
+var clock={timer:null,step:0,next:0,cb:null,gate:"off"};
+function stepDur(){ return beat()/4; }
+function tick(){
+  var la=ctx.currentTime+0.12;
+  while(clock.next<la){
+    var t=clock.next, sd=stepDur(), s=clock.step%16, pat=GATES[clock.gate];
+    if(pat){ var on=pat[s]; N.gate.gain.setTargetAtTime(on?1:0.06,t,0.004); }
+    if(clock.cb) clock.cb(clock.step,t,sd);
+    clock.next+=sd; clock.step++;
+  }
+}
+function setClock(running,cb,gate){
+  if(gate!=null) clock.gate=gate;
+  if(cb!==undefined) clock.cb=cb;
+  if(running && !clock.timer){ if(!start()) return; clock.step=0; clock.next=ctx.currentTime+0.06; clock.timer=setInterval(tick,25); }
+  if(!running && clock.timer){ clearInterval(clock.timer); clock.timer=null; }
+  if(ctx && (!running || !GATES[clock.gate])) N.gate.gain.setTargetAtTime(1,ctx.currentTime,0.01);
+}
+
+window.Engine={P:P,set:set,start:start,
+  noteOn:function(m){ return noteOnAt(m,0); }, noteOff:function(id){ noteOffAt(id,0); },
+  noteOnAt:noteOnAt, noteOffAt:noteOffAt, allOff:allOff, sounding:sounding, setClock:setClock, gates:GATES,
+  now:function(){ return ctx?ctx.currentTime:0; },
+  available:function(){ return !!AC; }, running:function(){ return !!ctx&&ctx.state==="running"; }};
 })();

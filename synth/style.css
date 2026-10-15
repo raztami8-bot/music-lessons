@@ -110,3 +110,18 @@ button{font:inherit;color:inherit}
   .kbd-bar .chordname{display:none}
 }
 @media (prefers-reduced-motion:reduce){.key,.toast{transition:none}}
+
+/* tabs inside the control panel */
+.tabs{display:flex;gap:4px;background:var(--bg);border-radius:12px;padding:4px;flex:none}
+.tabs button{flex:1;border:0;background:transparent;border-radius:9px;min-height:40px;font-weight:700;cursor:pointer;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--panel2);color:var(--ink);box-shadow:inset 0 -2px 0 var(--glow)}
+.pane{display:flex;flex-direction:column;gap:12px}
+.pane[hidden]{display:none}
+#knobs-dirt{grid-template-columns:repeat(4,1fr)}
+#knobs-time{grid-template-columns:repeat(4,1fr)}
+.explain.show{display:block;text-align:right}
+.bpm{display:flex;align-items:center;gap:6px}
+.pill.sq{width:44px;justify-content:center;padding:0;font-size:1.3rem}
+.bpmv{font-family:var(--f-display);font-size:1.6rem;min-width:56px;text-align:center;color:var(--glow);font-variant-numeric:tabular-nums}
+.pill#tap.on{background:var(--glow2);border-color:var(--glow2);color:#0f2a27}
+.seg + .seg{margin-inline-start:6px}
