@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0d0a16">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="מטוטלת">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>מטוטלת</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"><i></i></span><h1>מטוטלת</h1></div>
+  <div class="grp" aria-label="קצב">
+    <button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button>
+    <span class="num" id="bpmVal">124</span>
+    <button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button>
+  </div>
+  <div class="grp" aria-label="אוקטבה">
+    <button class="btn sq" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
+    <span class="num sm" id="octVal">אוק׳ 3</span>
+    <button class="btn sq" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
+  </div>
+  <button class="btn sync" id="sync" type="button" aria-pressed="false" aria-label="סנכרון עם הכלים האחרים">⇄</button>
+  <button class="btn rec" id="rec" type="button" aria-pressed="false" aria-label="הקלט">⏺</button>
+  <button class="btn" id="takesBtn" type="button">הקלטות</button>
+  <span class="meter" aria-hidden="true"><i id="meterFill"></i></span>
+  <button class="btn hot" id="release" type="button" hidden>שחרר</button>
+  <button class="btn" id="moreBtn" type="button" aria-label="הגדרות">⋯ עוד</button>
+</header>
+
+<main class="main">
+  <canvas id="surf" aria-label="משטח נגינה: אצבעות על עמודות של תווים, למעלה בהיר, למטה כהה. אצבע שעומדת במקום מקפיאה את הצליל"></canvas>
+  <p class="hint">אצבע = צליל · עמודה = תו · גובה = פתיחת הפילטר · אצבע עומדת = קפוא · הטיה קדימה = חלום · הטיה הצידה = רעד · ניעור = חיתוך</p>
+</main>
+</div>
+
+<div id="more" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הגדרות">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>עוד</h2><button class="btn" id="moreClose" type="button">סגור</button></div>
+    <section class="blk"><h3>סולם</h3><div class="opts" id="scales"></div>
+      <label class="row">שורש <select id="root" dir="ltr"></select></label></section>
+    <section class="blk"><h3>דיליי</h3><div class="opts" id="divs"></div></section>
+    <section class="blk"><h3>תנועה</h3>
+      <label class="row"><input type="checkbox" id="tiltOn"> ההטיה והניעור שולטים בצליל</label>
+      <button class="btn" id="calib" type="button">כייל את המנוחה</button>
+      <div id="manual" class="ctls">
+        <label class="ctl">חלום <input type="range" id="r_dream" min="0" max="100"></label>
+        <label class="ctl">רעד <input type="range" id="r_wob" min="0" max="100"></label>
+      </div></section>
+    <section class="blk"><h3>צליל</h3><div class="ctls">
+        <label class="ctl">ריזוננס <input type="range" id="r_res" min="0" max="100"></label>
+        <label class="ctl">דרייב <input type="range" id="r_drive" min="0" max="100"></label>
+        <label class="ctl">עוצמה <input type="range" id="r_vol" min="0" max="100"></label>
+      </div>
+      <button class="btn" id="reset" type="button">↻ איפוס צליל</button></section>
+  </div>
+</div>
+
+<div id="takes" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הקלטות">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>הקלטות</h2><button class="btn" id="takesClose" type="button">סגור</button></div>
+    <p class="lbl" id="takesEmpty">עוד אין הקלטות. לחץ ⏺, נגן, ולחץ שוב כדי לעצור.</p>
+    <ul id="takeList"></ul>
+  </div>
+</div>
+
+<div id="gate" class="start scroll-y">
+  <div class="gatebox">
+    <div class="logo big" aria-hidden="true"><i></i></div>
+    <h1>מטוטלת</h1>
+    <p>כלי שמנגנים בכל הגוף. כל אצבע על המסך היא קול: עמודה היא תו בסולם, גובה הוא פתיחת הפילטר. אצבע שעומדת במקום מקפיאה את הצליל. הטיית המכשיר קדימה פותחת דיליי, פייזר וריוורב. הטיה הצידה מרעידה. ניעור חותך.</p>
+    <button class="go" id="start" type="button">▶ הפעל צליל ותנועה</button>
+    <p class="small">אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</p>
+    <p class="small" id="installHint" hidden>להתקנה: שתף ← הוסף למסך הבית. אחרי זה היא עובדת גם בלי אינטרנט.</p>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script src="engine.js"></script>
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
