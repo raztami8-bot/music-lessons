@@ -8,7 +8,7 @@ var AC=window.AudioContext||window.webkitAudioContext;
 var ctx=null, N={}, voices={}, unlocked=false, silentEl=null;
 
 var P={bright:.45,reso:.15,env:.2,attack:.55,release:.6,width:.55,breath:.25,glide:.3,
-       space:.6,echo:.15,drive:0,mud:0,color:.7,metal:0,shape:0,mono:false,volume:.8,bpm:128};
+       space:.6,echo:.15,drive:0,mud:0,color:.7,metal:0,shape:0,mono:false,volume:.8,bpm:128,loopvol:.85};
 
 /* ---- iPhone/iPad: play through the silent switch, and unlock inside a tap ---- */
 function silentWav(){
@@ -86,6 +86,7 @@ function build(){
   N.master.connect(N.comp);
   N.limit=ctx.createWaveShaper(); N.limit.curve=(function(){ var n=1024,c=new Float32Array(n); for(var i=0;i<n;i++){ var x=i*2/n-1; c[i]=Math.tanh(x*1.2)/Math.tanh(1.2); } return c; })();
   N.comp.connect(N.limit); N.limit.connect(ctx.destination);
+  N.loopBus=ctx.createGain(); N.loopBus.gain.value=P.loopvol; N.loopBus.connect(N.limit);
   N.meter=ctx.createAnalyser(); N.meter.fftSize=512; N.limit.connect(N.meter); N.buf=new Float32Array(512);
   try{ N.rec=ctx.createMediaStreamDestination(); N.limit.connect(N.rec); }catch(e){ N.rec=null; }
   lastDrive=-1; apply(true);
@@ -103,6 +104,7 @@ function reset(){
   try{ if(ctx) ctx.close(); }catch(e){}
   ctx=null; N={}; voices={}; mono=null; monoStack=[]; unlocked=false;
   start(); if(wasClock) setClock(true);
+  if(window.Looper && window.Looper.reattach) window.Looper.reattach();
   return !!ctx;
 }
 var lastTouch=0;
@@ -158,6 +160,7 @@ function apply(now){
   N.fb1.gain.setTargetAtTime(0.2+P.echo*0.45,t,k); N.fb2.gain.setTargetAtTime(0.2+P.echo*0.45,t,k);
   var dt=beat()*0.75; N.d1.delayTime.setTargetAtTime(dt,t,0.05); N.d2.delayTime.setTargetAtTime(dt,t,0.05);   // dotted eighth, in time with the beat
   N.master.gain.setTargetAtTime(P.volume,t,k);
+  if(N.loopBus) N.loopBus.gain.setTargetAtTime(P.loopvol,t,k);
   Object.keys(voices).forEach(function(id){ var v=voices[id]; if(!v.stopping) v.oscs.forEach(function(o){ if(o.spread!=null) o.node.detune.setTargetAtTime(o.spread*P.width*22,t,k); }); });
 }
 function set(key,val){ P[key]=val; if(key==="mono" && !val) dropMono(); apply(false); }
@@ -270,6 +273,7 @@ function tick(){
     clock.next+=sd; clock.step++;
   }
 }
+function syncClock(t){ if(clock.timer && ctx){ clock.step=0; clock.next=Math.max(t,ctx.currentTime+0.01); } }
 function setClock(running,cb,gate){
   if(running && !ctx) start();
   if(gate!=null) clock.gate=gate;
@@ -280,7 +284,7 @@ function setClock(running,cb,gate){
 }
 
 function safe(fn,fallback){ return function(){ try{ return fn.apply(null,arguments); }catch(e){ if(window.console) console.warn("engine",e); return fallback; } }; }
-window.Engine={P:P,set:safe(set),start:safe(start,false),level:level,reset:reset,touched:function(){ lastTouch=Date.now(); },
+window.Engine={P:P,set:safe(set),start:safe(start,false),level:level,reset:reset,touched:function(){ lastTouch=Date.now(); }, internals:function(){ return {ctx:ctx,N:N}; }, syncClock:syncClock, beatSec:beat,
   live:function(){ return Object.keys(voices).filter(function(k){ return !voices[k].stopping; }).length; },
   recStream:function(){ start(); return N.rec?N.rec.stream:null; },
   noteOn:safe(function(m){ return noteOnAt(m,0); },null), noteOff:safe(function(id){ noteOffAt(id,0); }),

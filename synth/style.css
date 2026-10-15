@@ -159,3 +159,33 @@ button,a{font:inherit;color:inherit;touch-action:manipulation}
   .btn.sq{width:34px}
 }
 @media (prefers-reduced-motion:reduce){.btn,.toast{transition:none}.btn.rec.on{animation:none}}
+
+/* ---- looper ---- */
+.tabs button{font-size:.92rem}
+.loop-top{display:flex;flex-wrap:wrap;gap:6px}
+.btn.big{height:46px;padding:0 18px;font-size:1.02rem;background:linear-gradient(135deg,rgba(255,107,127,.25),rgba(255,179,138,.18));border-color:var(--hot)}
+.btn.big.on{background:var(--hot);border-color:var(--hot);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.loopbar{position:relative;height:12px;border-radius:99px;background:var(--track);overflow:hidden;direction:ltr}
+.loopbar span{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--glow2),var(--glow))}
+.loopbar.rec span{background:var(--hot)}
+.loopbar i{position:absolute;top:0;bottom:0;width:2px;background:rgba(18,15,34,.7)}
+.loopbar i:nth-of-type(1){left:25%} .loopbar i:nth-of-type(2){left:50%} .loopbar i:nth-of-type(3){left:75%}
+.lp-status{margin:0;font-weight:700;color:var(--muted);min-height:1.3em}
+.lp-row{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.knobs.one{grid-template-columns:auto;flex:none}
+.layers{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;flex:1;min-width:200px;counter-reset:ly}
+.layers li{counter-increment:ly;display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px 8px}
+.layers li::before{content:"שכבה " counter(ly);font-weight:800;flex:1}
+.layers li.muted{opacity:.5}
+.layers li .btn{height:34px;padding:0 9px}
+.layers .empty{color:var(--muted);font-weight:600}
+.layers li.empty::before{content:none}
+.loopbtn{position:relative;overflow:hidden;min-width:96px}
+.loopbtn .lf{position:absolute;inset:0 auto 0 0;width:0;background:rgba(127,214,201,.28);pointer-events:none}
+.loopbtn .lt{position:relative;font-variant-numeric:tabular-nums}
+.loopbtn.armed{border-color:var(--hot);animation:recpulse 1s ease-in-out infinite}
+.loopbtn.rec{border-color:var(--hot)}
+.loopbtn.rec .lf{background:rgba(255,107,127,.45)}
+.loopbtn.has{border-color:var(--glow2)}
+@media (max-width:600px){ .meter{display:none} .loopbtn{min-width:70px;padding:0 8px} .kbar{gap:5px} .kbar .btn{padding:0 9px} }

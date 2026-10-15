@@ -42,6 +42,7 @@
       <button type="button" role="tab" id="tab-sound" data-tab="sound" aria-selected="true">צליל</button>
       <button type="button" role="tab" id="tab-dirt" data-tab="dirt" aria-selected="false">לכלוך</button>
       <button type="button" role="tab" id="tab-time" data-tab="time" aria-selected="false">חלל וקצב</button>
+      <button type="button" role="tab" id="tab-loop" data-tab="loop" aria-selected="false">לופר</button>
     </div>
 
     <div class="pane scroll-y" data-pane="sound">
@@ -75,6 +76,25 @@
         <div class="seg" id="gate" role="group" aria-label="שער"><button type="button" data-v="off">כבוי</button><button type="button" data-v="trance">טראנס</button><button type="button" data-v="pulse">פעימה</button><button type="button" data-v="half">שמיניות</button></div>
         <p class="explain">חותך את הצליל לפי תבנית של 16 צעדים. שטיח ארוך הופך לקצב מגמגם של טראנס.</p></div>
     </div>
+
+    <div class="pane scroll-y" data-pane="loop" hidden>
+      <div class="loop-top">
+        <button type="button" class="btn big" id="lpRec">⏺ שכבה חדשה</button>
+        <button type="button" class="btn" id="lpPlay">■ עצור</button>
+        <button type="button" class="btn" id="lpUndo">↶ בטל אחרונה</button>
+        <button type="button" class="btn" id="lpClear">נקה הכול</button>
+      </div>
+      <div class="loopbar" aria-hidden="true"><span id="lpBarFill"></span><i></i><i></i><i></i></div>
+      <p class="lp-status" id="lpStatus" aria-live="polite"></p>
+      <div class="opt"><span class="opt-lbl">אורך</span>
+        <div class="seg" id="lpBars" role="group" aria-label="אורך הלופ"><button type="button" data-v="1">תיבה</button><button type="button" data-v="2">2 תיבות</button><button type="button" data-v="4">4</button><button type="button" data-v="8">8</button></div>
+        <p class="explain">אורך כל שכבה, לפי הקצב. נקבע לפני השכבה הראשונה. 2 תיבות בקצב 128 הן בערך 3.75 שניות.</p></div>
+      <div class="lp-row">
+        <div class="knobs one" id="knobs-loop"></div>
+        <ol class="layers" id="lpLayers"></ol>
+      </div>
+      <p class="explain">איך זה עובד: גע ב״שכבה חדשה״. ההקלטה מתחילה בתו הראשון שתנגן, ונמשכת בדיוק לפי האורך שבחרת. השכבה הבאה מתחילה תמיד בתחילת הלופ, כך שהכול נשאר צמוד. ״עצור״ ואז ״נגן״ מתחיל את הלופ מההתחלה, כדי לסנכרן מחדש עם התופים. הקצב ננעל כל עוד יש שכבות.</p>
+    </div>
   </section>
 </main>
 
@@ -83,6 +103,7 @@
     <div class="grp" dir="ltr"><button class="btn sq" id="octDown" type="button" aria-label="אוקטבה למטה">−</button><span class="oct" id="oct">3</span><button class="btn sq" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button></div>
     <span class="chordname" id="chordname" aria-live="polite"></span>
     <span class="sp"></span>
+    <button class="btn loopbtn" id="loopBtn" type="button"><span class="lf" id="loopFill"></span><span class="lt" id="loopTxt">🔁 לופ</span></button>
     <span class="meter" aria-hidden="true"><span id="meter"></span></span>
     <button class="btn hold" id="hold" type="button" aria-pressed="false">החזקה</button>
     <button class="btn" id="panic" type="button">שקט</button>
@@ -112,6 +133,7 @@
 <div class="recdone" id="recdone" hidden><span>ההקלטה מוכנה</span><a id="recfile" class="btn" download>שמור קובץ</a><button type="button" class="btn" id="recshare">שתף</button><button type="button" class="btn sq" id="recx" aria-label="סגירה">✕</button></div>
 
 <script src="engine.js"></script>
+<script src="looper.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

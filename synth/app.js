@@ -37,7 +37,7 @@ var KNOBS={
   ]
 };
 var ALLKNOBS=[].concat(KNOBS.sound,KNOBS.dirt,KNOBS.time);
-var DEF={bright:.45,reso:.15,env:.2,attack:.55,release:.6,width:.55,breath:.25,glide:.3,space:.6,echo:.15,drive:0,mud:0,color:.7,metal:0,shape:0,mono:0,chord:"min",arp:"off",rate:1,gate:"off"};
+var DEF={loopvol:.85,bright:.45,reso:.15,env:.2,attack:.55,release:.6,width:.55,breath:.25,glide:.3,space:.6,echo:.15,drive:0,mud:0,color:.7,metal:0,shape:0,mono:0,chord:"min",arp:"off",rate:1,gate:"off"};
 function preset(p){ var o={}; Object.keys(DEF).forEach(function(k){ o[k]=DEF[k]; }); Object.keys(p).forEach(function(k){ o[k]=p[k]; }); return o; }
 var PRESETS=[
   {name:"ענן",          bright:.45,reso:.15,env:.1, attack:.55,release:.62,width:.55,breath:.25,space:.6, echo:.15,shape:0,chord:"min"},
@@ -68,15 +68,15 @@ function clean(pr){
 
 /* ---- knobs ---- */
 var knobEls={}, knobVals={};
-function knobSVG(v){
+function knobSVG(v,key){ var gid="kg-"+key, bid="kb-"+key;   // unique gradient ids: shared ids break in hidden tabs
   function p(d,r){ var a=d*Math.PI/180; return [(50+r*Math.sin(a)).toFixed(1),(50-r*Math.cos(a)).toFixed(1)]; }
   var a=-150+v*300, large=(v*300)>180?1:0, s=p(-150,41), e=p(a,41), z=p(150,41), i1=p(a,9), i2=p(a,22), ticks="";
   for(var i=0;i<=10;i++){ var d=-150+i*30, t1=p(d,47), t2=p(d,49.5); ticks+='<line x1="'+t1[0]+'" y1="'+t1[1]+'" x2="'+t2[0]+'" y2="'+t2[1]+'" stroke="var(--muted)" stroke-width="1.6" opacity=".5"/>'; }
-  var arc=v>0.003?'<path d="M'+s.join(" ")+' A41 41 0 '+large+' 1 '+e.join(" ")+'" fill="none" stroke="url(#kg)" stroke-width="6.5" stroke-linecap="round"/>':"";
-  return '<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="kg" x1="0" x2="1"><stop offset="0" stop-color="#7fd6c9"/><stop offset="1" stop-color="#ffb38a"/></linearGradient>'+
-    '<radialGradient id="kb" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfc4ee"/></radialGradient></defs>'+ticks+
+  var arc=v>0.003?'<path d="M'+s.join(" ")+' A41 41 0 '+large+' 1 '+e.join(" ")+'" fill="none" stroke="url(#'+gid+')" stroke-width="6.5" stroke-linecap="round"/>':"";
+  return '<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="'+gid+'" x1="0" x2="1"><stop offset="0" stop-color="#7fd6c9"/><stop offset="1" stop-color="#ffb38a"/></linearGradient>'+
+    '<radialGradient id="'+bid+'" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfc4ee"/></radialGradient></defs>'+ticks+
     '<path d="M'+s.join(" ")+' A41 41 0 1 1 '+z.join(" ")+'" fill="none" stroke="var(--track)" stroke-width="6.5" stroke-linecap="round"/>'+arc+
-    '<circle cx="50" cy="51.5" r="28" fill="rgba(0,0,0,.35)"/><circle cx="50" cy="50" r="28" fill="url(#kb)"/><line x1="'+i1[0]+'" y1="'+i1[1]+'" x2="'+i2[0]+'" y2="'+i2[1]+'" stroke="#2a2350" stroke-width="5" stroke-linecap="round"/></svg>';
+    '<circle cx="50" cy="51.5" r="28" fill="rgba(0,0,0,.35)"/><circle cx="50" cy="50" r="28" fill="url(#'+bid+')"/><line x1="'+i1[0]+'" y1="'+i1[1]+'" x2="'+i2[0]+'" y2="'+i2[1]+'" stroke="#2a2350" stroke-width="5" stroke-linecap="round"/></svg>';
 }
 function buildKnobs(){
   Object.keys(KNOBS).forEach(function(group){
@@ -109,7 +109,7 @@ function flushKnobs(){
   paintRaf=0;
   Object.keys(paintQ).forEach(function(key){
     var d=knobEls[key]; if(!d) return; var v=Math.round(P[key]*200)/200;
-    if(knobVals[key]!==v){ knobVals[key]=v; d.innerHTML=knobSVG(P[key]); d.setAttribute("aria-valuenow",(P[key]*10).toFixed(1)); $("v-"+key).textContent=(P[key]*10).toFixed(1); }
+    if(knobVals[key]!==v){ knobVals[key]=v; d.innerHTML=knobSVG(P[key],key); d.setAttribute("aria-valuenow",(P[key]*10).toFixed(1)); $("v-"+key).textContent=(P[key]*10).toFixed(1); }
   });
   paintQ={};
 }
@@ -229,6 +229,7 @@ function clearHeld(){ held.forEach(E.noteOff); held=[]; heldNotes=[]; }
 
 function press(fid,m,sliding){
   E.touched(); lastPress=Date.now();
+  if(window.Looper && Looper.state==="armed") Looper.startFirst(E.now());
   if(!sliding && state.hold && Object.keys(fingers).length===0) clearHeld();   // a fresh chord replaces the held one
   var notes=chordNotes(m), ids=[];
   if(state.arp==="off") ids=notes.map(function(n){ return E.noteOn(n); }).filter(function(x){ return x!=null; });
@@ -314,8 +315,63 @@ function arpStop(){ arpIdx=0; if(arpMonoId){ E.noteOff(arpMonoId); arpMonoId=nul
 function refreshClock(){ var need=state.arp!=="off"||state.gate!=="off"; E.setClock(need&&E.running(),arpTick,state.gate); }
 setInterval(function(){ if(state.arp!=="off") paintKeys(); },90);
 
+/* ================= looper ================= */
+var LP=window.Looper;
+var loopKnob=[["loopvol","עוצמת לופ","עוצמת כל השכבות יחד, בלי לגעת בצליל שאתה מנגן עכשיו."]];
+(function(){ var save=KNOBS; KNOBS={loop:loopKnob}; buildKnobs(); KNOBS=save; paintKnob("loopvol"); })();
+function loopAction(){
+  E.start(); E.touched();
+  var st=LP.state;
+  if(st==="armed"){ LP.startFirst(E.now()); return; }                  // start right now (e.g. arpeggio already running)
+  if(st==="rec"){ LP.cancel(); toast("השכבה בוטלה"); return; }
+  if(LP.layers.length>=LP.max){ toast("הגעת למקסימום של "+LP.max+" שכבות"); return; }
+  var r=LP.arm(); if(r&&r.then) r.then(function(x){ if(x==="unsupported") toast("המכשיר הזה לא תומך בהקלטה ללופ"); });
+}
+$("loopBtn").addEventListener("click",loopAction);
+$("lpRec").addEventListener("click",loopAction);
+$("lpPlay").addEventListener("click",function(){ LP.togglePlay(); });
+$("lpUndo").addEventListener("click",function(){ LP.undo(); });
+var clearArm=0;
+$("lpClear").addEventListener("click",function(){
+  if(Date.now()-clearArm<2500){ LP.clear(); clearArm=0; this.textContent="נקה הכול"; toast("הלופר נוקה"); }
+  else { clearArm=Date.now(); var b=this; b.textContent="בטוח? גע שוב"; setTimeout(function(){ b.textContent="נקה הכול"; },2500); }
+});
+function setBars(v){ if(LP.setBars(+v)) seg("lpBars",v,setBars); else toast("האורך נקבע לפני השכבה הראשונה"); }
+seg("lpBars",LP.bars,setBars);
+function paintLoop(){
+  var st=LP.state, n=LP.layers.length, btn=$("loopBtn"), txt=$("loopTxt");
+  btn.classList.toggle("armed",st==="armed"); btn.classList.toggle("rec",st==="rec"); btn.classList.toggle("has",n>0&&st!=="rec");
+  var label, status;
+  if(st==="armed"){ label="נגן ▸"; status="מוכן. ההקלטה תתחיל בתו הראשון שתנגן, או בנגיעה נוספת בכפתור."; }
+  else if(st==="rec"){ label="⏺ הקלטה"; status="מקליט שכבה "+(n+1)+". נגיעה בכפתור מבטלת אותה."; }
+  else if(n){ label="+ שכבה ("+n+")"; status=n+" שכבות"+(LP.playing?" מתנגנות.":", עצורות.")+" ״שכבה חדשה״ תתחיל בתחילת הלופ הבא."; }
+  else { label="🔁 לופ"; status="אין שכבות עדיין."; }
+  txt.textContent=label; $("lpStatus").textContent=status;
+  $("lpRec").textContent=st==="rec"?"✕ בטל הקלטה":(st==="armed"?"▸ התחל עכשיו":"⏺ שכבה חדשה"); $("lpRec").classList.toggle("on",st==="rec");
+  $("lpPlay").textContent=LP.playing?"■ עצור":"▶ נגן מההתחלה"; $("lpPlay").disabled=!n; $("lpUndo").disabled=!n;
+  [].forEach.call($("lpBars").querySelectorAll("button"),function(b){ b.disabled=n>0; });
+  var ul=$("lpLayers"); ul.innerHTML="";
+  if(!n){ var e=document.createElement("li"); e.className="empty"; e.textContent="השכבות שתקליט יופיעו כאן"; ul.appendChild(e); }
+  LP.layers.forEach(function(x){
+    var li=document.createElement("li"); li.className=x.muted?"muted":"";
+    var m=document.createElement("button"); m.type="button"; m.className="btn"; m.textContent=x.muted?"השמע":"השתק"; m.addEventListener("click",function(){ LP.toggleMute(x.id); });
+    var d=document.createElement("button"); d.type="button"; d.className="btn"; d.textContent="✕"; d.setAttribute("aria-label","מחק שכבה");
+    d.addEventListener("click",function(){ LP.remove(x.id); });
+    li.appendChild(m); li.appendChild(d); ul.appendChild(li);
+  });
+}
+LP.onchange=paintLoop; paintLoop();
+setInterval(function(){
+  if(document.hidden) return;
+  var p=LP.progress(), fill=$("loopFill"), bar=$("lpBarFill"), lb=bar.parentNode;
+  lb.classList.toggle("rec",LP.state==="rec");
+  if(p<0){ fill.style.width="0"; bar.style.width="0"; $("loopTxt").textContent="בעוד "+(-p).toFixed(1); return; }
+  var w=(LP.layers.length||LP.state==="rec")?Math.round(p*100)+"%":"0"; fill.style.width=w; bar.style.width=w;
+  if(LP.state==="rec"){ $("loopTxt").textContent="⏺ "+Math.round(p*100)+"%"; }
+},50);
+
 /* ================= tempo ================= */
-function setBpm(v){ v=+v; if(!isFinite(v)) v=128; v=Math.max(60,Math.min(190,Math.round(v))); E.set("bpm",v); $("bpm").textContent=v; put("ambi:bpm",v); }
+function setBpm(v,force){ if(!force && window.Looper && Looper.layers.length){ toast("הקצב נעול כל עוד יש שכבות בלופר"); return; } v=+v; if(!isFinite(v)) v=128; v=Math.max(60,Math.min(190,Math.round(v))); E.set("bpm",v); $("bpm").textContent=v; put("ambi:bpm",v); }
 $("bpmDown").addEventListener("click",function(){ setBpm(P.bpm-1); });
 $("bpmUp").addEventListener("click",function(){ setBpm(P.bpm+1); });
 var taps=[];
@@ -389,7 +445,7 @@ window.addEventListener("error",function(){ toast("משהו השתבש. אם א�
   if(ios&&!standalone) $("install").hidden=false;
 })();
 buildKnobs();
-setBpm(get("ambi:bpm",128));
+setBpm(get("ambi:bpm",128),true);
 var last=clean(get("ambi:last",null));
 loadPreset(last||PRESETS[0]);
 if(last && !PRESETS.concat(mine()).some(function(p){ return p.name===last.name; })) state.current="";
