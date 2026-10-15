@@ -27,7 +27,27 @@ function dialSVG(v){
 /* ---------- the little bass synth ---------- */
 var Audio=(function(){
   var ctx=null, out=null, noise=null, timer=null, playing=null, onStop=null;
+  var silentEl=null, unlocked=false;
+  // A short silent WAV, used to move iOS into "playback" audio so the ring/silent switch does not mute us.
+  function silentWav(){
+    var n=1600, buf=new Uint8Array(44+n), dv=new DataView(buf.buffer);
+    function str(o,t){ for(var i=0;i<t.length;i++) buf[o+i]=t.charCodeAt(i); }
+    str(0,"RIFF"); dv.setUint32(4,36+n,true); str(8,"WAVE"); str(12,"fmt ");
+    dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
+    dv.setUint32(24,8000,true); dv.setUint32(28,8000,true); dv.setUint16(32,1,true); dv.setUint16(34,8,true);
+    str(36,"data"); dv.setUint32(40,n,true); for(var i=0;i<n;i++) buf[44+i]=128;
+    var b=""; for(var j=0;j<buf.length;j++) b+=String.fromCharCode(buf[j]);
+    return "data:audio/wav;base64,"+btoa(b);
+  }
+  function iosPlayback(){
+    try{ if(navigator.audioSession && navigator.audioSession.type!=="playback") navigator.audioSession.type="playback"; }catch(e){}
+    if(navigator.audioSession) return;           // newer iOS: the line above is enough
+    if(!silentEl){ silentEl=document.createElement("audio"); silentEl.setAttribute("playsinline",""); silentEl.setAttribute("x-webkit-airplay","deny");
+      silentEl.preload="auto"; silentEl.loop=true; silentEl.src=silentWav(); }
+    var pr=silentEl.play(); if(pr&&pr.catch) pr.catch(function(){});
+  }
   function ac(){
+    iosPlayback();
     if(!ctx){
       var C=window.AudioContext||window.webkitAudioContext; if(!C) return null;
       ctx=new C(); out=ctx.createGain(); out.gain.value=0.5;
@@ -36,9 +56,13 @@ var Audio=(function(){
       var len=ctx.sampleRate; noise=ctx.createBuffer(1,len,ctx.sampleRate);
       var d=noise.getChannelData(0); for(var i=0;i<len;i++) d[i]=Math.random()*2-1;
     }
-    if(ctx.state==="suspended") ctx.resume();
+    if(ctx.state!=="running"){ try{ var r=ctx.resume(); if(r&&r.catch) r.catch(function(){}); }catch(e){} }
+    if(!unlocked){   // iOS starts the audio only after something plays inside a tap
+      try{ var sb=ctx.createBufferSource(); sb.buffer=ctx.createBuffer(1,1,22050); sb.connect(ctx.destination); sb.start(0); unlocked=true; }catch(e){}
+    }
     return ctx;
   }
+  function running(){ return !!ctx && ctx.state==="running"; }
   function hz(key){ return 110*Math.pow(2,(key-1)/12); }          // key 1 = A2
   function cutHz(v){ return 45*Math.pow(2,v*8.2); }                // ~45 Hz to ~13 kHz
   function att(v){ return 0.002+v*v*1.2; }
@@ -104,15 +128,16 @@ var Audio=(function(){
   function stop(){
     if(timer){ clearInterval(timer); timer=null; }
     if(playing&&playing.v){ var v=playing.v, t=ctx.currentTime; release(v,t); v.o.stop(t+0.2); }
-    playing=null; var cb=onStop; onStop=null; if(cb) cb();
+    playing=null; if(silentEl){ try{ silentEl.pause(); }catch(e){} } var cb=onStop; onStop=null; if(cb) cb();
   }
   function note(key,p){
     var c=ac(); if(!c) return; var v=makeVoice(p), t=c.currentTime+0.01;
     trigger(v,p,t,key,false,0.12); v.o.stop(t+att(p.attack)+dec(p.decay)*2+0.3);
   }
-  return {start:start, stop:stop, note:note, available:function(){ return !!(window.AudioContext||window.webkitAudioContext); }};
+  return {start:start, stop:stop, note:note, unlock:ac, running:running, available:function(){ return !!(window.AudioContext||window.webkitAudioContext); }};
 })();
 
+var IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 var ACID={wave:"saw",attack:7,decay:10,cutoff:10,peak:2,eg:1,kick:true};
 var LABEL={cutoff:"CUTOFF",peak:"PEAK",eg:"CUTOFF EG INT",decay:"DECAY/RELEASE",attack:"ATTACK"};
 var ORDER=["attack","decay","eg","peak","cutoff"];   // left to right, as on the bass panel
@@ -151,6 +176,7 @@ function buildWidget(el,i){
   if(ctrls.indexOf("slides")>-1) h+='<button class="sy-tog on" type="button" data-tog="slides">עם גלישות</button>';
   if(ctrls.indexOf("kick")>-1 || st.kick) h+='<button class="sy-tog'+(st.kick?' on':'')+'" type="button" data-tog="kick">עם קיק</button>';
   h+='</div>';
+  if(IOS) h+='<p class="sy-hint">אין צליל? הרם את העוצמה בצד המכשיר, ובדוק שהאייפון לא במצב שקט.</p>';
   var knobs=ORDER.filter(function(k){ return k in vals; });
   if(knobs.length){
     h+='<div class="sy-knobs">';
@@ -239,9 +265,11 @@ function addPads(){
       var n=+(pad.querySelector(".pn")||{}).textContent; if(!n) return;
       pad.setAttribute("role","button"); pad.setAttribute("tabindex","0"); pad.classList.add("live");
       pad.setAttribute("aria-label","נגן קליד "+n);
-      function hit(e){ if(e) e.preventDefault(); Audio.note(n,p); pad.classList.add("hit"); setTimeout(function(){ pad.classList.remove("hit"); },160); }
-      pad.addEventListener("pointerdown",hit);
-      pad.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" ") hit(e); });
+      var fired=false;
+      function hit(){ Audio.note(n,p); pad.classList.add("hit"); setTimeout(function(){ pad.classList.remove("hit"); },160); }
+      pad.addEventListener("pointerdown",function(){ fired=false; if(Audio.running()){ fired=true; hit(); } });
+      pad.addEventListener("click",function(){ if(!fired) hit(); fired=false; });
+      pad.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); hit(); } });
     });
   });
 }
@@ -409,5 +437,9 @@ var gl=document.getElementById("glossary"); if(gl){ renderGlossary(gl); if(locat
 if(Audio.available()){ initWidgets(); addGridPlayers(); addPads(); }
 else [].forEach.call(document.querySelectorAll(".synth"),function(el){ el.innerHTML='<p class="info">הדפדפן הזה לא תומך בשמע.</p>'; });
 addNotes(); linkTerms();
+if(Audio.available()){
+  var first=function(){ Audio.unlock(); document.removeEventListener("touchend",first,true); document.removeEventListener("click",first,true); };
+  document.addEventListener("touchend",first,true); document.addEventListener("click",first,true);
+}
 document.addEventListener("visibilitychange",function(){ if(document.hidden) stopAll(); });
 })();
