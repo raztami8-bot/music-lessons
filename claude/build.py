@@ -71,7 +71,7 @@ def split_cards(html, n):
         num = re.search(r'<span class="num">([^<]+)</span>', body)
         attrs = ' class="card"'
         if num:
-            attrs += f' data-id="l{n}:{num.group(1)}"'
+            attrs += f' data-id="l{n}:{num.group(1)}" id="l{n}-{num.group(1).replace(".", "-")}"'
         learn = re.search(r'<div class="learn">.*?</div>', body, re.S)
         head = re.search(r'<div class="card-head">.*?</div>', body, re.S)
         if learn:
@@ -125,11 +125,12 @@ def page(n):
 <link rel="stylesheet" href="app.css">
 </head>
 <body data-lesson="{n}">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ להשאיר מסך דלוק</button></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="lab.html">🔊 מעבדה</a><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
 <div class="wrap">
 {html}
 </div>
 <script src="app.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>
 """
@@ -176,6 +177,11 @@ def hub(totals):
 <header class="hero"><span class="k">גרסת קלוד</span><h1>שיעורי מוזיקה</h1><p class="lede">בס חומצי ומכונת תופים, צעד אחר צעד. ההתקדמות נשמרת במכשיר שבו סימנת ״סיימתי״.</p></header>
 <ul class="lessons">
 {items}</ul>
+<ul class="lessons">
+<li><a class="lesson" href="lab.html"><span class="ln">🔊</span><div class="lt"><h2>מעבדת צליל</h2><p>בס שמנגן בדפדפן, עם הכפתורים של המכשיר</p></div></a></li>
+<li><a class="lesson" href="notebook.html"><span class="ln">☆</span><div class="lt"><h2>הפנקס שלי</h2><p>צלילים ששמרת והערות מהכרטיסים</p></div></a></li>
+<li><a class="lesson" href="glossary.html"><span class="ln">א</span><div class="lt"><h2>מילון מושגים</h2><p>כל המושגים מהשיעורים במקום אחד</p></div></a></li>
+</ul>
 <article class="card">
 <h3>להתקנה באייפד כמו אפליקציה</h3>
 <ol class="steps">
@@ -188,13 +194,59 @@ def hub(totals):
 <p class="legend"><a href="../index.html#grok">לגרסת גרוק של השיעורים</a></p>
 </div>
 <script src="app.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>
 """
     (HERE / "index.html").write_text(out, encoding="utf8")
 
 
+TOOLS = {
+    "lab": ("מעבדת צליל", "בס קטן שמנגן כאן בדפדפן, עם אותם כפתורים כמו במכשיר. סובב, הקשב, ורק אז נסה על הבס עצמו.",
+            """<article class="card"><div class="synth" data-title="קו האסיד משיעור 1" data-set="attack:7,decay:10,cutoff:10,peak:12,eg:1,kick:1" data-controls="attack,decay,eg,peak,cutoff,wave,slides"></div>
+<p class="info">הצליל כאן הוא קירוב של הבס שלך, לא הקלטה שלו. הוא טוב כדי להבין מה כל כפתור עושה. המיקומים המדויקים על המכשיר יכולים להישמע קצת אחרת.</p>
+<p class="info">אין צליל באייפד? בדוק שמתג השקט בצד כבוי ושהעוצמה למעלה.</p></article>
+<article class="card"><h3>נסה לבד</h3><ol class="qs"><li>הורד את CUTOFF לגמרי שמאלה ואז פתח לאט. מתי הצליל מתחיל ״לדבר״?</li><li>הרם את PEAK לשעה 3 וסובב את CUTOFF. זו החומצה.</li><li>הורד את CUTOFF EG INT לשמאל. מה נעלם?</li><li>כבה את הגלישות והשווה.</li><li>מצאת צליל שאהבת? ״☆ שמור לפנקס״.</li></ol></article>"""),
+    "notebook": ("הפנקס שלי", "הצלילים ששמרת וההערות שכתבת בכרטיסים, במקום אחד. נשמר באייפד הזה.", '<div id="notebook"></div>'),
+    "glossary": ("מילון מושגים", "כל המושגים מהשיעורים. בתוך השיעורים אפשר גם לגעת במילה עם קו תחתון מנוקד.", '<div id="glossary"></div>'),
+}
+
+
+def tool_page(key):
+    title, lede, body = TOOLS[key]
+    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">שיעור {k}</a>' for k in LESSONS)
+    links = "".join(f'<a class="tb{" cur" if k == key else ""}" href="{k}.html">{lbl}</a>' for k, lbl in (("lab", "🔊 מעבדה"), ("notebook", "☆ פנקס"), ("glossary", "א־ת מילון")))
+    out = f"""<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>{title} · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}{links}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:8px"><h1>{title}</h1><p class="lede">{lede}</p></header>
+{body}
+</div>
+<script src="app.js"></script>
+<script src="extras.js"></script>
+</body>
+</html>
+"""
+    (HERE / f"{key}.html").write_text(out, encoding="utf8")
+
+
 if __name__ == "__main__":
     totals = {n: page(n) for n in LESSONS}
     hub(totals)
+    for k in TOOLS:
+        tool_page(k)
     print("built", totals)

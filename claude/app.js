@@ -119,11 +119,11 @@
   if(wb){
     if(!("wakeLock" in navigator)){ wb.hidden=true; }
     else{
-      async function req(){ try{ lock=await navigator.wakeLock.request("screen"); wb.classList.add("on"); wb.textContent="☀ מסך דלוק";
-        lock.addEventListener("release",function(){ if(!wb.dataset.want) { wb.classList.remove("on"); wb.textContent="☀ להשאיר מסך דלוק"; } }); }
-        catch(e){ wb.dataset.want=""; wb.classList.remove("on"); wb.textContent="☀ להשאיר מסך דלוק"; } }
+      async function req(){ try{ lock=await navigator.wakeLock.request("screen"); wb.classList.add("on"); wb.textContent="☀ המסך דלוק ✓";
+        lock.addEventListener("release",function(){ if(!wb.dataset.want) { wb.classList.remove("on"); wb.textContent="☀ מסך דלוק"; } }); }
+        catch(e){ wb.dataset.want=""; wb.classList.remove("on"); wb.textContent="☀ מסך דלוק"; } }
       wb.addEventListener("click",function(){
-        if(wb.dataset.want){ delete wb.dataset.want; if(lock) lock.release(); lock=null; wb.classList.remove("on"); wb.textContent="☀ להשאיר מסך דלוק"; }
+        if(wb.dataset.want){ delete wb.dataset.want; if(lock) lock.release(); lock=null; wb.classList.remove("on"); wb.textContent="☀ מסך דלוק"; }
         else { wb.dataset.want="1"; req(); }
       });
       document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="visible" && wb.dataset.want) req(); });

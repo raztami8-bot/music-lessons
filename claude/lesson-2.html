@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="app.css">
 </head>
 <body data-lesson="2">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a><a class="tb" href="lesson-1.html">שיעור 1</a><a class="tb cur" href="lesson-2.html" aria-current=page>שיעור 2</a><a class="tb" href="lesson-3.html">שיעור 3</a><button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ להשאיר מסך דלוק</button></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a><a class="tb" href="lesson-1.html">שיעור 1</a><a class="tb cur" href="lesson-2.html" aria-current=page>שיעור 2</a><a class="tb" href="lesson-3.html">שיעור 3</a><button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="lab.html">🔊 מעבדה</a><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:10px">
   <h1>צלילה לעומק הבס</h1>
@@ -81,7 +81,7 @@
   <h2>שלושה מקורות וקיבוץ אחד</h2>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-01.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>FUNC</b></li><li><b>VCO1</b></li><li><b>VCO2</b></li><li><b>VCO3</b></li><li><b>1</b> שלושה נפרדים</li><li><b>2</b> 1 ו־2 יחד</li><li><b>3</b> כולם יחד</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:1.1"><div class="card-head"><span class="num">1.1</span><h3>שלושה מתנדים</h3><span class="label">VCO1 · VCO2 · VCO3</span></div><div class="col-do">
+<article class="card split" data-id="l2:1.1" id="l2-1-1"><div class="card-head"><span class="num">1.1</span><h3>שלושה מתנדים</h3><span class="label">VCO1 · VCO2 · VCO3</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>מצא את שלושת לחצני המתנדים.<span class="where">בשורת הלחצנים האפורים, מימין ללחצן העיגול <kbd>●</kbd>.</span></div></li>
@@ -98,7 +98,7 @@
       <p class="acid"><b>לאסיד:</b> מתנד מסור אחד מספיק לקו חד. שניים נותנים עובי או מרווח. שלושה נפרדים מאפשרים שורות שונות, אבל מסבכים את העריכה.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:1.2"><div class="card-head"><span class="num">1.2</span><h3>קיבוץ</h3><span class="label">FUNC + 1 · 2 · 3</span></div><div class="col-do">
+  <article class="card split" data-id="l2:1.2" id="l2-1-2"><div class="card-head"><span class="num">1.2</span><h3>קיבוץ</h3><span class="label">FUNC + 1 · 2 · 3</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>הכר את שלוש האפשרויות. בוחרים אותן עם <kbd>FUNC</kbd> ואחד מהקלידים 1, 2 או 3:
@@ -130,7 +130,7 @@
   <h2>מסור, מרובע, פעימות ואקורדים</h2>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-02.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>FUNC</b></li><li><b>8</b> גל מתנד 1</li><li><b>9</b> גל מתנד 2</li><li><b>10</b> גל מתנד 3</li><li><b>VCO1</b></li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:2.1"><div class="card-head"><span class="num">2.1</span><h3>מסור מול מרובע</h3><span class="label">FUNC + 8 · 9 · 10</span></div><div class="col-do">
+<article class="card split" data-id="l2:2.1" id="l2-2-1"><div class="card-head"><span class="num">2.1</span><h3>מסור מול מרובע</h3><span class="label">FUNC + 8 · 9 · 10</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>השתק שוב את <kbd>VCO2</kbd> (<kbd>FUNC</kbd> + <kbd>VCO2</kbd>), כדי לשמוע רק מתנד אחד.</div></li>
@@ -139,6 +139,7 @@
       <li><div>השווה, ואז החזר: <kbd>FUNC</kbd> + <kbd>8</kbd> עד שהנורה כבויה.</div></li>
     </ol>
     <div class="ok"><b>הצלחת אם:</b> שמעת הבדל: מסור זמזומי, מרובע חלול יותר. בסוף נורה 8 כבויה.</div>
+    <div class="synth" data-title="שמע: מסור מול מרובע" data-set="attack:7,decay:10,cutoff:12,peak:12,eg:1,kick:0" data-controls="wave,cutoff" data-target="השווה בין השניים, ואז סגור את CUTOFF ושמע איך ההבדל מצטמצם"></div>
     <p class="info">קליד 8 שייך למתנד 1, קליד 9 למתנד 2, קליד 10 למתנד 3. נורה כבויה = מסור, דולקת = מרובע.</p>
     
   </div><div class="col-learn"><div class="learn">
@@ -149,7 +150,7 @@
     </div></div></article>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-03.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>PITCH 1</b></li><li><b>PITCH 2</b></li><li><b>PITCH 3</b></li><li><b>OCTAVE</b></li><li><b>VCO1</b></li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:2.2"><div class="card-head"><span class="num">2.2</span><h3>אוניסון עם סטייה זעירה</h3><span class="label">PITCH 2</span></div><div class="col-do">
+<article class="card split" data-id="l2:2.2" id="l2-2-2"><div class="card-head"><span class="num">2.2</span><h3>אוניסון עם סטייה זעירה</h3><span class="label">PITCH 2</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>ודא קיבוץ של כולם: <kbd>FUNC</kbd> + <kbd>3</kbd>.</div></li>
@@ -168,7 +169,7 @@
       <p class="acid"><b>לאסיד:</b> סטייה זעירה נותנת עובי בלי לפתוח את המסנן, כך שהקו נשאר חד.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:2.3"><div class="card-head"><span class="num">2.3</span><h3>מרווחים ואקורדים</h3><span class="label">PITCH 2 · PITCH 3</span></div><div class="col-do">
+  <article class="card split" data-id="l2:2.3" id="l2-2-3"><div class="card-head"><span class="num">2.3</span><h3>מרווחים ואקורדים</h3><span class="label">PITCH 2 · PITCH 3</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>החזק קליד 1. סובב לאט את <kbd>PITCH 2</kbd> ימינה, והקשב עד ששני התווים ״מתיישבים״ יחד בצליל פתוח ויציב. זו <b>קווינטה</b>. התצוגה יכולה לעזור אם היא מראה ערך.</div></li>
@@ -202,7 +203,7 @@
   <h2>השיחה בין חיתוך, תהודה ועומק</h2>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-04.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>CUTOFF</b></li><li><b>PEAK</b></li><li><b>CUTOFF EG INT</b></li><li><b>ATTACK</b></li><li><b>DECAY/RELEASE</b></li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:3.1"><div class="card-head"><span class="num">3.1</span><h3>שלושת הכפתורים של האסיד</h3><span class="label">CUTOFF · PEAK · CUTOFF EG INT</span></div><div class="col-do">
+<article class="card split" data-id="l2:3.1" id="l2-3-1"><div class="card-head"><span class="num">3.1</span><h3>שלושת הכפתורים של האסיד</h3><span class="label">CUTOFF · PEAK · CUTOFF EG INT</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>קבע את נקודת ההתחלה: <kbd>CUTOFF</kbd> בשעה 10, <kbd>PEAK</kbd> בשעה 12, <kbd>CUTOFF EG INT</kbd> בשעה 1.</div></li>
@@ -213,6 +214,7 @@
     <div class="target pos"><span class="knob" data-h="2">PEAK</span><span class="knob" data-h="10">CUTOFF</span></div>
     <p class="poscap">כמו על המכשיר: PEAK משמאל לכפתור הגדול. CUTOFF EG INT נמצא בשורה העליונה.</p>
     <div class="ok"><b>הצלחת אם:</b> כל תו מתחיל בהיר ונסגר, עם צפצוף באזור החיתוך.</div>
+    <div class="synth" data-title="שמע: שלושת הכפתורים יחד" data-set="attack:7,decay:10,cutoff:10,peak:12,eg:1,kick:1" data-controls="eg,peak,cutoff"></div>
     
   </div><div class="col-learn"><div class="learn">
       <span class="learn-tag">להבין</span>
@@ -222,7 +224,7 @@
       <p class="acid"><b>לאסיד:</b> זה ״המשולש״ של הסגנון: נקודה סגורה למחצה, תהודה גבוהה, ופתיחה קצרה בכל תו.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:3.2"><div class="card-head"><span class="num">3.2</span><h3>עלייה, ירידה והחזקה</h3><span class="label">ATTACK · DECAY/RELEASE · FUNC + 11</span></div><div class="col-do">
+  <article class="card split" data-id="l2:3.2" id="l2-3-2"><div class="card-head"><span class="num">3.2</span><h3>עלייה, ירידה והחזקה</h3><span class="label">ATTACK · DECAY/RELEASE · FUNC + 11</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>החזק <kbd>FUNC</kbd> וגע ב־<kbd>11</kbd> כדי להדליק את נורה 11. שחרר.</div></li>
@@ -232,6 +234,7 @@
     </ol>
     <div class="target pos"><span class="knob" data-h="7">ATTACK</span><span class="knob" data-h="10">DECAY/RELEASE</span></div>
     <div class="ok"><b>הצלחת אם:</b> עם נורה 11 דולקת, הצליל ממשיך כל עוד האצבע על הקליד. עם נורה כבויה, הוא דועך מיד גם כשהאצבע נשארת.</div>
+    <div class="synth" data-title="שמע: אורך התו" data-set="attack:7,decay:10,cutoff:10,peak:2,eg:1,kick:1" data-controls="attack,decay" data-target="נסה ATTACK בשעה 12 ושמע איך כל תו ״נכנס לאט״"></div>
     
   </div><div class="col-learn"><div class="learn">
       <span class="learn-tag">להבין</span>
@@ -240,7 +243,7 @@
       <p class="acid"><b>לאסיד:</b> רוצים תווים קצרים שנפתחים ונסגרים בכל צעד. עם החזקה, הצליל נמתח והקו מאבד את הדיבור.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:3.3"><div class="card-head"><span class="num">3.3</span><h3>מעטפת לעוצמה מול מעטפת לגוון</h3><span class="label">FUNC + 12 · CUTOFF EG INT</span></div><div class="col-do">
+  <article class="card split" data-id="l2:3.3" id="l2-3-3"><div class="card-head"><span class="num">3.3</span><h3>מעטפת לעוצמה מול מעטפת לגוון</h3><span class="label">FUNC + 12 · CUTOFF EG INT</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>נגן כמה תווים והקשב.</div></li>
@@ -263,7 +266,7 @@
   <h2>מה זז, כמה, וכמה מהר</h2>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-05.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>RATE</b></li><li><b>INT</b></li><li><b>CUTOFF</b></li><li><b>FUNC</b></li><li><b>4</b> יעד: עוצמה</li><li><b>5</b> יעד: גובה</li><li><b>6</b> יעד: מסנן</li><li><b>7</b> צורת התנועה</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:4.1"><div class="card-head"><span class="num">4.1</span><h3>בוחרים מה יזוז</h3><span class="label">FUNC + 4 · 5 · 6</span></div><div class="col-do">
+<article class="card split" data-id="l2:4.1" id="l2-4-1"><div class="card-head"><span class="num">4.1</span><h3>בוחרים מה יזוז</h3><span class="label">FUNC + 4 · 5 · 6</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>החזק <kbd>FUNC</kbd> והסתכל על נורות 4, 5 ו־6.</div></li>
@@ -283,7 +286,7 @@
       <p class="acid"><b>לאסיד:</b> באסיד הקלאסי התנועה העיקרית באה מהמעטפת ומהידיים. התנועה המחזורית היא תוספת.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:4.2"><div class="card-head"><span class="num">4.2</span><h3>מהירות, עומק וצורה</h3><span class="label">RATE · INT · FUNC + 7</span></div><div class="col-do">
+  <article class="card split" data-id="l2:4.2" id="l2-4-2"><div class="card-head"><span class="num">4.2</span><h3>מהירות, עומק וצורה</h3><span class="label">RATE · INT · FUNC + 7</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>מצא את <kbd>RATE</kbd> ו־<kbd>INT</kbd> באזור LFO.<span class="where">מימין לכפתור הגדול: RATE משמאל, INT מימין.</span></div></li>
@@ -310,7 +313,7 @@
   <span class="stage-tag">שלב 5 · דגש</span>
   <h2>מה הבס כן מציע, ומה לא</h2>
 
-  <article class="card split" data-id="l2:5.1"><div class="card-head"><span class="num">5.1</span><h3>דגש בלי אקסנט</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:5.1" id="l2-5-1"><div class="card-head"><span class="num">5.1</span><h3>דגש בלי אקסנט</h3></div><div class="col-do">
     
     <p class="warn">בסינתיסייזר שהמציא את האסיד יש כפתור אקסנט שמדגיש צעדים נבחרים בעוצמה ובמסנן. בבס שלך אין כזה, ואין סימון אקסנט בצעדים. זו מגבלה אמיתית של המכשיר.</p>
     <p>ארבע דרכים ליצור תחושת דגש בכל זאת:</p>
@@ -327,7 +330,7 @@
       <p class="acid"><b>לאסיד:</b> זה סגנון אחר, לא פחות חומצי. מי שרוצה אקסנט אמיתי צריך מכשיר אחר.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:5.2"><div class="card-head"><span class="num">5.2</span><h3>אין הקלטת תנועות כפתורים</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:5.2" id="l2-5-2"><div class="card-head"><span class="num">5.2</span><h3>אין הקלטת תנועות כפתורים</h3></div><div class="col-do">
     
     <p>במכשירים אחרים בסדרה אפשר להקליט סיבובי כפתורים לתוך הרצף. בבס, לפי החוברת והמדריך, לא. הרצף שומר תווים, גלישות וצעדים פעילים, וזהו.</p>
     <ol class="steps">
@@ -348,7 +351,7 @@
   <h2>גלישות, שתיקות ודילוגים</h2>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-06.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>FUNC</b></li><li><b>STEP MODE</b></li><li><b>6</b> גלישה</li><li><b>14</b> גלישה</li><li><b>13</b> ניקוי גלישות</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:6.1"><div class="card-head"><span class="num">6.1</span><h3>גלישה בלי כפתור זמן</h3><span class="label">FUNC + STEP MODE</span></div><div class="col-do">
+<article class="card split" data-id="l2:6.1" id="l2-6-1"><div class="card-head"><span class="num">6.1</span><h3>גלישה בלי כפתור זמן</h3><span class="label">FUNC + STEP MODE</span></div><div class="col-do">
     
     <ol class="steps">
       <li><div>כניסה: החזק <kbd>FUNC</kbd> ולחץ על <kbd>STEP MODE</kbd>. שחרר.</div></li>
@@ -366,7 +369,7 @@
     </div></div></article>
 
   <figure class="photo"><div class="imgs"><img src="img/l2-07.webp" width="1140" height="660" loading="lazy" alt="צילום המכשיר עם סימונים"></div><figcaption><ol class="marks"><li><b>FUNC</b></li><li><b>▶</b> צעדים פעילים</li><li><b>STEP MODE</b> שתיקה</li><li><b>1</b> צעד לדוגמה</li><li><b>5 · 9 · 13</b> צעדים לדוגמה</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
-<article class="card split" data-id="l2:6.2"><div class="card-head"><span class="num">6.2</span><h3>שתיקה מול דילוג</h3><span class="label">STEP MODE · FUNC + ▶</span></div><div class="col-do">
+<article class="card split" data-id="l2:6.2" id="l2-6-2"><div class="card-head"><span class="num">6.2</span><h3>שתיקה מול דילוג</h3><span class="label">STEP MODE · FUNC + ▶</span></div><div class="col-do">
     
     <h4>שתיקה: הזמן נשאר, התו נעלם</h4>
     <ol class="steps">
@@ -409,7 +412,7 @@
     <p class="legend">המספרים הם שעות על הכפתור.</p>
   </article>
 
-  <article class="card split" data-id="l2:7.1"><div class="card-head"><span class="num">7.1</span><h3>אסיד קלאסי</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:7.1" id="l2-7-1"><div class="card-head"><span class="num">7.1</span><h3>אסיד קלאסי</h3></div><div class="col-do">
     
     <ol class="steps">
       <li><div>ודא: רק <kbd>VCO1</kbd> נשמע, נורות 8 ו־11 כבויות, 12 דולקת.</div></li>
@@ -417,13 +420,14 @@
     </ol>
     <div class="target pos"><span class="knob" data-h="2">PEAK</span><span class="knob" data-h="10">CUTOFF</span><span class="knob" data-h="1">CUTOFF EG INT</span></div>
     <div class="ok"><b>הצלחת אם:</b> כל תו עם ״וואו״ קצר וצפצוף.</div>
+    <div class="synth" data-title="שמע: אסיד קלאסי" data-set="attack:7,decay:10,cutoff:10,peak:2,eg:1,kick:1" data-controls="attack,decay,eg,peak,cutoff,wave,slides"></div>
     
   </div><div class="col-learn"><div class="learn">
       <span class="learn-tag">להבין</span>
       <p class="acid"><b>לאסיד:</b> זה הצליל שעליו בונים סיבובים. התחל ממנו לפני שמוסיפים מתנד שני או תנועה מחזורית.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:7.2"><div class="card-head"><span class="num">7.2</span><h3>אסיד נושם ואוניסון</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:7.2" id="l2-7-2"><div class="card-head"><span class="num">7.2</span><h3>אסיד נושם ואוניסון</h3></div><div class="col-do">
     
     <h4>נושם</h4>
     <ol class="steps">
@@ -449,7 +453,7 @@
   <h2>שלושה קווים, מקל לקשה</h2>
   <p class="info">בכל תרגיל: כותבים, מקשיבים, שומרים במקום זיכרון נפרד, ומצלמים את הלוח.</p>
 
-  <article class="card split" data-id="l2:8.1"><div class="card-head"><span class="num">8.1</span><h3>תרגיל א · קל: שתי גלישות</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:8.1" id="l2-8-1"><div class="card-head"><span class="num">8.1</span><h3>תרגיל א · קל: שתי גלישות</h3></div><div class="col-do">
     
     <p><b>צליל:</b> אסיד קלאסי. אם מנגנים לבד, <kbd>TEMPO</kbd> של הבס סביב 128.</p>
     <div class="grid-box"><div class="seq" data-keys="1,1,1,13,1,1,1,13,1,1,1,13,1,1,1,13" data-slides="3,11"></div></div>
@@ -470,7 +474,7 @@
       <p class="acid"><b>לאסיד:</b> תו גבוה רגע לפני הפעימה נותן ״דחיפה״ קדימה, והגלישה אליו מוסיפה תנועה מלודית בלי אקסנט.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:8.2"><div class="card-head"><span class="num">8.2</span><h3>תרגיל ב · בינוני: אוניסון ושתיקות</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:8.2" id="l2-8-2"><div class="card-head"><span class="num">8.2</span><h3>תרגיל ב · בינוני: אוניסון ושתיקות</h3></div><div class="col-do">
     
     <p><b>צליל:</b> אוניסון עבה משלב 7. <kbd>FUNC</kbd> + <kbd>3</kbd>, <kbd>VCO2</kbd> פתוח, <kbd>VCO3</kbd> מושתק, סטייה זעירה ב־<kbd>PITCH 2</kbd>.</p>
     <div class="grid-box"><div class="seq" data-keys="1,1,1,-,13,1,-,1,1,1,1,-,13,1,-,1" data-slides="5"></div></div>
@@ -490,7 +494,7 @@
       <p class="acid"><b>לאסיד:</b> השתיקות יוצרות דגש בלי אקסנט: האוזן מחכה לתו שאחרי הרווח. הסטייה בין המתנדים מוסיפה עובי, והמסנן נשאר חד.</p>
     </div></div></article>
 
-  <article class="card split" data-id="l2:8.3"><div class="card-head"><span class="num">8.3</span><h3>תרגיל ג · מתקדם: דילוגים וקווינטה</h3></div><div class="col-do">
+  <article class="card split" data-id="l2:8.3" id="l2-8-3"><div class="card-head"><span class="num">8.3</span><h3>תרגיל ג · מתקדם: דילוגים וקווינטה</h3></div><div class="col-do">
     
     <p><b>צליל:</b> אסיד קלאסי עם קיבוץ: <kbd>FUNC</kbd> + <kbd>3</kbd>, <kbd>VCO2</kbd> פתוח, <kbd>VCO3</kbd> מושתק.</p>
     <div class="grid-box"><div class="seq" data-keys="1,1,13,x,1,1,13,x,1,1,13,x,1,1,13,x" data-slides="2,10" data-skip="4,8,12,16"></div></div>
@@ -513,7 +517,7 @@
       <p class="acid"><b>לאסיד:</b> שבירת הריבועיות של 16 והקווינטה הפתוחה נותנות קו אגרסיבי יותר, על אותם כפתורים בדיוק.</p>
     </div></div></article>
 
-  <article class="card" data-id="l2:8.4">
+  <article class="card" data-id="l2:8.4" id="l2-8-4">
     <div class="card-head"><span class="num">8.4</span><h3>שמירה ותיעוד</h3><span class="label">FUNC + MEMORY</span></div>
     <ol class="steps">
       <li><div>אחרי כל תרגיל: החזק <kbd>FUNC</kbd>, לחץ <kbd>MEMORY</kbd>, שחרר, וגע בקליד של מקום פנוי בין 1 ל־8.</div></li>
@@ -533,5 +537,6 @@
 
 </div>
 <script src="app.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>

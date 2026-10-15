@@ -222,3 +222,64 @@ figure.photo{margin:0;background:var(--surface);border:1px solid var(--line);bor
 .pm-in .card .donebtn{display:none}
 .pm-nav,.pm-done{white-space:nowrap}
 @media (max-width:440px){.pm-nav,.pm-done{padding:0 10px;font-size:.95rem}}
+
+/* ---------- sound widget ---------- */
+.synth{border:1.5px solid var(--accent);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--accent-soft)}
+.sy-head{display:flex;align-items:center;gap:8px}
+.sy-head b{font-size:.98rem}
+.sy-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sy-play,.sy-gridplay{font:inherit;font-weight:700;min-height:44px;border-radius:10px;border:1.5px solid var(--fg);background:var(--fg);color:var(--surface);padding:0 18px;cursor:pointer}
+.sy-play.on,.sy-gridplay.on{background:var(--pointer);border-color:var(--pointer)}
+.sy-gridplay{align-self:flex-start;background:transparent;color:var(--fg);min-height:40px;font-size:.92rem}
+.sy-gridplay.on{color:var(--surface)}
+.sy-seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.sy-seg button,.sy-tog{font:inherit;font-size:.9rem;font-weight:600;min-height:40px;padding:0 14px;border:0;background:var(--surface);color:var(--fg);cursor:pointer}
+.sy-tog{border:1.5px solid var(--line);border-radius:10px}
+.sy-seg button.on,.sy-tog.on{background:var(--fg);color:var(--surface)}
+.sy-knobs{direction:ltr;display:flex;flex-wrap:wrap;gap:12px 18px;justify-content:center;background:var(--surface);border-radius:10px;padding:10px}
+.sy-k{display:flex;flex-direction:column;align-items:center;gap:2px;width:118px}
+.sy-k .kn{font-family:var(--f-mono);font-weight:700;font-size:.78rem;color:var(--fg);text-align:center}
+.sy-dial svg{width:58px;height:58px;display:block}
+.sy-k input{width:100%;accent-color:var(--pointer);height:30px}
+.sy-v{direction:rtl;font-size:.82rem;color:var(--muted);font-weight:600}
+.sy-hint{font-size:.85rem;color:var(--muted)}
+.sy-foot{justify-content:flex-start}
+.sy-reset,.sy-save{font:inherit;font-size:.88rem;font-weight:600;min-height:38px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:0 14px;cursor:pointer}
+.sy-msg{font-size:.88rem;color:var(--ok);font-weight:700}
+.pad.live{cursor:pointer;touch-action:manipulation;transition:transform .08s}
+.pad.hit{transform:scale(.92);box-shadow:0 0 0 3px var(--accent)}
+
+/* ---------- notes ---------- */
+.notebtn{font:inherit;font-size:.85rem;font-weight:600;border:1.5px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:4px 12px;min-height:36px;cursor:pointer}
+.notebtn.has{border-color:var(--learn);color:var(--learn)}
+.note-box{grid-column:1/-1;display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:10px}
+.note-box label{font-weight:700;font-size:.9rem}
+.note-box textarea,.nb-out{font:inherit;font-size:1rem;width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px;background:var(--surface);color:var(--fg);resize:vertical}
+.note-box small{color:var(--muted)}
+.nb-date{color:var(--muted);font-size:.85rem}
+.nb-del{margin-inline-start:auto;font:inherit;font-size:.85rem;border:1px solid var(--line);background:transparent;color:var(--pointer);border-radius:999px;padding:4px 12px;min-height:36px;cursor:pointer}
+.nb-text{white-space:normal}
+
+/* ---------- glossary ---------- */
+.term{font:inherit;font-weight:700;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline dotted var(--learn);text-decoration-thickness:2px;text-underline-offset:3px}
+.gl-pop{position:fixed;inset:0;z-index:60;background:rgba(10,12,18,.35);display:flex;align-items:flex-end;justify-content:center;
+  padding:0 max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+.gl-pop[hidden]{display:none}
+.gl-in{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:16px;padding:16px 18px;max-width:560px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.gl-h{display:flex;align-items:center;gap:8px}
+.gl-h b{font-family:var(--f-display);font-weight:400;font-size:1.3rem;flex:1}
+.gl-x{font:inherit;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.gl-search{font-weight:700}
+#gl-q{font:inherit;font-size:1rem;width:100%;max-width:420px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--fg)}
+.gl-list{margin:0;display:grid;gap:10px}
+@media (min-width:820px){.gl-list{grid-template-columns:1fr 1fr}}
+.gl-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;scroll-margin-top:80px}
+.gl-item.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.gl-item dt{font-family:var(--f-display);font-size:1.15rem}
+.gl-item dd{margin:4px 0 0;color:var(--fg)}
+.gl-item dd a{font-size:.88rem;white-space:nowrap}
+.card[id]{scroll-margin-top:80px}
+/* toolbar: one row that scrolls sideways instead of wrapping */
+.toolbar .in{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.toolbar .in::-webkit-scrollbar{display:none}
+.toolbar .tb,.toolbar .ver{flex:none;white-space:nowrap}
