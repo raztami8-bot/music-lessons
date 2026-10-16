@@ -59,6 +59,12 @@ select{background:var(--raise);color:var(--fg);border:1px solid var(--line);bord
 #ring{touch-action:none;display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
 .stagectl{display:flex;flex-direction:column;align-items:center;gap:6px}
 .tools{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.pattools{display:flex;flex-direction:column;gap:6px}
+.pt{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pt .lbl{flex:1;min-width:120px}
+.pt .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.pt .btn.on .en{color:var(--ink)}
+#spinTog.on{background:var(--heat);border-color:var(--heat);color:var(--ink)}
 #evolve.on{background:var(--heat);border-color:var(--heat);color:var(--ink)}
 .en{font-family:var(--f-num);font-size:10.5px;letter-spacing:.2px;color:var(--dim);opacity:.85;unicode-bidi:isolate;direction:ltr;font-weight:500}
 .hint{color:var(--dim);font-size:13px;text-align:center;min-height:1.4em}
@@ -177,6 +183,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   #rise{min-height:50px;font-size:26px}
   #rise small{display:none}
   .stagectl{gap:4px}
+  .tools{gap:3px}
+  .tools .btn{padding:0 6px;font-size:14px;min-width:40px}
   .slotrow .lbl{display:none}
   .slot{min-width:48px;min-height:44px}
   .hint{display:none}
@@ -218,7 +226,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   .play{min-width:72px}
   .main{grid-template-columns:minmax(0,1fr) minmax(250px,36%);gap:8px}
   .stage{flex-direction:row;align-items:stretch}
-  .stagectl{width:150px;justify-content:center}
+  .stagectl{width:210px;justify-content:center}
+  .tools{gap:3px}
+  .tools .btn{padding:0 6px;font-size:14px;min-width:40px}
+  .slotrow{gap:4px}
   .slotrow .lbl,.hint{display:none}
   .slot{min-width:44px}
   .side{overflow-y:auto;gap:8px}
@@ -276,9 +287,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <section class="stage">
       <div class="ringbox"><canvas id="ring" aria-label="טבעת של עד 16 צעדים"></canvas></div>
       <div class="stagectl">
-      <div class="tools" role="group" aria-label="כלי תבנית">
+      <div class="tools" role="group" aria-label="כלי עריכה">
+        <button class="btn tool on" data-tool="pitch" type="button">תו</button>
+        <button class="btn tool" data-tool="acc" type="button">הדגשה</button>
+        <button class="btn tool" data-tool="sl" type="button">גלישה</button>
+        <button class="btn tool" data-tool="p" type="button">סיכוי</button>
+        <button class="btn tool" data-tool="r" type="button">רטצ׳ט</button>
+        <button class="btn tool" data-tool="g" type="button">אורך</button>
         <button class="btn" id="mutate" type="button">מוטציה</button>
-        <button class="btn" id="evolve" type="button" aria-pressed="false">התפתחות</button>
         <button class="btn" id="fresh" type="button">חדש</button>
         <button class="btn" id="moreBtn" type="button" aria-label="עוד">⋯ עוד</button>
       </div>
@@ -290,7 +306,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <button class="btn slot" data-slot="3" type="button">4<i class="prog"></i></button>
         <span class="lbl">גע לטעינה, החזק לשמירה</span>
       </div>
-      <div class="hint" id="hint">גע להוסיף · החזק להדגשה · שתי אצבעות: סיבוב ואורך · ⋯ עוד: מדריך</div>
+      <div class="hint" id="hint">גע בנקודה להדליק או לכבות, גרור החוצה לתו גבוה. החזק את המרכז ללכלוך.</div>
       </div>
     </section>
 
@@ -364,6 +380,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 <div id="more" class="sheet" hidden role="dialog" aria-modal="true" aria-label="עוד">
   <div class="sheetbox">
     <div class="cardhead"><h2>עוד</h2><button class="btn" id="moreClose" type="button">סגור</button></div>
+    <div class="pattools">
+      <div class="pt"><span class="lbl">הזזה <bdi class="en">Shift</bdi></span><button class="btn" id="shiftR" type="button" aria-label="הזז קדימה">→</button><button class="btn" id="shiftL" type="button" aria-label="הזז אחורה">←</button></div>
+      <div class="pt"><span class="lbl">אורך הלולאה <bdi class="en">Length</bdi></span><button class="btn" id="lenDown" type="button">−</button><span class="num" id="lenVal">16</span><button class="btn" id="lenUp" type="button">+</button></div>
+      <div class="pt"><span class="lbl">טרנספוז בסולם <bdi class="en">Transpose</bdi></span><button class="btn" id="trDown" type="button">−</button><button class="btn" id="trUp" type="button">+</button></div>
+      <div class="pt"><button class="btn" id="evolve" type="button" aria-pressed="false">התפתחות<bdi class="en">Evolve</bdi></button><button class="btn" id="spinTog" type="button">צנטריפוגה<bdi class="en">Spin (rim)</bdi></button></div>
+    </div>
     <div class="morelist">
       <button class="btn" id="shareLink" type="button">🔗 שתף את התבנית בקישור<bdi class="en">Share link</bdi></button>
       <input id="linkBox" readonly hidden aria-label="קישור לתבנית">
@@ -442,16 +464,16 @@ function emptySteps(){const s=[];for(let i=0;i<STEPS;i++)s.push(mkStep(false,0))
 function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב נסתר
   const on=[1,0,1,1,0,1,1,0,1,0,1,1,0,1,0,1], deg=[0,0,7,0,0,3,0,0,0,0,10,7,0,5,0,12];
   const st=on.map((v,i)=>mkStep(v,v?deg[i]:0,[0,6,11].includes(i),[2,10].includes(i)));
-  st[7].on=true; st[7].deg=7; st[7].p=2; st[15].r=2; st[13].g=1; return st;
+  return st;
 }
-function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,morph:.25,vol:80,edit:"deep",len:16,breath:0,evolve:false,steps:demoSteps(),
+function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,morph:.25,vol:80,edit:"deep",len:16,breath:0,evolve:false,spinOn:false,steps:demoSteps(),
   worlds:JSON.parse(JSON.stringify(DEF_WORLDS))}}
 function sanitize(o){
   const d=defaults(); if(!o||typeof o!=="object") return d;
   const s={bpm:clamp(Math.round(fin(o.bpm,128)),60,200),root:clamp(Math.round(fin(o.root,9)),0,11),
     scale:["minor","phryg","dorian"].includes(o.scale)?o.scale:"minor",oct:clamp(Math.round(fin(o.oct,0)),-2,2),
     swing:clamp(fin(o.swing,0),0,1),morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",
-    len:clamp(Math.round(fin(o.len,16)),1,STEPS),breath:clamp(fin(o.breath,0),0,1),evolve:!!o.evolve,steps:[],worlds:{}};
+    len:clamp(Math.round(fin(o.len,16)),1,STEPS),breath:clamp(fin(o.breath,0),0,1),evolve:!!o.evolve,spinOn:!!o.spinOn,steps:[],worlds:{}};
   for(let i=0;i<STEPS;i++){const q=(Array.isArray(o.steps)&&o.steps[i])||d.steps[i];
     const on=!!q.on; s.steps.push({on,deg:clamp(Math.round(fin(q.deg,0)),0,DEGS-1),acc:on&&!!q.acc,sl:on&&!!q.sl,
       p:clamp(Math.round(fin(q.p,0)),0,3),g:clamp(Math.round(fin(q.g,0)),0,2),r:clamp(Math.round(fin(q.r,1)),1,4)})}
@@ -1036,7 +1058,7 @@ function sizeRing(){
   const size=Math.max(140,Math.floor(Math.min(w,h)));
   const dpr=Math.min(devicePixelRatio||1,2.5);
   ring.style.width=size+"px"; ring.style.height=size+"px"; ring.width=Math.round(size*dpr); ring.height=Math.round(size*dpr);
-  const R=size/2; RG={size,cx:R,cy:R,rMin:R*.36,rMax:R*.9,dpr}; bgKey=""; poke();
+  const R=size/2; RG={size,cx:R,cy:R,rMin:R*.36,rMax:R*.93,dpr}; bgKey=""; poke();
 }
 const STEP_A=2*Math.PI/STEPS;
 const stepAng=i=>-Math.PI/2+i*STEP_A;
@@ -1062,7 +1084,7 @@ function drawBg(){
   for(let i=0;i<STEPS;i++){const a=stepAng(i);g.globalAlpha=i>=S.len?.12:i%4===0?.9:.35;g.beginPath();
     g.moveTo(cx+Math.cos(a)*rMin*.92,cy+Math.sin(a)*rMin*.92);g.lineTo(cx+Math.cos(a)*rMax*1.03,cy+Math.sin(a)*rMax*1.03);g.stroke()}
   g.globalAlpha=.55; g.lineWidth=3; g.strokeStyle=C.dim; g.beginPath(); // קשת האורך: מה שבתוכה מתנגן
-  const a0=stepAng(0)-STEP_A/2; g.arc(cx,cy,rMax*1.07,a0,a0+S.len*STEP_A); g.stroke(); g.globalAlpha=1;
+  const a0=stepAng(0)-STEP_A/2; g.arc(cx,cy,rMin*.86,a0,a0+S.len*STEP_A); g.stroke(); g.globalAlpha=1;
 }
 const gradCache=new Map();
 function blobGrad(c0,c1){ const k=c0+c1; let gr=gradCache.get(k); if(gr) return gr; if(gradCache.size>48) gradCache.clear();
@@ -1110,89 +1132,74 @@ function drawRing(){
   g.closePath(); g.fill(); g.restore();
   // תווית במרכז: שם התו, או מה שהמחווה עשתה
   if(label&&now>label.until) label=null;
+  if(dragLabel) label={t:noteName(dragLabel.deg),sub:"",until:now+50};
   if(label){ g.textAlign="center"; g.textBaseline="middle";
     const fs=Math.round(size*(label.t.length>6?.085:.12)); g.font=`700 ${fs}px Karantina,Assistant,sans-serif`;
     g.fillStyle=C.ink; g.globalAlpha=.6; g.fillText(label.t,cx+1,cy+2-(label.sub?fs*.2:0)); g.globalAlpha=1; g.fillStyle=C.fg; g.fillText(label.t,cx,cy-(label.sub?fs*.2:0));
     if(label.sub){ g.font=`500 ${Math.round(size*.042)}px "IBM Plex Mono",monospace`; g.fillStyle=C.fg; g.globalAlpha=.8; g.fillText(label.sub,cx,cy+fs*.55); g.globalAlpha=1 } }
 }
 
-/* ---------- מחוות בטבעת ---------- */
-const drags=new Map(); let multi=null;
+/* ---------- עריכה בטבעת: בדיוק כמו ב-acid/ (מצבים נפרדים), ועוד שלושה מצבים באותה התנהגות ---------- */
+const drags=new Map(); let tool="pitch", dragLabel=null, multi=null;
 const cloneSteps=a=>a.map(s=>({...s}));
-const buzz=()=>{ try{ navigator.vibrate&&navigator.vibrate(8) }catch(e){} };
-function holdStep(d){
-  if(d.mode||!drags.has(d.id)) return; d.stage=(d.stage||0)+1; const s=S.steps[d.i]; buzz();
-  if(d.stage===1){ s.acc=!s.acc; d.didAcc=true; showLabel(s.acc?"הדגשה":"בלי הדגשה","Accent",1300); d.hold=setTimeout(()=>holdStep(d),650) }
-  else { if(d.didAcc){ s.acc=!s.acc; d.didAcc=false } s.p=(s.p+1)%4; showLabel("סיכוי "+PROBTXT[s.p],"Probability",1300); d.hold=setTimeout(()=>holdStep(d),650) }
-  save();
-}
-function rotateSteps(src,n){ const out=cloneSteps(src), L=S.len; for(let k=0;k<L;k++) out[((k+n)%L+L)%L]={...src[k]}; return out }
-function transpose(n){ const on=S.steps.filter(s=>s.on); if(!on.length) return false;
-  if(on.some(s=>s.deg+n<0||s.deg+n>DEGS-1)){ showLabel("קצה הטווח","Range",700); return false }
-  for(const s of on) s.deg+=n; return true }
-function velA(d){ const hs=d.hist; if(hs.length<2) return 0; const a=hs[0], b=hs[hs.length-1], dt=(b.t-a.t)/1000; if(dt<=0) return 0;
-  let tot=0; for(let k=1;k<hs.length;k++) tot+=wrapA(hs[k].a-hs[k-1].a); return tot/dt }
-function multiGeo(){ const [p,q]=[...multi.pts.values()]; return {a:Math.atan2(q.y-p.y,q.x-p.x),d:Math.hypot(q.x-p.x,q.y-p.y)} }
-
+const HINTS={pitch:"גע בנקודה להדליק או לכבות, גרור החוצה לתו גבוה. החזק את המרכז ללכלוך.",
+  acc:"גע בנקודה כדי להדגיש אותה: חזקה יותר ופותחת יותר את המסנן.",
+  sl:"גע בנקודה כדי שתגלוש לתו הבא בלי להתחיל מחדש.",
+  p:"גע בנקודה כדי לשנות את הסיכוי שתתנגן: 100, 75, 50, 25%. נקודה חיוורת מתנגנת רק לפעמים.",
+  r:"גע בנקודה כדי שתחזור כמה פעמים בתוך הצעד: ×1, ×2, ×3, ×4.",
+  g:"גע בנקודה כדי לקצר את התו: רגיל, קצר, סטקטו."};
+const velA=d=>{ const hs=d.hist; if(hs.length<2) return 0; const dt=(hs[hs.length-1].t-hs[0].t)/1000; if(dt<=0) return 0; let tot=0; for(let k=1;k<hs.length;k++) tot+=wrapA(hs[k].a-hs[k-1].a); return tot/dt };
 ring.addEventListener("pointerdown",e=>{
-  e.preventDefault(); try{ring.setPointerCapture(e.pointerId)}catch(_){}
-  const P=pt(e);
-  if(multi){ drags.set(e.pointerId,{id:e.pointerId,multi:true,ignored:true}); return }
-  if(drags.size>=1){ // אצבע שנייה: מחווה של שתי אצבעות. מבטלים מה שהאצבע הראשונה התחילה
-    const [id0,d0]=[...drags.entries()][0]; clearTimeout(d0.hold);
-    if(d0.snap) S.steps=d0.snap; if(d0.center){ dirtHeld=false }
-    d0.multi=true; drags.set(e.pointerId,{id:e.pointerId,multi:true});
-    multi={pts:new Map([[id0,d0.last],[e.pointerId,P]]),len0:S.len,steps0:cloneSteps(S.steps),mode:null,shift:0};
-    const gg=multiGeo(); multi.aPrev=gg.a; multi.aAcc=0; multi.d0=gg.d; showLabel("שתי אצבעות","rotate · pinch",900); return }
-  const d={id:e.pointerId,r0:P.r,a0:P.a,aPrev:P.a,i:P.i,t0:performance.now(),last:P,snap:cloneSteps(S.steps),mode:null,travel:0,hist:[{t:performance.now(),a:P.a}]};
-  drags.set(e.pointerId,d);
-  if(P.r<RG.rMin*.8){ d.center=true; dirtHeld=true; d.twist=0; d.trTot=0; poke(); return }
-  const s=S.steps[P.i]; d.wasOn=s.on; d.deg0=s.deg;
-  if(!s.on){ Object.assign(s,mkStep(true,rDeg(P.r))); d.created=true; audition(s.deg); showLabel(noteName(s.deg),"",700) }
-  else d.hold=setTimeout(()=>holdStep(d),430);
+  e.preventDefault(); ring.setPointerCapture(e.pointerId);
+  const P=pt(e), r=P.r, i=P.i;
+  if(S.spinOn&&r>RG.rMax+2){ drags.set(e.pointerId,{spinRim:true,mode:"spin",aPrev:P.a,hist:[{t:performance.now(),a:P.a}]}); return } // צנטריפוגה (רשות): רק בשוליים, מחוץ לנקודות
+  if(r<RG.rMin*.8){ dirtHeld=true; drags.set(e.pointerId,{dirt:true}); return }
+  const s=S.steps[i];
+  if(tool==="pitch"){
+    const d={i,wasOn:s.on,moved:false,r0:r};
+    if(!s.on){ Object.assign(s,mkStep(true,rDeg(r))); d.moved=true; audition(s.deg); dragLabel={i,deg:s.deg} }
+    drags.set(e.pointerId,d);
+  } else {
+    if(!s.on){ toast("כאן אין תו. מקם תו קודם, במצב ״תו״"); return }
+    if(tool==="acc"||tool==="sl") s[tool]=!s[tool];
+    else if(tool==="p"){ s.p=(s.p+1)%4; showLabel("סיכוי "+PROBTXT[s.p],"Probability",700) }
+    else if(tool==="r"){ s.r=s.r%4+1; showLabel("×"+s.r,"Ratchet",700) }
+    else if(tool==="g"){ s.g=(s.g+1)%3; showLabel(["רגיל","קצר","סטקטו"][s.g],"Gate",700) }
+    killUndo(); audition(s.deg); save();
+  }
   poke();
 });
 ring.addEventListener("pointermove",e=>{
-  const d=drags.get(e.pointerId); if(!d) return; const P=pt(e);
-  if(d.multi){ if(!multi||d.ignored||!multi.pts.has(e.pointerId)) return; multi.pts.set(e.pointerId,P);
-    const gg=multiGeo(); multi.aAcc+=wrapA(gg.a-multi.aPrev); multi.aPrev=gg.a;
-    if(!multi.mode){ if(Math.abs(multi.aAcc)>.22) multi.mode="rot"; else if(Math.abs(gg.d-multi.d0)>24) multi.mode="pinch" }
-    if(multi.mode==="rot"){ const n=Math.round(multi.aAcc/STEP_A); if(n!==multi.shift){ multi.shift=n; S.steps=rotateSteps(multi.steps0,n); buzz() } showLabel("הזזה "+(n>0?"+":"")+n,"Rotate",700) }
-    else if(multi.mode==="pinch"){ const Ln=clamp(multi.len0+Math.round((gg.d-multi.d0)/Math.max(10,RG.size*.035)),1,STEPS); if(Ln!==S.len){ S.len=Ln; buzz() } showLabel("אורך "+S.len,"Length",700) }
-    poke(); return }
-  d.last=P; const tnow=performance.now(); d.hist.push({t:tnow,a:P.a}); while(d.hist.length>2&&tnow-d.hist[0].t>90) d.hist.shift();
-  if(d.center){ const da=wrapA(P.a-d.aPrev); d.aPrev=P.a; if(P.r<RG.rMin*.25) return; d.twist+=da;
-    if(!d.twisting&&Math.abs(d.twist)>.35){ d.twisting=true; dirtHeld=false }
-    if(d.twisting){ const step=Math.PI/6, n=Math.trunc(d.twist/step); if(n){ d.twist-=n*step; if(transpose(n)){ d.trTot+=n; buzz(); const on=S.steps.find(s=>s.on); if(on) audition(on.deg) } showLabel("טרנספוז "+(d.trTot>0?"+":"")+d.trTot,"Transpose",800) } }
-    return }
-  const dr=P.r-d.r0, dt=wrapA(P.a-d.a0)*Math.max(d.r0,1);
-  if(!d.mode){ if(Math.hypot(dr,dt)<12) return; clearTimeout(d.hold); if(d.stage){ d.mode="held"; return }
-    d.mode=Math.abs(dt)>Math.abs(dr)*1.1?"tan":"rad" }
-  if(d.mode==="rad"){ const s=S.steps[d.i]; const nd=rDeg(P.r); if(nd!==s.deg){ s.deg=nd; audition(nd) } showLabel(noteName(s.deg),"",700) }
-  else if(d.mode==="tan"||d.mode==="spin"){ const da=wrapA(P.a-d.aPrev); d.aPrev=P.a; d.travel+=da;
-    if(d.mode==="tan"&&Math.abs(d.travel)>STEP_A*1.7){ d.mode="spin"; S.steps=d.snap; showLabel("צנטריפוגה","Spin",900) }
-    if(d.mode==="spin"){ spin=clamp(velA(d),-30,30); spinA+=da } }
-  poke();
+  const d=drags.get(e.pointerId); if(!d||d.dirt) return;
+  if(d.spinRim){ const P=pt(e), tn=performance.now(), da=wrapA(P.a-d.aPrev); d.aPrev=P.a; spinA+=da; d.hist.push({t:tn,a:P.a}); while(d.hist.length>2&&tn-d.hist[0].t>90) d.hist.shift(); spin=clamp(velA(d),-30,30); poke(); return }
+  const {r}=pt(e); if(!d.moved&&Math.abs(r-d.r0)<8) return;
+  d.moved=true; const s=S.steps[d.i]; const nd=rDeg(r); if(nd!==s.deg){ s.deg=nd; audition(nd) } dragLabel={i:d.i,deg:s.deg}; poke();
 });
+function clearDrags(){for(const [id,d] of drags) if(!d.dirt) drags.delete(id); dragLabel=null}
 function endDrag(e){
   const d=drags.get(e.pointerId); if(!d) return; drags.delete(e.pointerId);
-  if(d.multi){ if(multi&&multi.pts.has(e.pointerId)){ if(multi.mode){ killUndo(); save() } multi=null } return }
-  clearTimeout(d.hold);
-  if(d.center){ if(![...drags.values()].some(x=>x.center)) dirtHeld=false; if(d.twisting){ killUndo(); save() } return }
+  if(d.spinRim){ spin=clamp(velA(d),-30,30); if(Math.abs(spin)<1.5) spin=0; return }
+  if(dragLabel&&dragLabel.i===d.i) dragLabel=null;
+  if(d.dirt){ if(![...drags.values()].some(x=>x.dirt)) dirtHeld=false; return }
   killUndo();
-  const s=S.steps[d.i], P=d.last, dur=performance.now()-d.t0, up=e.type==="pointerup";
-  if(d.mode==="spin"){ spin=clamp(velA(d),-30,30); if(Math.abs(spin)<1.5) spin=0; poke(); return }
-  if(d.mode==="tan"){ if(d.wasOn&&Math.abs(d.travel)>STEP_A*.5){ const k=d.travel>0?d.i:(d.i+STEPS-1)%STEPS, st=S.steps[k];
-      if(st.on){ st.sl=!st.sl; showLabel(st.sl?"גלישה":"בלי גלישה","Slide") } } save(); return }
-  if(d.mode==="rad"&&d.wasOn&&dur<260&&Math.abs(P.r-d.r0)>clamp(RG.size*.06,16,30)){ s.deg=d.deg0; // הקפצה מהירה: לא שינוי תו
-    if(P.r>d.r0){ s.r=s.r%4+1; showLabel(s.r>1?"חזרות ×"+s.r:"בלי חזרות","Ratchet") }
-    else { s.g=(s.g+1)%3; showLabel(["שער רגיל","שער קצר","סטקטו"][s.g],"Gate") } }
-  else if(!d.mode&&!d.stage&&d.wasOn&&up){ Object.assign(s,mkStep(false,s.deg)) }
+  if(!d.moved&&d.wasOn&&e.type==="pointerup"){ const s=S.steps[d.i]; Object.assign(s,mkStep(false,s.deg)) }
   save();
 }
 ring.addEventListener("pointerup",endDrag); ring.addEventListener("pointercancel",endDrag); ring.addEventListener("lostpointercapture",endDrag);
-ring.addEventListener("contextmenu",e=>e.preventDefault());
-function clearDrags(){ for(const d of drags.values()) clearTimeout(d.hold); for(const [id,d] of drags) if(!d.center) drags.delete(id); multi=null; label=null }
+document.querySelectorAll(".tool").forEach(b=>b.addEventListener("click",()=>{
+  tool=b.dataset.tool; document.querySelectorAll(".tool").forEach(x=>x.classList.toggle("on",x===b));
+  $("#hint").textContent=HINTS[tool]||HINTS.pitch;
+}));
+/* כלי תבנית בלוח "עוד": הזזה, אורך, טרנספוז */
+function rotateSteps(src,n){ const out=cloneSteps(src), L=S.len; for(let k=0;k<L;k++) out[((k+n)%L+L)%L]={...src[k]}; return out }
+function transpose(n){ const on=S.steps.filter(s=>s.on); if(!on.length) return false;
+  if(on.some(s=>s.deg+n<0||s.deg+n>DEGS-1)){ toast("התבנית כבר בקצה הטווח"); return false } for(const s of on) s.deg+=n; return true }
+function patUI(){ $("#lenVal").textContent=S.len; $("#spinTog").classList.toggle("on",!!S.spinOn); $("#evolve").classList.toggle("on",S.evolve); $("#evolve").setAttribute("aria-pressed",S.evolve) }
+const patBtn=(id,fn)=>$(id).addEventListener("click",()=>{ killUndo(); clearDrags(); fn(); patUI(); save() });
+patBtn("#shiftL",()=>{ S.steps=rotateSteps(S.steps,-1) }); patBtn("#shiftR",()=>{ S.steps=rotateSteps(S.steps,1) });
+patBtn("#lenDown",()=>{ S.len=clamp(S.len-1,1,STEPS) }); patBtn("#lenUp",()=>{ S.len=clamp(S.len+1,1,STEPS) });
+patBtn("#trDown",()=>{ if(transpose(-1)){ const s=S.steps.find(x=>x.on); if(s) audition(s.deg) } }); patBtn("#trUp",()=>{ if(transpose(1)){ const s=S.steps.find(x=>x.on); if(s) audition(s.deg) } });
+$("#spinTog").addEventListener("click",()=>{ S.spinOn=!S.spinOn; if(!S.spinOn) spin=0; patUI(); save(true); toast(S.spinOn?"צנטריפוגה: זרוק את השוליים של הטבעת (מחוץ לנקודות) כדי לסובב":"צנטריפוגה כבויה") });
 
 $("#mutate").addEventListener("click",()=>{
   killUndo(); clearDrags();
@@ -1215,7 +1222,7 @@ function evolveStep(){
   evoMark[i]=performance.now(); poke(900); save(true);
 }
 function evolveStep2(){ const L=S.len, i=Math.floor(Math.random()*L), s=S.steps[i]; if(s.on){ s.deg=clamp(s.deg+(Math.random()<.5?-1:1),0,DEGS-1); evoMark[i]=performance.now(); poke(900); save(true) } }
-function evolveUI(){ const b=$("#evolve"); b.classList.toggle("on",S.evolve); b.setAttribute("aria-pressed",S.evolve) }
+function evolveUI(){ patUI() }
 $("#evolve").addEventListener("click",()=>{ S.evolve=!S.evolve; evolveUI(); save(true); toast(S.evolve?"התפתחות: כל שתי תיבות צעד אחד משתנה קצת":"התפתחות כבויה") });
 $("#fresh").addEventListener("click",()=>{
   killUndo(); clearDrags(); const prev=cloneSteps(S.steps), pl=S.len; S.steps=emptySteps(); S.len=16; save();
@@ -1609,8 +1616,8 @@ let rzT=0,rzT2=0; function onResize(){clearTimeout(rzT);clearTimeout(rzT2);rzT=s
 addEventListener("resize",onResize); addEventListener("orientationchange",onResize);
 
 /* ---------- עוד: קישור, רשימת צעדים, סנכרון, מדריך ---------- */
-const TKEY="storm-tour-v1";
-function openMore(){ $("#more").hidden=false; syncUI() }
+const TKEY="storm-tour-v2";
+function openMore(){ patUI(); $("#more").hidden=false; syncUI() }
 function closeMore(){ $("#more").hidden=true; $("#linkBox").hidden=true; $("#exportBox").hidden=true; $("#exportCopy").hidden=true }
 $("#moreBtn").addEventListener("click",openMore); $("#moreClose").addEventListener("click",closeMore);
 $("#more").addEventListener("click",e=>{ if(e.target.id==="more") closeMore() });
@@ -1663,11 +1670,8 @@ $("#sync").addEventListener("click",()=>{
   if(on&&playing){ leader=true; clock.start(S.bpm,epochOf(nextTime+(16-gstep%16)*60/S.bpm/4)) } });
 try{ if(clock&&localStorage.getItem("storm-sync")==="1") clock.setEnabled(true) }catch(e){}
 const TOUR=[
-  ["גע וגרור","גע במקום ריק כדי להוסיף תו, וגרור החוצה לתו גבוה יותר. גע בתו קיים כדי לכבות אותו.","tap = note · drag out = higher"],
-  ["החזק תו","החזקה קצרה: הדגשה. ממשיכים להחזיק: הסיכוי שהתו יתנגן, 100 → 75 → 50 → 25%. תו חיוור מתנגן רק לפעמים.","hold = Accent · keep holding = Probability"],
-  ["החלק והקפץ","החלק מתו לשכן שלו: גלישה. הקפצה מהירה החוצה: חזרות ×2 ×3 ×4. הקפצה פנימה: תו קצר יותר.","swipe sideways = Slide · flick out = Ratchet · flick in = Gate"],
-  ["שתי אצבעות","סובב בשתי אצבעות כדי להזיז את כל התבנית. צבוט או פתח כדי לקבוע את אורך הלולאה, מ-1 עד 16.","two-finger rotate = shift · pinch = length"],
-  ["המרכז והסופה","סובב אצבע אחת סביב המרכז: טרנספוז בתוך הסולם. החזק את המרכז: לכלוך. זרוק את הטבעת בתנועה מהירה סביב: היא מסתובבת והמסנן נפתח לפי המהירות.","center twist = Transpose · hold = Dirt · fling = Spin"]
+  ["עורכים כמו בטבעת החומצה","בוחרים מצב למטה: ״תו״ להדליק, לכבות ולגרור לגובה, ״הדגשה״ ו״גלישה״ בנגיעה. שלושה מצבים חדשים עובדים אותו דבר: ״סיכוי״, ״רטצ׳ט״ ו״אורך״. כל נגיעה עוברת לערך הבא.","modes: Note · Accent · Slide · Probability · Ratchet · Gate"],
+  ["⋯ עוד","הזזת התבנית, אורך הלולאה, טרנספוז, התפתחות וצנטריפוגה (כבויות כברירת מחדל), קישור לשיתוף ורשימת צעדים ל-T-8 / Volca.","shift · length · transpose · evolve · spin · share · export"]
 ];
 let tourI=0;
 function tourUI(){ const t=TOUR[tourI]; $("#tourH").textContent=t[0]; $("#tourP").textContent=t[1]; $("#tourEn").textContent=t[2]; $("#tourDots").textContent=(tourI+1)+" / "+TOUR.length; $("#tourNext").textContent=tourI===TOUR.length-1?"יאללה":"הבא" }
