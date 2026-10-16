@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#110f17">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="גרוב 2">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>מכונת גרוב 2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h1>גרוב 2</h1></div>
+  <div class="grp" aria-label="קצב">
+    <button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button>
+    <span class="num" id="bpmVal">124</span>
+    <button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button>
+    <button class="btn" id="tap" type="button">הקש</button>
+  </div>
+  <button class="btn rec" id="rec" type="button" aria-pressed="false" aria-label="הקלט">⏺<span class="lbl-long"> הקלט</span></button>
+  <button class="btn" id="takesBtn" type="button" aria-label="הקלטות">📁</button>
+  <button class="btn sync" id="sync" type="button" aria-pressed="false" aria-label="סנכרון עם הכלים האחרים">⇄</button>
+  <span class="meter" aria-hidden="true"><i id="meterFill"></i></span>
+  <button class="btn" id="moreClose" type="button" aria-label="סגור">✕</button>
+</header>
+
+<main class="main">
+  <section class="seq">
+    <div class="seqhead">
+      <div class="vars" role="group" aria-label="וריאציות">
+        <button class="btn var" data-var="0" type="button">א<i class="prog"></i></button>
+        <button class="btn var" data-var="1" type="button">ב<i class="prog"></i></button>
+        <button class="btn var" data-var="2" type="button">ג<i class="prog"></i></button>
+        <button class="btn var" data-var="3" type="button">ד<i class="prog"></i></button>
+      </div>
+  <div class="slotrow" role="group" aria-label="זיכרון">
+      <span class="lbl">זיכרון<br><small>החזק=שמור</small></span>
+      <button class="btn slot" data-slot="0" type="button">1<i class="prog"></i></button>
+      <button class="btn slot" data-slot="1" type="button">2<i class="prog"></i></button>
+      <button class="btn slot" data-slot="2" type="button">3<i class="prog"></i></button>
+      <button class="btn slot" data-slot="3" type="button">4<i class="prog"></i></button>
+    </div>
+      <div class="edits" id="edits">
+        <button class="btn ur" id="undo" type="button" aria-label="בטל">↶<span class="lg"> בטל</span></button>
+        <button class="btn ur" id="redo" type="button" aria-label="החזר">↷<span class="lg"> החזר</span></button>
+        <button class="btn clr" id="patBtn" type="button">🧹 נקה<span class="lg"> / תבנית</span></button>
+      </div>
+    </div>
+    <div class="pagebar">
+      <div class="pages" id="pages" dir="ltr" role="group" aria-label="עמודים"></div>
+      <button class="btn fol" id="follow" type="button" aria-pressed="true">⇥ עקוב</button>
+      <button class="btn len" id="lenBtn" type="button">אורך 16</button>
+    </div>
+    <div class="tabs" id="tabs" role="group" aria-label="תופים"></div>
+    <div class="grid" id="grid" dir="ltr" aria-label="צעדי העמוד לכל תוף, צעד 1 משמאל"></div>
+    <div class="hint" id="hint">גע: דלוק · מודגש · כבוי · גרור לצייר · גע שוב בשם התוף לעריכת הצליל · ↶ מבטל כל שינוי</div>
+  </section>
+</main>
+
+<!-- אזור אגודל ימני (לאורך: תחתית מימין) -->
+<nav class="rail rail-a" aria-label="נגינה">
+  <button class="btn play" id="play" type="button">▶ נגן</button>
+  <button class="btn big2" id="mutate" type="button">🎲<span>מוטציה</span></button>
+  <button class="btn big2" id="moreBtn" type="button" aria-label="קצב, הקלטה וזיכרון">⋯<span>עוד</span></button>
+  <button class="btn big2" id="soundBtn" type="button" aria-expanded="false">🎛<span>צליל</span></button>
+</nav>
+<!-- אזור אגודל שמאלי: אנרגיה ומילוי -->
+<nav class="rail rail-b" aria-label="ביצוע">
+  <div class="energy">
+    <div class="elbl"><b>אנרגיה</b><span class="lbl" id="layers"></span></div>
+    <div class="sld big" id="energy" data-key="energy" role="slider" tabindex="0" aria-label="אנרגיה" aria-valuemin="0" aria-valuemax="100"><div class="fill"></div><div class="ticks" aria-hidden="true"></div><div class="thumb"></div></div>
+  </div>
+  <button class="fillbtn" id="fill" type="button" aria-label="מילוי: החזק לגלגול"><span class="ff" id="fillFill"></span><b>מילוי</b><small>החזק</small></button>
+</nav>
+
+<aside class="side scroll-y" id="side" hidden aria-label="צליל">
+  <div class="card part" id="partCard">
+    <div class="cardhead"><h2 id="partName">בעיטה</h2><button class="btn" id="audition" type="button">▶ שמע</button><button class="btn ms m" id="selM" type="button" aria-label="השתק">M</button><button class="btn ms s" id="selS" type="button" aria-label="סולו">S</button><button class="btn" id="sideClose" type="button" aria-label="סגור">✕</button></div>
+    <div class="ctls" id="partCtls"></div>
+  </div>
+  <div class="card">
+    <div class="ctls">
+      <div class="ctl"><label>סווינג <output id="o_swing"></output></label><div class="sld" data-key="swing" role="slider" tabindex="0" aria-label="סווינג"><div class="fill"></div><div class="thumb"></div></div></div>
+      <div class="ctl"><label>לכלוך <output id="o_drive"></output></label><div class="sld" data-key="drive" role="slider" tabindex="0" aria-label="לכלוך"><div class="fill"></div><div class="thumb"></div></div></div>
+      <div class="ctl"><label>עוצמה <output id="o_vol"></output></label><div class="sld" data-key="vol" role="slider" tabindex="0" aria-label="עוצמה"><div class="fill"></div><div class="thumb"></div></div></div>
+      <div class="ctl"><label>&nbsp;</label><button class="btn" id="reset" type="button">↻ איפוס צליל</button></div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<div id="takes" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הקלטות">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>הקלטות</h2><button class="btn" id="takesClose" type="button">סגור</button></div>
+    <p class="lbl" id="takesEmpty">עוד אין הקלטות. לחץ ⏺ הקלט, נגן, ולחץ שוב כדי לעצור.</p>
+    <ul id="takeList"></ul>
+  </div>
+</div>
+
+<div id="pat" class="sheet" hidden role="dialog" aria-modal="true" aria-label="תבנית ונקה">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>תבנית <span id="patVar"></span></h2><button class="btn" id="patClose" type="button">סגור</button></div>
+    <section class="blk"><h3>אורך התבנית (צעדים)</h3><div class="opts" id="lens" dir="ltr"></div>
+      <button class="btn wide" id="copyNext" type="button">העתק עמוד לעמוד הבא</button></section>
+    <section class="blk"><h3>ניקוי</h3>
+      <div class="opts2"><button class="btn wide part-c" id="clrPart" type="button">נקה תוף</button><button class="btn wide" id="clrPage" type="button">נקה עמוד</button>
+      <button class="btn wide warn" id="clrAll" type="button">נקה את כל התופים</button></div></section>
+    <section class="blk"><h3>להתחיל מחדש</h3>
+      <div class="opts2"><button class="btn wide" id="newPat" type="button">📄 תבנית חדשה (ריקה)</button><button class="btn wide" id="rstSnd" type="button">🎛 החזר צלילים לברירת מחדל</button>
+      <button class="btn wide danger" id="factory" type="button">⟲ איפוס מלא</button></div>
+      <p class="lbl">כל ניקוי אפשר לבטל עם ↶ בטל. רק איפוס מלא סופי.</p></section>
+  </div>
+</div>
+<div id="cfm" class="sheet" hidden role="alertdialog" aria-modal="true" aria-labelledby="cfmTitle">
+  <div class="sheetbox cfmbox">
+    <h2 id="cfmTitle"></h2><p id="cfmBody"></p>
+    <div class="opts2"><button class="btn wide danger" id="cfmOk" type="button">כן</button><button class="btn wide" id="cfmNo" type="button">לא, השאר</button></div>
+  </div>
+</div>
+
+<div id="gate" class="start scroll-y">
+  <div class="gatebox">
+    <div class="logo big" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1>מכונת גרוב 2</h1>
+    <p>מכונת תופים אנלוגית: בעיטה, מחיאה, היי־האטים, טום ורים. מציירים צעדים, ומרימים את האנרגיה מבעיטה לבד עד גרוב מלא.</p>
+    <button class="go" id="start" type="button">▶ הפעל צליל</button>
+    <p class="small">אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</p>
+    <p class="small" id="installHint" hidden>להתקנה: שתף ← הוסף למסך הבית. אחרי זה היא עובדת גם בלי אינטרנט.</p>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script src="engine.js"></script>
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
