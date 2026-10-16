@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0d0a16">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="מטוטלת מגע">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>מטוטלת מגע</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"><i></i></span><h1>מטוטלת <span class="tw">מגע</span></h1></div>
+  <div class="grp" aria-label="קצב">
+    <button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button>
+    <span class="num" id="bpmVal">124</span>
+    <button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button>
+  </div>
+  <button class="btn sync" id="sync" type="button" aria-pressed="false" aria-label="סנכרון עם הכלים האחרים">⇄</button>
+  <button class="btn rec" id="rec" type="button" aria-pressed="false" aria-label="הקלט">⏺</button>
+  <button class="btn" id="takesBtn" type="button">הקלטות</button>
+  <span class="meter" aria-hidden="true"><i id="meterFill"></i></span>
+  <button class="btn" id="moreBtn" type="button" aria-label="הגדרות">⋯ עוד</button>
+</header>
+
+<main class="main">
+  <section class="play">
+    <div class="ctlrow">
+      <div class="seg" role="group" aria-label="מצב">
+        <button class="btn seg-b" data-mode="note" type="button">תו</button>
+        <button class="btn seg-b" data-mode="chord" type="button">אקורד</button>
+      </div>
+      <div class="seg" role="group" aria-label="קצב הארפג׳יו">
+        <button class="btn seg-b" data-rate="8" type="button" dir="ltr">1/8</button>
+        <button class="btn seg-b" data-rate="16" type="button" dir="ltr">1/16</button>
+        <button class="btn seg-b" data-rate="16t" type="button" dir="ltr">1/16T</button>
+        <button class="btn seg-b" data-rate="long" type="button">ארוך</button>
+      </div>
+      <div class="grp" aria-label="אוקטבה">
+        <button class="btn sq" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
+        <span class="num sm" id="octVal">אוק׳ 3</span>
+        <button class="btn sq" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
+      </div>
+      <button class="btn hold" id="hold" type="button" aria-pressed="false">החזק</button>
+    </div>
+    <div class="steps" id="stepsBar" aria-hidden="true"></div>
+    <div class="pads" id="pads" aria-label="כפתורי תווים"></div>
+  </section>
+  <aside class="ctl" id="ctl" aria-label="שליטה בצליל">
+    <div class="xyw">
+      <div class="xy" id="xy" role="slider" tabindex="0" aria-label="משטח אפקטים: למעלה חלום, הצידה רעד">
+        <span class="xl xl-y"><b>חלום ↑</b><bdi class="en" dir="ltr">DELAY · PHASER · REVERB</bdi></span>
+        <span class="xl xl-x"><b>רעד →</b><bdi class="en" dir="ltr">TREMOLO · VIBRATO · DETUNE</bdi></span>
+        <i class="grid" aria-hidden="true"></i><i class="dot" id="xyDot" aria-hidden="true"></i>
+      </div>
+      <div class="xybar">
+        <button class="btn mode" id="latchBtn" type="button" aria-pressed="true"><b id="latchHe">נשאר במקום</b><bdi class="en" dir="ltr" id="latchEn">LATCH</bdi></button>
+        <button class="btn cut" id="cutBtn" type="button"><b>חיתוך</b><bdi class="en" dir="ltr">CUT</bdi></button>
+      </div>
+    </div>
+    <div class="faders">
+      <div class="fader" data-key="filter"><div class="sld" role="slider" tabindex="0" aria-label="פילטר"><div class="fill"></div><div class="thumb"></div></div><b>פילטר</b><bdi class="en" dir="ltr">CUTOFF</bdi></div>
+      <div class="fader" data-key="res"><div class="sld" role="slider" tabindex="0" aria-label="תהודה"><div class="fill"></div><div class="thumb"></div></div><b>תהודה</b><bdi class="en" dir="ltr">RESONANCE</bdi></div>
+      <div class="fader" data-key="drive"><div class="sld" role="slider" tabindex="0" aria-label="עיוות"><div class="fill"></div><div class="thumb"></div></div><b>עיוות</b><bdi class="en" dir="ltr">DRIVE</bdi></div>
+    </div>
+  </aside>
+</main>
+</div>
+
+<div id="more" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הגדרות">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>עוד</h2><button class="btn" id="moreClose" type="button">סגור</button></div>
+    <section class="blk"><h3>סולם</h3><div class="opts" id="scales"></div>
+      <label class="row">שורש <select id="root" dir="ltr"></select></label></section>
+    <section class="blk"><h3>ארפג׳יו</h3><div class="opts" id="dirs"></div>
+      <div class="opts" id="spans"></div></section>
+    <section class="blk"><h3>דיליי</h3><div class="opts" id="divs"></div></section>
+    <section class="blk"><h3>צליל</h3><div class="ctls">
+                        <label class="vrow">עוצמה <input type="range" id="r_vol" min="0" max="100"></label>
+      </div>
+      <button class="btn" id="reset" type="button">↻ איפוס צליל</button></section>
+    <section class="blk"><h3>הטיה (רשות, כבויה כברירת מחדל)</h3>
+      <label class="row"><input type="checkbox" id="tiltOn"> הטיית המכשיר מזיזה את משטח האפקטים (קדימה = חלום, הצידה = רעד)</label>
+      <button class="btn" id="calib" type="button">כייל את המנוחה</button></section>
+  </div>
+</div>
+
+<div id="takes" class="sheet" hidden role="dialog" aria-modal="true" aria-label="הקלטות">
+  <div class="sheetbox scroll-y">
+    <div class="cardhead"><h2>הקלטות</h2><button class="btn" id="takesClose" type="button">סגור</button></div>
+    <p class="lbl" id="takesEmpty">עוד אין הקלטות. לחץ ⏺, נגן, ולחץ שוב כדי לעצור.</p>
+    <ul id="takeList"></ul>
+  </div>
+</div>
+
+<div id="gate" class="start scroll-y">
+  <div class="gatebox">
+    <div class="logo big" aria-hidden="true"><i></i></div>
+    <h1>מטוטלת מגע</h1>
+    <p>שמונה כפתורים בסולם, בלי תו שגוי. כפתור מוחזק חוזר על עצמו בקצב, נעול לפעמה של הגרוב. כמה כפתורים יחד הם ארפג׳יו. "החזק" משאיר אותו לנגן לבד. את הצליל משנים באצבע השנייה: משטח האפקטים והמחוונים, גם תוך כדי נגינה.</p>
+    <button class="go" id="start" type="button">▶ הפעל צליל</button>
+    <p class="small">אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</p>
+    <p class="small" id="installHint" hidden>להתקנה: שתף ← הוסף למסך הבית. אחרי זה היא עובדת גם בלי אינטרנט.</p>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script src="engine.js"></script>
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
