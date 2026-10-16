@@ -278,6 +278,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
       <div class="card foot">
         <div class="knob"><label for="vol">עוצמה <output id="volOut"></output></label><input type="range" id="vol" min="0" max="100" step="1"></div>
+        <div class="knob"><label for="swing">סווינג <output id="swingOut"></output></label><input type="range" id="swing" min="0" max="100" step="1"></div>
         <button class="btn" id="reset" type="button">איפוס</button>
       </div>
     </aside>
@@ -316,7 +317,7 @@ function killUndo(){undoTok++; if(toastAct&&toastUndo){toastAct=false;$("#toast"
 function toast(msg,label,fn,isUndo){const t=$("#toast");t.replaceChildren();toastAct=!!label;toastUndo=!!isUndo;const sp=document.createElement("span");sp.textContent=msg;t.appendChild(sp);
   if(label){const b=document.createElement("button");b.type="button";b.className="tact";b.textContent=label;
     const tok=undoTok;b.addEventListener("click",()=>{t.hidden=true;toastAct=false;clearTimeout(toastT);if(!isUndo||tok===undoTok){try{fn()}catch(e){}}});t.appendChild(b)}
-  t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,label?5000:3200)}
+  t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,label?(isUndo?7000:5000):3200)}
 
 /* ---------- צורות גל ---------- */
 function presetWave(kind){
@@ -337,23 +338,23 @@ function presetWave(kind){
 
 /* ---------- מצב ושמירה ---------- */
 const DEF_WORLDS={
-  deep:{cut:.38,res:.22,env:.32,dec:.55,drv:.12,sub:.75,dly:.22,fb:.35,ft:"warm",wave:presetWave("warm")},
-  acid:{cut:.2,res:.86,env:.8,dec:.3,drv:.72,sub:.2,dly:.3,fb:.52,ft:"warm",wave:presetWave("saw")}
+  deep:{cut:.38,res:.22,env:.32,dec:.55,drv:.12,sub:.75,dly:.22,fb:.35,rev:.3,ft:"warm",wave:presetWave("warm")},
+  acid:{cut:.2,res:.86,env:.8,dec:.3,drv:.72,sub:.2,dly:.3,fb:.52,rev:.14,ft:"warm",wave:presetWave("saw")}
 };
 const FTYPES=["warm","hollow","talk","metal"];
-const KNOBS=[["cut","מסנן"],["res","תהודה"],["env","מעטפת"],["dec","דעיכה"],["drv","לכלוך"],["sub","בס עמוק"],["dly","הד"],["fb","חזרות"]];
+const KNOBS=[["cut","מסנן"],["res","תהודה"],["env","מעטפת"],["dec","דעיכה"],["drv","לכלוך"],["sub","בס עמוק"],["dly","הד"],["fb","חזרות"],["rev","מרחב"]];
 function emptySteps(){const s=[];for(let i=0;i<STEPS;i++)s.push({on:false,deg:0,acc:false,sl:false});return s}
 function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב נסתר
   const on=[1,0,1,1,0,1,1,0,1,0,1,1,0,1,0,1], deg=[0,0,7,0,0,3,0,0,0,0,10,7,0,5,0,12];
   return on.map((v,i)=>({on:!!v,deg:v?deg[i]:0,acc:[0,6,11].includes(i),sl:[2,10].includes(i)}));
 }
-function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
+function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
   worlds:JSON.parse(JSON.stringify(DEF_WORLDS))}}
 function sanitize(o){
   const d=defaults(); if(!o||typeof o!=="object") return d;
   const s={bpm:clamp(Math.round(fin(o.bpm,128)),60,200),root:clamp(Math.round(fin(o.root,9)),0,11),
     scale:["minor","phryg","dorian"].includes(o.scale)?o.scale:"minor",oct:clamp(Math.round(fin(o.oct,0)),-2,2),
-    morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
+    swing:clamp(fin(o.swing,0),0,1),morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
   for(let i=0;i<STEPS;i++){const q=(Array.isArray(o.steps)&&o.steps[i])||d.steps[i];
     const on=!!q.on; s.steps.push({on,deg:clamp(Math.round(fin(q.deg,0)),0,DEGS-1),acc:on&&!!q.acc,sl:on&&!!q.sl})}
   for(const k of ["deep","acid"]){const src=(o.worlds&&o.worlds[k])||{}; const w={};
@@ -372,17 +373,180 @@ function save(keepSlot){ if(!keepSlot&&typeof curSlot==="number"&&curSlot>=0){cu
 /* ---------- מיפוי פרמטרים ---------- */
 const MAP={
   cut:v=>80*Math.pow(2,v*6.3), res:v=>.7+v*v*24, env:v=>v*4.5, dec:v=>.03+v*v*.6,
-  drv:v=>1+v*v*30, sub:v=>v*.9, dly:v=>v*.6, fb:v=>v*.8
+  drv:v=>1+v*v*30, sub:v=>v*.9, dly:v=>v*.6, fb:v=>v*.8, rev:v=>v*v*.7
 };
 const SHOW={cut:v=>Math.round(MAP.cut(v))+"", res:v=>Math.round(v*100)+"", env:v=>Math.round(v*100)+"", dec:v=>Math.round(MAP.dec(v)*1000)+"",
-  drv:v=>Math.round(v*100)+"", sub:v=>Math.round(v*100)+"", dly:v=>Math.round(v*100)+"", fb:v=>Math.round(v*100)+""};
+  drv:v=>Math.round(v*100)+"", sub:v=>Math.round(v*100)+"", dly:v=>Math.round(v*100)+"", fb:v=>Math.round(v*100)+"", rev:v=>Math.round(v*100)+""};
 function mixed(){const a=S.worlds.deep,b=S.worlds.acid,m=S.morph,o={};for(const [p] of KNOBS)o[p]=lerp(a[p],b[p],m);return o}
 const SCALES={minor:[0,2,3,5,7,8,10],phryg:[0,1,3,5,7,8,10],dorian:[0,2,3,5,7,9,10]};
-function degHz(deg){const sc=SCALES[S.scale];const semi=sc[deg%7]+12*Math.floor(deg/7);
-  const midi=36+S.root+12*S.oct+semi; return 440*Math.pow(2,(midi-69)/12)}
+const NOTES=["דו","דו#","רה","רה#","מי","פה","פה#","סול","סול#","לה","לה#","סי"];
+function degMidi(deg){const sc=SCALES[S.scale];return 36+S.root+12*S.oct+sc[deg%7]+12*Math.floor(deg/7)}
+function noteName(deg){const m=degMidi(deg);return NOTES[m%12]+(Math.floor(m/12)-1)}
+function degHz(deg){return 440*Math.pow(2,(degMidi(deg)-69)/12)}
 
 /* ---------- מנוע צליל ---------- */
-let ctx=null, E=null;
+let ctx=null, E=null, engP=null, noteSeq=0;
+/* ליבת הצליל רצה ב-AudioWorklet; הקוד שלה יושב כאן כמחרוזת ונטען דרך Blob, אז עובד גם אופליין */
+const CORE_SRC=`/* ליבת הצליל של טבעת חומצה: רצה בתוך AudioWorklet, דגימה אחר דגימה.
+   קלט 0: ערבוב האוסילטורים (מונו). קלט 1: סאב (מונו).
+   פלט: ערוץ 0 = בס אחרי מסנן ו-VCA, ערוץ 1 = סאב אחרי VCA.
+   כל המסננים עם רוויה (tanh) בתוך הלולאה, בדגימת-יתר פי 2. */
+const OS=2;
+function th(x){ if(x>3)return 1; if(x<-3)return -1; const x2=x*x; return x*(27+x2)/(27+9*x2) }
+function clamp(v,a,b){ return v<a?a:v>b?b:v }
+
+/* סולם 4 קטבים (TPT, zero-delay feedback) עם רוויה בכל שלב. k עד ~4.2 = השמעה עצמית */
+class Ladder{
+  constructor(){ this.s1=this.s2=this.s3=this.s4=0 }
+  reset(){ this.s1=this.s2=this.s3=this.s4=0 }
+  run(x,G,k,drv){
+    const a=1-G, G2=G*G, G3=G2*G, G4=G3*G;
+    const Sy=a*(G3*this.s1+G2*this.s2+G*this.s3+this.s4);
+    let u=(x*drv-k*Sy)/(1+k*G4); u=th(u);
+    let y=G*u+a*this.s1; this.s1=2*y-this.s1;
+    y=G*th(y)+a*this.s2; this.s2=2*y-this.s2;
+    y=G*th(y)+a*this.s3; this.s3=2*y-this.s3;
+    y=G*th(y)+a*this.s4; this.s4=2*y-this.s4;
+    return y*(1+k*.45);
+  }
+}
+/* מסנן משתנה-מצב (TPT) עם רוויה על מצב הפס */
+class Svf{
+  constructor(){ this.ic1=0; this.ic2=0; this.bp=0; this.lp=0 }
+  reset(){ this.ic1=this.ic2=this.bp=this.lp=0 }
+  run(x,g,k){
+    const a1=1/(1+g*(g+k)), a2=g*a1, a3=g*a2;
+    const v3=x-this.ic2, v1=a1*this.ic1+a2*v3, v2=this.ic2+a2*this.ic1+a3*v3;
+    this.ic1=th(2*v1-this.ic1); this.ic2=2*v2-this.ic2; this.bp=v1; this.lp=v2;
+  }
+}
+const VOWELS=[[300,870,2240],[460,840,2500],[730,1090,2440],[530,1840,2480],[280,2250,2900]];
+function vowelAt(hz,out){ const v=clamp(Math.log2(Math.max(hz,1)/80)/6.3,0,1)*(VOWELS.length-1), i=Math.min(VOWELS.length-2,Math.floor(v)), f=v-i;
+  for(let k=0;k<3;k++) out[k]=VOWELS[i][k]+(VOWELS[i+1][k]-VOWELS[i][k])*f }
+
+/* ארבעת האופיים, ממשק אחיד: run(x,fc,res,drv) בקצב הדגימה-היתר */
+class Unit{
+  constructor(type,fs2){
+    this.type=type; this.fs2=fs2; this.fmax=fs2*.42;
+    if(type===0){ this.l=new Ladder() }
+    else if(type===1){ this.s=new Svf() }
+    else if(type===2){ this.s=[new Svf(),new Svf(),new Svf()]; this.fq=[700,1100,2400]; this.gg=[0,0,0]; this.gn=[1,.6,.32] }
+    else { const L=Math.ceil(fs2*.1)+4; this.buf=new Float32Array(L); this.L=L; this.w=0; this.dd=fs2/110; this.dT=this.dd; this.dc=.02; this.lp=0; this.fb=.6; this.fbT=.6 }
+  }
+  pitch(f,leg){ if(this.type!==3) return; // תהודה בגובה התו
+    const minD=512; let kk=this.kk||1; if(!leg||kk*this.fs2/f<minD) kk=Math.ceil(minD*f/this.fs2); this.kk=kk;
+    this.dT=clamp(kk*this.fs2/f,minD,this.L-3); this.dc=leg?1-Math.exp(-1/(.035*this.fs2)):1-Math.exp(-1/(.003*this.fs2)) }
+  release(){ if(this.type===3) this.fbT=.3 }
+  /* פעם בדגימה: מקדמים. run(x) רץ פעמיים בדגימה (דגימת-יתר) */
+  prep(fc,res,drv){
+    const fs2=this.fs2; fc=clamp(fc,20,this.fmax); this.drv=drv;
+    if(this.type===0){ const g=Math.tan(Math.PI*fc/fs2); this.G=g/(1+g); this.k=4.6*res*(.72+.28*res); this.d=1+drv*5; this.cmp=1/(1+drv*.42) }
+    else if(this.type===1){ this.g=Math.tan(Math.PI*fc/fs2); this.k=2*(1-.94*res); this.d=1+drv*3; this.og=2.4+res*1.6 }
+    else if(this.type===2){ vowelAt(fc,this.fq); for(let i=0;i<3;i++) this.gg[i]=Math.tan(Math.PI*clamp(this.fq[i],60,this.fmax)/fs2); this.k=1/(4+res*11); this.d=1+drv*3; this.og=1.8+res*1.2 }
+    else { this.fbk=clamp(this.fb+res*.38,0,.93); this.dcf=1-Math.exp(-2*Math.PI*clamp(fc*1.5,80,this.fmax)/fs2); this.d=1+drv*2; this.og=.75/(1+drv*.5) }
+  }
+  run(x){
+    const t=this.type;
+    if(t===0) return this.l.run(x,this.G,this.k,this.d)*this.cmp;
+    if(t===1){ this.s.run(th(x*this.d),this.g,this.k); return th(this.s.bp*this.og) }
+    if(t===2){ const xin=th(x*this.d); let o=0; for(let i=0;i<3;i++){ this.s[i].run(xin,this.gg[i],this.k); o+=this.s[i].bp*this.gn[i] } return th(o*this.og) }
+    // מתכת: מסרק בגובה התו, עמעום במסנן, רוויה בלולאה
+    this.dd+=(this.dT-this.dd)*this.dc; this.fb+=(this.fbT-this.fb)*.0005;
+    const rp=this.w-this.dd; let ri=Math.floor(rp); const fr=rp-ri; ri=((ri%this.L)+this.L)%this.L; const ri2=(ri+1)%this.L;
+    const rd=this.buf[ri]*(1-fr)+this.buf[ri2]*fr;
+    this.lp+=(rd-this.lp)*this.dcf;
+    const s=th(x*.5*this.d)+th(this.fbk*this.lp);
+    this.buf[this.w]=s; this.w=(this.w+1)%this.L; return s*this.og;
+  }
+}
+
+class AcidCore extends AudioWorkletProcessor{
+  static get parameterDescriptors(){ return [
+    {name:"cut",defaultValue:600,minValue:20,maxValue:20000,automationRate:"k-rate"},
+    {name:"res",defaultValue:.3,minValue:0,maxValue:1,automationRate:"k-rate"},
+    {name:"env",defaultValue:2,minValue:0,maxValue:6,automationRate:"k-rate"},
+    {name:"dec",defaultValue:.3,minValue:.01,maxValue:3,automationRate:"k-rate"},
+    {name:"sat",defaultValue:.2,minValue:0,maxValue:1.5,automationRate:"k-rate"},
+    {name:"morph",defaultValue:0,minValue:0,maxValue:1,automationRate:"k-rate"},
+    {name:"ftA",defaultValue:0,minValue:0,maxValue:3,automationRate:"k-rate"},
+    {name:"ftB",defaultValue:0,minValue:0,maxValue:3,automationRate:"k-rate"}
+  ]}
+  constructor(){ super();
+    const fs=sampleRate, fs2=fs*OS; this.fs=fs; this.fs2=fs2;
+    this.A=new Unit(0,fs2); this.B=null; this.Aold=null; this.Bold=null; this.xA=1; this.xB=1; this.xStep=1/(.03*fs*OS);
+    this.ftA=0; this.ftB=0; this.lastF=110;
+    this.q=[]; this.id=0; this.gate=false;
+    this.vca=0; this.vcaT=0; this.vAtk=1-Math.exp(-1/(.003*fs)); this.vLeg=1-Math.exp(-1/(.012*fs)); this.vRel=1-Math.exp(-1/(.015*fs)); this.vc=this.vRel;
+    this.sv=0; this.svT=0; this.sAtk=1-Math.exp(-1/(.005*fs)); this.sRel=1-Math.exp(-1/(.025*fs)); this.sc=this.sRel;
+    this.fenv=0; this.fdec=1; this.acc=0; this.accDec=Math.exp(-1/(.45*fs)); this.accAmt=0;
+    this.xprev=0; this.olp=0; this.olpc=1-Math.exp(-2*Math.PI*18000/fs2);
+    this.port.onmessage=e=>{ const m=e.data; if(m&&m.type==="kill"){ this.q.length=0; this.gate=false; this.vcaT=0; this.svT=0; this.vc=this.vRel; this.sc=this.sRel; this.A.release(); if(this.B) this.B.release(); return } if(m&&typeof m.t==="number") this.q.push(m) };
+  }
+  unit(slot,type){ const cur=slot==="A"?this.A:this.B; if(cur&&cur.type===type) return;
+    const u=new Unit(type,this.fs2); u.pitch(this.lastF,false);
+    if(slot==="A"){ this.Aold=cur; this.A=u; this.xA=cur?0:1 } else { this.Bold=cur; this.B=u; this.xB=0 } }
+  event(m){
+    if(m.type==="note"){ this.id=m.id; this.lastF=m.f; const leg=!!m.leg;
+      this.gate=true; this.A.pitch(m.f,leg); if(this.B) this.B.pitch(m.f,leg);
+      const lvl=m.acc?.95:.62;
+      if(!leg){ this.fenv=1; this.vc=this.vAtk; this.sc=this.sAtk; this.vcaT=lvl; this.svT=m.acc?.95:.8;
+        if(m.acc){ this.acc=Math.min(1.6,this.acc+.55); this.accAmt=1 } else this.accAmt=0;
+        if(this.A.type===3) this.A.fbT=.6; if(this.B&&this.B.type===3) this.B.fbT=.6 }
+      else { this.vc=this.vLeg; this.sc=this.sAtk; this.vcaT=Math.max(this.vcaT,lvl*.9); this.svT=Math.max(this.svT,.8) }
+    } else if(m.type==="off"){ if(m.id!==undefined&&m.id!==this.id) return;
+      this.gate=false; this.vcaT=0; this.svT=0; this.vc=this.vRel; this.sc=this.sRel; this.A.release(); if(this.B) this.B.release() }
+  }
+  process(inputs,outputs,P){
+    const inO=inputs[0][0], inS=inputs[1]&&inputs[1][0], out=outputs[0], o0=out[0], o1=out[1]||o0; const n=o0.length;
+    const fs=this.fs, t0=currentTime;
+    const cut=P.cut[0], res=P.res[0], env=P.env[0], dec=P.dec[0], sat=P.sat[0], morph=P.morph[0], ftA=Math.round(P.ftA[0]), ftB=Math.round(P.ftB[0]);
+    if(ftA!==this.ftA){ this.ftA=ftA; this.unit("A",ftA) }
+    if(ftB!==this.ftB){ this.ftB=ftB; this.unit("B",ftB) }
+    if(this.B&&this.xB>=1&&!this.Bold&&this.B.type===this.A.type) this.B=null; // שני אופיים זהים: מסנן אחד מספיק
+    const runB=!!this.B&&(morph>.0005||this.xB<1);
+    const decA=this.accAmt>0?Math.min(dec,.22):dec; this.fdec=Math.exp(-1/(decA*fs));
+    const q=this.q; let qi=0;
+    for(let i=0;i<n;i++){
+      const t=t0+i/fs; while(qi<q.length&&q[qi].t<=t){ this.event(q[qi]); qi++ }
+      // מעטפות
+      this.vca+=(this.vcaT-this.vca)*this.vc; this.sv+=(this.svT-this.sv)*this.sc;
+      this.fenv*=this.fdec; this.acc*=this.accDec;
+      const fc=cut*Math.exp(.6931472*(env*this.fenv*(1+this.acc*.35)+this.acc*.9));
+      const r=clamp(res+this.acc*.08,0,1), d=sat*(1+this.acc*.3);
+      this.A.prep(fc,r,d); if(this.Aold) this.Aold.prep(fc,r,d); if(runB){ this.B.prep(fc,r,d); if(this.Bold) this.Bold.prep(fc,r,d) }
+      // דגימת-יתר פי 2: אינטרפולציה בין הדגימה הקודמת לנוכחית
+      const x=(inO?inO[i]:0)+1e-9, xm=(x+this.xprev)*.5; this.xprev=x;
+      let y=0;
+      for(let k=0;k<OS;k++){
+        const xi=k?x:xm; let a=this.A.run(xi);
+        if(this.Aold){ a=a*this.xA+this.Aold.run(xi)*(1-this.xA); this.xA+=this.xStep; if(this.xA>=1){ this.xA=1; this.Aold=null } }
+        let v=a;
+        if(runB){ let b=this.B.run(xi);
+          if(this.xB<1){ const ob=this.Bold?this.Bold.run(xi):a; b=b*this.xB+ob*(1-this.xB); this.xB+=this.xStep; if(this.xB>=1){ this.xB=1; this.Bold=null } }
+          v=a*(1-morph)+b*morph }
+        this.olp+=(v-this.olp)*this.olpc; y=this.olp;
+      }
+      o0[i]=y*this.vca; o1[i]=(inS?inS[i]:0)*this.sv;
+    }
+    if(qi) q.splice(0,qi);
+    return true;
+  }
+}
+registerProcessor("acid-core",AcidCore);
+`;
+async function loadWorklet(c){
+  if(!c.audioWorklet||typeof AudioWorkletNode==="undefined") return false;
+  try{ const u=URL.createObjectURL(new Blob([CORE_SRC],{type:"text/javascript"})); await c.audioWorklet.addModule(u); setTimeout(()=>URL.revokeObjectURL(u),5000); return true }catch(e){}
+  try{ await c.audioWorklet.addModule("data:text/javascript;base64,"+btoa(unescape(encodeURIComponent(CORE_SRC)))); return true }catch(e){ return false }
+}
+/* תגובת הד של חדר קטן ומלוכלך: רעש דועך שמתכהה עם הזמן, שני ערוצים שונים */
+function makeIR(c){
+  const sr=c.sampleRate, len=Math.floor(sr*1.35), buf=c.createBuffer(2,len,sr);
+  for(let ch=0;ch<2;ch++){ const d=buf.getChannelData(ch); let seed=ch?7919:104729, lp=0;
+    for(let i=0;i<len;i++){ seed=(seed*1664525+1013904223)>>>0; const n=(seed/4294967296)*2-1; const t=i/sr;
+      const env=Math.exp(-t*3.2)*(t<.012?t/.012:1); const cf=1-Math.exp(-2*Math.PI*(9000*Math.exp(-t*2.2)+600)/sr); lp+=(n-lp)*cf; d[i]=lp*env } }
+  return buf;
+}
 let playing=false, nextTime=0, stepIdx=0, timer=0;
 let accStack=0, lastAccT=-9;
 let rise=0, riseHeld=false, dropArmed=false, dirt=0, dirtHeld=false, gateOpen=false, lastPlayedDeg=0;
@@ -441,41 +605,80 @@ function setUnit(slot,type){
     const prev=E[key]; E.vca.connect(u.input); u.output.connect(sw); try{E.vca.disconnect(prev.input)}catch(e){} prev.dispose(); E[key]=u;
     sw.gain.setTargetAtTime(1,ctx.currentTime,.012) },60);
 }
-function syncUnits(){ if(!E) return; for(const [slot,w] of [["A","deep"],["B","acid"]]){ const cur=E.pend[slot]||E[slot==="A"?"uA":"uB"]; if(!cur||cur.type!==S.worlds[w].ft) setUnit(slot,S.worlds[w].ft) } }
+function syncUnits(){ if(!E) return;
+  if(E.wk){ const P=E.wk.parameters, now=ctx.currentTime; P.get("ftA").setValueAtTime(FTYPES.indexOf(S.worlds.deep.ft),now); P.get("ftB").setValueAtTime(FTYPES.indexOf(S.worlds.acid.ft),now); return }
+  for(const [slot,w] of [["A","deep"],["B","acid"]]){ const cur=E.pend[slot]||E[slot==="A"?"uA":"uB"]; if(!cur||cur.type!==S.worlds[w].ft) setUnit(slot,S.worlds[w].ft) } }
 
-function makeEngine(){
+async function makeEngine(){
   const c=ctx, nyq=c.sampleRate/2;
-  const e={nyq};
+  const e={nyq,wk:null};
+  const useWk=await loadWorklet(c);
   e.oscA=c.createOscillator(); e.oscB=c.createOscillator(); e.sub=c.createOscillator(); e.sub.type="sine";
   e.gA=c.createGain(); e.gB=c.createGain();
-  e.vca=c.createGain(); e.vca.gain.value=0;
-  e.subVca=c.createGain(); e.subVca.gain.value=0; e.subLvl=c.createGain();
-  e.fsum=c.createGain(); e.swA=c.createGain(); e.swB=c.createGain(); e.gFA=c.createGain(); e.gFB=c.createGain(); e.pend={};
+  e.subLvl=c.createGain();
   e.pre=c.createGain(); e.shaper=c.createWaveShaper(); e.post=c.createGain();
   const curve=new Float32Array(2048); for(let i=0;i<2048;i++){const x=i/1023.5-1;curve[i]=Math.tanh(x*2.2)/Math.tanh(2.2)}
   e.shaper.curve=curve; e.shaper.oversample="4x";
   e.dc=c.createBiquadFilter(); e.dc.type="highpass"; e.dc.frequency.value=28; e.dc.Q.value=.5;
-  e.bus=c.createGain();
-  e.dl=c.createDelay(2); e.fbG=c.createGain(); e.dlTone=c.createBiquadFilter(); e.dlTone.type="lowpass"; e.dlTone.frequency.value=2600; e.dlTone.Q.value=-3;
-  e.wet=c.createGain();
+  e.bus=c.createGain(); e.bus.gain.value=.6;
+  e.accDrv=c.createGain(); e.accDrv.gain.value=1;
+  e.oscA.connect(e.gA); e.oscB.connect(e.gB);
+  if(useWk){
+    // מסלול חדש: אוסילטורים -> ליבה (מסנן, מעטפות, הדגשה) -> עיוות -> באס. הסאב יוצא מהליבה בערוץ נפרד
+    try{
+      e.wk=new AudioWorkletNode(c,"acid-core",{numberOfInputs:2,numberOfOutputs:1,outputChannelCount:[2],channelCount:1,channelCountMode:"explicit",channelInterpretation:"discrete"});
+      e.mix=c.createGain(); e.gA.connect(e.mix); e.gB.connect(e.mix); e.mix.connect(e.wk,0,0); e.sub.connect(e.wk,0,1);
+      e.split=c.createChannelSplitter(2); e.wk.connect(e.split);
+      e.split.connect(e.pre,0); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc); e.dc.connect(e.bus);
+      e.split.connect(e.subLvl,1); e.subLvl.connect(e.bus);
+      e.wk.onprocessorerror=()=>{ toast("ליבת הצליל נפלה. טען את הדף מחדש") };
+    }catch(err){ e.wk=null }
+  }
+  if(!e.wk){
+    // מסלול ישן (דפדפן בלי AudioWorklet): מסננים מובנים
+    e.vca=c.createGain(); e.vca.gain.value=0;
+    e.subVca=c.createGain(); e.subVca.gain.value=0;
+    e.fsum=c.createGain(); e.swA=c.createGain(); e.swB=c.createGain(); e.gFA=c.createGain(); e.gFB=c.createGain(); e.pend={};
+    e.gA.connect(e.vca); e.gB.connect(e.vca);
+    e.swA.connect(e.gFA); e.swB.connect(e.gFB); e.gFA.connect(e.fsum); e.gFB.connect(e.fsum); e.fsum.connect(e.accDrv); e.accDrv.connect(e.pre); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc);
+    e.dc.connect(e.bus);
+    e.sub.connect(e.subVca); e.subVca.connect(e.subLvl); e.subLvl.connect(e.bus);
+  }
+  // הד פינג-פונג: שמאל, ימין, שמאל, עם מעט נדנוד גובה כמו הד אנלוגי. הבס עצמו נשאר במרכז
+  e.dlIn=c.createGain(); e.dl=c.createDelay(2); e.dlR=c.createDelay(2); e.fbG=c.createGain(); e.fbG2=c.createGain();
+  const tone=()=>{const f=c.createBiquadFilter(); f.type="lowpass"; f.frequency.value=2600; f.Q.value=-3; return f};
+  const hp=()=>{const f=c.createBiquadFilter(); f.type="highpass"; f.frequency.value=170; f.Q.value=0; return f};
+  e.dlTone=tone(); e.dlToneR=tone(); e.dlHp=hp(); e.dlHpR=hp(); e.merge=c.createChannelMerger(2); e.wet=c.createGain();
+  e.dc.connect(e.dlIn); e.dlIn.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.dlHp); e.dlHp.connect(e.fbG); e.fbG.connect(e.dlR);
+  e.dlR.connect(e.dlToneR); e.dlToneR.connect(e.dlHpR); e.dlHpR.connect(e.fbG2); e.fbG2.connect(e.dl);
+  e.dlHp.connect(e.merge,0,0); e.dlHpR.connect(e.merge,0,1); e.merge.connect(e.wet); e.wet.connect(e.bus);
+  e.lfo=c.createOscillator(); e.lfo.type="sine"; e.lfo.frequency.value=.23; e.lfoG=c.createGain(); e.lfoG.gain.value=.0011; e.lfoG2=c.createGain(); e.lfoG2.gain.value=-.0009;
+  e.lfo.connect(e.lfoG); e.lfoG.connect(e.dl.delayTime); e.lfo.connect(e.lfoG2); e.lfoG2.connect(e.dlR.delayTime); e.lfo.start();
+  // מרחב: ריוורב קצר, מקבל את הבס (בלי התחתית) ואת ההד
+  e.revHp=hp(); e.revHp.frequency.value=220; e.revSend=c.createGain(); e.rev=c.createConvolver(); e.rev.normalize=true;
+  try{ e.rev.buffer=makeIR(c) }catch(err){}
+  e.revWet=c.createGain(); e.revWet.gain.value=0;
+  e.dc.connect(e.revHp); e.revHp.connect(e.revSend); e.merge.connect(e.revSend); e.revSend.gain.value=.8; e.revSend.connect(e.rev); e.rev.connect(e.revWet); e.revWet.connect(e.bus);
+  // סוף השרשרת
   e.comp=c.createDynamicsCompressor();
   e.comp.threshold.value=-8; e.comp.knee.value=4; e.comp.ratio.value=20; e.comp.attack.value=.002; e.comp.release.value=.12;
-  e.master=c.createGain(); e.bus.gain.value=.6;
+  e.master=c.createGain();
   e.clip=c.createWaveShaper(); const cc=new Float32Array(2048); for(let i=0;i<2048;i++){const x=(i/1023.5-1)*1.5;cc[i]=Math.tanh(x)} e.clip.curve=cc; e.clip.oversample="2x";
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
-  // ניתוב
-  e.oscA.connect(e.gA); e.oscB.connect(e.gB); e.gA.connect(e.vca); e.gB.connect(e.vca);
-  e.accDrv=c.createGain(); e.accDrv.gain.value=1;
-  e.swA.connect(e.gFA); e.swB.connect(e.gFB); e.gFA.connect(e.fsum); e.gFB.connect(e.fsum); e.fsum.connect(e.accDrv); e.accDrv.connect(e.pre); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc);
-  e.dc.connect(e.bus);
-  e.sub.connect(e.subVca); e.subVca.connect(e.subLvl); e.subLvl.connect(e.bus);
-  e.dc.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.fbG); e.fbG.connect(e.dl); e.dlTone.connect(e.wet); e.wet.connect(e.bus);
   e.bus.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
   const f=degHz(0); e.oscA.frequency.value=f; e.oscB.frequency.value=f; e.sub.frequency.value=subHz(f);
   e.lastF=f;
   e.oscA.start(); e.oscB.start(); e.sub.start();
-  E=e; setUnit("A",S.worlds.deep.ft); setUnit("B",S.worlds.acid.ft); updateWave("deep"); updateWave("acid"); applyContinuous(true);
+  E=e; syncUnits(); updateWave("deep"); updateWave("acid"); applyContinuous(true);
 }
+/* סגירת השער ועצירה, בשני המסלולים */
+function gateOff(t){ if(!E) return;
+  if(E.wk){ E.wk.port.postMessage({type:"off",t}); return }
+  E.vca.gain.setTargetAtTime(0,t,.012); E.subVca.gain.setTargetAtTime(0,t,.02); for(const u of [E.uA,E.uB]) if(u) u.release(t) }
+function killAll(){ if(!E) return; const t=ctx.currentTime;
+  if(E.wk){ E.wk.port.postMessage({type:"kill"}); return }
+  E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
+  E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); for(const u of [E.uA,E.uB]) if(u) u.release(t) }
 
 function waveFrom(arr){
   const H=40, re=new Float32Array(H+1), im=new Float32Array(H+1); let energy=0;
@@ -496,14 +699,27 @@ function setP(param,v,tau){ if(!isFinite(v)) return; const o=lastP.get(param); i
 function applyContinuous(now){
   if(!E) return; const p=mixed(), tau=now?.005:.05, m=S.morph;
   setP(E.gA.gain,Math.cos(m*Math.PI/2),tau); setP(E.gB.gain,Math.sin(m*Math.PI/2),tau);
-  setP(E.gFA.gain,1-m,tau); setP(E.gFB.gain,m,tau); // ליניארי: שני מסננים זהים נשמעים בדיוק כמו מסנן אחד
-  const drive=MAP.drv(clamp(p.drv+dirt*.55+rise*.15,0,1));
-  setP(E.pre.gain,drive*.5,tau); setP(E.post.gain,1/Math.sqrt(drive*.5+.5),tau);
+  if(E.wk){
+    const P=E.wk.parameters;
+    setP(P.get("cut"),clamp(MAP.cut(p.cut)*Math.pow(2,rise*2.6),20,12000),tau);
+    setP(P.get("res"),clamp(p.res+rise*.25+dirt*.12,0,1),tau);
+    setP(P.get("env"),MAP.env(p.env),tau);
+    setP(P.get("dec"),MAP.dec(p.dec),tau);
+    setP(P.get("sat"),clamp(p.drv*.9+dirt*.65+rise*.2,0,1.5),tau); // רוויה בתוך המסנן
+    setP(P.get("morph"),m,tau);
+    const d2=1+Math.pow(clamp(p.drv*.55+dirt*.45+rise*.1,0,1),2)*9; // עיוות אחרי המסנן, עדין יותר מבעבר
+    setP(E.pre.gain,d2*.5,tau); setP(E.post.gain,1/Math.sqrt(d2*.5+.5),tau);
+  } else {
+    setP(E.gFA.gain,1-m,tau); setP(E.gFB.gain,m,tau);
+    const drive=MAP.drv(clamp(p.drv+dirt*.55+rise*.15,0,1));
+    setP(E.pre.gain,drive*.5,tau); setP(E.post.gain,1/Math.sqrt(drive*.5+.5),tau);
+  }
   setP(E.subLvl.gain,MAP.sub(p.sub),tau);
-  const stepDur=60/S.bpm/4;
-  setP(E.dl.delayTime,clamp(stepDur*3,.05,1.9),.2);
-  setP(E.fbG.gain,clamp(MAP.fb(p.fb)+rise*.12,0,.8),tau);
+  const stepDur=60/S.bpm/4, dt=clamp(stepDur*3,.05,1.9);
+  setP(E.dl.delayTime,dt,.2); setP(E.dlR.delayTime,dt,.2);
+  const fb=clamp(MAP.fb(p.fb)+rise*.12,0,.8); setP(E.fbG.gain,fb,tau); setP(E.fbG2.gain,fb,tau);
   setP(E.wet.gain,clamp(MAP.dly(p.dly)+rise*.25,0,.9),tau);
+  setP(E.revWet.gain,clamp(MAP.rev(p.rev)+rise*.15,0,.9),tau);
   setP(E.master.gain,Math.pow(S.vol/100,1.6)*.9,tau);
 }
 
@@ -512,8 +728,12 @@ function hash(i,salt){const x=Math.sin(i*127.1+salt*311.7)*43758.5453;return x-M
 
 function playNote(t,deg,acc,legato,slideOut,stepDur){
   const p=mixed(); const f=clamp(degHz(deg),20,4000), fsub=subHz(f); const fr=E.oscA.frequency, fb2=E.oscB.frequency, fs=E.sub.frequency;
-  if(legato){ fr.setTargetAtTime(f,t,.035); fb2.setTargetAtTime(f,t,.035); fs.setTargetAtTime(fsub,t,.035) }
+  if(legato){ fr.setTargetAtTime(f,t,.05); fb2.setTargetAtTime(f,t,.05); fs.setTargetAtTime(fsub,t,.05) }
   else { fr.setValueAtTime(f,t); fb2.setValueAtTime(f,t); fs.setValueAtTime(fsub,t) }
+  E.lastF=f;
+  if(E.wk){ const id=++noteSeq; E.wk.port.postMessage({type:"note",t,id,f,acc:!!acc,leg:!!legato});
+    if(!slideOut){ E.wk.port.postMessage({type:"off",t:t+stepDur*.55,id}); gateOpen=false } else gateOpen=true;
+    return }
   // הדגשה: בעיטת מסנן של אוקטבה ומעלה, הנערמת כשהדגשות צמודות, ותוספת לכלוך לאותו תו
   if(acc){ accStack=(t-lastAccT<=stepDur*2.05)?Math.min(accStack+.55,1.8):0; lastAccT=t } 
   const kickOct=acc?1+accStack:0;
@@ -537,13 +757,13 @@ function playNote(t,deg,acc,legato,slideOut,stepDur){
   else gateOpen=true;
 }
 
-function scheduleStep(i,t){
-  const stepDur=60/S.bpm/4, st=S.steps[i];
+function scheduleStep(i,t,gap){
+  const stepDur=gap||60/S.bpm/4, st=S.steps[i];
   let on=st.on, deg=st.deg, acc=st.acc, sl=st.sl, isDrop=false;
   if(dropArmed && i===0){ dropArmed=false; isDrop=true; rise=0; on=true; acc=true; sl=false; if(!st.on) deg=0; riseUI() }
   else if(!on && rise>0 && hash(i,1)<rise*.85){ on=true; deg=hash(i,2)<.5?lastPlayedDeg:clamp(lastPlayedDeg+7,0,DEGS-1); acc=hash(i,3)<rise*.5; sl=false }
   const legato=gateOpen&&on&&!isDrop;
-  if(gateOpen&&!on){ E.vca.gain.setTargetAtTime(0,t,.012); E.subVca.gain.setTargetAtTime(0,t,.02); for(const u of [E.uA,E.uB]) if(u) u.release(t); gateOpen=false }
+  if(gateOpen&&!on){ gateOff(t); gateOpen=false }
   if(on){ playNote(t,deg,acc,legato,sl,stepDur); lastPlayedDeg=deg }
   if(!document.hidden){ visQ.push({i,t,on,acc,st:acc?accStack:0}); if(visQ.length>64) visQ.splice(0,visQ.length-32) }
 }
@@ -552,10 +772,12 @@ function tick(){
   if(!playing||!ctx) return;
   const now=ctx.currentTime, was=riseHeld||rise>0;
   if(nextTime<now-.25){ nextTime=now+.05 } // אחרי השהיה או הפרעה: לא לרוץ להשלים תווים שפוספסו
+  const stepDur=60/S.bpm/4, sw=S.swing*stepDur*.36; // סווינג: כל צעד שני מתאחר, עד מעט מעבר לשלישון
   while(nextTime<now+.12){
     if(riseHeld) rise=Math.min(1,rise+1/64); // מגיע לשיא אחרי 4 תיבות
-    scheduleStep(stepIdx,nextTime);
-    nextTime+=60/S.bpm/4; stepIdx=(stepIdx+1)%STEPS;
+    const odd=stepIdx%2===1;
+    scheduleStep(stepIdx,nextTime+(odd?sw:0),odd?stepDur-sw:stepDur+sw);
+    nextTime+=stepDur; stepIdx=(stepIdx+1)%STEPS;
   }
   if(was||riseHeld||rise>0) applyContinuous();
 }
@@ -567,9 +789,9 @@ async function ensureAudio(){
     try{ if(navigator.audioSession) navigator.audioSession.type="playback" }catch(e){}
     ctx=new AC({latencyHint:"interactive"});
     try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}
-    makeEngine();
     ctx.onstatechange=()=>{ if(ctx.state!=="running"&&playing) toast("הצליל נעצר. גע במסך כדי להמשיך") };
   }
+  if(!E){ if(!engP) engP=makeEngine().catch(e=>{ engP=null; console.error("engine",e); throw e }); try{ await engP }catch(e){ toast("לא הצלחתי לבנות את מנוע הצליל"); return false } }
   if(ctx.state!=="running"){ try{await ctx.resume()}catch(e){} }
   return ctx.state==="running";
 }
@@ -583,14 +805,12 @@ async function togglePlay(){
   if(!await ensureAudio()){ toast("לא הצלחתי להפעיל צליל. גע שוב"); return }
   playing=!playing;
   if(playing){ accStack=0; lastAccT=-9; stepIdx=0; nextTime=ctx.currentTime+.06; gateOpen=false; visQ.length=0; clearInterval(timer); timer=setInterval(tick,25); tick() }
-  else { clearInterval(timer); visQ.length=0; curStep=-1; const t=ctx.currentTime;
-    E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
-    E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); for(const u of [E.uA,E.uB]) if(u) u.release(t); gateOpen=false;
+  else { clearInterval(timer); visQ.length=0; curStep=-1; killAll(); gateOpen=false;
     riseHeld=false; dropArmed=false; rise=0; riseUI(); applyContinuous() }
   setWake(playing||!!recr); $("#play").classList.toggle("on",playing); $("#play").textContent=playing?"■ עצור":"▶ נגן";
 }
 function audition(deg){
-  if(playing||!ctx||ctx.state!=="running") return;
+  if(playing||!ctx||!E||ctx.state!=="running") return;
   const t=ctx.currentTime+.01; gateOpen=false; playNote(t,deg,false,false,false,.22);
 }
 
@@ -654,9 +874,12 @@ function drawRing(){
   for(let k=0;k<=64;k++){const a=k/64*2*Math.PI;const r=br*(1+wob*Math.sin(a*lobes+phase*2)+wob*.5*Math.sin(a*(lobes+2)-phase*3));
     const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;k?g.lineTo(x,y):g.moveTo(x,y)}
   g.closePath();g.fill();
+  // שם התו בזמן גרירה
+  if(dragLabel){ g.font=`700 ${Math.round(size*.13)}px Karantina,Assistant,sans-serif`; g.textAlign="center"; g.textBaseline="middle";
+    g.fillStyle=C.ink; g.globalAlpha=.55; g.fillText(noteName(dragLabel.deg),cx+1,cy+2); g.globalAlpha=1; g.fillStyle=C.fg; g.fillText(noteName(dragLabel.deg),cx,cy) }
 }
 
-const drags=new Map(); let tool="pitch";
+const drags=new Map(); let tool="pitch", dragLabel=null;
 ring.addEventListener("pointerdown",e=>{
   e.preventDefault(); ring.setPointerCapture(e.pointerId);
   const {r,i}=polar(e);
@@ -664,7 +887,7 @@ ring.addEventListener("pointerdown",e=>{
   const s=S.steps[i];
   if(tool==="pitch"){
     const d={i,wasOn:s.on,moved:false,r0:r};
-    if(!s.on){ s.on=true; s.deg=rDeg(r); s.acc=false; s.sl=false; d.moved=true; audition(s.deg) }
+    if(!s.on){ s.on=true; s.deg=rDeg(r); s.acc=false; s.sl=false; d.moved=true; audition(s.deg); dragLabel={i,deg:s.deg} }
     drags.set(e.pointerId,d);
   } else {
     if(!s.on){ toast("כאן אין תו. מקם תו קודם, במצב ״תו״"); return }
@@ -674,11 +897,12 @@ ring.addEventListener("pointerdown",e=>{
 ring.addEventListener("pointermove",e=>{
   const d=drags.get(e.pointerId); if(!d||d.dirt) return;
   const {r}=polar(e); if(!d.moved&&Math.abs(r-d.r0)<8) return;
-  d.moved=true; const s=S.steps[d.i]; const nd=rDeg(r); if(nd!==s.deg){ s.deg=nd; audition(nd) }
+  d.moved=true; const s=S.steps[d.i]; const nd=rDeg(r); if(nd!==s.deg){ s.deg=nd; audition(nd) } dragLabel={i:d.i,deg:s.deg}
 });
-function clearDrags(){for(const [id,d] of drags) if(!d.dirt) drags.delete(id)}
+function clearDrags(){for(const [id,d] of drags) if(!d.dirt) drags.delete(id); dragLabel=null}
 function endDrag(e){
   const d=drags.get(e.pointerId); if(!d) return; drags.delete(e.pointerId);
+  if(dragLabel&&dragLabel.i===d.i) dragLabel=null;
   if(d.dirt){ if(![...drags.values()].some(x=>x.dirt)) dirtHeld=false; return }
   killUndo();
   if(!d.moved&&d.wasOn&&e.type==="pointerup"){ const s=S.steps[d.i]; s.on=false; s.acc=false; s.sl=false }
@@ -873,10 +1097,9 @@ $("#voiceFile").addEventListener("change",async e=>{
 });
 
 /* ---------- שורה עליונה ---------- */
-const NOTES=["דו","דו#","רה","רה#","מי","פה","פה#","סול","סול#","לה","לה#","סי"];
 NOTES.forEach((n,i)=>{const o=document.createElement("option");o.value=i;o.textContent=n;$("#root").appendChild(o)});
 function topUI(){$("#bpmVal").textContent=S.bpm;$("#octVal").textContent=(S.oct>0?"+":"")+S.oct;$("#root").value=S.root;$("#scale").value=S.scale;
-  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol)}
+  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100)}
 function setBpm(v){S.bpm=clamp(Math.round(v),60,200);topUI();applyContinuous();save()}
 function repeatBtn(el,fn){let holdT=0;const stop=()=>{clearTimeout(holdT);clearInterval(holdT)};
   el.addEventListener("pointerdown",e=>{e.preventDefault();fn();stop();holdT=setTimeout(()=>{holdT=setInterval(fn,70)},380)});
@@ -890,6 +1113,7 @@ $("#octUp").addEventListener("click",()=>{S.oct=clamp(S.oct+1,-2,2);topUI();save
 $("#root").addEventListener("change",e=>{S.root=clamp(+e.target.value||0,0,11);save()});
 $("#scale").addEventListener("change",e=>{S.scale=SCALES[e.target.value]?e.target.value:"minor";save()});
 $("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#volOut").textContent=Math.round(S.vol);applyContinuous();save(true)});
+$("#swing").addEventListener("input",e=>{S.swing=clamp(+e.target.value/100,0,1);$("#swingOut").textContent=Math.round(S.swing*100);save()});
 $("#play").addEventListener("click",togglePlay);
 let resetArm=0;
 $("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
@@ -901,7 +1125,7 @@ const SKEY="acid-ring-slots-v1";
 let slots=[null,null,null,null], curSlot=-1;
 try{const a=JSON.parse(localStorage.getItem(SKEY));if(Array.isArray(a))slots=[0,1,2,3].map(i=>(a[i]&&typeof a[i]==="object")?sanitize(a[i]):null)}catch(e){}
 function saveSlots(){try{localStorage.setItem(SKEY,JSON.stringify(slots));return true}catch(e){return false}}
-function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
+function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,swing:S.swing,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
 function slotsUI(){document.querySelectorAll(".slot").forEach(b=>{const i=+b.dataset.slot;b.classList.toggle("full",!!slots[i]);b.classList.toggle("cur",i===curSlot)})}
 function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlot=i; slotsUI();
   const ok=saveSlots();
@@ -911,7 +1135,7 @@ function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlo
 function loadSlot(i){
   if(!slots[i])return; const v=sanitize(slots[i]); killUndo(); clearDrags();
   if(tiltOn)tiltOff();
-  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
+  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.swing=v.swing;S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
   topUI();worldUI();morphUI(); if(E){updateWave("deep");updateWave("acid");syncUnits()} applyContinuous();
   curSlot=i; slotsUI(); save(true);
 }
