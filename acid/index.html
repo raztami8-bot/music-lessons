@@ -490,7 +490,7 @@ class AcidCore extends AudioWorkletProcessor{
   event(m){
     if(m.type==="note"){ this.id=m.id; this.lastF=m.f; const leg=!!m.leg;
       this.gate=true; this.A.pitch(m.f,leg); if(this.B) this.B.pitch(m.f,leg);
-      const ak=this.ak, lvl=m.acc?Math.min(1,.58*(1+ak*.75)):.58; // הדגשה: עד +4.7dB לפי הידית
+      const ak=this.ak, lvl=m.acc?Math.min(1,.5*(1+ak)):.5; // הדגשה: עד +6dB לפי הידית, והקליפ הרך בסוף מוסיף חספוס
       if(!leg){ this.fenv=1; this.vc=this.vAtk; this.sc=this.sAtk; this.vcaT=lvl; this.svT=m.acc?Math.min(1,.8*(1+ak*.25)):.8;
         if(m.acc){ this.acc=Math.min(1.6,this.acc+.55); this.accAmt=1 } else this.accAmt=0;
         if(this.A.type===3) this.A.fbT=.6; if(this.B&&this.B.type===3) this.B.fbT=.6 }
@@ -514,7 +514,7 @@ class AcidCore extends AudioWorkletProcessor{
       this.vca+=(this.vcaT-this.vca)*this.vc; this.sv+=(this.svT-this.sv)*this.sc;
       this.fenv*=this.fdec; this.acc*=this.accDec;
       const fc=cut*Math.exp(.6931472*(env*this.fenv*(1+this.acc*ak)+this.acc*(.3+ak*2.6))); // ידית ב-70: כאוקטבה לכל הדגשה, יותר ברצף
-      const r=clamp(res+this.acc*ak*.2,0,1), d=sat*(1+this.acc*ak*.6);
+      const r=clamp(res+this.acc*ak*.35,0,1), d=sat*(1+this.acc*ak*.7);
       this.A.prep(fc,r,d); if(this.Aold) this.Aold.prep(fc,r,d); if(runB){ this.B.prep(fc,r,d); if(this.Bold) this.Bold.prep(fc,r,d) }
       // דגימת-יתר פי 2: אינטרפולציה בין הדגימה הקודמת לנוכחית
       const x=(inO?inO[i]:0)+1e-9, xm=(x+this.xprev)*.5; this.xprev=x;
@@ -596,7 +596,7 @@ async function makeEngine(){
   e.dc.connect(e.revHp); e.revHp.connect(e.revSend); e.merge.connect(e.revSend); e.revSend.gain.value=.8; e.revSend.connect(e.rev); e.rev.connect(e.revWet); e.revWet.connect(e.bus);
   // סוף השרשרת
   e.comp=c.createDynamicsCompressor();
-  e.comp.threshold.value=-12; e.comp.knee.value=6; e.comp.ratio.value=8; e.comp.attack.value=.002; e.comp.release.value=.12;
+  e.comp.threshold.value=-6; e.comp.knee.value=6; e.comp.ratio.value=3; // ביטוח בלבד: הקליפ הרך בסוף הוא המגן e.comp.attack.value=.002; e.comp.release.value=.12;
   e.master=c.createGain();
   e.clip=c.createWaveShaper(); const cc=new Float32Array(2048); for(let i=0;i<2048;i++){const x=(i/1023.5-1)*1.5;cc[i]=Math.tanh(x)} e.clip.curve=cc; e.clip.oversample="2x";
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
