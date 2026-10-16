@@ -558,7 +558,7 @@ class Unit{
   prep(fc,res,drv){
     const fs2=this.fs2; fc=clamp(fc,20,this.fmax);
     if(this.type===0){ const g=Math.tan(Math.PI*fc/fs2); this.G=g/(1+g); this.k=4.6*res*(.72+.28*res); this.d=1+drv*5; this.cmp=1/(1+drv*.42) }
-    else if(this.type===4){ const g=Math.tan(Math.PI*fc/fs2); this.G=g/(1+g); this.k=3.7*Math.pow(res,.8); this.d=1.2+drv*4.5; this.cmp=.85/(1+drv*.45) }
+    else if(this.type===4){ const g=Math.tan(Math.PI*fc/fs2); this.G=g/(1+g); this.k=5.2*Math.pow(res,.9); this.d=1.2+drv*4.5; this.cmp=.85/(1+drv*.45) }
     else if(this.type===1){ this.g=Math.tan(Math.PI*fc/fs2); this.k=2*(1-.94*res); this.d=1+drv*3; this.og=2.4+res*1.6 }
     else if(this.type===2){ vowelAt(fc,this.fq); for(let i=0;i<3;i++) this.gg[i]=Math.tan(Math.PI*clamp(this.fq[i],60,this.fmax)/fs2); this.k=1/(4+res*11); this.d=1+drv*3; this.og=1.8+res*1.2 }
     else { this.fbk=clamp(this.fb+res*.38,0,.93); this.dcf=1-Math.exp(-2*Math.PI*clamp(fc*1.5,80,this.fmax)/fs2); this.d=1+drv*2; this.og=.75/(1+drv*.5) }
@@ -666,13 +666,24 @@ async function loadWorklet(c){
   try{ await c.audioWorklet.addModule("data:text/javascript;base64,"+btoa(unescape(encodeURIComponent(CORE_SRC)))); return true }catch(e){ return false }
 }
 /* תגובת הד של חדר קטן ומלוכלך: רעש דועך שמתכהה עם הזמן, שני ערוצים שונים */
+/* ריוורב: רעש עם זרע קבוע וזנב שמתכהה, עם החזרות מוקדמות (מ-bama2/pendulum), שני ערוצים שונים */
 function makeIR(c){
-  const sr=c.sampleRate, len=Math.floor(sr*1.35), buf=c.createBuffer(2,len,sr);
-  for(let ch=0;ch<2;ch++){ const d=buf.getChannelData(ch); let seed=ch?7919:104729, lp=0;
-    for(let i=0;i<len;i++){ seed=(seed*1664525+1013904223)>>>0; const n=(seed/4294967296)*2-1; const t=i/sr;
-      const env=Math.exp(-t*3.2)*(t<.012?t/.012:1); const cf=1-Math.exp(-2*Math.PI*(9000*Math.exp(-t*2.2)+600)/sr); lp+=(n-lp)*cf; d[i]=lp*env } }
-  return buf;
+  const sr=c.sampleRate, n=Math.floor(sr*1.9), b=c.createBuffer(2,n,sr);
+  for(let ch=0;ch<2;ch++){ const d=b.getChannelData(ch); let lp=0, s=9876+ch*777; const k=.25+.75*.35;
+    for(let i=0;i<n;i++){ s=(s*1103515245+12345)&0x7fffffff; const w=s/0x3fffffff-1, t=i/n;
+      const env=Math.pow(1-t,2.2)*Math.exp(-t*3.2); lp+=(w-lp)*(k*(1-t*.8)+.02); d[i]=lp*env*(i<sr*.03?.35:1) }
+    [.011,.019,.027,.041,.053].forEach((dt,jj)=>{ const at=Math.floor(dt*sr*(ch?1.07:1)); if(at<n) d[at]+=(.5-jj*.08)*(ch?-1:1) }) }
+  return b;
 }
+/* אייפון/אייפד: לנגן גם כשמתג השקט דלוק (אותו טריק כמו pendulum/bama2) */
+let silentEl=null;
+function silentWav(){ const n=1600,buf=new Uint8Array(44+n),dv=new DataView(buf.buffer); const str=(o,t)=>{ for(let i=0;i<t.length;i++) buf[o+i]=t.charCodeAt(i) };
+  str(0,"RIFF"); dv.setUint32(4,36+n,true); str(8,"WAVE"); str(12,"fmt "); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
+  dv.setUint32(24,8000,true); dv.setUint32(28,8000,true); dv.setUint16(32,1,true); dv.setUint16(34,8,true); str(36,"data"); dv.setUint32(40,n,true); for(let i=0;i<n;i++) buf[44+i]=128;
+  let b=""; for(let j=0;j<buf.length;j++) b+=String.fromCharCode(buf[j]); return "data:audio/wav;base64,"+btoa(b) }
+function playbackSession(){ try{ if(navigator.audioSession&&navigator.audioSession.type!=="playback") navigator.audioSession.type="playback" }catch(e){}
+  if(navigator.audioSession) return; try{ if(!silentEl){ silentEl=document.createElement("audio"); silentEl.setAttribute("playsinline",""); silentEl.loop=true; silentEl.src=silentWav() }
+  if(silentEl.paused){ const pr=silentEl.play(); if(pr&&pr.catch) pr.catch(()=>{}) } }catch(e){} }
 let playing=false, nextTime=0, stepIdx=0, timer=0;
 let accStack=0, lastAccT=-9;
 let rise=0, riseHeld=false, dropArmed=false, dirt=0, dirtHeld=false, gateOpen=false, lastPlayedDeg=0;
@@ -759,7 +770,7 @@ async function makeEngine(){
       e.split=c.createChannelSplitter(2); e.wk.connect(e.split);
       e.split.connect(e.pre,0); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc); e.dc.connect(e.bus);
       e.split.connect(e.subLvl,1); e.subLvl.connect(e.bus);
-      e.wk.onprocessorerror=()=>{ toast("ליבת הצליל נפלה. טען את הדף מחדש") };
+      e.wk.onprocessorerror=()=>{ setTimeout(()=>rebuildAudio("ליבת הצליל נפלה ונבנתה מחדש"),50) };
     }catch(err){ e.wk=null }
   }
   if(!e.wk){
@@ -778,7 +789,7 @@ async function makeEngine(){
   const hp=()=>{const f=c.createBiquadFilter(); f.type="highpass"; f.frequency.value=170; f.Q.value=0; return f};
   e.dlTone=tone(); e.dlToneR=tone(); e.dlHp=hp(); e.dlHpR=hp(); e.merge=c.createChannelMerger(2); e.wet=c.createGain();
   // הד דאב: בלולאה יש מסנן עם קצת תהודה ורוויה רכה, אז כל חזרה כהה ומלוכלכת יותר מהקודמת
-  const loopSat=()=>{ const ws=c.createWaveShaper(), cv=new Float32Array(1024); for(let i=0;i<1024;i++){const x=(i/511.5-1)*2; cv[i]=Math.tanh(x*1.2)/1.2} ws.curve=cv; return ws };
+  const loopSat=()=>{ const ws=c.createWaveShaper(), cv=new Float32Array(1024); for(let i=0;i<1024;i++){const x=(i/511.5-1)*2; cv[i]=Math.tanh(x*1.2)/1.2} ws.curve=cv; ws.oversample="2x"; return ws };
   e.dlTone.Q.value=1.4; e.dlToneR.Q.value=1.4; e.dlTone.frequency.value=2000; e.dlToneR.frequency.value=1800;
   e.dsat=loopSat(); e.dsatR=loopSat();
   e.dc.connect(e.dlIn); e.dlIn.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.dlHp); e.dlHp.connect(e.dsat); e.dsat.connect(e.fbG); e.fbG.connect(e.dlR);
@@ -795,10 +806,12 @@ async function makeEngine(){
   e.comp=c.createDynamicsCompressor();
   e.comp.threshold.value=-8; e.comp.knee.value=4; e.comp.ratio.value=20; e.comp.attack.value=.002; e.comp.release.value=.12;
   e.master=c.createGain();
-  e.clip=c.createWaveShaper(); const cc=new Float32Array(2048); for(let i=0;i<2048;i++){const x=(i/1023.5-1)*1.5;cc[i]=Math.tanh(x)} e.clip.curve=cc; e.clip.oversample="2x";
+  e.clip=c.createWaveShaper(); const cc=new Float32Array(2048); for(let i=0;i<2048;i++){const x=(i/1023.5-1)*1.5;cc[i]=Math.tanh(x)} e.clip.curve=cc; e.clip.oversample="4x";
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
   e.duck=c.createGain(); // "נשימה": בעיטה שקופה בכל רבע שמכווצת את הבס
-  e.bus.connect(e.duck); e.duck.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
+  e.outDc=c.createBiquadFilter(); e.outDc.type="highpass"; e.outDc.frequency.value=22; e.outDc.Q.value=.5; // חיתוך DC לפני הלימיטר
+  e.bus.connect(e.duck); e.duck.connect(e.outDc); e.outDc.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
+  e.an=c.createAnalyser(); e.an.fftSize=512; e.clip.connect(e.an); // לשומר: בודק NaN ביציאה
   const f=degHz(0); e.oscA.frequency.value=f; e.oscB.frequency.value=f; e.sub.frequency.value=subHz(f);
   e.lastF=f;
   // סחף אנלוגי: שני LFO איטיים מאוד, כל אוסילטור נודד אחרת, בסנטים בודדים
@@ -943,7 +956,7 @@ async function ensureAudio(){
   if(!ctx){
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC){ toast("הדפדפן הזה לא תומך בצליל"); return false }
-    try{ if(navigator.audioSession) navigator.audioSession.type="playback" }catch(e){}
+    playbackSession();
     ctx=new AC({latencyHint:"interactive"});
     try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}
     ctx.onstatechange=()=>{ if(ctx.state!=="running"&&playing) toast("הצליל נעצר. גע במסך כדי להמשיך") };
@@ -953,7 +966,16 @@ async function ensureAudio(){
   return ctx.state==="running";
 }
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) return; if(ctx&&ctx.state!=="running") ctx.resume().catch(()=>{}); if(playing) setWake(true) });
-for(const ev of ["pointerdown","touchend","click"]) document.addEventListener(ev,()=>{ if(ctx&&ctx.state!=="running") ctx.resume().catch(()=>{}) },true);
+let lastTouch=0;
+for(const ev of ["pointerdown","touchend","click"]) document.addEventListener(ev,()=>{ lastTouch=Date.now(); if(ctx){ playbackSession(); if(ctx.state!=="running") ctx.resume().catch(()=>{}) } },true);
+/* שומר (מ-pendulum/bama2): NaN ביציאה = בונים את הצליל מחדש; הקשר תקוע אחרי נגיעות = resume ואז בנייה מחדש */
+let wdBad=0, wdLast=0; const wbuf=new Float32Array(512);
+async function rebuildAudio(msg){ const was=playing; if(playing) stop(true); try{ ctx.close() }catch(e){} ctx=null; E=null; engP=null; lastP.clear?lastP.clear():0;
+  if(await ensureAudio()){ if(was) await play() } toast(msg) }
+setInterval(()=>{ if(!ctx||!E||document.hidden) return;
+  if(E.an){ E.an.getFloatTimeDomainData(wbuf); for(let i=0;i<wbuf.length;i++) if(!isFinite(wbuf[i])){ if(Date.now()-wdLast>3000){ wdLast=Date.now(); rebuildAudio("נמצאה תקלה בצליל, הצליל אותחל") } return } }
+  if(ctx.state!=="running"){ ctx.resume().catch(()=>{}); if(Date.now()-lastTouch<8000) wdBad++; else wdBad=0;
+    if(wdBad>=3&&Date.now()-wdLast>10000){ wdBad=0; wdLast=Date.now(); rebuildAudio("הצליל הופעל מחדש") } } else wdBad=0 },1000);
 
 let wake=null;
 async function setWake(on){ try{ if(on&&navigator.wakeLock&&!wake){wake=await navigator.wakeLock.request("screen");wake.addEventListener("release",()=>wake=null)} else if(!on&&wake){await wake.release();wake=null} }catch(e){wake=null} }
