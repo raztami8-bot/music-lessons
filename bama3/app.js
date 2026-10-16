@@ -45,7 +45,13 @@ function renderLanes(){ var p=st.bass[S().b], d=st.drums[S().d];
 
 /* ---------- song strip ---------- */
 function secSub(s){ return '<bdi dir="ltr">'+"ABCD"[s.b]+"·"+"ABCD"[s.d]+"</bdi> · "+s.bars+" תיבות"; }
-function renderStrip(){ var sp=$("strip"); sp.innerHTML="";
+function secCls(i){ var c="sec"; if(i===st.cur) c+=" cur"; if(playing&&i===nextIdx()&&i!==st.cur) c+=" next"; if(qSec===i) c+=" queued"; if(sel===i&&mode==="edit") c+=" sel"; return c; }
+function renderStrip(){ var sp=$("strip");
+  /* same number of cards: update in place, so a tap that is in progress is not lost when the bar changes */
+  if(sp.children.length===st.song.length){ st.song.forEach(function(s,i){ var c=sp.children[i]; c.className=secCls(i); c.querySelector(".sn").innerHTML='<bdi class="ix" dir="ltr">'+(i+1)+'</bdi> '+esc(s.name); c.querySelector(".ss").innerHTML=secSub(s);
+      var pr=c.querySelector(".prog"); if(i===st.cur&&playing){ if(!pr){ pr=el("i","prog"); c.querySelector(".sbody").appendChild(pr); } pr.style.width=Math.min(100,barIn/s.bars*100)+"%"; } else if(pr) pr.remove(); });
+    var cc=sp.children[st.cur]; if(cc&&cc.scrollIntoView) try{ cc.scrollIntoView({block:"nearest",inline:"nearest"}); }catch(e){} return; }
+  sp.innerHTML="";
   st.song.forEach(function(s,i){ var c=el("div","sec"); c.dataset.i=i;
     if(i===st.cur) c.classList.add("cur"); if(playing&&i===nextIdx()&&i!==st.cur) c.classList.add("next"); if(qSec===i) c.classList.add("queued"); if(sel===i&&mode==="edit") c.classList.add("sel");
     var h=el("span","handle","⠿"); h.setAttribute("aria-label","גרור כדי להזיז"); c.appendChild(h);
