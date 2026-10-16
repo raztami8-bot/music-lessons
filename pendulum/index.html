@@ -26,22 +26,41 @@
     <span class="num" id="bpmVal">124</span>
     <button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button>
   </div>
-  <div class="grp" aria-label="אוקטבה">
-    <button class="btn sq" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
-    <span class="num sm" id="octVal">אוק׳ 3</span>
-    <button class="btn sq" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
-  </div>
   <button class="btn sync" id="sync" type="button" aria-pressed="false" aria-label="סנכרון עם הכלים האחרים">⇄</button>
   <button class="btn rec" id="rec" type="button" aria-pressed="false" aria-label="הקלט">⏺</button>
   <button class="btn" id="takesBtn" type="button">הקלטות</button>
   <span class="meter" aria-hidden="true"><i id="meterFill"></i></span>
-  <button class="btn hot" id="release" type="button" hidden>שחרר</button>
   <button class="btn" id="moreBtn" type="button" aria-label="הגדרות">⋯ עוד</button>
 </header>
 
 <main class="main">
-  <canvas id="surf" aria-label="משטח נגינה: אצבעות על עמודות של תווים, למעלה בהיר, למטה כהה. אצבע שעומדת במקום מקפיאה את הצליל"></canvas>
-  <p class="hint">אצבע = צליל · עמודה = תו · גובה = פתיחת הפילטר · אצבע עומדת = קפוא · הטיה קדימה = חלום · הטיה הצידה = רעד · ניעור = חיתוך</p>
+  <section class="play">
+    <div class="ctlrow">
+      <div class="seg" role="group" aria-label="מצב">
+        <button class="btn seg-b" data-mode="note" type="button">תו</button>
+        <button class="btn seg-b" data-mode="chord" type="button">אקורד</button>
+      </div>
+      <div class="seg" role="group" aria-label="קצב הארפג׳יו">
+        <button class="btn seg-b" data-rate="8" type="button" dir="ltr">1/8</button>
+        <button class="btn seg-b" data-rate="16" type="button" dir="ltr">1/16</button>
+        <button class="btn seg-b" data-rate="16t" type="button" dir="ltr">1/16T</button>
+        <button class="btn seg-b" data-rate="long" type="button">ארוך</button>
+      </div>
+      <div class="grp" aria-label="אוקטבה">
+        <button class="btn sq" id="octDown" type="button" aria-label="אוקטבה למטה">−</button>
+        <span class="num sm" id="octVal">אוק׳ 3</span>
+        <button class="btn sq" id="octUp" type="button" aria-label="אוקטבה למעלה">+</button>
+      </div>
+      <button class="btn hold" id="hold" type="button" aria-pressed="false">החזק</button>
+    </div>
+    <div class="steps" id="stepsBar" aria-hidden="true"></div>
+    <div class="pads" id="pads" aria-label="כפתורי תווים"></div>
+  </section>
+  <aside class="faders" aria-label="מחוונים">
+    <div class="fader" data-key="filter"><div class="sld" role="slider" tabindex="0" aria-label="פילטר"><div class="fill"></div><div class="thumb"></div></div><b>פילטר</b></div>
+    <div class="fader" data-key="dream"><div class="sld" role="slider" tabindex="0" aria-label="חלום"><div class="fill"></div><div class="thumb"></div></div><b>חלום</b></div>
+    <div class="fader" data-key="wob"><div class="sld" role="slider" tabindex="0" aria-label="רעד"><div class="fill"></div><div class="thumb"></div></div><b>רעד</b></div>
+  </aside>
 </main>
 </div>
 
@@ -50,20 +69,18 @@
     <div class="cardhead"><h2>עוד</h2><button class="btn" id="moreClose" type="button">סגור</button></div>
     <section class="blk"><h3>סולם</h3><div class="opts" id="scales"></div>
       <label class="row">שורש <select id="root" dir="ltr"></select></label></section>
+    <section class="blk"><h3>ארפג׳יו</h3><div class="opts" id="dirs"></div>
+      <div class="opts" id="spans"></div></section>
     <section class="blk"><h3>דיליי</h3><div class="opts" id="divs"></div></section>
-    <section class="blk"><h3>תנועה</h3>
-      <label class="row"><input type="checkbox" id="tiltOn"> ההטיה והניעור שולטים בצליל</label>
-      <button class="btn" id="calib" type="button">כייל את המנוחה</button>
-      <div id="manual" class="ctls">
-        <label class="ctl">חלום <input type="range" id="r_dream" min="0" max="100"></label>
-        <label class="ctl">רעד <input type="range" id="r_wob" min="0" max="100"></label>
-      </div></section>
     <section class="blk"><h3>צליל</h3><div class="ctls">
         <label class="ctl">ריזוננס <input type="range" id="r_res" min="0" max="100"></label>
         <label class="ctl">דרייב <input type="range" id="r_drive" min="0" max="100"></label>
         <label class="ctl">עוצמה <input type="range" id="r_vol" min="0" max="100"></label>
       </div>
       <button class="btn" id="reset" type="button">↻ איפוס צליל</button></section>
+    <section class="blk"><h3>תנועה (ניסיוני)</h3>
+      <label class="row"><input type="checkbox" id="tiltOn"> הטיית המכשיר שולטת בחלום וברעד במקום המחוונים</label>
+      <button class="btn" id="calib" type="button">כייל את המנוחה</button></section>
   </div>
 </div>
 
@@ -79,8 +96,8 @@
   <div class="gatebox">
     <div class="logo big" aria-hidden="true"><i></i></div>
     <h1>מטוטלת</h1>
-    <p>כלי שמנגנים בכל הגוף. כל אצבע על המסך היא קול: עמודה היא תו בסולם, גובה הוא פתיחת הפילטר. אצבע שעומדת במקום מקפיאה את הצליל. הטיית המכשיר קדימה פותחת דיליי, פייזר וריוורב. הטיה הצידה מרעידה. ניעור חותך.</p>
-    <button class="go" id="start" type="button">▶ הפעל צליל ותנועה</button>
+    <p>שמונה כפתורים בסולם, בלי תו שגוי. כפתור מוחזק חוזר על עצמו בקצב, נעול לפעמה של הגרוב. כמה כפתורים יחד הם ארפג׳יו. "החזק" משאיר אותו לנגן לבד.</p>
+    <button class="go" id="start" type="button">▶ הפעל צליל</button>
     <p class="small">אין צליל? הרם עוצמה ובדוק שהמכשיר לא במצב שקט.</p>
     <p class="small" id="installHint" hidden>להתקנה: שתף ← הוסף למסך הבית. אחרי זה היא עובדת גם בלי אינטרנט.</p>
   </div>

@@ -100,8 +100,8 @@ function makeFilter(o){
   var res={setTargetAtTime:function(v,t,k){ b.Q.setTargetAtTime(.7+v*v*14,t,k); }, set value(v){ b.Q.value=.7+v*v*14; }};
   return {inp:drv,out:b,cut:cut,res:res,drv:drv.gain,kill:function(){}};
 }
-function spawn(o,id,freq,vel,cut,P){
-  var c=o.c, t=c.currentTime+.003;
+function spawn(o,id,freq,vel,cut,P,at){
+  var c=o.c, t=Math.max(c.currentTime+.003,fin(at,0));
   if(o.voices.length>=MAXV){ var old=o.voices[0]; release(o,old,.03); }
   var v={id:id,born:t,freq:freq};
   v.o1=c.createOscillator(); v.o1.type="sawtooth";
@@ -123,13 +123,13 @@ function spawn(o,id,freq,vel,cut,P){
   o.voices.push(v); return v;
 }
 function find(o,id){ for(var i=0;i<o.voices.length;i++) if(o.voices[i].id===id) return o.voices[i]; return null; }
-function release(o,v,rel){
-  var c=o.c, t=c.currentTime, i=o.voices.indexOf(v); if(i>=0) o.voices.splice(i,1);
+function release(o,v,rel,at){
+  var c=o.c, t=Math.max(c.currentTime,fin(at,0)), i=o.voices.indexOf(v); if(i>=0) o.voices.splice(i,1);
   rel=fin(rel,.25);
   try{ v.vca.gain.cancelScheduledValues(t); v.vca.gain.setTargetAtTime(0,t,rel/3.5); }catch(e){}
   var end=t+rel+.1;
   try{ v.o1.stop(end); v.o2.stop(end); v.sub.stop(end); }catch(e){}
-  setTimeout(function(){ try{ o.vibG.disconnect(v.o1.detune); o.vibG.disconnect(v.o2.detune); o.vibG.disconnect(v.sub.detune); }catch(e){} try{ v.vca.disconnect(); }catch(e){} v.f.kill(); },(rel+.25)*1000);
+  setTimeout(function(){ try{ o.vibG.disconnect(v.o1.detune); o.vibG.disconnect(v.o2.detune); o.vibG.disconnect(v.sub.detune); }catch(e){} try{ v.vca.disconnect(); }catch(e){} v.f.kill(); },(t-c.currentTime+rel+.25)*1000);
 }
 
 /* ---------- מצב חי ---------- */
@@ -209,7 +209,8 @@ var G=window.PendulumEngine={
   stream:function(){ return recDest?recDest.stream:null; },
   voices:function(){ return O?O.voices.length:0; },
   // קול: id ייחודי לאצבע. freq בהרץ, vel 0..1, cut בהרץ
-  noteOn:function(id,freq,vel,cut){ if(!O) return; var old=find(O,id); if(old) release(O,old,.05); spawn(O,id,clamp(fin(freq,220),20,8000),clamp(fin(vel,.8),0,1),clamp(fin(cut,2000),80,16000),P); },
+  // at: זמן שמע עתידי (לסקוונסר). בלי at: עכשיו
+  noteOn:function(id,freq,vel,cut,at){ if(!O) return; var old=find(O,id); if(old) release(O,old,.05,at); spawn(O,id,clamp(fin(freq,220),20,8000),clamp(fin(vel,.8),0,1),clamp(fin(cut,2000),80,16000),P,at); },
   // עדכון רציף: תדר (עם גלישה בשניות), גובה הפילטר, עוצמה
   set:function(id,q){ if(!O) return; var v=find(O,id); if(!v) return; var t=ctx.currentTime;
     if(q.freq!==undefined&&isFinite(q.freq)){ var gl=clamp(fin(q.glide,.02),.005,1.2); v.freq=q.freq; [v.o1,v.o2].forEach(function(os){ os.frequency.setTargetAtTime(q.freq,t,gl/3); }); v.sub.frequency.setTargetAtTime(q.freq/2,t,gl/3); }
@@ -217,7 +218,7 @@ var G=window.PendulumEngine={
     if(q.vel!==undefined&&isFinite(q.vel)){ var lvl=.16+clamp(q.vel,0,1)*.2; v.lvl=lvl; v.vca.gain.setTargetAtTime(lvl,t,.04); }
     if(q.res!==undefined) v.f.res.setTargetAtTime(clamp(q.res,0,1.1),t,.03);
   },
-  noteOff:function(id,rel){ if(!O) return; var v=find(O,id); if(v) release(O,v,rel); },
+  noteOff:function(id,rel,at){ if(!O) return; var v=find(O,id); if(v) release(O,v,rel,at); },
   allOff:function(rel){ if(!O) return; O.voices.slice().forEach(function(v){ release(O,v,rel); }); },
   // stutter: שער פתוח/סגור על כל הקולות, מתוזמן לשעון. from: זמן שמע, n: מספר חיתוכים, dur: אורך חיתוך בשניות
   stutter:function(from,n,dur){ if(!O) return; var gp=O.stutter.gain, t=Math.max(from,ctx.currentTime+.005);
@@ -228,6 +229,7 @@ var G=window.PendulumEngine={
   setWobble:function(x){ P.wobble=clamp(fin(x,0),0,1); apply(); },
   setRes:function(x){ P.res=clamp(fin(x,.4),0,1.1); if(O) O.voices.forEach(function(v){ v.f.res.setTargetAtTime(P.res,ctx.currentTime,.03); }); },
   setDrive:function(x){ P.drive=clamp(fin(x,1.4),.3,8); if(O) O.voices.forEach(function(v){ v.f.drv.setTargetAtTime(P.drive,ctx.currentTime,.03); }); },
+  setCut:function(hz){ if(!O) return; var t=ctx.currentTime; O.voices.forEach(function(v){ v.f.cut.setTargetAtTime(clamp(hz,80,16000),t,.02); }); },
   setVolume:function(x){ P.vol=clamp(fin(x,.8),0,1); apply(); },
   setTempo:function(bpm,div){ P.beat=60/clamp(fin(bpm,124),40,300); if(div) P.div=clamp(fin(div,.75),.1,2); apply(); },
   params:function(){ return P; },
