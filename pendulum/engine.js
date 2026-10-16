@@ -88,7 +88,7 @@ var MAXV=10, haveWorklet=false;
 function makeFilter(o){
   var c=o.c;
   if(haveWorklet){
-    try{ var n=new AudioWorkletNode(c,"ladder",{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
+    try{ var n=new AudioWorkletNode(c,"ladder2",{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
       return {node:n,inp:n,out:n,cut:n.parameters.get("cutoff"),res:n.parameters.get("res"),drv:n.parameters.get("drive"),kill:function(){ try{ n.port.postMessage("stop"); }catch(e){} }}; }catch(e){ haveWorklet=false; }
   }
   var a=c.createBiquadFilter(), b=c.createBiquadFilter(); a.type=b.type="lowpass"; a.Q.value=.7; b.Q.value=4; a.connect(b);
