@@ -83,64 +83,86 @@ function chain(c){
   return o;
 }
 
-/* ---------- קולות ---------- */
+/* ---------- קולות: מאגר קבוע (תיקון) ----------
+   קודם: כל תו של הארפג'יו בנה קול חדש (3 מתנדים, 5 Gain ו־AudioWorkletNode חדש) ופירק אותו אחרי חצי שנייה.
+   ב־1/16T עם אקורד זה ~20 worklet ו־~250 צמתים חדשים בשנייה, וספארי נחנק מזה (בנייה סינכרונית של worklet, איסוף זבל).
+   עכשיו: POOL קולות נבנים פעם אחת ונשארים מחוברים. תו חדש לוקח קול פנוי (או גונב את הישן ביותר) ומתזמן עליו פרמטרים.
+   הפילטר של קול שקט עובר למצב מנוחה (gate=0) ולא מחשב כלום. */
 var MAXV=10, haveWorklet=false;
 function makeFilter(o){
   var c=o.c;
   if(haveWorklet){
     try{ var n=new AudioWorkletNode(c,"ladder2",{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
-      return {node:n,inp:n,out:n,cut:n.parameters.get("cutoff"),res:n.parameters.get("res"),drv:n.parameters.get("drive"),kill:function(){ try{ n.port.postMessage("stop"); }catch(e){} }}; }catch(e){ haveWorklet=false; }
+      return {node:n,inp:n,out:n,cut:n.parameters.get("cutoff"),res:n.parameters.get("res"),drv:n.parameters.get("drive"),gate:n.parameters.get("gate"),kill:function(){ try{ n.port.postMessage("stop"); }catch(e){} }}; }catch(e){ haveWorklet=false; }
   }
   var a=c.createBiquadFilter(), b=c.createBiquadFilter(); a.type=b.type="lowpass"; a.Q.value=.7; b.Q.value=4; a.connect(b);
   var drv=g(c,1), sh=c.createWaveShaper(); sh.curve=softCurve(2); drv.connect(sh); sh.connect(a);
-  // AudioParam מדומה לפילטר הכפול: אותו API כמו ב־worklet
   var cut={_v:1200, setValueAtTime:function(v,t){ a.frequency.setValueAtTime(v,t); b.frequency.setValueAtTime(v,t); this._v=v; },
     setTargetAtTime:function(v,t,k){ a.frequency.setTargetAtTime(v,t,k); b.frequency.setTargetAtTime(v,t,k); this._v=v; },
     cancelScheduledValues:function(t){ a.frequency.cancelScheduledValues(t); b.frequency.cancelScheduledValues(t); }, get value(){ return this._v; }, set value(v){ this.setValueAtTime(v,c.currentTime); }};
-  var res={setTargetAtTime:function(v,t,k){ b.Q.setTargetAtTime(.7+v*v*14,t,k); }, set value(v){ b.Q.value=.7+v*v*14; }};
-  return {inp:drv,out:b,cut:cut,res:res,drv:drv.gain,kill:function(){}};
+  var res={setTargetAtTime:function(v,t,k){ b.Q.setTargetAtTime(.7+v*v*14,t,k); }, cancelScheduledValues:function(t){ b.Q.cancelScheduledValues(t); }, set value(v){ b.Q.value=.7+v*v*14; }};
+  return {inp:drv,out:b,cut:cut,res:res,drv:drv.gain,gate:null,kill:function(){}};
 }
-function spawn(o,id,freq,vel,cut,P,at){
-  var c=o.c, t=Math.max(c.currentTime+.003,fin(at,0));
-  if(o.voices.length>=MAXV){ var old=o.voices[0]; release(o,old,.03); }
-  var v={id:id,born:t,freq:freq};
-  v.o1=c.createOscillator(); v.o1.type="sawtooth";
-  v.o2=c.createOscillator(); v.o2.type="square";
-  v.sub=c.createOscillator(); v.sub.type="sine";
-  v.o1.frequency.value=freq; v.o2.frequency.value=freq; v.sub.frequency.value=freq/2;
+function makeVoice(o,ladder){
+  var c=o.c, v={id:null,born:-1,freeAt:0,freq:220,held:false,ladder:ladder};
+  v.o1=c.createOscillator(); v.o1.type="sawtooth"; v.o2=c.createOscillator(); v.o2.type="square"; v.sub=c.createOscillator(); v.sub.type="sine";
   v.o2.detune.value=P.spread; v.o1.detune.value=-P.spread*.35;
-  v.g1=g(c,.42); v.g2=g(c,.3); v.gs=g(c,.34);
-  v.f=makeFilter(o);
+  v.g1=g(c,.42); v.g2=g(c,.3); v.gs=g(c,.34); v.f=makeFilter(o);
   v.o1.connect(v.g1); v.o2.connect(v.g2); v.sub.connect(v.gs); v.g1.connect(v.f.inp); v.g2.connect(v.f.inp); v.gs.connect(v.f.inp);
   v.vca=g(c,0); v.f.out.connect(v.vca); v.vca.connect(o.voiceBus);
   o.vibG.connect(v.o1.detune); o.vibG.connect(v.o2.detune); o.vibG.connect(v.sub.detune);
-  // פילטר: פתיחה חדה ונפילה לגובה האצבע (pluck), ריזוננס ודרייב מהמצב
-  v.f.cut.setValueAtTime(clamp(cut*3.2,80,16000),t); v.f.cut.setTargetAtTime(cut,t,.11);
-  v.f.res.setTargetAtTime(P.res,t,.01); v.f.drv.setTargetAtTime(P.drive,t,.01);
-  // VCA: עלייה מהירה, לפי עוצמת האצבע
-  var lvl=.16+vel*.2; v.vca.gain.setValueAtTime(0,t); v.vca.gain.linearRampToValueAtTime(lvl,t+.012); v.lvl=lvl;
-  v.o1.start(t); v.o2.start(t); v.sub.start(t);
-  o.voices.push(v); return v;
+  if(v.f.gate) v.f.gate.value=0;
+  var t=c.currentTime; v.o1.start(t); v.o2.start(t); v.sub.start(t);
+  return v;
+}
+function dropVoice(o,v){ try{ v.o1.stop(); v.o2.stop(); v.sub.stop(); }catch(e){} try{ o.vibG.disconnect(v.o1.detune); o.vibG.disconnect(v.o2.detune); o.vibG.disconnect(v.sub.detune); }catch(e){} try{ v.vca.disconnect(); }catch(e){} v.f.kill(); }
+// המאגר נבנה פעם אחת. כשה־worklet נטען, מחליפים בשקט את הקולות הזמניים (biquad) בקולות עם ladder
+function ensurePool(o){
+  if(o.pool&&o.pool.length&&o.pool[0].ladder===haveWorklet) return;
+  var old=o.pool||[]; o.pool=[]; for(var i=0;i<MAXV;i++) o.pool.push(makeVoice(o,haveWorklet));
+  old.forEach(function(v){ var c=o.c, t=c.currentTime; v.vca.gain.cancelScheduledValues(t); v.vca.gain.setTargetAtTime(0,t,.02); setTimeout(function(){ dropVoice(o,v); },300); });
+}
+function pickVoice(o,t){
+  var best=null, i, v;
+  for(i=0;i<o.pool.length;i++){ v=o.pool[i]; if(!v.held&&v.freeAt<=t&&(!best||v.freeAt<best.freeAt)) best=v; }
+  if(best) return best;
+  for(i=0;i<o.pool.length;i++){ v=o.pool[i]; if(!best||v.born<best.born) best=v; } // גניבה: הישן ביותר
+  return best;
+}
+function cancelAt(p,t){ if(p.cancelAndHoldAtTime) { try{ p.cancelAndHoldAtTime(t); return; }catch(e){} } p.cancelScheduledValues(t); }
+function spawn(o,id,freq,vel,cut,P,at){
+  var c=o.c, t=Math.max(c.currentTime+.003,fin(at,0)); ensurePool(o);
+  var v=pickVoice(o,t), stolen=v.held||v.freeAt>t;
+  v.id=id; v.born=t; v.freq=freq; v.held=true; v.freeAt=Infinity;
+  var ts=stolen?t+.004:t; // קול גנוב: דעיכה של 4ms לפני התו החדש, בלי קליק
+  cancelAt(v.vca.gain,t); if(stolen) v.vca.gain.setTargetAtTime(0,t,.0012);
+  [[v.o1,freq],[v.o2,freq],[v.sub,freq/2]].forEach(function(a){ a[0].frequency.cancelScheduledValues(ts); a[0].frequency.setValueAtTime(a[1],ts); });
+  if(v.f.gate){ v.f.gate.cancelScheduledValues(t); v.f.gate.setValueAtTime(1,t); }
+  v.f.cut.cancelScheduledValues(ts); v.f.cut.setValueAtTime(clamp(cut*3.2,80,16000),ts); v.f.cut.setTargetAtTime(cut,ts,.11);
+  v.f.res.cancelScheduledValues&&v.f.res.cancelScheduledValues(ts); v.f.res.setTargetAtTime(P.res,ts,.01); v.f.drv.cancelScheduledValues(ts); v.f.drv.setTargetAtTime(P.drive,ts,.01);
+  var lvl=.16+vel*.2; v.vca.gain.setValueAtTime(0,ts); v.vca.gain.linearRampToValueAtTime(lvl,ts+.012); v.lvl=lvl;
+  if(o.voices.indexOf(v)<0) o.voices.push(v);
+  return v;
 }
 function find(o,id){ for(var i=0;i<o.voices.length;i++) if(o.voices[i].id===id) return o.voices[i]; return null; }
 function release(o,v,rel,at){
   var c=o.c, t=Math.max(c.currentTime,fin(at,0)), i=o.voices.indexOf(v); if(i>=0) o.voices.splice(i,1);
-  rel=fin(rel,.25);
-  try{ v.vca.gain.cancelScheduledValues(t); v.vca.gain.setTargetAtTime(0,t,rel/3.5); }catch(e){}
-  var end=t+rel+.1;
-  try{ v.o1.stop(end); v.o2.stop(end); v.sub.stop(end); }catch(e){}
-  setTimeout(function(){ try{ o.vibG.disconnect(v.o1.detune); o.vibG.disconnect(v.o2.detune); o.vibG.disconnect(v.sub.detune); }catch(e){} try{ v.vca.disconnect(); }catch(e){} v.f.kill(); },(t-c.currentTime+rel+.25)*1000);
+  rel=fin(rel,.25); v.held=false; v.id=null;
+  try{ cancelAt(v.vca.gain,t); v.vca.gain.setTargetAtTime(0,t,rel/3.5); }catch(e){}
+  v.freeAt=t+rel+.05;
+  if(v.f.gate){ v.f.gate.cancelScheduledValues(t+.001); v.f.gate.setValueAtTime(0,t+rel*1.6+.15); } // אחרי שהצליל דעך, הפילטר נח
 }
 
 /* ---------- מצב חי ---------- */
 var ctx=null, O=null, unlocked=false, meter=null, mbuf=null, recDest=null, ready=null;
 var P={res:.42,drive:1.4,spread:7,dream:0,wobble:0,vol:.8,beat:60/124,div:.75};
 function build(){
-  ctx=new AC({latencyHint:"interactive"});
+  ctx=new AC({latencyHint:"interactive"}); haveWorklet=false;
   if(ctx.audioWorklet&&ctx.audioWorklet.addModule){
     ready=ctx.audioWorklet.addModule("ladder.js").then(function(){ haveWorklet=true; },function(){ haveWorklet=false; });
   } else ready=Promise.resolve();
-  O=chain(ctx);
+  O=chain(ctx); ensurePool(O);
+  var o0=O; ready.then(function(){ if(O===o0) ensurePool(o0); });
   meter=ctx.createAnalyser(); meter.fftSize=512; mbuf=new Float32Array(512); O.out.connect(meter);
   try{ recDest=ctx.createMediaStreamDestination(); O.out.connect(recDest); }catch(e){ recDest=null; }
   apply();
@@ -156,7 +178,7 @@ function apply(){
   O.rvSendS.gain.setTargetAtTime(.14*(1-d),t,.1); O.rvSendL.gain.setTargetAtTime(d*.8,t,.1);
   // רעד: ויברטו ומרווח בין המתנדים
   O.vibG.gain.setTargetAtTime(w*w*40,t,.05); O.vib.frequency.setTargetAtTime(5.2+w*1.6,t,.05);
-  var sp=7+w*26; O.voices.forEach(function(v){ v.o2.detune.setTargetAtTime(sp,t,.05); v.o1.detune.setTargetAtTime(-sp*.35,t,.05); }); P.spread=sp;
+  var sp=7+w*26; (O.pool||[]).forEach(function(v){ v.o2.detune.setTargetAtTime(sp,t,.05); v.o1.detune.setTargetAtTime(-sp*.35,t,.05); }); P.spread=sp;
   // זמן הדיליי מהקצב: המעבר מתגלגל (כמו קלטת שמשנה מהירות)
   var dt=clamp(P.beat*P.div,.03,1.9); O.dL.delayTime.setTargetAtTime(dt,t,.35); O.dR.delayTime.setTargetAtTime(dt,t,.35);
 }
