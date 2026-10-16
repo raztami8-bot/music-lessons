@@ -159,9 +159,9 @@ function hit(o,part,t,v,p){
   if(!o) return; var c=o.c, p0=p||{}; t=Math.max(t,c.currentTime); p=p0;
   p={level:clamp(fin(p.level,.8),0,1),decay:clamp(fin(p.decay,.5),0,1),pitch:clamp(fin(p.pitch,.5),0,1),tone:clamp(fin(p.tone,.5),0,1)};
   v=clamp(fin(v,.7),0,1.3)*p.level*p.level*1.15; if(v<=.001) return;
-  var bus=o.parts[part]; if(!bus) return;
+  var bus=o.parts[part]||o.mix; if(!bus||!V[part==="oh"?"hat":part]&&part!=="ch") return;
   try{ var ct=c.currentTime, cut=clamp(fin(p0.cut,1),0,1), f=o.pf[part], ps=o.ps[part];
-    f.frequency.setTargetAtTime(cut>=.99?20000:80*Math.pow(250,cut),ct,.01); f.Q.setTargetAtTime(cut>=.99?.7:1.4,ct,.01);
+    f.frequency.setTargetAtTime(cut>=.99?20000:Math.max(250,80*Math.pow(250,cut)),ct,.01); f.Q.setTargetAtTime(cut>=.99?.7:1.4,ct,.01);
     ps.d.gain.setTargetAtTime(clamp(fin(p0.dly,0),0,1)*.9,ct,.01); ps.r.gain.setTargetAtTime(clamp(fin(p0.rev,0),0,1)*1.1,ct,.01); }catch(e){}
   try{
     if(part==="ch"||part==="oh"){
@@ -169,7 +169,9 @@ function hit(o,part,t,v,p){
       if(o.open && o.open.t<t && o.open.end>t){ var g=o.open.g; try{ g.cancelScheduledValues(t); }catch(e){} g.setTargetAtTime(0,t,.005); }
       var h=V.hat(o,bus,t,v,p,part==="oh"); if(part==="oh") o.open=h; else if(o.open && o.open.t>=t) {/* פתוח מאוחר יותר: נשאר */}
     } else V[part](o,bus,t,v,p);
-  }catch(e){}
+  }catch(e){ // קול שנכשל (למשל API חסר בספארי ישן) לא נשאר שקט: צליל גיבוי פשוט
+    try{ var os=c.createOscillator(), a=c.createGain(); os.type="triangle"; os.frequency.value={kick:60,clap:900,ch:6000,oh:5000,tom:140,rim:1700}[part]||440;
+      env(c,a.gain,t,.6*v,.08,.001); os.connect(a); a.connect(bus); os.start(t); os.stop(t+.6); }catch(e2){} }
 }
 
 /* ---------- מצב חי ---------- */

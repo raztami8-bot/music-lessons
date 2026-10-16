@@ -36,7 +36,7 @@ const PARTS=[
   {id:"tom",name:"טום",th:.55,tone:"עור",col:"--tom"},
   {id:"rim",name:"רים",full:"רים / רעש",th:.68,tone:"רעש",col:"--rim"}
 ];
-const NP=PARTS.length, GHOST_TH=.86;
+const VER=2, NP=PARTS.length, GHOST_TH=.86;
 const DEF_PART={kick:{level:.88,decay:.45,pitch:.3,tone:.45},clap:{level:.72,decay:.35,pitch:.4,tone:.5},ch:{level:.62,decay:.3,pitch:.5,tone:.5},
   oh:{level:.56,decay:.42,pitch:.5,tone:.5},tom:{level:.66,decay:.42,pitch:.35,tone:.35},rim:{level:.62,decay:.3,pitch:.5,tone:.3}};
 const DEF_REV={kick:.04,clap:.22,ch:.08,oh:.14,tom:.18,rim:.16};
@@ -51,7 +51,7 @@ const emptyVar=()=>PARTS.map(()=>new Array(MAXS).fill(0));
 const pad64=r=>{ const o=r.slice(0,MAXS); while(o.length<MAXS) o.push(0); return o };
 function defaults(){
   const parts={}; for(const p of PARTS) parts[p.id]={...DEF_PART[p.id],nudge:.5,dly:0,rev:DEF_REV[p.id],cut:1,mute:false,solo:false};
-  return {bpm:124,swing:.12,energy:.8,drive:.1,vol:.8,cur:0,sel:0,len:16,follow:true,vars:DEMOS.map(v=>v.map(pad64)),parts};
+  return {ver:VER,bpm:124,swing:.12,energy:.8,drive:.1,vol:.8,cur:0,sel:0,len:16,follow:true,vars:DEMOS.map(v=>v.map(pad64)),parts};
 }
 function sanitize(o){
   const d=defaults(); if(!o||typeof o!=="object") return d;
@@ -61,7 +61,12 @@ function sanitize(o){
     s.vars.push(PARTS.map((p,pi)=>{ const r=Array.isArray(src[pi])?src[pi]:d.vars[v][pi]; const out=[]; for(let i=0;i<MAXS;i++){ const x=Math.round(fin(r[i],0)); out.push(x===1||x===2?x:0) } return out })) }
   for(const p of PARTS){ const q=(o.parts&&o.parts[p.id])||{}, df=d.parts[p.id], w={};
     for(const k of ["level","decay","pitch","tone","nudge","dly","rev","cut"]) w[k]=clamp(fin(q[k],df[k]),0,1);
-    w.mute=!!q.mute; w.solo=!!q.solo; s.parts[p.id]=w }
+    w.mute=q.mute===true; w.solo=q.solo===true; s.parts[p.id]=w }
+  /* מצב שנשמר בגרסה ישנה (בלי ver): לא נותנים לו להשתיק תופים. רמה כמעט אפס או פילטר סגור לגמרי חוזרים לברירת המחדל,
+     ואנרגיה נמוכה (שמכבה את פתוח/טום/רים בנגינה) עולה לברירת המחדל */
+  if(o.ver!==VER){ for(const p of PARTS){ const w=s.parts[p.id], df=d.parts[p.id]; if(w.level<.15) w.level=df.level; if(w.cut<.25) w.cut=1; w.mute=false; w.solo=false }
+    if(s.energy<d.energy) s.energy=d.energy }
+  s.ver=VER;
   return s;
 }
 const KEY="groove2-v1";
@@ -307,7 +312,7 @@ function pagesUI(){ const n=nPages();
     const minis=b.querySelector(".mini").children, g=grid(); let any=false;
     for(let k=0;k<STEPS;k++){ let h=0; if(k<L) for(let pi=0;pi<NP;pi++) h=Math.max(h,g[pi][a0+k]); minis[k].className=k>=L?"x":h===2?"a":h?"o":""; if(h) any=true }
     b.classList.toggle("empty",!any) });
-  pagesEl.dataset.n=n; $("#lenBtn").textContent="אורך "+S.len }
+  pagesEl.dataset.n=n; $("#lenBtn").textContent="אורך "+S.len+" ▾"; $$("#lenInline .opt").forEach(b=>b.classList.toggle("on",+b.dataset.v===S.len)) }
 function followUI(){ const b=$("#follow"); b.classList.toggle("on",S.follow); b.setAttribute("aria-pressed",S.follow) }
 onTap($("#follow"),()=>{ S.follow=!S.follow; followUI(); save(true); toast(S.follow?"העמוד עוקב אחרי הנגינה":"העמוד נשאר במקום בזמן נגינה") });
 function mixUI(){
@@ -394,7 +399,8 @@ function patUI(){ $$("#lens .opt").forEach(b=>b.classList.toggle("on",+b.dataset
   $("#copyNext").textContent=page<nPages()-1?`העתק עמוד ${page+1} לעמוד ${page+2}`:`העתק עמוד ${page+1} לעמוד חדש`; $("#clrPage").textContent=`נקה את עמוד ${page+1}`; $("#patVar").textContent=VN[S.cur] }
 onTap($("#patBtn"),()=>{ patUI(); sheet("#pat",true) }); onTap($("#lenBtn"),()=>{ patUI(); sheet("#pat",true) });
 $("#patClose").addEventListener("click",()=>sheet("#pat",false)); $("#pat").addEventListener("click",e=>{ if(e.target.id==="pat") sheet("#pat",false) });
-LENS.forEach(n=>{ const b=document.createElement("button"); b.type="button"; b.className="btn opt"; b.dataset.v=n; b.textContent=n; $("#lens").appendChild(b);
+LENS.forEach(n=>{ const bi=document.createElement("button"); bi.type="button"; bi.className="btn opt"; bi.dataset.v=n; bi.textContent=n; $("#lenInline").appendChild(bi); onTap(bi,()=>setLen(n));
+ const b=document.createElement("button"); b.type="button"; b.className="btn opt"; b.dataset.v=n; b.textContent=n; $("#lens").appendChild(b);
   b.addEventListener("click",()=>setLen(n)) });
 function setLen(n){ if(n===S.len) return; pushUndo(); S.len=n; if(page>=nPages()) page=nPages()-1; pos%=S.len; gridUI(); patUI(); save(); toast(`אורך התבנית: ${n} צעדים (${nPages()} ${nPages()>1?"עמודים":"עמוד"})`,"בטל",undo,true) }
 let cfmFn=null;
@@ -653,7 +659,9 @@ $("#start").addEventListener("click",async()=>{
 window.addEventListener("error",()=>{ toast("משהו השתבש. אם אין צליל, גע ב־↻ איפוס") });
 setBpmUI(); allUI(); slotsUI(); recUI(); syncUI();
 requestAnimationFrame(frame);
-if("serviceWorker" in navigator&&location.protocol==="https:") addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+if("serviceWorker" in navigator&&location.protocol==="https:") addEventListener("load",()=>{ const had=!!navigator.serviceWorker.controller; let rl=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(had&&!rl&&!playing){ rl=true; location.reload() } }); // גרסה חדשה השתלטה: טוענים פעם אחת
+  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>r.update()).catch(()=>{}) });
 
 /* בדיקה: רינדור תיבה אחת בלי רמקול, עם אותם קולות ואותה שרשרת יציאה */
 window.GrooveDebug={

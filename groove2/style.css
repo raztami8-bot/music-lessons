@@ -365,3 +365,12 @@ html,body{height:100dvh;touch-action:manipulation}
   .clr{flex-direction:column;gap:0;font-size:13px;line-height:1.05}
 }
 .seqhead{min-width:0}
+
+/* אורך התבנית גלוי במסך הראשי (אייפד ומחשב); בטלפון: הכפתור "אורך ▾" */
+.lenbar{display:flex;align-items:center;gap:10px;margin:6px 0 2px;flex-wrap:wrap}
+.lenbar .lbl{font-size:15px;opacity:.85;white-space:nowrap}
+.lenopts{display:flex;gap:5px;flex:1;min-width:0}
+.lenopts .opt{flex:1;min-height:44px;min-width:44px;font-size:16px;font-weight:700}
+.lenopts .opt.on{background:var(--acc,#ff7a3d);color:#111;border-color:transparent}
+@media (min-width:700px){ .lenbar~* {} #lenBtn{display:none} }
+@media (max-width:699.9px){ .lenbar{display:none} .len{font-weight:700;outline:2px solid rgba(255,255,255,.35)} }
