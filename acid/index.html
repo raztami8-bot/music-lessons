@@ -279,6 +279,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="card foot">
         <div class="knob"><label for="vol">עוצמה <output id="volOut"></output></label><input type="range" id="vol" min="0" max="100" step="1"></div>
         <div class="knob"><label for="swing">סווינג <output id="swingOut"></output></label><input type="range" id="swing" min="0" max="100" step="1"></div>
+        <div class="knob"><label for="accent">הדגשה <output id="accentOut"></output></label><input type="range" id="accent" min="0" max="100" step="1"></div>
         <button class="btn" id="reset" type="button">איפוס</button>
       </div>
     </aside>
@@ -348,13 +349,13 @@ function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב 
   const on=[1,0,1,1,0,1,1,0,1,0,1,1,0,1,0,1], deg=[0,0,7,0,0,3,0,0,0,0,10,7,0,5,0,12];
   return on.map((v,i)=>({on:!!v,deg:v?deg[i]:0,acc:[0,6,11].includes(i),sl:[2,10].includes(i)}));
 }
-function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
+function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,accent:.7,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
   worlds:JSON.parse(JSON.stringify(DEF_WORLDS))}}
 function sanitize(o){
   const d=defaults(); if(!o||typeof o!=="object") return d;
   const s={bpm:clamp(Math.round(fin(o.bpm,128)),60,200),root:clamp(Math.round(fin(o.root,9)),0,11),
     scale:["minor","phryg","dorian"].includes(o.scale)?o.scale:"minor",oct:clamp(Math.round(fin(o.oct,0)),-2,2),
-    swing:clamp(fin(o.swing,0),0,1),morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
+    swing:clamp(fin(o.swing,0),0,1),accent:clamp(fin(o.accent,.7),0,1),morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
   for(let i=0;i<STEPS;i++){const q=(Array.isArray(o.steps)&&o.steps[i])||d.steps[i];
     const on=!!q.on; s.steps.push({on,deg:clamp(Math.round(fin(q.deg,0)),0,DEGS-1),acc:on&&!!q.acc,sl:on&&!!q.sl})}
   for(const k of ["deep","acid"]){const src=(o.worlds&&o.worlds[k])||{}; const w={};
@@ -468,6 +469,7 @@ class AcidCore extends AudioWorkletProcessor{
     {name:"dec",defaultValue:.3,minValue:.01,maxValue:3,automationRate:"k-rate"},
     {name:"sat",defaultValue:.2,minValue:0,maxValue:1.5,automationRate:"k-rate"},
     {name:"morph",defaultValue:0,minValue:0,maxValue:1,automationRate:"k-rate"},
+    {name:"accent",defaultValue:.7,minValue:0,maxValue:1,automationRate:"k-rate"},
     {name:"ftA",defaultValue:0,minValue:0,maxValue:3,automationRate:"k-rate"},
     {name:"ftB",defaultValue:0,minValue:0,maxValue:3,automationRate:"k-rate"}
   ]}
@@ -478,7 +480,7 @@ class AcidCore extends AudioWorkletProcessor{
     this.q=[]; this.id=0; this.gate=false;
     this.vca=0; this.vcaT=0; this.vAtk=1-Math.exp(-1/(.003*fs)); this.vLeg=1-Math.exp(-1/(.012*fs)); this.vRel=1-Math.exp(-1/(.015*fs)); this.vc=this.vRel;
     this.sv=0; this.svT=0; this.sAtk=1-Math.exp(-1/(.005*fs)); this.sRel=1-Math.exp(-1/(.025*fs)); this.sc=this.sRel;
-    this.fenv=0; this.fdec=1; this.acc=0; this.accDec=Math.exp(-1/(.45*fs)); this.accAmt=0;
+    this.fenv=0; this.fdec=1; this.acc=0; this.accDec=Math.exp(-1/(.45*fs)); this.accAmt=0; this.ak=.7;
     this.xprev=0; this.olp=0; this.olpc=1-Math.exp(-2*Math.PI*18000/fs2);
     this.port.onmessage=e=>{ const m=e.data; if(m&&m.type==="kill"){ this.q.length=0; this.gate=false; this.vcaT=0; this.svT=0; this.vc=this.vRel; this.sc=this.sRel; this.A.release(); if(this.B) this.B.release(); return } if(m&&typeof m.t==="number") this.q.push(m) };
   }
@@ -488,8 +490,8 @@ class AcidCore extends AudioWorkletProcessor{
   event(m){
     if(m.type==="note"){ this.id=m.id; this.lastF=m.f; const leg=!!m.leg;
       this.gate=true; this.A.pitch(m.f,leg); if(this.B) this.B.pitch(m.f,leg);
-      const lvl=m.acc?.95:.62;
-      if(!leg){ this.fenv=1; this.vc=this.vAtk; this.sc=this.sAtk; this.vcaT=lvl; this.svT=m.acc?.95:.8;
+      const ak=this.ak, lvl=m.acc?Math.min(1,.58*(1+ak*.75)):.58; // הדגשה: עד +4.7dB לפי הידית
+      if(!leg){ this.fenv=1; this.vc=this.vAtk; this.sc=this.sAtk; this.vcaT=lvl; this.svT=m.acc?Math.min(1,.8*(1+ak*.25)):.8;
         if(m.acc){ this.acc=Math.min(1.6,this.acc+.55); this.accAmt=1 } else this.accAmt=0;
         if(this.A.type===3) this.A.fbT=.6; if(this.B&&this.B.type===3) this.B.fbT=.6 }
       else { this.vc=this.vLeg; this.sc=this.sAtk; this.vcaT=Math.max(this.vcaT,lvl*.9); this.svT=Math.max(this.svT,.8) }
@@ -499,20 +501,20 @@ class AcidCore extends AudioWorkletProcessor{
   process(inputs,outputs,P){
     const inO=inputs[0][0], inS=inputs[1]&&inputs[1][0], out=outputs[0], o0=out[0], o1=out[1]||o0; const n=o0.length;
     const fs=this.fs, t0=currentTime;
-    const cut=P.cut[0], res=P.res[0], env=P.env[0], dec=P.dec[0], sat=P.sat[0], morph=P.morph[0], ftA=Math.round(P.ftA[0]), ftB=Math.round(P.ftB[0]);
+    const cut=P.cut[0], res=P.res[0], env=P.env[0], dec=P.dec[0], sat=P.sat[0], morph=P.morph[0], ak=P.accent[0], ftA=Math.round(P.ftA[0]), ftB=Math.round(P.ftB[0]);
     if(ftA!==this.ftA){ this.ftA=ftA; this.unit("A",ftA) }
     if(ftB!==this.ftB){ this.ftB=ftB; this.unit("B",ftB) }
     if(this.B&&this.xB>=1&&!this.Bold&&this.B.type===this.A.type) this.B=null; // שני אופיים זהים: מסנן אחד מספיק
     const runB=!!this.B&&(morph>.0005||this.xB<1);
-    const decA=this.accAmt>0?Math.min(dec,.22):dec; this.fdec=Math.exp(-1/(decA*fs));
+    this.ak=ak; const decA=this.accAmt>0?Math.max(.08,dec*(1-ak*.5)):dec; this.fdec=Math.exp(-1/(decA*fs)); // תו מודגש דועך מהר יותר, בהתאם לידית
     const q=this.q; let qi=0;
     for(let i=0;i<n;i++){
       const t=t0+i/fs; while(qi<q.length&&q[qi].t<=t){ this.event(q[qi]); qi++ }
       // מעטפות
       this.vca+=(this.vcaT-this.vca)*this.vc; this.sv+=(this.svT-this.sv)*this.sc;
       this.fenv*=this.fdec; this.acc*=this.accDec;
-      const fc=cut*Math.exp(.6931472*(env*this.fenv*(1+this.acc*.35)+this.acc*.9));
-      const r=clamp(res+this.acc*.08,0,1), d=sat*(1+this.acc*.3);
+      const fc=cut*Math.exp(.6931472*(env*this.fenv*(1+this.acc*ak)+this.acc*(.3+ak*2.6))); // ידית ב-70: כאוקטבה לכל הדגשה, יותר ברצף
+      const r=clamp(res+this.acc*ak*.2,0,1), d=sat*(1+this.acc*ak*.6);
       this.A.prep(fc,r,d); if(this.Aold) this.Aold.prep(fc,r,d); if(runB){ this.B.prep(fc,r,d); if(this.Bold) this.Bold.prep(fc,r,d) }
       // דגימת-יתר פי 2: אינטרפולציה בין הדגימה הקודמת לנוכחית
       const x=(inO?inO[i]:0)+1e-9, xm=(x+this.xprev)*.5; this.xprev=x;
@@ -594,7 +596,7 @@ async function makeEngine(){
   e.dc.connect(e.revHp); e.revHp.connect(e.revSend); e.merge.connect(e.revSend); e.revSend.gain.value=.8; e.revSend.connect(e.rev); e.rev.connect(e.revWet); e.revWet.connect(e.bus);
   // סוף השרשרת
   e.comp=c.createDynamicsCompressor();
-  e.comp.threshold.value=-8; e.comp.knee.value=4; e.comp.ratio.value=20; e.comp.attack.value=.002; e.comp.release.value=.12;
+  e.comp.threshold.value=-12; e.comp.knee.value=6; e.comp.ratio.value=8; e.comp.attack.value=.002; e.comp.release.value=.12;
   e.master=c.createGain();
   e.clip=c.createWaveShaper(); const cc=new Float32Array(2048); for(let i=0;i<2048;i++){const x=(i/1023.5-1)*1.5;cc[i]=Math.tanh(x)} e.clip.curve=cc; e.clip.oversample="2x";
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
@@ -632,6 +634,7 @@ function applyContinuous(now){
   setP(P.get("dec"),MAP.dec(p.dec),tau);
   setP(P.get("sat"),clamp(p.drv*.9+dirt*.65+rise*.2,0,1.5),tau); // רוויה בתוך המסנן
   setP(P.get("morph"),m,tau);
+  setP(P.get("accent"),S.accent,tau);
   const d2=1+Math.pow(clamp(p.drv*.55+dirt*.45+rise*.1,0,1),2)*9; // עיוות אחרי המסנן
   setP(E.pre.gain,d2*.5,tau); setP(E.post.gain,1/Math.sqrt(d2*.5+.5),tau);
   setP(E.subLvl.gain,MAP.sub(p.sub),tau);
@@ -997,7 +1000,7 @@ $("#voiceFile").addEventListener("change",async e=>{
 /* ---------- שורה עליונה ---------- */
 NOTES.forEach((n,i)=>{const o=document.createElement("option");o.value=i;o.textContent=n;$("#root").appendChild(o)});
 function topUI(){$("#bpmVal").textContent=S.bpm;$("#octVal").textContent=(S.oct>0?"+":"")+S.oct;$("#root").value=S.root;$("#scale").value=S.scale;
-  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100)}
+  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100);$("#accent").value=Math.round(S.accent*100);$("#accentOut").textContent=Math.round(S.accent*100)}
 function setBpm(v){S.bpm=clamp(Math.round(v),60,200);topUI();applyContinuous();save()}
 function repeatBtn(el,fn){let holdT=0;const stop=()=>{clearTimeout(holdT);clearInterval(holdT)};
   el.addEventListener("pointerdown",e=>{e.preventDefault();fn();stop();holdT=setTimeout(()=>{holdT=setInterval(fn,70)},380)});
@@ -1012,6 +1015,7 @@ $("#root").addEventListener("change",e=>{S.root=clamp(+e.target.value||0,0,11);s
 $("#scale").addEventListener("change",e=>{S.scale=SCALES[e.target.value]?e.target.value:"minor";save()});
 $("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#volOut").textContent=Math.round(S.vol);applyContinuous();save(true)});
 $("#swing").addEventListener("input",e=>{S.swing=clamp(+e.target.value/100,0,1);$("#swingOut").textContent=Math.round(S.swing*100);save()});
+$("#accent").addEventListener("input",e=>{S.accent=clamp(+e.target.value/100,0,1);$("#accentOut").textContent=Math.round(S.accent*100);applyContinuous();save()});
 $("#play").addEventListener("click",togglePlay);
 let resetArm=0;
 $("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
@@ -1023,7 +1027,7 @@ const SKEY="acid-ring-slots-v1";
 let slots=[null,null,null,null], curSlot=-1;
 try{const a=JSON.parse(localStorage.getItem(SKEY));if(Array.isArray(a))slots=[0,1,2,3].map(i=>(a[i]&&typeof a[i]==="object")?sanitize(a[i]):null)}catch(e){}
 function saveSlots(){try{localStorage.setItem(SKEY,JSON.stringify(slots));return true}catch(e){return false}}
-function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,swing:S.swing,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
+function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,swing:S.swing,accent:S.accent,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
 function slotsUI(){document.querySelectorAll(".slot").forEach(b=>{const i=+b.dataset.slot;b.classList.toggle("full",!!slots[i]);b.classList.toggle("cur",i===curSlot)})}
 function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlot=i; slotsUI();
   const ok=saveSlots();
@@ -1033,7 +1037,7 @@ function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlo
 function loadSlot(i){
   if(!slots[i])return; const v=sanitize(slots[i]); killUndo(); clearDrags();
   if(tiltOn)tiltOff();
-  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.swing=v.swing;S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
+  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.swing=v.swing;S.accent=clamp(fin(v.accent,.7),0,1);S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
   topUI();worldUI();morphUI(); if(E){updateWave("deep");updateWave("acid");syncUnits()} applyContinuous();
   curSlot=i; slotsUI(); save(true);
 }
