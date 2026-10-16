@@ -372,8 +372,8 @@ function save(keepSlot){ if(!keepSlot&&typeof curSlot==="number"&&curSlot>=0){cu
 
 /* ---------- מיפוי פרמטרים ---------- */
 const MAP={
-  cut:v=>80*Math.pow(2,v*6.3), res:v=>.7+v*v*24, env:v=>v*4.5, dec:v=>.03+v*v*.6,
-  drv:v=>1+v*v*30, sub:v=>v*.9, dly:v=>v*.6, fb:v=>v*.8, rev:v=>v*v*.7
+  cut:v=>80*Math.pow(2,v*6.3), env:v=>v*4.5, dec:v=>.03+v*v*.6,
+  sub:v=>v*.9, dly:v=>v*.6, fb:v=>v*.8, rev:v=>v*v*.7
 };
 const SHOW={cut:v=>Math.round(MAP.cut(v))+"", res:v=>Math.round(v*100)+"", env:v=>Math.round(v*100)+"", dec:v=>Math.round(MAP.dec(v)*1000)+"",
   drv:v=>Math.round(v*100)+"", sub:v=>Math.round(v*100)+"", dly:v=>Math.round(v*100)+"", fb:v=>Math.round(v*100)+"", rev:v=>Math.round(v*100)+""};
@@ -548,71 +548,18 @@ function makeIR(c){
   return buf;
 }
 let playing=false, nextTime=0, stepIdx=0, timer=0;
-let accStack=0, lastAccT=-9;
+let accSim=0, accSimT=-9; // מראה של מצבר ההדגשה שבליבה, לציור בלבד (אותה נוסחה)
 let rise=0, riseHeld=false, dropArmed=false, dirt=0, dirtHeld=false, gateOpen=false, lastPlayedDeg=0;
 const visQ=[]; let curStep=-1, kick=0;
 
-/* ---------- אופי מסנן: ארבעה סוגים, אותן ידיות ---------- */
-const VOWELS=[[300,870,2240],[460,840,2500],[730,1090,2440],[530,1840,2480],[280,2250,2900]]; // או, אוֹ, א, אֶ, אי
-function vowelAt(hz){ const v=clamp(Math.log2(Math.max(hz,1)/80)/6.3,0,1)*(VOWELS.length-1), i=Math.min(VOWELS.length-2,Math.floor(v)), f=v-i;
-  return VOWELS[i].map((x,k)=>lerp(x,VOWELS[i+1][k],f)) }
-function makeUnit(c,type){
-  const nyq=c.sampleRate/2, cl=v=>clamp(fin(v,800),40,nyq*.45), nodes=[];
-  const mk=(kind,ty)=>{ const n=kind==="b"?c.createBiquadFilter():kind==="d"?c.createDelay(.1):c.createGain(); if(ty)n.type=ty; nodes.push(n); return n };
-  const u={type,input:mk("g"),output:mk("g"),pitch:()=>{},release:()=>{}};
-  const glide=(n,t,base,peak,dec)=>{ n.frequency.setTargetAtTime(cl(peak),t,.0015); n.frequency.setTargetAtTime(cl(base),t+.006,dec) };
-  if(type==="hollow"){ // פס צר באמצע
-    const b=mk("b","bandpass"), lp=mk("b","lowpass"); lp.Q.value=0; b.frequency.value=800; lp.frequency.value=2400;
-    u.input.connect(b); b.connect(lp); lp.connect(u.output); u.output.gain.value=2.9;
-    u.env=(t,base,peak,dec)=>{ glide(b,t,base,peak,dec); glide(lp,t,base*3,peak*3,dec) };
-    u.q=(t,qdb)=>b.Q.setTargetAtTime(clamp(1+qdb*.6,.5,18),t,.02);
-  } else if(type==="talk"){ // שלושה פורמנטים של פה: נפתח מ״או״ ל״אי״
-    const gains=[1,.6,.32], bps=gains.map((g,k)=>{ const b=mk("b","bandpass"), gg=mk("g"); gg.gain.value=g; b.frequency.value=VOWELS[2][k]; u.input.connect(b); b.connect(gg); gg.connect(u.output); return b });
-    u.output.gain.value=3;
-    u.env=(t,base,peak,dec)=>{ const fb=vowelAt(base), fp=vowelAt(peak); bps.forEach((b,k)=>glide(b,t,fb[k],fp[k],dec)) };
-    u.q=(t,qdb)=>{ const q=clamp(4+qdb*.45,2,16); bps.forEach(b=>b.Q.setTargetAtTime(q,t,.02)) };
-  } else if(type==="metal"){ // מהדהד בגובה התו
-    const inG=mk("g"), sum=mk("g"), dl=mk("d"), damp=mk("b","lowpass"), fbG=mk("g");
-    inG.gain.value=.5; damp.Q.value=-3; damp.frequency.value=3000; fbG.gain.value=.6; dl.delayTime.value=.01;
-    u.input.connect(inG); inG.connect(sum); sum.connect(dl); dl.connect(damp); damp.connect(fbG); fbG.connect(sum); sum.connect(u.output);
-    u.output.gain.value=.75;
-    u.env=(t,base,peak,dec)=>glide(damp,t,base*1.5,peak*1.5,dec);
-    u.q=(t,qdb)=>fbG.gain.setTargetAtTime(clamp(.55+qdb/28*.35,0,.9),t,.02);
-    u.release=t=>fbG.gain.setTargetAtTime(.3,t,.05); // אחרי שהתו נגמר הצלצול דועך, לא נתקע
-    let kk=1;
-    u.pitch=(t,f,leg)=>{ const minD=256/c.sampleRate; f=clamp(fin(f,110),20,4000);
-      if(!leg||kk/f<minD) kk=Math.ceil(minD*f); const d=clamp(kk/f,minD,.09);
-      dl.delayTime.setTargetAtTime(d,t,leg?.035:.003) };
-  } else { // חם: המסנן המקורי
-    const f1=mk("b","lowpass"), f2=mk("b","lowpass"); f2.Q.value=0; f1.frequency.value=800; f2.frequency.value=1200;
-    u.input.connect(f1); f1.connect(f2); f2.connect(u.output);
-    u.env=(t,base,peak,dec)=>{ glide(f1,t,base,peak,dec); glide(f2,t,base*1.6,peak*1.6,dec) };
-    u.q=(t,qdb)=>f1.Q.setTargetAtTime(clamp(qdb,.5,28),t,.02);
-  }
-  u.dispose=()=>{ for(const n of nodes) try{n.disconnect()}catch(e){} };
-  return u;
-}
-// החלפת מסנן בלי קליק: משתיקים את הנתיב, מחליפים, ומחזירים
-function setUnit(slot,type){
-  if(!E) return; const key=slot==="A"?"uA":"uB", sw=slot==="A"?E.swA:E.swB, old=E[key];
-  if(old&&old.type===type){ if(E.pend[slot]){ E.pend[slot].dispose(); E.pend[slot]=null; sw.gain.cancelScheduledValues(ctx.currentTime); sw.gain.setTargetAtTime(1,ctx.currentTime,.012) } return }
-  const u=makeUnit(ctx,type), p=mixed(), base=clamp(MAP.cut(p.cut),40,E.nyq*.42), now=ctx.currentTime;
-  u.env(now,base,base,.02); u.q(now,clamp(MAP.res(p.res),.5,28)); u.pitch(now,E.lastF||110,false);
-  if(!old){ E.vca.connect(u.input); u.output.connect(sw); E[key]=u; return }
-  if(E.pend[slot]) E.pend[slot].dispose();
-  E.pend[slot]=u; sw.gain.cancelScheduledValues(now); sw.gain.setTargetAtTime(0,now,.008);
-  setTimeout(()=>{ if(E.pend[slot]!==u){ return } E.pend[slot]=null;
-    const prev=E[key]; E.vca.connect(u.input); u.output.connect(sw); try{E.vca.disconnect(prev.input)}catch(e){} prev.dispose(); E[key]=u;
-    sw.gain.setTargetAtTime(1,ctx.currentTime,.012) },60);
-}
-function syncUnits(){ if(!E) return;
-  if(E.wk){ const P=E.wk.parameters, now=ctx.currentTime; P.get("ftA").setValueAtTime(FTYPES.indexOf(S.worlds.deep.ft),now); P.get("ftB").setValueAtTime(FTYPES.indexOf(S.worlds.acid.ft),now); return }
-  for(const [slot,w] of [["A","deep"],["B","acid"]]){ const cur=E.pend[slot]||E[slot==="A"?"uA":"uB"]; if(!cur||cur.type!==S.worlds[w].ft) setUnit(slot,S.worlds[w].ft) } }
+/* ---------- אופי מסנן: הליבה מחליפה בעצמה (crossfade של 30ms) ---------- */
+function syncUnits(){ if(!E) return; const P=E.wk.parameters, now=ctx.currentTime;
+  P.get("ftA").setValueAtTime(FTYPES.indexOf(S.worlds.deep.ft),now); P.get("ftB").setValueAtTime(FTYPES.indexOf(S.worlds.acid.ft),now) }
 
 async function makeEngine(){
-  const c=ctx, nyq=c.sampleRate/2;
-  const e={nyq,wk:null};
-  const useWk=await loadWorklet(c);
+  const c=ctx;
+  if(!await loadWorklet(c)) throw new Error("noworklet");
+  const e={};
   e.oscA=c.createOscillator(); e.oscB=c.createOscillator(); e.sub=c.createOscillator(); e.sub.type="sine";
   e.gA=c.createGain(); e.gB=c.createGain();
   e.subLvl=c.createGain();
@@ -621,29 +568,15 @@ async function makeEngine(){
   e.shaper.curve=curve; e.shaper.oversample="4x";
   e.dc=c.createBiquadFilter(); e.dc.type="highpass"; e.dc.frequency.value=28; e.dc.Q.value=.5;
   e.bus=c.createGain(); e.bus.gain.value=.6;
-  e.accDrv=c.createGain(); e.accDrv.gain.value=1;
   e.oscA.connect(e.gA); e.oscB.connect(e.gB);
-  if(useWk){
-    // מסלול חדש: אוסילטורים -> ליבה (מסנן, מעטפות, הדגשה) -> עיוות -> באס. הסאב יוצא מהליבה בערוץ נפרד
-    try{
-      e.wk=new AudioWorkletNode(c,"acid-core",{numberOfInputs:2,numberOfOutputs:1,outputChannelCount:[2],channelCount:1,channelCountMode:"explicit",channelInterpretation:"discrete"});
-      e.mix=c.createGain(); e.gA.connect(e.mix); e.gB.connect(e.mix); e.mix.connect(e.wk,0,0); e.sub.connect(e.wk,0,1);
-      e.split=c.createChannelSplitter(2); e.wk.connect(e.split);
-      e.split.connect(e.pre,0); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc); e.dc.connect(e.bus);
-      e.split.connect(e.subLvl,1); e.subLvl.connect(e.bus);
-      e.wk.onprocessorerror=()=>{ toast("ליבת הצליל נפלה. טען את הדף מחדש") };
-    }catch(err){ e.wk=null }
-  }
-  if(!e.wk){
-    // מסלול ישן (דפדפן בלי AudioWorklet): מסננים מובנים
-    e.vca=c.createGain(); e.vca.gain.value=0;
-    e.subVca=c.createGain(); e.subVca.gain.value=0;
-    e.fsum=c.createGain(); e.swA=c.createGain(); e.swB=c.createGain(); e.gFA=c.createGain(); e.gFB=c.createGain(); e.pend={};
-    e.gA.connect(e.vca); e.gB.connect(e.vca);
-    e.swA.connect(e.gFA); e.swB.connect(e.gFB); e.gFA.connect(e.fsum); e.gFB.connect(e.fsum); e.fsum.connect(e.accDrv); e.accDrv.connect(e.pre); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc);
-    e.dc.connect(e.bus);
-    e.sub.connect(e.subVca); e.subVca.connect(e.subLvl); e.subLvl.connect(e.bus);
-  }
+  // אוסילטורים -> ליבה (מסנן, מעטפות, הדגשה) -> עיוות -> באס. הסאב יוצא מהליבה בערוץ נפרד
+  try{ e.wk=new AudioWorkletNode(c,"acid-core",{numberOfInputs:2,numberOfOutputs:1,outputChannelCount:[2],channelCount:1,channelCountMode:"explicit",channelInterpretation:"discrete"}) }
+  catch(err){ throw new Error("noworklet") }
+  e.mix=c.createGain(); e.gA.connect(e.mix); e.gB.connect(e.mix); e.mix.connect(e.wk,0,0); e.sub.connect(e.wk,0,1);
+  e.split=c.createChannelSplitter(2); e.wk.connect(e.split);
+  e.split.connect(e.pre,0); e.pre.connect(e.shaper); e.shaper.connect(e.post); e.post.connect(e.dc); e.dc.connect(e.bus);
+  e.split.connect(e.subLvl,1); e.subLvl.connect(e.bus);
+  e.wk.onprocessorerror=()=>{ toast("ליבת הצליל נפלה. טען את הדף מחדש") };
   // הד פינג-פונג: שמאל, ימין, שמאל, עם מעט נדנוד גובה כמו הד אנלוגי. הבס עצמו נשאר במרכז
   e.dlIn=c.createGain(); e.dl=c.createDelay(2); e.dlR=c.createDelay(2); e.fbG=c.createGain(); e.fbG2=c.createGain();
   const tone=()=>{const f=c.createBiquadFilter(); f.type="lowpass"; f.frequency.value=2600; f.Q.value=-3; return f};
@@ -667,18 +600,12 @@ async function makeEngine(){
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
   e.bus.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
   const f=degHz(0); e.oscA.frequency.value=f; e.oscB.frequency.value=f; e.sub.frequency.value=subHz(f);
-  e.lastF=f;
   e.oscA.start(); e.oscB.start(); e.sub.start();
   E=e; syncUnits(); updateWave("deep"); updateWave("acid"); applyContinuous(true);
 }
-/* סגירת השער ועצירה, בשני המסלולים */
-function gateOff(t){ if(!E) return;
-  if(E.wk){ E.wk.port.postMessage({type:"off",t}); return }
-  E.vca.gain.setTargetAtTime(0,t,.012); E.subVca.gain.setTargetAtTime(0,t,.02); for(const u of [E.uA,E.uB]) if(u) u.release(t) }
-function killAll(){ if(!E) return; const t=ctx.currentTime;
-  if(E.wk){ E.wk.port.postMessage({type:"kill"}); return }
-  E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
-  E.vca.gain.setTargetAtTime(0,t,.02); E.subVca.gain.setTargetAtTime(0,t,.03); for(const u of [E.uA,E.uB]) if(u) u.release(t) }
+/* סגירת השער (מתעלמת אם התו כבר הוחלף) ועצירה מיידית */
+function gateOff(t){ if(E) E.wk.port.postMessage({type:"off",t}) }
+function killAll(){ if(E) E.wk.port.postMessage({type:"kill"}) }
 
 function waveFrom(arr){
   const H=40, re=new Float32Array(H+1), im=new Float32Array(H+1); let energy=0;
@@ -697,23 +624,16 @@ function updateWave(world){
 const lastP=new WeakMap();
 function setP(param,v,tau){ if(!isFinite(v)) return; const o=lastP.get(param); if(o!==undefined&&Math.abs(o-v)<=Math.abs(v)*.002+1e-5) return; lastP.set(param,v); param.setTargetAtTime(v,ctx.currentTime,tau||.04) }
 function applyContinuous(now){
-  if(!E) return; const p=mixed(), tau=now?.005:.05, m=S.morph;
+  if(!E) return; const p=mixed(), tau=now?.005:.05, m=S.morph, P=E.wk.parameters;
   setP(E.gA.gain,Math.cos(m*Math.PI/2),tau); setP(E.gB.gain,Math.sin(m*Math.PI/2),tau);
-  if(E.wk){
-    const P=E.wk.parameters;
-    setP(P.get("cut"),clamp(MAP.cut(p.cut)*Math.pow(2,rise*2.6),20,12000),tau);
-    setP(P.get("res"),clamp(p.res+rise*.25+dirt*.12,0,1),tau);
-    setP(P.get("env"),MAP.env(p.env),tau);
-    setP(P.get("dec"),MAP.dec(p.dec),tau);
-    setP(P.get("sat"),clamp(p.drv*.9+dirt*.65+rise*.2,0,1.5),tau); // רוויה בתוך המסנן
-    setP(P.get("morph"),m,tau);
-    const d2=1+Math.pow(clamp(p.drv*.55+dirt*.45+rise*.1,0,1),2)*9; // עיוות אחרי המסנן, עדין יותר מבעבר
-    setP(E.pre.gain,d2*.5,tau); setP(E.post.gain,1/Math.sqrt(d2*.5+.5),tau);
-  } else {
-    setP(E.gFA.gain,1-m,tau); setP(E.gFB.gain,m,tau);
-    const drive=MAP.drv(clamp(p.drv+dirt*.55+rise*.15,0,1));
-    setP(E.pre.gain,drive*.5,tau); setP(E.post.gain,1/Math.sqrt(drive*.5+.5),tau);
-  }
+  setP(P.get("cut"),clamp(MAP.cut(p.cut)*Math.pow(2,rise*2.6),20,12000),tau);
+  setP(P.get("res"),clamp(p.res+rise*.25+dirt*.12,0,1),tau);
+  setP(P.get("env"),MAP.env(p.env),tau);
+  setP(P.get("dec"),MAP.dec(p.dec),tau);
+  setP(P.get("sat"),clamp(p.drv*.9+dirt*.65+rise*.2,0,1.5),tau); // רוויה בתוך המסנן
+  setP(P.get("morph"),m,tau);
+  const d2=1+Math.pow(clamp(p.drv*.55+dirt*.45+rise*.1,0,1),2)*9; // עיוות אחרי המסנן
+  setP(E.pre.gain,d2*.5,tau); setP(E.post.gain,1/Math.sqrt(d2*.5+.5),tau);
   setP(E.subLvl.gain,MAP.sub(p.sub),tau);
   const stepDur=60/S.bpm/4, dt=clamp(stepDur*3,.05,1.9);
   setP(E.dl.delayTime,dt,.2); setP(E.dlR.delayTime,dt,.2);
@@ -727,34 +647,12 @@ function subHz(f){return f/2>=30?f/2:f}
 function hash(i,salt){const x=Math.sin(i*127.1+salt*311.7)*43758.5453;return x-Math.floor(x)}
 
 function playNote(t,deg,acc,legato,slideOut,stepDur){
-  const p=mixed(); const f=clamp(degHz(deg),20,4000), fsub=subHz(f); const fr=E.oscA.frequency, fb2=E.oscB.frequency, fs=E.sub.frequency;
+  const f=clamp(degHz(deg),20,4000), fsub=subHz(f); const fr=E.oscA.frequency, fb2=E.oscB.frequency, fs=E.sub.frequency;
   if(legato){ fr.setTargetAtTime(f,t,.05); fb2.setTargetAtTime(f,t,.05); fs.setTargetAtTime(fsub,t,.05) }
   else { fr.setValueAtTime(f,t); fb2.setValueAtTime(f,t); fs.setValueAtTime(fsub,t) }
-  E.lastF=f;
-  if(E.wk){ const id=++noteSeq; E.wk.port.postMessage({type:"note",t,id,f,acc:!!acc,leg:!!legato});
-    if(!slideOut){ E.wk.port.postMessage({type:"off",t:t+stepDur*.55,id}); gateOpen=false } else gateOpen=true;
-    return }
-  // הדגשה: בעיטת מסנן של אוקטבה ומעלה, הנערמת כשהדגשות צמודות, ותוספת לכלוך לאותו תו
-  if(acc){ accStack=(t-lastAccT<=stepDur*2.05)?Math.min(accStack+.55,1.8):0; lastAccT=t } 
-  const kickOct=acc?1+accStack:0;
-  const lvl=acc?.78:.5, subL=acc?.95:.8;
-  const riseMul=Math.pow(2,rise*2.6);
-  const base=clamp(MAP.cut(p.cut)*riseMul*(acc?Math.pow(2,accStack*.5):1),40,E.nyq*.42);
-  const q=clamp(MAP.res(clamp(p.res+rise*.25,0,1))+(acc?3+accStack*2:0),.5,28);
-  E.lastF=f; for(const u of [E.uA,E.uB]) if(u){ u.q(t,q); u.pitch(t,f,legato) }
-  if(legato){
-    E.vca.gain.setTargetAtTime(lvl,t,.01); E.subVca.gain.setTargetAtTime(subL,t,.01);
-  } else {
-    E.vca.gain.cancelScheduledValues(t); E.subVca.gain.cancelScheduledValues(t);
-    E.vca.gain.setTargetAtTime(lvl,t,.0025); E.subVca.gain.setTargetAtTime(subL,t,.004);
-    const peak=clamp(base*Math.pow(2,MAP.env(p.env)+kickOct),40,Math.min(16000,E.nyq*.45));
-    const ad=E.accDrv.gain; ad.cancelScheduledValues(t);
-    if(acc){ ad.setTargetAtTime(1.9+accStack*.4,t,.002); ad.setTargetAtTime(1,t+stepDur*.6,.04) } else ad.setTargetAtTime(1,t,.01);
-    const dec=MAP.dec(p.dec)*(acc?.7:1);
-    for(const u of [E.uA,E.uB]) if(u) u.env(t,base,peak,dec);
-  }
-  if(!slideOut){ const r=t+stepDur*.55; E.vca.gain.setTargetAtTime(0,r,.012); E.subVca.gain.setTargetAtTime(0,r,.02); for(const u of [E.uA,E.uB]) if(u) u.release(r); gateOpen=false }
-  else gateOpen=true;
+  const id=++noteSeq; E.wk.port.postMessage({type:"note",t,id,f,acc:!!acc,leg:!!legato});
+  if(acc&&!legato){ accSim=Math.min(1.6,accSim*Math.exp(-(t-accSimT)/.45)+.55); accSimT=t } // משקף את this.acc בליבה: +0.55 לכל הדגשה, דעיכה של 0.45 שניות
+  if(!slideOut){ E.wk.port.postMessage({type:"off",t:t+stepDur*.55,id}); gateOpen=false } else gateOpen=true;
 }
 
 function scheduleStep(i,t,gap){
@@ -765,7 +663,7 @@ function scheduleStep(i,t,gap){
   const legato=gateOpen&&on&&!isDrop;
   if(gateOpen&&!on){ gateOff(t); gateOpen=false }
   if(on){ playNote(t,deg,acc,legato,sl,stepDur); lastPlayedDeg=deg }
-  if(!document.hidden){ visQ.push({i,t,on,acc,st:acc?accStack:0}); if(visQ.length>64) visQ.splice(0,visQ.length-32) }
+  if(!document.hidden){ visQ.push({i,t,on,acc,st:acc?accSim*Math.exp(-(t-accSimT)/.45):0}); if(visQ.length>64) visQ.splice(0,visQ.length-32) }
 }
 
 function tick(){
@@ -791,7 +689,7 @@ async function ensureAudio(){
     try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}
     ctx.onstatechange=()=>{ if(ctx.state!=="running"&&playing) toast("הצליל נעצר. גע במסך כדי להמשיך") };
   }
-  if(!E){ if(!engP) engP=makeEngine().catch(e=>{ engP=null; console.error("engine",e); throw e }); try{ await engP }catch(e){ toast("לא הצלחתי לבנות את מנוע הצליל"); return false } }
+  if(!E){ if(!engP) engP=makeEngine().catch(e=>{ engP=null; console.error("engine",e); throw e }); try{ await engP }catch(e){ toast(e&&e.message==="noworklet"?"הדפדפן הזה ישן מדי לליבת הצליל. עדכן את המכשיר":"לא הצלחתי לבנות את מנוע הצליל"); return false } }
   if(ctx.state!=="running"){ try{await ctx.resume()}catch(e){} }
   return ctx.state==="running";
 }
@@ -804,7 +702,7 @@ async function setWake(on){ try{ if(on&&navigator.wakeLock&&!wake){wake=await na
 async function togglePlay(){
   if(!await ensureAudio()){ toast("לא הצלחתי להפעיל צליל. גע שוב"); return }
   playing=!playing;
-  if(playing){ accStack=0; lastAccT=-9; stepIdx=0; nextTime=ctx.currentTime+.06; gateOpen=false; visQ.length=0; clearInterval(timer); timer=setInterval(tick,25); tick() }
+  if(playing){ accSim=0; accSimT=-9; stepIdx=0; nextTime=ctx.currentTime+.06; gateOpen=false; visQ.length=0; clearInterval(timer); timer=setInterval(tick,25); tick() }
   else { clearInterval(timer); visQ.length=0; curStep=-1; killAll(); gateOpen=false;
     riseHeld=false; dropArmed=false; rise=0; riseUI(); applyContinuous() }
   setWake(playing||!!recr); $("#play").classList.toggle("on",playing); $("#play").textContent=playing?"■ עצור":"▶ נגן";
@@ -1288,8 +1186,15 @@ addEventListener("resize",onResize); addEventListener("orientationchange",onResi
 readColors(); topUI(); worldUI(); morphUI(); riseUI(); slotsUI(); recUI(); sizeRing(); sizeWave();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{sizeRing();sizeWave()}).catch(()=>{});
 requestAnimationFrame(frame);
+
+/* ---------- אופליין ועדכונים ---------- */
+// sw.js מגיש מהמטמון ומעדכן ברקע. כשהוא מזהה index.html חדש הוא שולח הודעה, ואנחנו מציעים לטעון מחדש
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.addEventListener("message",e=>{ if(e.data&&e.data.type==="update") toast("יש גרסה חדשה של הכלי","טען מחדש",()=>location.reload()) });
+  addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
 })();
 </script>
-<script>if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
 </body>
 </html>
+
