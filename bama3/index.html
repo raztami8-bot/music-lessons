@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b0b0f">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="במה 3">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<title>במה 3 · בונים שיר ומנגנים אותו</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app" data-tab="clips" data-mode="play">
+<header class="top">
+  <h1>במה 3</h1>
+  <button class="btn play" id="play" type="button" aria-pressed="false" aria-label="נגן">▶</button>
+  <button class="btn songmode" id="songMode" type="button" aria-pressed="true"><span id="songModeL">שיר ⇠</span></button>
+  <div class="grp"><button class="btn sq" id="bpmDown" type="button" aria-label="האט">−</button><span class="num" id="bpmVal" dir="ltr">134</span><button class="btn sq" id="bpmUp" type="button" aria-label="האץ">+</button></div>
+  <select class="btn sel" id="key" aria-label="סולם"></select>
+  <button class="btn more" id="moreBtn" type="button" aria-label="עוד">☰</button>
+</header>
+<div class="status" id="status" aria-live="polite">
+  <span class="now"><b class="lbl">מנגן עכשיו</b> <span id="nowName">פתיחה</span> <span class="bars" id="nowBars"></span></span>
+  <span class="next"><b class="lbl">הבא</b> <span id="nextName">בנייה</span></span>
+</div>
+<section class="song" id="songWrap">
+  <div class="strip" id="strip"></div>
+  <button class="btn add" id="addSec" type="button" aria-label="הוסף קטע">＋<span class="lg"> קטע</span></button>
+</section>
+<section class="lanes" dir="ltr" aria-hidden="true"><div class="lane" id="laneB"></div><div class="lane" id="laneD"></div></section>
+<nav class="modes" id="modes">
+  <div class="seg" role="group" aria-label="מצב"><button class="btn" data-mode="play" type="button" aria-pressed="true">▶ נגינה</button><button class="btn" data-mode="edit" type="button" aria-pressed="false">✎ עריכה</button></div>
+  <div class="seg tabs" id="tabs"><button class="btn" data-t="clips" type="button" aria-pressed="true">קליפים</button><button class="btn" data-t="fx" type="button" aria-pressed="false">אפקטים</button></div>
+</nav>
+<main class="panels">
+  <section class="panel clips">
+    <p class="hint" id="hint"></p>
+    <div class="grid" id="grid">
+      <span class="rl">בס <bdi class="en">BASS</bdi></span><div class="row" dir="ltr"><button class="btn clip" data-p="b" data-i="0">A</button><button class="btn clip" data-p="b" data-i="1">B</button><button class="btn clip" data-p="b" data-i="2">C</button><button class="btn clip" data-p="b" data-i="3">D</button></div>
+      <span class="rl">תופים <bdi class="en">DRUMS</bdi></span><div class="row" dir="ltr"><button class="btn clip" data-p="d" data-i="0">A</button><button class="btn clip" data-p="d" data-i="1">B</button><button class="btn clip" data-p="d" data-i="2">C</button><button class="btn clip" data-p="d" data-i="3">D</button></div>
+    </div>
+    <div class="mutes" id="mutes">
+      <button class="btn mute" data-m="kick">בעיטה <bdi class="en">KICK</bdi></button><button class="btn mute" data-m="clap">מחיאה <bdi class="en">CLAP</bdi></button><button class="btn mute" data-m="hats">מצילות <bdi class="en">HATS</bdi></button><button class="btn mute" data-m="bass">בס <bdi class="en">BASS</bdi></button>
+    </div>
+    <div class="bd"><button class="btn build" id="build" type="button" aria-pressed="false">בנייה <bdi class="en">BUILD ↗</bdi></button><button class="btn drop" id="drop" type="button">נפילה <bdi class="en">DROP ⤓</bdi></button></div>
+  </section>
+  <section class="panel fx">
+    <div class="xy" id="xy" dir="ltr"><span class="ax ax-x">LP ← FILTER → HP</span><span class="ax ax-y">DELAY + REVERB ↑</span><i id="dot"></i></div>
+    <div class="holds" dir="ltr"><button class="btn hold" id="stut"><span>גמגום</span><bdi class="en">STUTTER</bdi></button><button class="btn hold" id="throw"><span>הד</span><bdi class="en">THROW</bdi></button><button class="btn hold" id="wash"><span>שטיפה</span><bdi class="en">WASH</bdi></button><button class="btn hold" id="tape"><span>עצירה</span><bdi class="en">TAPE STOP</bdi></button></div>
+    <div class="knobs">
+      <label><span class="kl"><span>אנרגיה</span> <bdi class="en">ENERGY</bdi></span><input type="range" id="energy" min="0" max="100" value="55"></label>
+      <label><span class="kl"><span>פתיחת פילטר</span> <bdi class="en">CUTOFF</bdi></span><input type="range" id="cutoff" min="0" max="100" value="45"></label>
+      <label><span class="kl"><span>תהודה</span> <bdi class="en">RESONANCE</bdi></span><input type="range" id="res" min="0" max="100" value="60"></label>
+      <label><span class="kl"><span>עיוות</span> <bdi class="en">DRIVE</bdi></span><input type="range" id="drive" min="0" max="100" value="25"></label>
+      <label><span class="kl"><span>עוצמה</span> <bdi class="en">VOLUME</bdi></span><input type="range" id="vol" min="0" max="100" value="80"></label>
+      <label><span class="kl"><span>בס עבה</span> <bdi class="en">FAT</bdi></span><button class="btn" id="fat" type="button" aria-pressed="false">OFF</button></label>
+    </div>
+  </section>
+</main>
+
+<!-- sheets -->
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" id="sheet" hidden role="dialog" aria-modal="true">
+  <header class="sh-top">
+    <h2 id="shTitle">עריכה</h2>
+    <button class="btn play sm" id="shPlay" type="button" aria-label="נגן">▶</button>
+    <button class="btn" id="shClose" type="button">סיום ✓</button>
+  </header>
+  <div class="sh-body" id="shBody"></div>
+</section>
+
+<div class="onb" id="onb" hidden>
+  <div class="card" id="onbCard"></div>
+  <div class="onb-nav"><button class="btn" id="onbSkip" type="button">דלג</button><span class="dots" id="onbDots"></span><button class="btn pri" id="onbNext" type="button">הבא</button></div>
+</div>
+<div class="toast" id="toast"></div>
+</div>
+<script src="sync.js"></script>
+<script src="bass.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
