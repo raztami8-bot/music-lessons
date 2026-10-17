@@ -283,9 +283,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="knob"><label for="vol">עוצמה <output id="volOut"></output></label><input type="range" id="vol" min="0" max="100" step="1"></div>
         <div class="knob"><label for="swing">סווינג <output id="swingOut"></output></label><input type="range" id="swing" min="0" max="100" step="1"></div>
         <div class="knob"><label for="accent">הדגשה <output id="accentOut"></output></label><input type="range" id="accent" min="0" max="100" step="1"></div>
-        <div class="knob"><label for="gate">שער <output id="gateOut"></output></label><input type="range" id="gate" min="30" max="95" step="1"></div>
+        <div class="knob"><label for="gateLen">שער <output id="gateLenOut"></output></label><input type="range" id="gateLen" min="30" max="95" step="1"></div>
         <button class="btn" id="reset" type="button">איפוס</button>
-        <span class="ver" title="גרסה">v11</span>
+        <span class="ver" title="גרסה">v12</span>
       </div>
     </aside>
   </div>
@@ -1052,7 +1052,7 @@ $("#voiceFile").addEventListener("change",async e=>{
 /* ---------- שורה עליונה ---------- */
 NOTES.forEach((n,i)=>{const o=document.createElement("option");o.value=i;o.textContent=n;$("#root").appendChild(o)});
 function topUI(){$("#bpmVal").textContent=S.bpm;$("#octVal").textContent=(S.oct>0?"+":"")+S.oct;$("#root").value=S.root;$("#scale").value=S.scale;
-  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100);$("#accent").value=Math.round(S.accent*100);$("#accentOut").textContent=Math.round(S.accent*100);$("#gate").value=Math.round(S.gate*100);$("#gateOut").textContent=Math.round(S.gate*100)}
+  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100);$("#accent").value=Math.round(S.accent*100);$("#accentOut").textContent=Math.round(S.accent*100);$("#gateLen").value=Math.round(S.gate*100);$("#gateLenOut").textContent=Math.round(S.gate*100)}
 function setBpm(v){S.bpm=clamp(Math.round(v),60,200);topUI();applyContinuous();save()}
 function repeatBtn(el,fn){let holdT=0;const stop=()=>{clearTimeout(holdT);clearInterval(holdT)};
   el.addEventListener("pointerdown",e=>{e.preventDefault();fn();stop();holdT=setTimeout(()=>{holdT=setInterval(fn,70)},380)});
@@ -1068,7 +1068,7 @@ $("#scale").addEventListener("change",e=>{S.scale=SCALES[e.target.value]?e.targe
 $("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#volOut").textContent=Math.round(S.vol);applyContinuous();save(true)});
 $("#swing").addEventListener("input",e=>{S.swing=clamp(+e.target.value/100,0,1);$("#swingOut").textContent=Math.round(S.swing*100);save()});
 $("#accent").addEventListener("input",e=>{S.accent=clamp(+e.target.value/100,0,1);$("#accentOut").textContent=Math.round(S.accent*100);applyContinuous();save()});
-$("#gate").addEventListener("input",e=>{S.gate=clamp(+e.target.value/100,.3,.95);$("#gateOut").textContent=Math.round(S.gate*100);save()});
+$("#gateLen").addEventListener("input",e=>{S.gate=clamp(+e.target.value/100,.3,.95);$("#gateLenOut").textContent=Math.round(S.gate*100);save()}); // gateLen ולא gate: #gate הוא מסך הפתיחה
 $("#play").addEventListener("click",togglePlay);
 let resetArm=0;
 $("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
