@@ -98,6 +98,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 #wave{width:100%;height:96px;border-radius:10px;background:var(--ink);border:1px solid var(--line);touch-action:none;display:block}
 .presets{display:flex;gap:4px;flex-wrap:wrap}
 .presets .btn{min-height:34px;font-size:14px;flex:1}
+#ftypes .btn{padding:0 6px;min-width:0;flex:1 1 0;white-space:nowrap}
 .voicerow .btn{border-style:dashed}
 .ftrow{display:flex;flex-direction:column;gap:4px}
 #ftypes .btn.on{background:var(--accent,var(--deep));border-color:var(--accent,var(--deep));color:var(--ink)}
@@ -282,8 +283,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="knob"><label for="vol">עוצמה <output id="volOut"></output></label><input type="range" id="vol" min="0" max="100" step="1"></div>
         <div class="knob"><label for="swing">סווינג <output id="swingOut"></output></label><input type="range" id="swing" min="0" max="100" step="1"></div>
         <div class="knob"><label for="accent">הדגשה <output id="accentOut"></output></label><input type="range" id="accent" min="0" max="100" step="1"></div>
+        <div class="knob"><label for="gate">שער <output id="gateOut"></output></label><input type="range" id="gate" min="30" max="95" step="1"></div>
         <button class="btn" id="reset" type="button">איפוס</button>
-        <span class="ver" title="גרסה">v10</span>
+        <span class="ver" title="גרסה">v11</span>
       </div>
     </aside>
   </div>
@@ -352,13 +354,13 @@ function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב 
   const on=[1,0,1,1,0,1,1,0,1,0,1,1,0,1,0,1], deg=[0,0,7,0,0,3,0,0,0,0,10,7,0,5,0,12];
   return on.map((v,i)=>({on:!!v,deg:v?deg[i]:0,acc:[0,6,11].includes(i),sl:[2,10].includes(i)}));
 }
-function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,accent:.7,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
+function defaults(){return{bpm:128,root:9,scale:"minor",oct:0,swing:0,accent:.7,gate:.55,morph:.25,vol:80,edit:"deep",steps:demoSteps(),
   worlds:JSON.parse(JSON.stringify(DEF_WORLDS))}}
 function sanitize(o){
   const d=defaults(); if(!o||typeof o!=="object") return d;
   const s={bpm:clamp(Math.round(fin(o.bpm,128)),60,200),root:clamp(Math.round(fin(o.root,9)),0,11),
     scale:["minor","phryg","dorian"].includes(o.scale)?o.scale:"minor",oct:clamp(Math.round(fin(o.oct,0)),-2,2),
-    swing:clamp(fin(o.swing,0),0,1),accent:clamp(fin(o.accent,.7),0,1),morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
+    swing:clamp(fin(o.swing,0),0,1),accent:clamp(fin(o.accent,.7),0,1),gate:clamp(fin(o.gate,.55),.3,.95),morph:clamp(fin(o.morph,.25),0,1),vol:clamp(fin(o.vol,80),0,100),edit:o.edit==="acid"?"acid":"deep",steps:[],worlds:{}};
   for(let i=0;i<STEPS;i++){const q=(Array.isArray(o.steps)&&o.steps[i])||d.steps[i];
     const on=!!q.on; s.steps.push({on,deg:clamp(Math.round(fin(q.deg,0)),0,DEGS-1),acc:on&&!!q.acc,sl:on&&!!q.sl})}
   for(const k of ["deep","acid"]){const src=(o.worlds&&o.worlds[k])||{}; const w={};
@@ -518,6 +520,7 @@ class AcidCore extends AudioWorkletProcessor{
     this.sv=0; this.svT=0; this.sAtk=1-Math.exp(-1/(.005*fs)); this.sRel=1-Math.exp(-1/(.025*fs)); this.sc=this.sRel;
     this.fenv=0; this.fdec=1; this.acc=0; this.accDec=Math.exp(-1/(.45*fs)); this.accAmt=0; this.ak=.7;
     this.up=new Up2(); this.dn=new Down2(); this.sd=new Float32Array(32); this.sp=0; // הסאב מושהה ב-24 דגימות כמו הבס
+    this.drift=0; this.driftT=0; this.driftN=0; // סחיפה איטית של ה-cutoff, יעד אקראי חדש כל ~1.5 שניות
     this.port.onmessage=e=>{ const m=e.data; if(m&&m.type==="kill"){ this.q.length=0; this.gate=false; this.vcaT=0; this.svT=0; this.vc=this.vRel; this.sc=this.sRel; this.A.release(); if(this.B) this.B.release(); return } if(m&&typeof m.t==="number") this.q.push(m) };
   }
   unit(slot,type){ const cur=slot==="A"?this.A:this.B; if(cur&&cur.type===type) return;
@@ -537,7 +540,8 @@ class AcidCore extends AudioWorkletProcessor{
   process(inputs,outputs,P){
     const inO=inputs[0][0], inS=inputs[1]&&inputs[1][0], out=outputs[0], o0=out[0], o1=out[1]||o0; const n=o0.length;
     const fs=this.fs, t0=currentTime;
-    const cut=P.cut[0], res=P.res[0], env=P.env[0], dec=P.dec[0], sat=P.sat[0], morph=P.morph[0], ak=P.accent[0], ftA=Math.round(P.ftA[0]), ftB=Math.round(P.ftB[0]);
+    if(--this.driftN<=0){ this.driftN=Math.round(fs*(1+Math.random())/n); this.driftT=(Math.random()*2-1)*.045 } this.drift+=(this.driftT-this.drift)*.004;
+    const cut=P.cut[0]*(1+this.drift), res=P.res[0], env=P.env[0], dec=P.dec[0], sat=P.sat[0], morph=P.morph[0], ak=P.accent[0], ftA=Math.round(P.ftA[0]), ftB=Math.round(P.ftB[0]);
     if(ftA!==this.ftA){ this.ftA=ftA; this.unit("A",ftA) }
     if(ftB!==this.ftB){ this.ftB=ftB; this.unit("B",ftB) }
     if(this.B&&this.xB>=1&&!this.Bold&&this.B.type===this.A.type) this.B=null; // שני אופיים זהים: מסנן אחד מספיק
@@ -622,8 +626,11 @@ async function makeEngine(){
   const tone=()=>{const f=c.createBiquadFilter(); f.type="lowpass"; f.frequency.value=2600; f.Q.value=-3; return f};
   const hp=()=>{const f=c.createBiquadFilter(); f.type="highpass"; f.frequency.value=170; f.Q.value=0; return f};
   e.dlTone=tone(); e.dlToneR=tone(); e.dlHp=hp(); e.dlHpR=hp(); e.merge=c.createChannelMerger(2); e.wet=c.createGain();
-  e.dc.connect(e.dlIn); e.dlIn.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.dlHp); e.dlHp.connect(e.fbG); e.fbG.connect(e.dlR);
-  e.dlR.connect(e.dlToneR); e.dlToneR.connect(e.dlHpR); e.dlHpR.connect(e.fbG2); e.fbG2.connect(e.dl);
+  // דאב: רוויה רכה בלולאת החזרות, כל חזרה מתחממת ומתעגלת מעט יותר מהקודמת
+  const warm=()=>{ const s=c.createWaveShaper(); const cv=new Float32Array(1024); for(let i=0;i<1024;i++){ const x=(i/511.5-1)*1.6; cv[i]=Math.tanh(x)/1.6*1.15 } s.curve=cv; s.oversample="2x"; return s };
+  e.fbSat=warm(); e.fbSatR=warm();
+  e.dc.connect(e.dlIn); e.dlIn.connect(e.dl); e.dl.connect(e.dlTone); e.dlTone.connect(e.dlHp); e.dlHp.connect(e.fbG); e.fbG.connect(e.fbSat); e.fbSat.connect(e.dlR);
+  e.dlR.connect(e.dlToneR); e.dlToneR.connect(e.dlHpR); e.dlHpR.connect(e.fbG2); e.fbG2.connect(e.fbSatR); e.fbSatR.connect(e.dl);
   e.dlHp.connect(e.merge,0,0); e.dlHpR.connect(e.merge,0,1); e.merge.connect(e.wet); e.wet.connect(e.bus);
   e.lfo=c.createOscillator(); e.lfo.type="sine"; e.lfo.frequency.value=.23; e.lfoG=c.createGain(); e.lfoG.gain.value=.0011; e.lfoG2=c.createGain(); e.lfoG2.gain.value=-.0009;
   e.lfo.connect(e.lfoG); e.lfoG.connect(e.dl.delayTime); e.lfo.connect(e.lfoG2); e.lfoG2.connect(e.dlR.delayTime); e.lfo.start();
@@ -640,6 +647,13 @@ async function makeEngine(){
   e.clipIn=c.createGain(); e.clipIn.gain.value=1/1.5;
   e.bus.connect(e.comp); e.comp.connect(e.master); e.master.connect(e.clipIn); e.clipIn.connect(e.clip); e.clip.connect(c.destination);
   const f=degHz(0); e.oscA.frequency.value=f; e.oscB.frequency.value=f; e.sub.frequency.value=subHz(f);
+  // סחיפה אנלוגית: שני LFO איטיים בקצבים לא-מתחלקים על ה-detune, כמה סנטים, בכיוונים שונים לכל אוסילטור
+  e.drA=c.createOscillator(); e.drA.frequency.value=.071; e.drB=c.createOscillator(); e.drB.frequency.value=.113;
+  const dg=(lfo,cents,param)=>{ const g=c.createGain(); g.gain.value=cents; lfo.connect(g); g.connect(param) };
+  dg(e.drA,3.5,e.oscA.detune); dg(e.drB,-2.5,e.oscA.detune);
+  dg(e.drA,-2.8,e.oscB.detune); dg(e.drB,3.2,e.oscB.detune);
+  dg(e.drB,1.5,e.sub.detune);
+  e.drA.start(); e.drB.start();
   e.oscA.start(); e.oscB.start(); e.sub.start();
   E=e; syncUnits(); updateWave("deep"); updateWave("acid"); applyContinuous(true);
 }
@@ -693,7 +707,7 @@ function playNote(t,deg,acc,legato,slideOut,stepDur){
   else { fr.setValueAtTime(f,t); fb2.setValueAtTime(f,t); fs.setValueAtTime(fsub,t) }
   const id=++noteSeq; E.wk.port.postMessage({type:"note",t,id,f,acc:!!acc,leg:!!legato});
   if(acc&&!legato){ accSim=Math.min(1.6,accSim*Math.exp(-(t-accSimT)/.45)+.55); accSimT=t } // משקף את this.acc בליבה: +0.55 לכל הדגשה, דעיכה של 0.45 שניות
-  if(!slideOut){ E.wk.port.postMessage({type:"off",t:t+stepDur*.55,id}); gateOpen=false } else gateOpen=true;
+  if(!slideOut){ E.wk.port.postMessage({type:"off",t:t+stepDur*S.gate,id}); gateOpen=false } else gateOpen=true; // "שער": אורך התו כחלק מהצעד
 }
 
 function scheduleStep(i,t,gap){
@@ -1038,7 +1052,7 @@ $("#voiceFile").addEventListener("change",async e=>{
 /* ---------- שורה עליונה ---------- */
 NOTES.forEach((n,i)=>{const o=document.createElement("option");o.value=i;o.textContent=n;$("#root").appendChild(o)});
 function topUI(){$("#bpmVal").textContent=S.bpm;$("#octVal").textContent=(S.oct>0?"+":"")+S.oct;$("#root").value=S.root;$("#scale").value=S.scale;
-  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100);$("#accent").value=Math.round(S.accent*100);$("#accentOut").textContent=Math.round(S.accent*100)}
+  $("#vol").value=S.vol;$("#volOut").textContent=Math.round(S.vol);$("#swing").value=Math.round(S.swing*100);$("#swingOut").textContent=Math.round(S.swing*100);$("#accent").value=Math.round(S.accent*100);$("#accentOut").textContent=Math.round(S.accent*100);$("#gate").value=Math.round(S.gate*100);$("#gateOut").textContent=Math.round(S.gate*100)}
 function setBpm(v){S.bpm=clamp(Math.round(v),60,200);topUI();applyContinuous();save()}
 function repeatBtn(el,fn){let holdT=0;const stop=()=>{clearTimeout(holdT);clearInterval(holdT)};
   el.addEventListener("pointerdown",e=>{e.preventDefault();fn();stop();holdT=setTimeout(()=>{holdT=setInterval(fn,70)},380)});
@@ -1054,6 +1068,7 @@ $("#scale").addEventListener("change",e=>{S.scale=SCALES[e.target.value]?e.targe
 $("#vol").addEventListener("input",e=>{S.vol=clamp(+e.target.value,0,100);$("#volOut").textContent=Math.round(S.vol);applyContinuous();save(true)});
 $("#swing").addEventListener("input",e=>{S.swing=clamp(+e.target.value/100,0,1);$("#swingOut").textContent=Math.round(S.swing*100);save()});
 $("#accent").addEventListener("input",e=>{S.accent=clamp(+e.target.value/100,0,1);$("#accentOut").textContent=Math.round(S.accent*100);applyContinuous();save()});
+$("#gate").addEventListener("input",e=>{S.gate=clamp(+e.target.value/100,.3,.95);$("#gateOut").textContent=Math.round(S.gate*100);save()});
 $("#play").addEventListener("click",togglePlay);
 let resetArm=0;
 $("#reset").addEventListener("click",()=>{const now=Date.now();if(now-resetArm>2500){resetArm=now;toast("גע שוב ב״איפוס״ כדי לחזור להגדרות ההתחלה");return}
@@ -1065,7 +1080,7 @@ const SKEY="acid-ring-slots-v1";
 let slots=[null,null,null,null], curSlot=-1;
 try{const a=JSON.parse(localStorage.getItem(SKEY));if(Array.isArray(a))slots=[0,1,2,3].map(i=>(a[i]&&typeof a[i]==="object")?sanitize(a[i]):null)}catch(e){}
 function saveSlots(){try{localStorage.setItem(SKEY,JSON.stringify(slots));return true}catch(e){return false}}
-function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,swing:S.swing,accent:S.accent,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
+function snapshot(){return JSON.parse(JSON.stringify({bpm:S.bpm,root:S.root,scale:S.scale,oct:S.oct,swing:S.swing,accent:S.accent,gate:S.gate,morph:S.morph,steps:S.steps,worlds:S.worlds}))}
 function slotsUI(){document.querySelectorAll(".slot").forEach(b=>{const i=+b.dataset.slot;b.classList.toggle("full",!!slots[i]);b.classList.toggle("cur",i===curSlot)})}
 function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlot=i; slotsUI();
   const ok=saveSlots();
@@ -1075,7 +1090,7 @@ function saveSlot(i){killUndo(); const old=slots[i]; slots[i]=snapshot(); curSlo
 function loadSlot(i){
   if(!slots[i])return; const v=sanitize(slots[i]); killUndo(); clearDrags();
   if(tiltOn)tiltOff();
-  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.swing=v.swing;S.accent=clamp(fin(v.accent,.7),0,1);S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
+  S.bpm=v.bpm;S.root=v.root;S.scale=v.scale;S.oct=v.oct;S.swing=v.swing;S.accent=clamp(fin(v.accent,.7),0,1);S.gate=clamp(fin(v.gate,.55),.3,.95);S.morph=v.morph;S.steps=v.steps;S.worlds=v.worlds;
   topUI();worldUI();morphUI(); if(E){updateWave("deep");updateWave("acid");syncUnits()} applyContinuous();
   curSlot=i; slotsUI(); save(true);
 }
