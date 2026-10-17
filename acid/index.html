@@ -391,8 +391,22 @@ let ctx=null, E=null, engP=null, noteSeq=0;
 const CORE_SRC=`/* ליבת הצליל של טבעת חומצה: רצה בתוך AudioWorklet, דגימה אחר דגימה.
    קלט 0: ערבוב האוסילטורים (מונו). קלט 1: סאב (מונו).
    פלט: ערוץ 0 = בס אחרי מסנן ו-VCA, ערוץ 1 = סאב אחרי VCA.
-   כל המסננים עם רוויה (tanh) בתוך הלולאה, בדגימת-יתר פי 2. */
+   כל המסננים עם רוויה (tanh) בתוך הלולאה, בדגימת-יתר פי 2 אמיתית (halfband למעלה ולמטה). */
 const OS=2;
+/* דגימת-יתר: halfband FIR פוליפאזי, 49 מקדמים (Kaiser 6). שטוח עד 20kHz, -20dB ב-26k, -70dB מ-28k ומעלה.
+   רק המקדמים האי-זוגיים (צד אחד) נשמרים; המרכז הוא 1 (למעלה) או 0.5 (למטה). השהיה כוללת: 24 דגימות */
+const HB=[0.6336006,-0.2032918,0.1129287,-0.07172162,0.04751491,-0.03160167,0.02062817,-0.01297861,0.007720855,-0.004229815,0.002037971,-0.0007742578], HBM=HB.length, RM=31;
+class Up2{ // דגימה אחת נכנסת, שתיים יוצאות: הקלט בהשהיה של HBM, ואינטרפולציה ביניהן
+  constructor(){ this.z=new Float32Array(32); this.p=0 }
+  push(x){ this.z[this.p]=x; this.p=(this.p+1)&RM }
+  even(){ return this.z[(this.p-1-HBM)&RM] }
+  odd(){ const z=this.z, p=this.p-1; let s=0; for(let i=1;i<=HBM;i++) s+=HB[i-1]*(z[(p-HBM+i)&RM]+z[(p-HBM+1-i)&RM]); return s }
+}
+class Down2{ // שתי דגימות נכנסות (זוגית, אי-זוגית), אחת יוצאת
+  constructor(){ this.e=new Float32Array(32); this.o=new Float32Array(32); this.p=0 }
+  run(e,o){ const p=this.p; this.e[p]=e; this.o[p]=o; this.p=(p+1)&RM;
+    let s=.5*this.e[(p-HBM)&RM]; const z=this.o; for(let i=1;i<=HBM;i++) s+=HB[i-1]*.5*(z[(p-HBM-1+i)&RM]+z[(p-HBM-i)&RM]); return s }
+}
 function th(x){ if(x>3)return 1; if(x<-3)return -1; const x2=x*x; return x*(27+x2)/(27+9*x2) }
 function clamp(v,a,b){ return v<a?a:v>b?b:v }
 
@@ -481,7 +495,7 @@ class AcidCore extends AudioWorkletProcessor{
     this.vca=0; this.vcaT=0; this.vAtk=1-Math.exp(-1/(.003*fs)); this.vLeg=1-Math.exp(-1/(.012*fs)); this.vRel=1-Math.exp(-1/(.015*fs)); this.vc=this.vRel;
     this.sv=0; this.svT=0; this.sAtk=1-Math.exp(-1/(.005*fs)); this.sRel=1-Math.exp(-1/(.025*fs)); this.sc=this.sRel;
     this.fenv=0; this.fdec=1; this.acc=0; this.accDec=Math.exp(-1/(.45*fs)); this.accAmt=0; this.ak=.7;
-    this.xprev=0; this.olp=0; this.olpc=1-Math.exp(-2*Math.PI*18000/fs2);
+    this.up=new Up2(); this.dn=new Down2(); this.sd=new Float32Array(32); this.sp=0; // הסאב מושהה ב-24 דגימות כמו הבס
     this.port.onmessage=e=>{ const m=e.data; if(m&&m.type==="kill"){ this.q.length=0; this.gate=false; this.vcaT=0; this.svT=0; this.vc=this.vRel; this.sc=this.sRel; this.A.release(); if(this.B) this.B.release(); return } if(m&&typeof m.t==="number") this.q.push(m) };
   }
   unit(slot,type){ const cur=slot==="A"?this.A:this.B; if(cur&&cur.type===type) return;
@@ -513,22 +527,24 @@ class AcidCore extends AudioWorkletProcessor{
       // מעטפות
       this.vca+=(this.vcaT-this.vca)*this.vc; this.sv+=(this.svT-this.sv)*this.sc;
       this.fenv*=this.fdec; this.acc*=this.accDec;
-      const fc=cut*Math.exp(.6931472*(env*this.fenv*(1+this.acc*ak)+this.acc*(.3+ak*2.6))); // ידית ב-70: כאוקטבה לכל הדגשה, יותר ברצף
-      const r=clamp(res+this.acc*ak*.35,0,1), d=sat*(1+this.acc*ak*.7);
-      this.A.prep(fc,r,d); if(this.Aold) this.Aold.prep(fc,r,d); if(runB){ this.B.prep(fc,r,d); if(this.Bold) this.Bold.prep(fc,r,d) }
-      // דגימת-יתר פי 2: אינטרפולציה בין הדגימה הקודמת לנוכחית
-      const x=(inO?inO[i]:0)+1e-9, xm=(x+this.xprev)*.5; this.xprev=x;
-      let y=0;
+      if((i&7)===0){ // מקדמי המסננים: כל 8 דגימות, מספיק לכל מעטפת ושומר CPU
+        const fc=cut*Math.exp(.6931472*(env*this.fenv*(1+this.acc*ak)+this.acc*(.3+ak*2.6))); // ידית ב-70: כאוקטבה לכל הדגשה, יותר ברצף
+        const r=clamp(res+this.acc*ak*.35,0,1), d=sat*(1+this.acc*ak*.7);
+        this.A.prep(fc,r,d); if(this.Aold) this.Aold.prep(fc,r,d); if(runB){ this.B.prep(fc,r,d); if(this.Bold) this.Bold.prep(fc,r,d) } }
+      // דגימת-יתר פי 2: העלאה ב-halfband, שני מעברים במסננים, הורדה ב-halfband
+      this.up.push((inO?inO[i]:0)+1e-9);
+      let v0=0, v1=0;
       for(let k=0;k<OS;k++){
-        const xi=k?x:xm; let a=this.A.run(xi);
+        const xi=k?this.up.odd():this.up.even(); let a=this.A.run(xi);
         if(this.Aold){ a=a*this.xA+this.Aold.run(xi)*(1-this.xA); this.xA+=this.xStep; if(this.xA>=1){ this.xA=1; this.Aold=null } }
         let v=a;
         if(runB){ let b=this.B.run(xi);
           if(this.xB<1){ const ob=this.Bold?this.Bold.run(xi):a; b=b*this.xB+ob*(1-this.xB); this.xB+=this.xStep; if(this.xB>=1){ this.xB=1; this.Bold=null } }
           v=a*(1-morph)+b*morph }
-        this.olp+=(v-this.olp)*this.olpc; y=this.olp;
+        if(k) v1=v; else v0=v;
       }
-      o0[i]=y*this.vca; o1[i]=(inS?inS[i]:0)*this.sv;
+      o0[i]=this.dn.run(v0,v1)*this.vca;
+      const sp=this.sp; this.sd[sp]=inS?inS[i]:0; this.sp=(sp+1)&RM; o1[i]=this.sd[(sp-2*HBM)&RM]*this.sv;
     }
     if(qi) q.splice(0,qi);
     return true;
