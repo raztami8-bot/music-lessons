@@ -104,6 +104,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .voicerow .btn.on{background:var(--rec);border-color:var(--rec);border-style:solid;color:var(--ink)}
 .foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .foot .knob{flex:1;min-width:140px}
+.foot .ver{font-size:11px;opacity:.45;letter-spacing:.04em;margin-inline-start:auto}
 
 /* שכבת פתיחה והודעות */
 #gate{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
@@ -256,6 +257,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             <button class="btn" data-ft="hollow" type="button">חלול</button>
             <button class="btn" data-ft="talk" type="button">מדבר</button>
             <button class="btn" data-ft="metal" type="button">מתכת</button>
+            <button class="btn" data-ft="diode" type="button">דיודה</button>
           </div>
         </div>
         <div class="knobs" id="knobs"></div>
@@ -281,6 +283,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="knob"><label for="swing">סווינג <output id="swingOut"></output></label><input type="range" id="swing" min="0" max="100" step="1"></div>
         <div class="knob"><label for="accent">הדגשה <output id="accentOut"></output></label><input type="range" id="accent" min="0" max="100" step="1"></div>
         <button class="btn" id="reset" type="button">איפוס</button>
+        <span class="ver" title="גרסה">v10</span>
       </div>
     </aside>
   </div>
@@ -342,7 +345,7 @@ const DEF_WORLDS={
   deep:{cut:.38,res:.22,env:.32,dec:.55,drv:.12,sub:.75,dly:.22,fb:.35,rev:.3,ft:"warm",wave:presetWave("warm")},
   acid:{cut:.2,res:.86,env:.8,dec:.3,drv:.72,sub:.2,dly:.3,fb:.52,rev:.14,ft:"warm",wave:presetWave("saw")}
 };
-const FTYPES=["warm","hollow","talk","metal"];
+const FTYPES=["warm","hollow","talk","metal","diode"]; // האינדקס נשלח לליבה (ftA/ftB)
 const KNOBS=[["cut","מסנן"],["res","תהודה"],["env","מעטפת"],["dec","דעיכה"],["drv","לכלוך"],["sub","בס עמוק"],["dly","הד"],["fb","חזרות"],["rev","מרחב"]];
 function emptySteps(){const s=[];for(let i=0;i<STEPS;i++)s.push({on:false,deg:0,acc:false,sl:false});return s}
 function demoSteps(){ // תבנית פתיחה קבועה, בלי שום מצב נסתר
@@ -435,17 +438,34 @@ class Svf{
     this.ic1=th(2*v1-this.ic1); this.ic2=2*v2-this.ic2; this.bp=v1; this.lp=v2;
   }
 }
+/* סולם "דיודה" בסגנון 303: ארבעה שלבים חד-קוטביים (TPT), משוב בהשהיית דגימה דרך highpass של 60Hz (הבס לא נעלם ברזוננס גבוה),
+   היסט DC קטן לפני הרוויה (הרמוניות זוגיות), ופלט שמערבב את הקוטב השלישי והרביעי (מדרון רך יותר). הרזוננס "גומי" ולא חד.
+   המשוב מפוצה לפי cutoff (1+2.2G) כדי שההשמעה העצמית תתחיל סביב res 0.93 בכל גובה */
+class Diode{
+  constructor(){ this.s1=this.s2=this.s3=this.s4=0; this.y=0; this.hp=0 }
+  reset(){ this.s1=this.s2=this.s3=this.s4=this.y=this.hp=0 }
+  run(x,G,k,drv,hpc){
+    this.hp+=(this.y-this.hp)*hpc; const fb=this.y-this.hp;
+    const u=th(x*drv-k*fb+.12)-.1194;
+    let v=(u-this.s1)*G, y1=v+this.s1; this.s1=y1+v;
+    v=(th(y1)-this.s2)*G; const y2=v+this.s2; this.s2=y2+v;
+    v=(y2-this.s3)*G; const y3=v+this.s3; this.s3=y3+v;
+    v=(y3-this.s4)*G; const y4=v+this.s4; this.s4=y4+v;
+    this.y=y4; return (y3*.3+y4*.7)*(1+k*.4);
+  }
+}
 const VOWELS=[[300,870,2240],[460,840,2500],[730,1090,2440],[530,1840,2480],[280,2250,2900]];
 function vowelAt(hz,out){ const v=clamp(Math.log2(Math.max(hz,1)/80)/6.3,0,1)*(VOWELS.length-1), i=Math.min(VOWELS.length-2,Math.floor(v)), f=v-i;
   for(let k=0;k<3;k++) out[k]=VOWELS[i][k]+(VOWELS[i+1][k]-VOWELS[i][k])*f }
 
-/* ארבעת האופיים, ממשק אחיד: run(x,fc,res,drv) בקצב הדגימה-היתר */
+/* חמשת האופיים, ממשק אחיד: prep(fc,res,drv) ואז run(x) בקצב הדגימה-היתר */
 class Unit{
   constructor(type,fs2){
     this.type=type; this.fs2=fs2; this.fmax=fs2*.42;
     if(type===0){ this.l=new Ladder() }
     else if(type===1){ this.s=new Svf() }
     else if(type===2){ this.s=[new Svf(),new Svf(),new Svf()]; this.fq=[700,1100,2400]; this.gg=[0,0,0]; this.gn=[1,.6,.32] }
+    else if(type===4){ this.l=new Diode(); this.hpc=1-Math.exp(-2*Math.PI*60/fs2) }
     else { const L=Math.ceil(fs2*.1)+4; this.buf=new Float32Array(L); this.L=L; this.w=0; this.dd=fs2/110; this.dT=this.dd; this.dc=.02; this.lp=0; this.fb=.6; this.fbT=.6 }
   }
   pitch(f,leg){ if(this.type!==3) return; // תהודה בגובה התו
@@ -457,12 +477,14 @@ class Unit{
     const fs2=this.fs2; fc=clamp(fc,20,this.fmax); this.drv=drv;
     if(this.type===0){ const g=Math.tan(Math.PI*fc/fs2); this.G=g/(1+g); this.k=4.6*res*(.72+.28*res); this.d=1+drv*5; this.cmp=1/(1+drv*.42) }
     else if(this.type===1){ this.g=Math.tan(Math.PI*fc/fs2); this.k=2*(1-.94*res); this.d=1+drv*3; this.og=2.4+res*1.6 }
+    else if(this.type===4){ const g=Math.tan(Math.PI*fc/fs2), G=g/(1+g); this.G=G; this.k=4.9*res*(.72+.28*res)/(1+2.2*G); this.d=1.2+drv*4.5; this.cmp=.85/(1+drv*.45) }
     else if(this.type===2){ vowelAt(fc,this.fq); for(let i=0;i<3;i++) this.gg[i]=Math.tan(Math.PI*clamp(this.fq[i],60,this.fmax)/fs2); this.k=1/(4+res*11); this.d=1+drv*3; this.og=1.8+res*1.2 }
     else { this.fbk=clamp(this.fb+res*.38,0,.93); this.dcf=1-Math.exp(-2*Math.PI*clamp(fc*1.5,80,this.fmax)/fs2); this.d=1+drv*2; this.og=.75/(1+drv*.5) }
   }
   run(x){
     const t=this.type;
     if(t===0) return this.l.run(x,this.G,this.k,this.d)*this.cmp;
+    if(t===4) return this.l.run(x,this.G,this.k,this.d,this.hpc)*this.cmp;
     if(t===1){ this.s.run(th(x*this.d),this.g,this.k); return th(this.s.bp*this.og) }
     if(t===2){ const xin=th(x*this.d); let o=0; for(let i=0;i<3;i++){ this.s[i].run(xin,this.gg[i],this.k); o+=this.s[i].bp*this.gn[i] } return th(o*this.og) }
     // מתכת: מסרק בגובה התו, עמעום במסנן, רוויה בלולאה
@@ -484,8 +506,8 @@ class AcidCore extends AudioWorkletProcessor{
     {name:"sat",defaultValue:.2,minValue:0,maxValue:1.5,automationRate:"k-rate"},
     {name:"morph",defaultValue:0,minValue:0,maxValue:1,automationRate:"k-rate"},
     {name:"accent",defaultValue:.7,minValue:0,maxValue:1,automationRate:"k-rate"},
-    {name:"ftA",defaultValue:0,minValue:0,maxValue:3,automationRate:"k-rate"},
-    {name:"ftB",defaultValue:0,minValue:0,maxValue:3,automationRate:"k-rate"}
+    {name:"ftA",defaultValue:0,minValue:0,maxValue:4,automationRate:"k-rate"},
+    {name:"ftB",defaultValue:0,minValue:0,maxValue:4,automationRate:"k-rate"}
   ]}
   constructor(){ super();
     const fs=sampleRate, fs2=fs*OS; this.fs=fs; this.fs2=fs2;
