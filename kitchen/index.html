@@ -76,6 +76,13 @@ p{margin:0}
 .meal[aria-pressed="true"] .tick{background:var(--r5);border-color:var(--r5);color:var(--r5-on)}
 .meal[aria-pressed="true"] .tick svg{opacity:1}
 .meals-note{font-size:.9rem;color:var(--muted);min-height:1.35em}
+.teas{background:var(--surface);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.teas-head{display:flex;align-items:baseline;gap:8px}
+.teas-head b{font-family:var(--font-display);font-weight:600;font-size:1.05rem}
+.teas-head span{color:var(--muted);font-size:.9rem}
+.teas-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.teas-row::-webkit-scrollbar{display:none}
+.teas-row .chip{flex:0 0 auto}
 
 /* search */
 .searchbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px 10px;display:flex;flex-direction:column;gap:10px}
@@ -181,6 +188,7 @@ nav.tabs svg{width:26px;height:26px}
       <button class="meal" id="m2" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ערב</button>
     </div>
     <p class="meals-note" id="mealsNote"></p>
+    <div class="teas"><div class="teas-head"><b>חליטה לאורך היום</b><span>גם במקום מים</span></div><div class="teas-row" id="teaRow"></div></div>
   </header>
 
   <section class="panel" id="p-search">
@@ -229,6 +237,7 @@ nav.tabs svg{width:26px;height:26px}
         <li>לימון מוגדר כתבלין אבל לא מדורג. מותר? באיזו כמות?</li>
         <li>גזר, שורש פטרוזיליה ושורש סלרי מופיעים פעמיים: 4 כפחמימה ו-3 כירק. לפי מה להתנהל?</li>
         <li>מה הכוונה ב״בלי 2,3,4 למטה״?</li>
+        <li>איך מכינים כל חליטה: כמה, כמה זמן, ואפשר לשלב כמה יחד?</li>
       </ol>
       <button class="btn" id="copyBtn">העתק את השאלות</button>
       <textarea id="copyText" hidden readonly aria-label="השאלות להעתקה"></textarea>
@@ -442,9 +451,9 @@ rule;q;לימון/מיץ לימון;מוגדר כתבלין, אבל בלי די�
 rule;i;מים;חליטה קבועה מומלצת, אפילו במקום מים
 `;
 
-const CATS = {veg:'ירקות',protein:'חלבון',carb:'פחמימות',fat:'שומנים',fruit:'פירות',spice:'תבלינים וחליטות',cook:'שיטות בישול',rule:'מהכללים'};
-const CHIP_CATS = ['veg','protein','carb','fat','fruit','spice','cook'];
-const CHIP_NAMES = {all:'הכול',veg:'ירקות',protein:'חלבון',carb:'פחמימות',fat:'שומנים',fruit:'פירות',spice:'תבלינים',cook:'בישול'};
+const CATS = {veg:'ירקות',protein:'חלבון',carb:'פחמימות',fat:'שומנים',fruit:'פירות',spice:'חליטות ותבלינים',cook:'שיטות בישול',rule:'מהכללים'};
+const CHIP_CATS = ['spice','veg','protein','carb','fat','fruit','cook'];
+const CHIP_NAMES = {all:'הכול',spice:'חליטות',veg:'ירקות',protein:'חלבון',carb:'פחמימות',fat:'שומנים',fruit:'פירות',cook:'בישול'};
 const RATE = {
   '5':{label:'מומלץ ביותר',glyph:'5'}, '4':{label:'אפשר כל יום',glyph:'4'},
   '3':{label:'מדי פעם, לגיוון',glyph:'3'}, '2':{label:'עדיף לא',glyph:'2'},
@@ -542,7 +551,7 @@ function renderHome(){
 }
 function renderCat(c){
   const list=ITEMS.filter(it=>it.cat===c);
-  let h='';
+  let h=c==='spice'?'<div class="rule"><h3>חליטה קבועה לאורך היום</h3><p>לפי ההנחיות, אפילו במקום מים. קליפות הדרים וג׳ל אלוורה מסומנים שם גם כ״חליטות בלבד״. איך מכינים כל אחת - לברר עם אור.</p></div>':'';
   for(const r of ['5','4','3','2','x','q','i']){
     const tier=list.filter(it=>it.r===r); if(!tier.length)continue;
     h+='<div class="tier r-'+r+'"><div class="tier-head"><span class="disc sm" aria-hidden="true">'+RATE[r].glyph+'</span><h2>'+RATE[r].label+'</h2></div>'+
@@ -573,6 +582,9 @@ document.addEventListener('click',e=>{
   const go=e.target.closest('[data-go]'); if(go){showTab('search');setCat('all');q.value=go.dataset.go;render();window.scrollTo({top:0});return;}
   const more=e.target.closest('[data-cat]'); if(more){showTab('search');q.value='';setCat(more.dataset.cat);window.scrollTo({top:0});}
 });
+
+const TEAS=['זרעי שומר','זרעי כוסברה','למון גראס','קליפות הדרים','ג׳ל אלוורה','פיליפנדולה'];
+document.getElementById('teaRow').innerHTML=TEAS.map(n=>chip(n,'5')).join('');
 
 /* ---------- plate ---------- */
 const PLATES=[

@@ -1,7 +1,7 @@
 /* אופליין: מגישים מהמטמון מיד, ובמקביל מביאים מהרשת ומעדכנים.
    אם index.html השתנה, הדף הפתוח מקבל הודעה ומציע לטעון מחדש. לבאמפ את CACHE בכל העלאה.
    גם הגופנים נשמרים במטמון, כדי שהדף ייראה אותו דבר בלי רשת. */
-var CACHE="kitchen-v1";
+var CACHE="kitchen-v2";
 var FILES=["./","index.html","manifest.webmanifest","icon-180.png","icon-512.png"];
 var FONT_HOSTS=["fonts.googleapis.com","fonts.gstatic.com"];
 self.addEventListener("install",function(e){ e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(FILES); })); self.skipWaiting(); });
