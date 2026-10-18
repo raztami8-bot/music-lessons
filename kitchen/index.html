@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>המטבח שלי</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="המטבח">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<meta name="theme-color" content="#F4F6F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10141B" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Fredoka:wght@500;600&display=swap">
+<style>
+/* Layout: one-column phone app, porcelain ground, cobalt like Polish pottery; rating discs carry the meaning; fixed bottom tabs */
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#1B2433; --muted:#5B6577; --line:#DFE4EC;
+  --cobalt:#2A4B98; --cobalt-soft:#E5EBF7;
+  --r5:#2E7A4A; --r5-on:#FFFFFF; --r4:#6BAA6F; --r4-on:#0F2A16;
+  --r3:#E2B23A; --r3-on:#3A2A00; --r2:#C9514A; --r2-on:#FFFFFF;
+  --rq:#2A4B98; --rq-on:#FFFFFF; --r0:#9AA2B0; --r0-on:#FFFFFF;
+  --plate:#FFFFFF; --plate-in:#F7F9FC; --veg:#8DBA84; --prot:#E3A391; --carb:#EACB7C; --fat:#BDB873; --slice-ink:#1D2A22;
+  --shadow:0 1px 2px rgba(27,36,51,.06),0 4px 16px rgba(27,36,51,.05);
+  --font-display:"Fredoka","Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --font-body:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10141B; --surface:#19202A; --ink:#E8ECF3; --muted:#9BA5B6; --line:#2A3241;
+  --cobalt:#93ACF2; --cobalt-soft:#1E2942;
+  --r5:#3F9A62; --r5-on:#FFFFFF; --r4:#78B97C; --r4-on:#0F2A16;
+  --r3:#E4B84A; --r3-on:#2E2200; --r2:#E06B61; --r2-on:#FFFFFF;
+  --rq:#93ACF2; --rq-on:#0E1630; --r0:#6E7789; --r0-on:#FFFFFF;
+  --plate:#222A36; --plate-in:#1B222D; --veg:#86B07E; --prot:#D99A88; --carb:#DDBE72; --fat:#B1AC69; --slice-ink:#16201A;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#10141B; --surface:#19202A; --ink:#E8ECF3; --muted:#9BA5B6; --line:#2A3241;
+  --cobalt:#93ACF2; --cobalt-soft:#1E2942;
+  --r5:#3F9A62; --r5-on:#FFFFFF; --r4:#78B97C; --r4-on:#0F2A16;
+  --r3:#E4B84A; --r3-on:#2E2200; --r2:#E06B61; --r2-on:#FFFFFF;
+  --rq:#93ACF2; --rq-on:#0E1630; --r0:#6E7789; --r0-on:#FFFFFF;
+  --plate:#222A36; --plate-in:#1B222D; --veg:#86B07E; --prot:#D99A88; --carb:#DDBE72; --fat:#B1AC69; --slice-ink:#16201A;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.5;direction:rtl;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2.5px solid var(--cobalt);outline-offset:2px;border-radius:10px}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;margin:0;text-wrap:balance}
+p{margin:0}
+
+.app{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:calc(14px + env(safe-area-inset-top,0px)) calc(100px + env(safe-area-inset-bottom,0px))}
+
+/* header */
+.hello{display:flex;flex-direction:column;gap:10px;padding-block:6px 14px}
+.hello h1{font-size:1.75rem;line-height:1.2}
+.status{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 12px;border-radius:999px;background:var(--cobalt-soft);color:var(--cobalt);font-weight:600;font-size:.95rem}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.status.soon{background:color-mix(in srgb,var(--r3) 22%,var(--surface));color:var(--ink)}
+.status.soon::before{background:var(--r3)}
+.status.closed{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.meals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.meal{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:14px;border:1.5px dashed var(--line);background:transparent;font-weight:600;font-size:1rem;color:var(--muted);transition:background .15s,border-color .15s,color .15s}
+.meal .tick{width:22px;height:22px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center}
+.meal .tick svg{opacity:0}
+.meal[aria-pressed="true"]{border-style:solid;border-color:var(--r5);background:color-mix(in srgb,var(--r5) 12%,var(--surface));color:var(--ink)}
+.meal[aria-pressed="true"] .tick{background:var(--r5);border-color:var(--r5);color:var(--r5-on)}
+.meal[aria-pressed="true"] .tick svg{opacity:1}
+.meals-note{font-size:.9rem;color:var(--muted);min-height:1.35em}
+
+/* search */
+.searchbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px 10px;display:flex;flex-direction:column;gap:10px}
+.field{position:relative}
+.field svg.lens{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+#q{width:100%;height:58px;border-radius:18px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 1.2rem var(--font-body);padding:0 52px 0 52px;box-shadow:var(--shadow);-webkit-appearance:none;appearance:none}
+#q::placeholder{color:var(--muted);font-weight:400}
+#q:focus{outline:none;border-color:var(--cobalt)}
+#clear{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:12px;background:transparent;color:var(--muted);display:grid;place-items:center}
+.cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-left,0px))}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:0 0 auto;height:38px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;font-size:.98rem;color:var(--muted)}
+.cat[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:var(--surface)}
+
+.results{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+.card{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}
+.card .body{min-width:0;display:flex;flex-direction:column;gap:3px}
+.card h3{font-size:1.25rem;line-height:1.25}
+.card .tag{font-weight:700;color:var(--c)}
+.r-3 .tag,.r-4 .tag{color:var(--ink)}
+.card .note{color:var(--ink)}
+.card .meta{color:var(--muted);font-size:.9rem}
+.alt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;font-size:.92rem;color:var(--muted)}
+.disc{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:var(--on);font:600 1.2rem/1 var(--font-display);flex:0 0 auto}
+.disc.sm{width:28px;height:28px;font-size:.9rem}
+.r-5{--c:var(--r5);--on:var(--r5-on)} .r-4{--c:var(--r4);--on:var(--r4-on)} .r-3{--c:var(--r3);--on:var(--r3-on)}
+.r-2,.r-x{--c:var(--r2);--on:var(--r2-on)} .r-q,.r-i{--c:var(--rq);--on:var(--rq-on)} .r-0{--c:var(--r0);--on:var(--r0-on)}
+.card.r-0{background:transparent;box-shadow:none;border:1.5px dashed var(--line)}
+.hint{color:var(--muted);font-size:.92rem;padding:6px 4px}
+
+.chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:.95rem;color:var(--ink)}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--r5))}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.more{border:0;background:transparent;color:var(--cobalt);font-weight:700;font-size:.95rem;padding:6px 4px}
+
+.intro{font-size:1.05rem;color:var(--muted);padding:2px 4px 6px}
+.group{display:flex;flex-direction:column;gap:10px;background:var(--surface);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.group-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.group-head h2{font-size:1.15rem}
+.group-head .sub{color:var(--muted);font-size:.88rem;font-family:var(--font-body)}
+
+.tier{display:flex;flex-direction:column;gap:2px;background:var(--surface);border-radius:18px;padding:12px 16px 8px;box-shadow:var(--shadow)}
+.tier-head{display:flex;align-items:center;gap:10px;padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:2px}
+.tier-head h2{font-size:1.1rem}
+.row{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row b{font-weight:700}
+.row span{color:var(--muted);font-size:.92rem}
+
+/* plate */
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:var(--surface);border-radius:16px;box-shadow:var(--shadow)}
+.seg button{border:0;background:transparent;border-radius:12px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1.25}
+.seg button b{font-family:var(--font-display);font-weight:600;font-size:1.05rem}
+.seg button span{font-size:.8rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--cobalt);color:var(--surface)}
+.seg button[aria-pressed="true"] span{color:var(--surface);opacity:.85}
+.plate-wrap{display:grid;place-items:center;padding-block:18px 6px}
+.plate-wrap svg{width:min(300px,84vw);height:auto;max-width:100%;filter:drop-shadow(0 6px 18px rgba(27,36,51,.10))}
+.plate-note{text-align:center;font-weight:600;padding-bottom:10px}
+.plate-note small{display:block;color:var(--muted);font-weight:400;font-size:.92rem}
+.legend{display:flex;flex-direction:column;gap:10px}
+.leg{background:var(--surface);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.leg-head{display:flex;align-items:center;gap:10px}
+.sw{width:18px;height:18px;border-radius:50%;flex:0 0 auto}
+.leg-head h3{font-size:1.1rem;flex:1}
+.pct{font:600 1.15rem var(--font-display);font-variant-numeric:tabular-nums}
+
+/* rules */
+.stack{display:flex;flex-direction:column;gap:12px}
+.rule{background:var(--surface);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px}
+.rule h3{font-size:1.12rem}
+.rule p{color:var(--muted)}
+.section-title{font-size:1.25rem;padding:14px 4px 0}
+.chip.red{--c:var(--r2)}
+.ask{background:var(--cobalt-soft);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.ask h3{font-size:1.12rem;color:var(--cobalt)}
+.ask ol{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.ask p{font-size:.92rem;color:var(--muted)}
+.btn{align-self:flex-start;height:44px;padding:0 18px;border-radius:12px;border:0;background:var(--cobalt);color:var(--surface);font-weight:700}
+#copyText{width:100%;min-height:120px;font:inherit;font-size:.9rem;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px}
+.foot{color:var(--muted);font-size:.85rem;text-align:center;padding:18px 0 4px}
+
+/* bottom nav */
+nav.tabs{position:fixed;inset:auto 0 0 0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--muted);font-weight:600;font-size:.85rem}
+nav.tabs button[aria-current="page"]{color:var(--cobalt)}
+nav.tabs svg{width:26px;height:26px}
+.panel{display:flex;flex-direction:column;gap:12px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9;display:flex;align-items:center;gap:12px;background:var(--ink);color:var(--bg);padding:10px 12px 10px 16px;border-radius:14px;box-shadow:var(--shadow);font-weight:600;max-width:calc(100% - 32px)}
+.toast button{border:0;border-radius:10px;background:var(--cobalt);color:#fff;font-weight:700;padding:8px 12px}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header class="hello">
+    <h1 id="greet">שלום</h1>
+    <span class="status" id="status">המטבח פתוח</span>
+    <div class="meals" role="group" aria-label="ארוחות היום">
+      <button class="meal" id="m0" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>בוקר</button>
+      <button class="meal" id="m1" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>צהריים</button>
+      <button class="meal" id="m2" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ערב</button>
+    </div>
+    <p class="meals-note" id="mealsNote"></p>
+  </header>
+
+  <section class="panel" id="p-search">
+    <div class="searchbar">
+      <div class="field">
+        <svg class="lens" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input id="q" type="search" inputmode="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="מה בא לך לאכול?" aria-label="חיפוש מזון">
+        <button id="clear" aria-label="ניקוי" hidden><svg width="18" height="18" viewBox="0 0 18 18"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="cats" id="cats"></div>
+    </div>
+    <div class="results" id="results" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="p-plate" hidden>
+    <div class="seg" id="seg"></div>
+    <div class="plate-wrap" id="plateSvg"></div>
+    <p class="plate-note">שליש עד חצי מהצלחת: ירק מבושל<small>לפי ההנחיות, זה הכי חשוב</small></p>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel" id="p-rules" hidden>
+    <div class="stack">
+      <div class="rule"><h3>שלוש ארוחות מבושלות</h3><p>בוקר, צהריים וערב. הקיבה צריכה להתמלא לפחות שלוש פעמים ביום, בלי לדלג.</p></div>
+      <div class="rule"><h3>בסיס נוזלי</h3><p>מרקים, תבשילים ומאודה. אוכל ביתי בכיוון פולני, לא מתובל מאוד.</p></div>
+      <div class="rule"><h3>חצי צלחת ירק</h3><p>שליש עד חצי מכל ארוחה ירק מבושל, ועוד חלבון ופחמימה.</p></div>
+      <div class="rule"><h3>סוגרים את המטבח ב-20:00</h3><p>בלי אכילת לילה, ו״בלי לפתוח רווחים בין ארוחות״.</p></div>
+      <div class="rule"><h3>חליטה במקום מים</h3><p>חליטה קבועה לאורך היום: זרעי שומר, זרעי כוסברה, למון גראס, קליפות הדרים, ג׳ל אלוורה ופיליפנדולה.</p></div>
+      <div class="rule"><h3>לא לדלג על ארוחה</h3><p>במילים של ההנחיות: ״אי אכילה + קפה הורג את הקיבה״.</p></div>
+    </div>
+
+    <h2 class="section-title">להפחית עד להפסיק</h2>
+    <div class="chips" id="cutChips"></div>
+    <h2 class="section-title">טעמים להימנע</h2>
+    <div class="chips" id="tasteChips"></div>
+
+    <h2 class="section-title">איך מבשלים</h2>
+    <div class="stack" id="cookTiers"></div>
+
+    <div class="rule" style="margin-top:12px"><h3>מה שלא ברשימות</h3><p>לפי המסמך, מזון שלא מופיע בהנחיות אינו חלק מהטיפול, ועדיף לא לאכול אותו.</p></div>
+
+    <div class="ask" style="margin-top:12px">
+      <h3>לברר עם אור</h3>
+      <ol id="askList">
+        <li>כמה מלח מותר בבישול? ברשימות מופיע רק ״מלוח מאוד״ כטעם להימנע.</li>
+        <li>לימון מוגדר כתבלין אבל לא מדורג. מותר? באיזו כמות?</li>
+        <li>גזר, שורש פטרוזיליה ושורש סלרי מופיעים פעמיים: 4 כפחמימה ו-3 כירק. לפי מה להתנהל?</li>
+        <li>מה הכוונה ב״בלי 2,3,4 למטה״?</li>
+      </ol>
+      <button class="btn" id="copyBtn">העתק את השאלות</button>
+      <textarea id="copyText" hidden readonly aria-label="השאלות להעתקה"></textarea>
+      <p>אור עונה בוואטסאפ על שאלות יישום: איך מכינים ואיפה קונים. שאלות קליניות נשארות למפגש.</p>
+    </div>
+    <p class="foot">לפי ההנחיות מ-18.10.2026</p>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="ניווט">
+  <button data-tab="search" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>מותר או לא</button>
+  <button data-tab="plate"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 12V3M12 12l7 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>צלחת</button>
+  <button data-tab="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.5" fill="currentColor"/><circle cx="4.5" cy="12" r="1.5" fill="currentColor"/><circle cx="4.5" cy="18" r="1.5" fill="currentColor"/></svg>כללים</button>
+</nav>
+
+<script>
+/* ---------- data: from the guidelines, 18.10.2026 ---------- */
+const RAW = `
+carb;5;אורז עגול לבן/אורז/אורז לסושי/אורז לריזוטו;רגיל, לסושי או לריזוטו
+carb;5;אורז יסמין לבן/יסמין
+carb;5;אטריות אורז/אטריות
+carb;5;אטריות שעועית שקופות/אטריות זכוכית
+carb;5;טפיוקה
+carb;4;שיבולת שועל/קוואקר
+carb;4;קינואה
+carb;4;כוסמת ירוקה/כוסמת
+carb;4;אטריות כוסמת/סובה
+carb;4;בטטה
+carb;4;בטטה סגולה
+carb;4;גזר;כפחמימה. ברשימת הירקות הוא בדירוג 3
+carb;4;שורש פטרוזיליה;כפחמימה. ברשימת הירקות בדירוג 3
+carb;4;שורש סלרי/סלרי שורש;כפחמימה. ברשימת הירקות בדירוג 3
+carb;4;תפוח אדמה/תפוחי אדמה/תפו״א;צהבהב, אדמדם או סגול-שחור
+carb;4;אורז בסמטי לבן/בסמטי
+carb;4;קמח תירס/פולנטה
+carb;3;אורז אדום
+carb;3;אורז שחור
+carb;3;אורז פרא
+carb;3;אורז בסמטי מלא/אורז מלא
+carb;3;דוחן
+carb;3;פנקייק כוסמת ירוקה/פנקייק
+carb;3;לחם כוסמת/לחם
+carb;3;לחם כוסמין מחמצת/לחם מחמצת/כוסמין
+carb;3;אמרנט
+carb;3;דפי אורז
+carb;3;סלק
+protein;5;עוף עם עצם/עוף/שוקיים/כרעיים
+protein;5;הודו עם עצם/הודו
+protein;5;גרונות עוף/גרונות הודו/גרונות
+protein;5;קרפיון/דג/דגים;דג מים מתוקים, עם העצם
+protein;5;פורל/טרוטה/דג/דגים;דג מים מתוקים, עם העצם
+protein;5;אמנון/מושט/דג/דגים;דג מים מתוקים, עם העצם
+protein;5;בס/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;לברק/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;דניס/צ׳יפורה/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;בורי/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;לוקוס/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;סרדין טרי/סרדינים טריים/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;ברבוניה טרייה/ברבוניה/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;בקלה/קוד/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;הליבוט/דג/דגים;דג ים טרי או קפוא, עם העצם
+protein;5;טופו
+protein;5;ג׳לטין;כפית לצלחת אישית או כף לתבשיל. תוספת, לא מנת חלבון
+protein;4;ביצים/ביצה/חביתה
+protein;3;חזה עוף
+protein;3;בקר רזה/בקר/בשר בקר/בשר
+protein;3;בשר בקר טחון/בשר טחון
+protein;3;סרדינים בקופסה/שפרוטים;לנקז היטב את השמן
+protein;2;בקר שמן;;בקר רזה
+protein;2;בשר כבש/כבש/טלה
+veg;5;סלרי/עלי סלרי/גבעולי סלרי;עלים וגבעולים
+veg;5;כוסברה/כוסבר
+veg;5;שמיר
+veg;5;מנגולד
+veg;5;תרד
+veg;5;דלעת/דלורית
+veg;5;דלעת יפנית;וגם דלעות מיוחדות
+veg;5;קישוא/זוקיני/קישואים
+veg;5;ריג׳לה/רגלת הגינה/רגלה
+veg;5;מלפפון;חי
+veg;4;פטרוזיליה;עלים
+veg;4;בזיליקום
+veg;4;שומר;הירק עצמו
+veg;4;כרוב סגול
+veg;4;כרוב לבן/כרוב
+veg;4;בוק צ׳וי/כרוב סיני
+veg;4;קייל
+veg;4;במיה
+veg;4;מלוחיה
+veg;4;אספרגוס
+veg;4;שעועית ירוקה/שעועית
+veg;4;פטריות/פטרייה/שמפיניון
+veg;4;חסה;ירוקה או סגולה
+veg;4;נבטי מאש/נבטים
+veg;4;נבטי חמנייה/נבטים
+veg;3;בצל/בצל לבן/בצל צהוב;מבושל
+veg;3;בצל סגול מבושל;חי - עדיף לא
+veg;3;כרשה/כרישה
+veg;3;ברוקולי
+veg;3;נבטי ברוקולי/נבטים;לא מבושלים
+veg;3;רוקט/ארוגולה/נבטי רוקט
+veg;3;צנונית/נבטי צנונית
+veg;3;צנון
+veg;3;לפת
+veg;3;קולרבי
+veg;3;כרובית
+veg;3;סלק מבושל/סלק
+veg;3;ארטישוק;טרי או לבבות קפואים, לא משומר ולא במלח
+veg;3;אדממה
+veg;3;אפונה ירוקה/אפונה;טרייה או קפואה
+veg;3;אנדיב
+veg;3;פלפל אדום/פלפל צהוב/גמבה/פלפל;אדום או צהוב
+veg;3;נבטי אלפלפא/אלפלפא/נבטים
+veg;3;וואקמה/אצות;כפית לתבשיל
+veg;3;קומבו/אצת קומבו/אצות;חתיכה של כ-3 ס״מ לתבשיל
+veg;3;עלי גפן
+veg;3;גזר;כירק. כפחמימה בדירוג 4
+veg;3;שורש פטרוזיליה;כירק. כפחמימה בדירוג 4
+veg;3;שורש סלרי;כירק. כפחמימה בדירוג 4
+veg;2;בצל סגול חי
+veg;2;שום/שום חי/שום מבושל;גם חי וגם מבושל
+veg;2;בצל ירוק
+veg;2;עירית
+veg;2;עגבנייה/עגבניה/עגבניות/רסק עגבניות;טרייה, מבושלת או רסק
+veg;2;חציל/חצילים
+fat;5;פשתן טחון/פשתן/זרעי פשתן;עד 2 כפות ליום
+fat;5;זרעי צ׳יה/צ׳יה;עד 2 כפות ליום, או כפית לכל ארוחה
+fat;4;שמן זית/שמן;כבישה קרה
+fat;4;שמן קוקוס/שמן;כבישה קרה
+fat;4;שמן שומשום/שמן סומסום/שמן;כבישה קרה
+fat;4;גרעיני דלעת/גרעינים;ירוקים
+fat;4;זרעי חמנייה/גרעיני חמנייה/גרעינים;לא קלויים
+fat;4;שומשום שחור
+fat;4;שומשום/סומסום
+fat;4;שקדים/שקד;שרויים במים וקלופים
+fat;4;אבוקדו;חצי ליום
+fat;4;חלב קוקוס/קרם קוקוס
+fat;3;פיסטוק;לא קלוי
+fat;3;אגוז ברזיל/אגוזים;2-3 ליום
+fat;3;טחינה;רצוי כבישה קרה, 2-3 כפות ליום, מערבבים עם מים ותיבול
+fat;3;קוקוס;בשר הפרי, טרי או יבש
+fruit;5;חבוש;מבושל
+fruit;4;תפוח/תפוח עץ/תפוחים
+fruit;4;אגס
+fruit;4;אגס נאשי/נאשי
+fruit;4;אוכמניות
+fruit;4;אבטיח
+fruit;4;מלון
+fruit;4;פפאיה
+fruit;3;שזיף/שזיפים;טרי, או יבש אורגני
+fruit;3;דובדבן/דובדבנים
+fruit;3;משמש/מישמש;טרי, או יבש אורגני
+fruit;3;תות עץ
+fruit;3;תות/תות שדה/תותים
+fruit;3;פירות יער
+fruit;3;אנונה
+fruit;3;גויאבה
+fruit;3;סברס
+fruit;2;רימון
+fruit;2;בננה
+fruit;2;הדרים/תפוז/קלמנטינה/אשכולית/מנדרינה/פומלה;חוץ מלימון, שמוגדר כתבלין
+fruit;2;מנגו
+fruit;2;קיווי
+fruit;2;קרמבולה
+fruit;2;ליצ׳י
+fruit;2;אננס
+fruit;2;תמרים/תמר
+fruit;2;תאנה/תאנים;טרייה או יבשה
+spice;5;זרעי שומר
+spice;5;זרעי כוסברה
+spice;5;למון גראס/לימונית/עשב לימון
+spice;5;קליפות הדרים/קליפת תפוז/קליפת לימון;תבלין וגם חליטה
+spice;5;ג׳ל אלוורה/אלוורה;קפוא. תבלין וגם חליטה
+spice;5;פיליפנדולה/אולמריה;חליטה קבועה, לפי ההנחיה הכללית
+spice;4;כמון
+spice;4;קימל
+spice;4;כוכב אניס/אניס
+spice;3;עלי קארי/קארי;העלים עצמם
+spice;i;חליטה/חליטות/תה צמחים;קבועה, אפילו במקום מים: זרעי שומר, למון גראס, קליפות הדרים, אלוורה, פיליפנדולה
+cook;5;מחבת עם מכסה/בישול במחבת/מחבת
+cook;5;אידוי/מאודה/מאודים/סטימר
+cook;4;מרק/מרקים
+cook;4;חביתת ירק/חביתה
+cook;4;אפוי בתנור/תנור/אפייה;מנה אפויה
+cook;4;אוחיטשי/חליטת ירק;חליטה מהירה של ירק במים רותחים
+cook;4;פסטו/ממרח ירוק
+cook;4;מיץ טרי/מיץ
+cook;4;שייק/סמוטי
+cook;3;הקפצה/מוקפץ/ווק
+cook;3;דייסה
+cook;3;סלט ירקות/סלט
+cook;3;סלט מורכב/סלט;פחמימה, חלבון, שומן וירק
+cook;2;גרנולה/מוזלי
+cook;i;תבשיל/תבשילים/קדרה;חלק מהבסיס הנוזלי של כל ארוחה: מרקים, תבשילים, מאודה
+rule;x;קפה/אספרסו/נס קפה/קפוצ׳ינו/הפוך;״אי אכילה + קפה הורג את הקיבה״;זרעי שומר/למון גראס/קליפות הדרים
+rule;x;אלכוהול/בירה/יין/וודקה/ערק/וויסקי;;זרעי שומר/למון גראס/פיליפנדולה
+rule;x;מטוגן/טיגון/צ׳יפס/שניצל;שיטת בישול;מחבת עם מכסה/אידוי/אפוי בתנור
+rule;x;על האש/מנגל;שיטת בישול;מחבת עם מכסה/אידוי/אפוי בתנור
+rule;x;גריל/צלוי/צלייה;שיטת בישול;מחבת עם מכסה/אידוי/אפוי בתנור
+rule;x;צרוב/צריבה;שיטת בישול;מחבת עם מכסה/אידוי
+rule;x;קלוי/קלייה/קלויים;שיטת בישול;שקדים/גרעיני דלעת
+rule;x;חומצי;;
+rule;x;חריף/צ׳ילי/פלפל חריף/סחוג/הריסה;טעם להימנע;כמון/זרעי כוסברה/קימל
+rule;x;חמוץ/חומץ/חמוצים/מלפפון חמוץ;טעם להימנע;
+rule;x;מלוח מאוד;טעם להימנע;
+rule;x;מתוק קיצוני/סוכר/ממתקים/סוכריות;טעם להימנע;חבוש/תפוח/אגס
+rule;x;נענע/מנטה;טעם להימנע;למון גראס/זרעי שומר
+rule;x;אכילת לילה/נשנוש;סוגרים את המטבח ב-20:00;
+rule;q;מלח;רק ״מלוח מאוד״ מופיע כטעם להימנע. כמה מלח מותר בבישול - לשאול את אור
+rule;q;לימון/מיץ לימון;מוגדר כתבלין, אבל בלי דירוג. לשאול את אור
+rule;i;מים;חליטה קבועה מומלצת, אפילו במקום מים
+`;
+
+const CATS = {veg:'ירקות',protein:'חלבון',carb:'פחמימות',fat:'שומנים',fruit:'פירות',spice:'תבלינים וחליטות',cook:'שיטות בישול',rule:'מהכללים'};
+const CHIP_CATS = ['veg','protein','carb','fat','fruit','spice','cook'];
+const CHIP_NAMES = {all:'הכול',veg:'ירקות',protein:'חלבון',carb:'פחמימות',fat:'שומנים',fruit:'פירות',spice:'תבלינים',cook:'בישול'};
+const RATE = {
+  '5':{label:'מומלץ ביותר',glyph:'5'}, '4':{label:'אפשר כל יום',glyph:'4'},
+  '3':{label:'מדי פעם, לגיוון',glyph:'3'}, '2':{label:'עדיף לא',glyph:'2'},
+  'x':{label:'להפחית עד להפסיק',glyph:'×'}, 'q':{label:'לברר עם אור',glyph:'?'},
+  'i':{label:'טוב לדעת',glyph:'i'}, '0':{label:'לא ברשימות',glyph:'–'}
+};
+const ORDER = {'5':0,'4':1,'3':2,'2':3,'x':4,'q':5,'i':6};
+const ADDON = new Set(['ג׳לטין']), PLANT = new Set(['טופו']);
+
+const FIN = {'ך':'כ','ם':'מ','ן':'נ','ף':'פ','ץ':'צ'};
+function norm(s){
+  return s.replace(/[֑-ׇ]/g,'').replace(/[׳'’`״"”“]/g,'').replace(/[-־.,()/]/g,' ')
+    .replace(/[ךםןףץ]/g,c=>FIN[c]).replace(/יי/g,'י').replace(/וו/g,'ו').replace(/\s+/g,' ').trim().toLowerCase();
+}
+const ITEMS = RAW.trim().split('\n').map(l=>l.trim()).filter(Boolean).map((l,i)=>{
+  const [cat,r,names,note='',alt=''] = l.split(';');
+  const ns = names.split('/');
+  return {id:i,cat,r,name:ns[0],note,alt:alt?alt.split('/'):[],keys:ns.map(norm)};
+});
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store = {
+  get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+};
+
+/* ---------- header: greeting, kitchen clock, meals ---------- */
+function todayKey(){const d=new Date();return 'meals-'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+function updateHeader(){
+  const d=new Date(), h=d.getHours(), mins=h*60+d.getMinutes(), close=20*60;
+  const g = h>=5&&h<11?'בוקר טוב':h>=11&&h<16?'צהריים טובים':h>=16&&h<21?'ערב טוב':'לילה טוב';
+  document.getElementById('greet').textContent = g;
+  const st=document.getElementById('status');
+  if(mins>=close||mins<5*60){st.className='status closed';st.textContent='המטבח סגור. נתראה בארוחת הבוקר'}
+  else{
+    const left=close-mins, hh=Math.floor(left/60), mm=left%60;
+    if(left<60){st.className='status soon';st.textContent='נשארו '+mm+' דקות עד 20:00'}
+    else{st.className='status';st.textContent='המטבח פתוח עוד '+hh+':'+String(mm).padStart(2,'0')+' שעות'}
+  }
+}
+function loadMeals(){let v=store.get(todayKey());return v?v.split('').map(c=>c==='1'):[false,false,false]}
+function renderMeals(){
+  const m=loadMeals();
+  m.forEach((on,i)=>document.getElementById('m'+i).setAttribute('aria-pressed',on?'true':'false'));
+  const n=m.filter(Boolean).length;
+  document.getElementById('mealsNote').textContent = n===3?'שלוש ארוחות מבושלות היום. יפה מאוד.':n?'סימנת '+n+' מתוך 3 ארוחות היום.':'מסמנים כל ארוחה מבושלת שאכלת היום.';
+}
+[0,1,2].forEach(i=>document.getElementById('m'+i).addEventListener('click',()=>{
+  const m=loadMeals(); m[i]=!m[i]; store.set(todayKey(),m.map(b=>b?'1':'0').join('')); renderMeals();
+}));
+
+/* ---------- search ---------- */
+let cat='all';
+const q=document.getElementById('q'), results=document.getElementById('results'), clearBtn=document.getElementById('clear');
+
+function score(it,qq){
+  let best=9;
+  for(const k of it.keys){
+    let s=9;
+    if(k===qq)s=0; else if(k.startsWith(qq))s=1; else if(k.split(' ').some(w=>w.startsWith(qq)))s=2; else if(k.includes(qq))s=3;
+    if(s<best)best=s;
+  }
+  return best;
+}
+function topOf(c,n,opts={}){
+  return ITEMS.filter(it=>it.cat===c&&/[2-5]/.test(it.r)&&!ADDON.has(it.name)&&!(opts.noPlant&&PLANT.has(it.name)))
+    .sort((a,b)=>ORDER[a.r]-ORDER[b.r]).slice(0,n);
+}
+function chip(name,r){return '<button class="chip r-'+r+'" data-go="'+esc(name)+'">'+esc(name)+'</button>'}
+function altsFor(it){
+  let names = it.alt.length ? it.alt : (it.r==='2' ? topOf(it.cat,3).map(x=>x.name) : []);
+  if(!names.length) return '';
+  return '<div class="alt">במקום זה:'+names.map(n=>{const f=ITEMS.find(x=>x.name===n);return chip(n,f?f.r:'5')}).join('')+'</div>';
+}
+function card(it){
+  const R=RATE[it.r];
+  return '<article class="card r-'+it.r+'"><div class="disc" aria-hidden="true">'+R.glyph+'</div><div class="body">'+
+    '<h3>'+esc(it.name)+'</h3><span class="tag">'+R.label+'</span>'+
+    (it.note?'<p class="note">'+esc(it.note)+'</p>':'')+
+    '<p class="meta">'+CATS[it.cat]+'</p>'+altsFor(it)+'</div></article>';
+}
+function notFound(text){
+  return '<article class="card r-0"><div class="disc" aria-hidden="true">–</div><div class="body"><h3>״'+esc(text)+'״ לא ברשימות</h3>'+
+    '<p class="note">לפי ההנחיות, מה שלא מופיע ברשימות אינו חלק מהטיפול ועדיף להימנע ממנו.</p>'+
+    '<p class="meta">אם זה חשוב לך, שווה לשאול את אור.</p></div></article>';
+}
+function renderHome(){
+  let h='<p class="intro">מקלידים מזון ורואים מיד אם הוא מתאים. ככה נראים המומלצים ביותר:</p>';
+  for(const c of CHIP_CATS){
+    const tops=ITEMS.filter(it=>it.cat===c&&it.r==='5'&&!ADDON.has(it.name));
+    const shown=tops.slice(0,8);
+    h+='<div class="group"><div class="group-head"><h2>'+CATS[c]+'</h2><button class="more" data-cat="'+c+'">כל הרשימה ←</button></div>'+
+       '<div class="chips">'+shown.map(it=>chip(it.name,'5')).join('')+'</div></div>';
+  }
+  results.innerHTML=h;
+}
+function renderCat(c){
+  const list=ITEMS.filter(it=>it.cat===c);
+  let h='';
+  for(const r of ['5','4','3','2','x','q','i']){
+    const tier=list.filter(it=>it.r===r); if(!tier.length)continue;
+    h+='<div class="tier r-'+r+'"><div class="tier-head"><span class="disc sm" aria-hidden="true">'+RATE[r].glyph+'</span><h2>'+RATE[r].label+'</h2></div>'+
+      tier.map(it=>'<div class="row"><b>'+esc(it.name)+'</b>'+(it.note?'<span>'+esc(it.note)+'</span>':'')+'</div>').join('')+'</div>';
+  }
+  results.innerHTML=h;
+}
+function render(){
+  const raw=q.value.trim(), qq=norm(raw);
+  clearBtn.hidden=!raw;
+  if(!qq){ cat==='all'?renderHome():renderCat(cat); return; }
+  let found=ITEMS.filter(it=>cat==='all'||it.cat===cat).map(it=>({it,s:score(it,qq)})).filter(x=>x.s<9)
+    .sort((a,b)=>a.s-b.s||ORDER[a.it.r]-ORDER[b.it.r]).slice(0,30);
+  if(!found.length){results.innerHTML=notFound(raw);return;}
+  const exact=found.some(x=>x.s===0);
+  results.innerHTML=found.map(x=>card(x.it)).join('')+(exact?'':'<p class="hint">לא מצאת בדיוק את מה שחיפשת? מה שלא מופיע ברשימות, עדיף להימנע ממנו.</p>');
+}
+function setCat(c){
+  cat=c;
+  document.querySelectorAll('.cat').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===c?'true':'false'));
+  render();
+}
+document.getElementById('cats').innerHTML=Object.keys(CHIP_NAMES).map(c=>'<button class="cat" data-c="'+c+'" aria-pressed="'+(c==='all')+'">'+CHIP_NAMES[c]+'</button>').join('');
+document.getElementById('cats').addEventListener('click',e=>{const b=e.target.closest('.cat');if(b)setCat(b.dataset.c)});
+q.addEventListener('input',render);
+clearBtn.addEventListener('click',()=>{q.value='';render();q.focus()});
+document.addEventListener('click',e=>{
+  const go=e.target.closest('[data-go]'); if(go){showTab('search');setCat('all');q.value=go.dataset.go;render();window.scrollTo({top:0});return;}
+  const more=e.target.closest('[data-cat]'); if(more){showTab('search');q.value='';setCat(more.dataset.cat);window.scrollTo({top:0});}
+});
+
+/* ---------- plate ---------- */
+const PLATES=[
+  {id:'merc',name:'מרצדס',sub:'מאוזנת',parts:[['veg',30],['protein',30],['carb',30],['fat',10]]},
+  {id:'clean',name:'מנקה',sub:'הרבה ירק, מרזה',parts:[['veg',50],['protein',25],['carb',20],['fat',5]]},
+  {id:'nocarb',name:'בלי פחמימה',sub:'חלבון מהחי וירק',parts:[['veg',50],['protein',50]],extra:'ומעט שומן'}
+];
+const PART={veg:{name:'ירק',col:'var(--veg)'},protein:{name:'חלבון',col:'var(--prot)'},carb:{name:'פחמימה',col:'var(--carb)'},fat:{name:'שומן',col:'var(--fat)'}};
+let plateId=store.get('plate')||'merc';
+function arc(cx,cy,r,a0,a1){
+  const p=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+  const [x0,y0]=p(a0),[x1,y1]=p(a1);
+  return 'M'+cx+','+cy+' L'+x0.toFixed(2)+','+y0.toFixed(2)+' A'+r+','+r+' 0 '+((a1-a0)>Math.PI?1:0)+' 1 '+x1.toFixed(2)+','+y1.toFixed(2)+' Z';
+}
+function renderPlate(){
+  const P=PLATES.find(p=>p.id===plateId)||PLATES[0];
+  document.getElementById('seg').innerHTML=PLATES.map(p=>'<button data-plate="'+p.id+'" aria-pressed="'+(p.id===P.id)+'"><b>'+p.name+'</b><span>'+p.sub+'</span></button>').join('');
+  let svg='<svg viewBox="0 0 240 240" role="img" aria-label="צלחת '+P.name+'">';
+  svg+='<circle cx="120" cy="120" r="116" fill="var(--plate)" stroke="var(--line)" stroke-width="1.5"/>';
+  for(let i=0;i<32;i++){const a=i/32*Math.PI*2;svg+='<circle cx="'+(120+106*Math.cos(a)).toFixed(2)+'" cy="'+(120+106*Math.sin(a)).toFixed(2)+'" r="'+(i%2?1.8:3)+'" fill="var(--cobalt)" opacity="'+(i%2?.45:.8)+'"/>';}
+  svg+='<circle cx="120" cy="120" r="96" fill="var(--plate-in)" stroke="var(--cobalt)" stroke-opacity=".3" stroke-width="1"/>';
+  let a=-Math.PI/2;
+  for(const [k,pct] of P.parts){
+    const a1=a+pct/100*Math.PI*2;
+    svg+='<path d="'+arc(120,120,88,a,a1)+'" fill="'+PART[k].col+'" stroke="var(--plate-in)" stroke-width="3" stroke-linejoin="round"/>';
+    if(pct>=8){const m=(a+a1)/2;svg+='<text x="'+(120+54*Math.cos(m)).toFixed(1)+'" y="'+(120+54*Math.sin(m)).toFixed(1)+'" text-anchor="middle" dominant-baseline="central" fill="var(--slice-ink)" font-family="Fredoka, Assistant, sans-serif" font-weight="600" font-size="15">'+pct+'%</text>'}
+    a=a1;
+  }
+  svg+='</svg>';
+  document.getElementById('plateSvg').innerHTML=svg;
+  const parts=P.parts.slice(); if(P.extra)parts.push(['fat',null]);
+  document.getElementById('legend').innerHTML=parts.map(([k,pct])=>{
+    const c=k==='protein'?'protein':k==='carb'?'carb':k==='fat'?'fat':'veg';
+    let items=ITEMS.filter(it=>it.cat===c&&it.r==='5'&&!ADDON.has(it.name)&&!(P.id==='nocarb'&&PLANT.has(it.name)));
+    if(items.length<4) items=topOf(c,6);
+    const name=k==='protein'&&P.id==='nocarb'?'חלבון מהחי':k==='veg'?'ירק מבושל':PART[k].name;
+    return '<div class="leg"><div class="leg-head"><span class="sw" style="background:'+PART[k].col+'"></span><h3>'+name+'</h3><span class="pct">'+(pct===null?'מעט':pct+'%')+'</span></div>'+
+      '<div class="chips">'+items.slice(0,6).map(it=>chip(it.name,it.r)).join('')+'<button class="more" data-cat="'+c+'">עוד ←</button></div></div>';
+  }).join('');
+}
+document.getElementById('seg').addEventListener('click',e=>{const b=e.target.closest('[data-plate]');if(b){plateId=b.dataset.plate;store.set('plate',plateId);renderPlate()}});
+
+/* ---------- rules ---------- */
+function redChips(names){return names.map(n=>'<button class="chip red" data-go="'+esc(n)+'">'+esc(n)+'</button>').join('')}
+document.getElementById('cutChips').innerHTML=redChips(['על האש','צרוב','גריל','קלוי','מטוגן','חומצי','קפה','אלכוהול']);
+document.getElementById('tasteChips').innerHTML=redChips(['חריף','חמוץ','מלוח מאוד','מתוק קיצוני','נענע']);
+(function(){
+  const cook=ITEMS.filter(it=>it.cat==='cook'&&/[2-5]/.test(it.r));
+  let h='';
+  for(const r of ['5','4','3','2']){
+    const t=cook.filter(it=>it.r===r); if(!t.length)continue;
+    h+='<div class="tier r-'+r+'"><div class="tier-head"><span class="disc sm" aria-hidden="true">'+r+'</span><h2>'+RATE[r].label+'</h2></div>'+
+      t.map(it=>'<div class="row"><b>'+esc(it.name)+'</b>'+(it.note?'<span>'+esc(it.note)+'</span>':'')+'</div>').join('')+'</div>';
+  }
+  document.getElementById('cookTiers').innerHTML=h;
+})();
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  const lines=[...document.querySelectorAll('#askList li')].map((li,i)=>(i+1)+'. '+li.textContent);
+  const text='היי אור, כמה שאלות יישום על ההנחיות:\n'+lines.join('\n');
+  const btn=document.getElementById('copyBtn'), ta=document.getElementById('copyText');
+  const fallback=()=>{ta.value=text;ta.hidden=false;ta.focus();ta.select();btn.textContent='מסמנים ומעתיקים מהתיבה'};
+  try{navigator.clipboard.writeText(text).then(()=>{btn.textContent='הועתק. אפשר להדביק בוואטסאפ'},fallback)}catch(e){fallback()}
+});
+
+/* ---------- tabs ---------- */
+const TABS=['search','plate','rules'];
+function showTab(t){
+  if(!TABS.includes(t))t='search';
+  TABS.forEach(x=>{document.getElementById('p-'+x).hidden=x!==t});
+  document.querySelectorAll('nav.tabs button').forEach(b=>{if(b.dataset.tab===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  store.set('tab',t);
+}
+document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){showTab(b.dataset.tab);window.scrollTo({top:0})}});
+
+/* ---------- start ---------- */
+updateHeader(); renderMeals(); render(); renderPlate();
+showTab((location.hash||'').slice(1)||store.get('tab')||'search');
+setInterval(()=>{updateHeader();renderMeals()},30000);
+
+/* ---------- offline + updates ---------- */
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.addEventListener("message",e=>{
+    if(!(e.data&&e.data.type==="update")||document.querySelector(".toast"))return;
+    const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");
+    t.innerHTML='<span>יש גרסה חדשה</span><button type="button">לטעון</button>';
+    t.querySelector("button").addEventListener("click",()=>location.reload());
+    document.body.appendChild(t);
+  });
+  addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+
+</body>
+</html>
