@@ -168,8 +168,34 @@ p{margin:0}
 #copyText{width:100%;min-height:120px;font:inherit;font-size:.9rem;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px}
 .foot{color:var(--muted);font-size:.85rem;text-align:center;padding:18px 0 4px}
 
+/* tracking */
+.fb{background:var(--surface);border-radius:18px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.fb h2{font-size:1.15rem}
+.fb-big{font:600 2.6rem/1 var(--font-display);color:var(--r5);font-variant-numeric:tabular-nums;direction:ltr;text-align:right}
+.fb-big span{font-size:1.4rem;color:var(--muted)}
+.fb ul{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:4px}
+.days{display:flex;flex-direction:column;gap:8px}
+.day{background:var(--surface);border-radius:16px;box-shadow:var(--shadow)}
+.day.today{outline:2px solid var(--cobalt);outline-offset:-2px}
+.day-row{width:100%;border:0;background:transparent;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;padding:12px 16px;text-align:start;border-radius:16px}
+.dname{font-weight:700}
+.dname small{color:var(--muted);font-weight:400;margin-inline-start:8px;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:6px}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--line)}
+.dot.on{background:var(--r5);border-color:var(--r5)}
+.dstat{min-width:4.5em;text-align:end;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.day.full .dstat{color:var(--r5);font-weight:700}
+.day.empty .dname,.day.empty .dots{opacity:.55}
+.day-edit{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 12px}
+.meal.col{flex-direction:column;gap:2px;min-height:68px}
+.meal small{font-weight:400;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
+.bk-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.btn.ghost{background:transparent;color:var(--cobalt);border:1.5px solid var(--cobalt);display:inline-flex;align-items:center;cursor:pointer}
+.bk-msg{font-size:.92rem;color:var(--ink);min-height:1.3em}
+.vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
 /* bottom nav */
-nav.tabs{position:fixed;inset:auto 0 0 0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs{position:fixed;inset:auto 0 0 0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(6px + env(safe-area-inset-bottom,0px))}
 nav.tabs button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--muted);font-weight:600;font-size:.85rem}
 nav.tabs button[aria-current="page"]{color:var(--cobalt)}
 nav.tabs svg{width:26px;height:26px}
@@ -183,7 +209,7 @@ nav.tabs svg{width:26px;height:26px}
 <body>
 <div class="app">
   <header class="hello">
-    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 2</span></div>
+    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 3</span></div>
     <span class="status" id="status">המטבח פתוח</span>
     <div class="meals" role="group" aria-label="ארוחות היום">
       <button class="meal" id="m0" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>בוקר</button>
@@ -211,6 +237,19 @@ nav.tabs svg{width:26px;height:26px}
     <div class="plate-wrap" id="plateSvg"></div>
     <p class="plate-note">שליש עד חצי מהצלחת: ירק מבושל<small>לפי ההנחיות, זה הכי חשוב</small></p>
     <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel" id="p-track" hidden>
+    <div id="feedback"></div>
+    <h2 class="section-title">14 הימים האחרונים</h2>
+    <p class="hint" style="padding-top:0">נוגעים ביום כדי לתקן סימון.</p>
+    <div class="days" id="days"></div>
+    <div class="rule" style="margin-top:12px">
+      <h3>גיבוי</h3>
+      <p>ההיסטוריה נשמרת רק בטלפון הזה. אם מוחקים את האפליקציה ממסך הבית, היא נמחקת. כדאי לשמור קובץ גיבוי מדי פעם, למשל בקבצים.</p>
+      <div class="bk-row"><button class="btn" id="bkSave">שמירת קובץ גיבוי</button><label class="btn ghost" for="bkFile">שחזור מקובץ</label><input type="file" id="bkFile" class="vh" accept=".json,application/json"></div>
+      <p class="bk-msg" id="bkMsg" role="status"></p>
+    </div>
   </section>
 
   <section class="panel" id="p-rules" hidden>
@@ -255,6 +294,7 @@ nav.tabs svg{width:26px;height:26px}
 <nav class="tabs" aria-label="ניווט">
   <button data-tab="search" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>מותר או לא</button>
   <button data-tab="plate"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 12V3M12 12l7 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>צלחת</button>
+  <button data-tab="track"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>מעקב</button>
   <button data-tab="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.5" fill="currentColor"/><circle cx="4.5" cy="12" r="1.5" fill="currentColor"/><circle cx="4.5" cy="18" r="1.5" fill="currentColor"/></svg>כללים</button>
 </nav>
 
@@ -485,7 +525,6 @@ const store = {
 };
 
 /* ---------- header: greeting, kitchen clock, meals ---------- */
-function todayKey(){const d=new Date();return 'meals-'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function updateHeader(){
   const d=new Date(), h=d.getHours(), mins=h*60+d.getMinutes(), close=20*60;
   const g = h>=5&&h<11?'בוקר טוב':h>=11&&h<16?'צהריים טובים':h>=16&&h<21?'ערב טוב':'לילה טוב';
@@ -498,16 +537,112 @@ function updateHeader(){
     else{st.className='status';st.textContent='המטבח פתוח עוד '+hh+':'+String(mm).padStart(2,'0')+' שעות'}
   }
 }
-function loadMeals(){let v=store.get(todayKey());return v?v.split('').map(c=>c==='1'):[false,false,false]}
+/* ---------- log: meals by date and time, kept only on this phone ---------- */
+const LOG_KEY='kitchen-log-v1', START_KEY='kitchen-start';
+const MEALS=['בוקר','צהריים','ערב'];
+const DAYN=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+const TICK='<span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+let LOG={}, openDay=null;
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const hhmm=d=>pad(d.getHours())+':'+pad(d.getMinutes());
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+function saveLog(){store.set(LOG_KEY,JSON.stringify(LOG))}
+function loadLog(){
+  try{LOG=JSON.parse(store.get(LOG_KEY)||'{}')||{}}catch(e){LOG={}}
+  try{ // versions 1-2 kept "meals-Y-M-D" = "101"; move it into the log once
+    const old=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^meals-\d+-\d+-\d+$/.test(k))old.push(k)}
+    old.forEach(k=>{const m=k.split('-'),key=m[1]+'-'+pad(m[2])+'-'+pad(m[3]),v=localStorage.getItem(k)||'';
+      if(!LOG[key]&&v.includes('1'))LOG[key]=[0,1,2].map(j=>v[j]==='1'?'?':null);localStorage.removeItem(k)});
+  }catch(e){}
+  const first=Object.keys(LOG).sort()[0], st=store.get(START_KEY), today=dkey(new Date());
+  store.set(START_KEY,[st||today,first||today].sort()[0]);
+  saveLog();
+}
+const dayOf=k=>LOG[k]||[null,null,null];
+function setMeal(k,i,on,time){const d=dayOf(k).slice();d[i]=on?time:null;if(d.every(x=>!x))delete LOG[k];else LOG[k]=d;saveLog()}
+// "?" = marked later for a past day, so the time is unknown
+function toggleMeal(k,i){setMeal(k,i,!dayOf(k)[i],k===dkey(new Date())?hhmm(new Date()):'?');renderMeals();renderTrack()}
 function renderMeals(){
-  const m=loadMeals();
-  m.forEach((on,i)=>document.getElementById('m'+i).setAttribute('aria-pressed',on?'true':'false'));
+  const m=dayOf(dkey(new Date()));
+  m.forEach((t,i)=>document.getElementById('m'+i).setAttribute('aria-pressed',t?'true':'false'));
   const n=m.filter(Boolean).length;
   document.getElementById('mealsNote').textContent = n===3?'שלוש ארוחות מבושלות היום. יפה מאוד.':n?'סימנת '+n+' מתוך 3 ארוחות היום.':'מסמנים כל ארוחה מבושלת שאכלת היום.';
 }
-[0,1,2].forEach(i=>document.getElementById('m'+i).addEventListener('click',()=>{
-  const m=loadMeals(); m[i]=!m[i]; store.set(todayKey(),m.map(b=>b?'1':'0').join('')); renderMeals();
-}));
+[0,1,2].forEach(i=>document.getElementById('m'+i).addEventListener('click',()=>toggleMeal(dkey(new Date()),i)));
+
+/* ---------- tracking: weekly feedback + last 14 days ---------- */
+function stats(from){ // 7 days, starting "from" days ago and going back; today is never counted
+  const st=store.get(START_KEY), now=new Date(), s={days:0,full:0,empty:0,late:0,miss:[0,0,0]};
+  for(let n=from;n<from+7;n++){
+    const k=dkey(addDays(now,-n)); if(st&&k<st)continue;
+    s.days++; const v=dayOf(k), c=v.filter(Boolean).length;
+    if(c===3)s.full++;
+    if(!c){s.empty++;continue}
+    v.forEach((t,i)=>{if(!t)s.miss[i]++;else if(t!=='?'&&t>='20:00')s.late++});
+  }
+  return s;
+}
+function renderFeedback(){
+  const s=stats(1), p=stats(8), el=document.getElementById('feedback');
+  if(!s.days){el.innerHTML='<div class="fb"><h2>המשוב השבועי</h2><p>יופיע מחר, אחרי היום המלא הראשון. בינתיים מסמנים כל ארוחה בראש המסך.</p></div>';return}
+  const L=[], filled=s.days-s.empty, mx=Math.max(...s.miss);
+  if(filled){ if(!mx)L.push('בימים שסימנת לא דילגת על אף ארוחה. יפה מאוד.'); else {const i=s.miss.indexOf(mx);L.push('הכי מדולגת: ארוחת '+MEALS[i]+' ('+(mx===1?'פעם אחת':mx+' פעמים')+').')} }
+  if(s.empty)L.push((s.empty===1?'יום אחד':s.empty+' ימים')+' בלי שום סימון. אם אכלת ושכחת לסמן, אפשר לתקן למטה.');
+  if(s.late)L.push((s.late===1?'ארוחה אחת סומנה':s.late+' ארוחות סומנו')+' אחרי 20:00.');
+  if(p.days>=3){const a=s.full/s.days,b=p.full/p.days;L.push(a>b+.01?'יותר ימים מלאים מהשבוע שלפני.':a<b-.01?'פחות ימים מלאים מהשבוע שלפני.':'בדיוק כמו השבוע שלפני.')}
+  el.innerHTML='<div class="fb"><h2>המשוב השבועי</h2><div class="fb-big">'+s.full+'<span>/'+s.days+'</span></div><p>'+(s.days<7?'ימים עם שלוש ארוחות, מאז שהתחלת':'ימים עם שלוש ארוחות בשבוע האחרון')+'</p>'+(L.length?'<ul>'+L.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'')+'</div>';
+}
+function renderDays(){
+  const st=store.get(START_KEY), now=new Date(), today=dkey(now); let h='';
+  for(let n=0;n<14;n++){
+    const d=addDays(now,-n), k=dkey(d); if(st&&k<st)break;
+    const v=dayOf(k), c=v.filter(Boolean).length, isT=k===today, open=openDay===k;
+    const stat=isT?'היום':c===3?'3/3':c?c+'/3':'לא מולא';
+    h+='<div class="day'+(isT?' today':'')+(c===3?' full':'')+(!c&&!isT?' empty':'')+'">'+
+      '<button class="day-row" data-day="'+k+'" aria-expanded="'+open+'"><span class="dname">יום '+DAYN[d.getDay()]+'<small>'+d.getDate()+'.'+(d.getMonth()+1)+'</small></span>'+
+      '<span class="dots" aria-hidden="true">'+v.map(t=>'<i class="dot'+(t?' on':'')+'"></i>').join('')+'</span><span class="dstat">'+stat+'</span></button>'+
+      (open?'<div class="day-edit">'+MEALS.map((m,i)=>'<button class="meal col" data-k="'+k+'" data-i="'+i+'" aria-pressed="'+(v[i]?'true':'false')+'">'+TICK+m+(v[i]&&v[i]!=='?'?'<small>'+v[i]+'</small>':'')+'</button>').join('')+'</div>':'')+
+      '</div>';
+  }
+  document.getElementById('days').innerHTML=h;
+}
+function renderTrack(){renderFeedback();renderDays()}
+document.getElementById('days').addEventListener('click',e=>{
+  const m=e.target.closest('.meal[data-k]'); if(m){toggleMeal(m.dataset.k,+m.dataset.i);return}
+  const r=e.target.closest('.day-row'); if(r){openDay=openDay===r.dataset.day?null:r.dataset.day;renderDays()}
+});
+
+/* ---------- backup to a file ---------- */
+function bkMsg(t){document.getElementById('bkMsg').textContent=t}
+document.getElementById('bkSave').addEventListener('click',async()=>{
+  const name='המטבח-גיבוי-'+dkey(new Date())+'.json';
+  const text=JSON.stringify({app:'kitchen',v:1,saved:new Date().toISOString(),start:store.get(START_KEY),log:LOG});
+  let file=null; try{file=new File([text],name,{type:'application/json'})}catch(e){}
+  try{ if(file&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});bkMsg('הגיבוי נשמר.');return} }
+  catch(e){ if(e&&e.name==='AbortError')return }
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(file||new Blob([text],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);bkMsg('הקובץ ירד. אפשר לשמור אותו בקבצים.')}
+  catch(e){bkMsg('לא הצלחתי לשמור קובץ במכשיר הזה.')}
+});
+document.getElementById('bkFile').addEventListener('change',e=>{
+  const inp=e.target, f=inp.files&&inp.files[0]; if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const j=JSON.parse(rd.result), lg=j&&j.log; if(!lg||typeof lg!=='object')throw new Error('bad');
+      let n=0;
+      for(const k in lg){
+        if(!/^\d{4}-\d\d-\d\d$/.test(k)||!Array.isArray(lg[k]))continue;
+        const cur=dayOf(k), inc=lg[k], merged=[0,1,2].map(i=>cur[i]||(typeof inc[i]==='string'&&inc[i]?inc[i]:null));
+        if(merged.some(Boolean)){LOG[k]=merged;n++}
+      }
+      const keys=Object.keys(LOG).sort(); if(keys[0]&&keys[0]<(store.get(START_KEY)||'9999'))store.set(START_KEY,keys[0]);
+      saveLog(); renderMeals(); renderTrack(); bkMsg('שוחזרו '+n+' ימים מהגיבוי.');
+    }catch(err){bkMsg('הקובץ הזה לא נראה כמו גיבוי של המטבח.')}
+    inp.value='';
+  };
+  rd.readAsText(f);
+});
 
 /* ---------- search ---------- */
 let cat='all';
@@ -655,19 +790,22 @@ document.getElementById('copyBtn').addEventListener('click',()=>{
 });
 
 /* ---------- tabs ---------- */
-const TABS=['search','plate','rules'];
+const TABS=['search','plate','track','rules'];
 function showTab(t){
   if(!TABS.includes(t))t='search';
   TABS.forEach(x=>{document.getElementById('p-'+x).hidden=x!==t});
   document.querySelectorAll('nav.tabs button').forEach(b=>{if(b.dataset.tab===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   store.set('tab',t);
+  if(t==='track')renderTrack();
 }
 document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){showTab(b.dataset.tab);window.scrollTo({top:0})}});
 
 /* ---------- start ---------- */
-updateHeader(); renderMeals(); render(); renderPlate();
+loadLog(); updateHeader(); renderMeals(); render(); renderPlate();
 showTab((location.hash||'').slice(1)||store.get('tab')||'search');
-setInterval(()=>{updateHeader();renderMeals()},30000);
+function refresh(){updateHeader();renderMeals();if(!document.getElementById('p-track').hidden)renderTrack()}
+setInterval(refresh,30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 
 /* ---------- offline + updates ---------- */
 if("serviceWorker" in navigator){
