@@ -63,6 +63,8 @@ p{margin:0}
 /* header */
 .hello{display:flex;flex-direction:column;gap:10px;padding-block:6px 14px}
 .hello h1{font-size:1.75rem;line-height:1.2}
+.hello-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ver{flex:0 0 auto;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:.8rem;font-weight:700;font-variant-numeric:tabular-nums}
 .status{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 12px;border-radius:999px;background:var(--cobalt-soft);color:var(--cobalt);font-weight:600;font-size:.95rem}
 .status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
 .status.soon{background:color-mix(in srgb,var(--r3) 22%,var(--surface));color:var(--ink)}
@@ -180,7 +182,7 @@ nav.tabs svg{width:26px;height:26px}
 <body>
 <div class="app">
   <header class="hello">
-    <h1 id="greet">שלום</h1>
+    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 1</span></div>
     <span class="status" id="status">המטבח פתוח</span>
     <div class="meals" role="group" aria-label="ארוחות היום">
       <button class="meal" id="m0" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>בוקר</button>
