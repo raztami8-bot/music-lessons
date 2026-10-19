@@ -9,8 +9,12 @@ LESSONS = {
     1: ("ג׳אם אסיד ראשון", "תופים, בס חומצי וסיבובים חיים בקצב 128"),
     2: ("צלילה לעומק הבס", "מתנדים, מסנן, מעטפת, תנועה מחזורית ותרגילים"),
     3: ("הקלידים של הבס", "16 הקלידים, אוקטבה, סולמות לאסיד והעברת ריף"),
-    4: ("ג׳אם אסיד עם הטי־8", "תופים ובס בקופסה אחת, הדגשות, שאיבה מהקיק וסיבובים חיים"),
+    4: ("היכרות עם הטי־8", "מאפס: הדלקה, מפה של הלוח, כל צליל, והשפה של הלחצנים"),
+    5: ("ג׳אם אסיד עם הטי־8", "תופים ובס בקופסה אחת, הדגשות, שאיבה מהקיק וסיבובים חיים"),
 }
+
+T8CAP = "תרשים מצויר לפי המדריך הרשמי, לא צילום"
+T8_LESSONS = (4, 5)
 
 # Photos: (lesson, kind, anchor) -> images + legend. Legend order matches the numbers drawn on each photo.
 PHOTOS = [
@@ -38,6 +42,17 @@ PHOTOS = [
     (3, "card", "3.1", ["l3-03"], ["●|", "▶|", "VCO1 · 2 · 3|", "1 … 16|הקלידים", "TEMPO|"], ""),
     (3, "after", "<h2>אותו קליד, הרבה תפקידים</h2>", ["l3-04"], ["FUNC|", "1 · 2 · 3|קיבוץ", "4 · 5 · 6 · 7|תנועה מחזורית", "8 · 9 · 10|צורת גל", "11 · 12|החזקה ומעטפת", "13 … 16|מחיקות"], ""),
     (3, "card", "4.3", ["l3-05"], ["MEMORY|", "FUNC|", "M1 … M8|", "|התצוגה"], ""),
+    # lesson 4: drawn map of the T-8 (src/t8map.py), not photos
+    (4, "card", "1.1", ["l4-01"], ["CHARGE|נורית הטעינה", "MIX OUT|אוזניות", "VOLUME|עוצמה"], T8CAP),
+    (4, "card", "1.3", ["l4-02"], ["|התצוגה", "TEMPO/VALUE|", "▶|נגינה ועצירה"], T8CAP),
+    (4, "card", "2.1", ["l4-03"], ["|התצוגה", "TEMPO/VALUE|", "SHIFT|", "PATTERN|", "▶|", "●|"], T8CAP),
+    (4, "card", "2.2", ["l4-04"], ["BASS DRUM|", "SNARE DRUM|", "HAND CLAP|", "TOM|", "CLOSED HIHAT|", "OPEN HIHAT|"], T8CAP),
+    (4, "card", "2.3", ["l4-06"], ["BASS|", "KYBD|", "CUTOFF|", "RESO|", "ENV MOD|", "DECAY|של הבס"], T8CAP),
+    (4, "card", "2.4", ["l4-08"], ["DELAY|", "REVERB|", "ACCENT|"], T8CAP),
+    (4, "card", "2.5", ["l4-07"], ["1|C · EXIT", "10|A", "14|OCT-", "15|OCT+", "16|SLIDE"], T8CAP),
+    (4, "card", "3.1", ["l4-09"], ["PATTERN|", "16|תבנית 16", "SHIFT|", "11|PTN CLEAR ALL"], T8CAP),
+    (4, "card", "3.2", ["l4-05"], ["BASS DRUM|לחצן הכלי", "LEVEL|", "TUNE|", "DECAY|הלחצן העגול", "1|צעד 1"], T8CAP),
+    (4, "card", "5.3", ["l4-10"], ["SHIFT|", "15|MENU", "TEMPO/VALUE|", "2|ENTER", "1|EXIT"], T8CAP),
 ]
 
 SIZES = {}
@@ -53,6 +68,9 @@ def figure(imgs, legend, cap):
     two = " two" if len(imgs) > 1 else ""
     tags = []
     for i in imgs:
+        if (HERE / "img" / f"{i}.svg").exists():
+            tags.append(f'<img src="img/{i}.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים">')
+            continue
         w, h = SIZES.get(i, (1140, 660))
         tags.append(f'<img src="img/{i}.webp" width="{w}" height="{h}" loading="lazy" alt="צילום המכשיר עם סימונים">')
     lis = ""
@@ -85,6 +103,9 @@ def split_cards(html, n):
             body = f'{head_html}<div class="col-do">{rest}</div><div class="col-learn">{learn.group(0)}</div>'
         return f"<article{attrs}>{body}</article>"
     return re.sub(r'<article class="card">(.*?)</article>', fix, html, flags=re.S)
+
+
+T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
 
 
 def page(n):
@@ -132,7 +153,7 @@ def page(n):
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
-</body>
+{T8JS if n in T8_LESSONS else ""}</body>
 </html>
 """
     (HERE / f"lesson-{n}.html").write_text(out, encoding="utf8")
@@ -240,6 +261,10 @@ def tool_page(key):
 
 
 if __name__ == "__main__":
+    import sys
+    sys.path.insert(0, str(SRC))
+    import t8map
+    t8map.build()
     totals = {n: page(n) for n in LESSONS}
     hub(totals)
     for k in TOOLS:
