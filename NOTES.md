@@ -6,7 +6,7 @@
 - Source content: shell plus six HTML fragments in `codex/src/`; diagram spec `figures.json`; task map and review checklist in `codex/PROJECT.md`. The existing Claude renderer is imported without running its build and writes only into a temporary Codex staging directory. No dependency or neighboring model files changed.
 - Musical values (90 tempo, send 30 and the illustrated beat) are proposed exercises, not measurements of Raz's device. All hardware operations were checked against the official v1.02 pattern, rhythm, bass, menu, panel and effects instructions; replacement choices were cross-checked with Roland's support table. Sources are linked in the lesson.
 - Save is explicitly Ptn for the previously empty practice slot. No factory reset or blanket clear is taught. Waveform shortcut names PATTERN explicitly because SHIFT with that same step would clear a pattern. Reload help explicitly says it discards unsaved changes.
-- Validation and public browser verification: in progress.
+- Validation completed: 32 source cards match 32 generated cards; all local assets, anchors and HTML structure checked; all 13 declared diagrams produced. No Claude/Grok files changed. GitHub Pages reported content commit 75b5706 as built. The public lesson passed browser checks at 1024x768 and 768x1024: all 32 practice cards advance in order, captions fit, images load, enlargement opens/closes, Finish restores the page, and no horizontal overflow was found. These are browser viewport checks; real iPad/Safari and physical-device audio remain untested.
 
 ## 2026-10-19 — Codex T-8 introduction, first excerpt
 

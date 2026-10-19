@@ -13,9 +13,11 @@ Content plan:
 - [x] Teach bass pitch/length, cutoff, resonance/envelope and saw/square selection.
 - [x] Add delay/reverb, mute arrangement, rolls, probability and bass slide with restoration instructions.
 - [x] Explain deliberate Ptn saving, stopping, unsaved changes and practical troubleshooting.
-- [ ] Verify chapter links, card/image pairing, expected output count and unchanged neighboring projects; browser-check landscape/portrait, navigation, enlargement and menu instructions.
-- [ ] Publish and verify the existing public URL.
+- [x] Verify chapter links, card/image pairing, expected output count and unchanged neighboring projects; browser-check landscape/portrait, navigation, enlargement and menu instructions.
+- [x] Publish and verify the existing public URL.
 
 Source of truth: Roland T-8 Owner's Manual v1.02, top panel, functions/menu, pattern, rhythm, bass and effects pages. Base-sound choices are cross-checked against Roland support article 6145882578715. Menu labels are case-sensitive examples of the segmented display, not browser controls. No factory reset or blanket pattern clear belongs in this course.
 
 Editing: `src/t8-intro.html` is the shell and opening cards. Six chapter HTML fragments contain subsequent cards. `src/figures.json` names the reused schematic control IDs. `python codex/build.py` creates one HTML page and exactly the declared diagrams under an exclusive lock; the image and HTML replacements are atomic per file.
+
+Verification completed: 32 authored/generated cards and 13 declared/generated diagrams; all public practice cards navigated in order. Landscape (1024x768) and portrait (768x1024) checks passed for image loading, caption containment, beat grids, menu reminders and image zoom. The public content commit 75b5706 is built. No real iPad/Safari or hardware audio testing was performed.
