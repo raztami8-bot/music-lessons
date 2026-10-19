@@ -14,7 +14,7 @@
 <!--
   This is the site's home page: one list of everything on the site.
   Adding something new? Add one <a class="item"> in the right section, with:
-    data-type = lesson | guide | tool      data-who = claude | grok | raz (space separated if several)
+    data-type = lesson | guide | tool      data-who = claude | grok | codex | raz (space separated if several)
   and the same badges inside it. Keep the one-line description short and say what it is for.
   No service worker here on purpose: the page always loads fresh, so updates show up at once.
 -->
@@ -37,6 +37,7 @@ header.top p{margin:0;color:#c9cfdb}
 .who{display:inline-block;font-size:.78rem;font-weight:700;padding:.1em .6em;border-radius:999px;white-space:nowrap}
 .who.claude{background:var(--claude-bg);color:var(--claude)}
 .who.grok{background:var(--grok-bg);color:var(--grok)}
+.who.codex{background:#ece7f8;color:#684594}
 .who.raz{background:var(--raz-bg);color:var(--raz)}
 .kind{display:inline-block;font-size:.78rem;padding:.05em .55em;border-radius:6px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .new{display:inline-block;font-size:.78rem;font-weight:700;padding:.05em .55em;border-radius:6px;background:var(--ink);color:var(--bg);white-space:nowrap}
@@ -88,6 +89,7 @@ a.item:active{background:var(--claude-bg)}
   <span>מי בנה:</span>
   <span class="who claude">קלוד</span>
   <span class="who grok">גרוק</span>
+  <span class="who codex">קודקס</span>
   <span class="who raz">רז</span>
 </div>
 
@@ -97,13 +99,14 @@ a.item:active{background:var(--claude-bg)}
   <button class="f" type="button" data-f="tool">כלים לנגן במסך</button>
   <button class="f" type="button" data-f="claude">של קלוד</button>
   <button class="f" type="button" data-f="grok">של גרוק</button>
+  <button class="f" type="button" data-f="codex">של קודקס</button>
 </nav>
 
 <div class="start" data-always>
   <h2>מאיפה להתחיל</h2>
   <ol>
     <li><b>הוולקות</b> (התופים והבס של קורג): <a href="#volca">שיעורים 1 עד 3</a>. יש שתי גרסאות, בחר אחת.</li>
-    <li><b>הטי־8</b>: קודם <a href="claude/lesson-4.html">שיעור 4, היכרות</a>, אחר כך <a href="claude/lesson-5.html">שיעור 5, ג׳אם</a>. <a href="t8-guide/">המדריך של גרוק</a> לעיון.</li>
+    <li><b>הטי־8</b>: <a href="codex/">קטע הפתיחה של קודקס — מתחילים מאפס</a>. לשיעורים הקיימים: קודם <a href="claude/lesson-4.html">שיעור 4, היכרות</a>, אחר כך <a href="claude/lesson-5.html">שיעור 5, ג׳אם</a>. <a href="t8-guide/">המדריך של גרוק</a> לעיון.</li>
     <li><b>לנגן באייפד בלי מכשיר</b>: <a href="#tools">הכלים</a> למטה.</li>
   </ol>
 </div>
@@ -137,8 +140,13 @@ a.item:active{background:var(--claude-bg)}
 <!-- ============ lessons: T-8 ============ -->
 <section class="grp" id="claude">
   <h2>שיעורים ומדריך: הטי־8</h2>
-  <p class="sub">שני שיעורים לפי הסדר, ומדריך אחד לעיון.</p>
+  <p class="sub">שיעורי היכרות ונגינה, קטע פתיחה למתחילים ומדריך לעיון.</p>
   <div class="list">
+    <a class="item" href="codex/" data-type="lesson" data-who="codex">
+      <div class="t"><b class="name">הטי־8 מאפס</b><span class="kind">קטע פתיחה</span></div>
+      <p>קודם מבינים, אחר כך מנסים: איורי המכשיר, נגינה ראשונה, עיצוב צליל והחלפת הקלאפ. לקריאה נוחה באייפד.</p>
+      <div class="tags"><span class="who codex">קודקס</span><span class="kind">שיעור</span><span class="dev">T-8</span></div>
+    </a>
     <a class="item" href="claude/lesson-4.html" data-type="lesson" data-who="claude">
       <div class="t"><span class="num">4</span><b class="name">היכרות עם הטי־8</b></div>
       <p>מאפס: הדלקה, מפה של הלוח, לשמוע כל תוף ואת הבס, ואיך הלחצנים עובדים. עם תרשים לחיץ ומשחק ״מצא את הכפתור״.</p>

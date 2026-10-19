@@ -1,14 +1,14 @@
+## 2026-10-19 — Codex T-8 introduction, first excerpt
 
-## 2026-10-19 — T-8 introduction preview (Codex, awaiting Raz review)
-
-- Raz approved an iPad-first introduction for a complete beginner: explain the idea and show the control before asking for an action. Understanding is part of every step, not an optional detour. He requested a first excerpt before any full-lesson rewrite.
-- The first excerpt is `claude/src/l4-intro.html`. Build only that excerpt with `python claude/build.py --intro-preview`; the sole HTML output is `claude/lesson-4-preview.html`. The existing `src/l4.html`, `lesson-4.html`, shared CSS/JS and other lessons are unchanged.
-- Reused `app.css`, `app.js`, practice mode and existing T-8 SVG diagrams. The preview has scoped inline CSS with text and figure side by side above 900px. Portrait uses normal scrolling. Practice position has a separate `4-intro-preview` namespace and the excerpt does not add completion entries to the original lesson.
-- Added official Roland top/rear panel images as `claude/img/t8-manual-top.png` and `t8-manual-rear.png`; attribution and links are in the excerpt. Source URLs: `https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312299_28312304.png` and `https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312309_28312312.png`.
-- Sequence: understand drums/bass/effects; distinguish knobs/buttons and volume/pitch/length; connect and power on; understand/play a stored pattern; experiment with kick LEVEL. Optional follow-up topics explain individual/shared sound controls. No pattern clearing, saving or factory reset is taught in this excerpt.
-- Verified controls against Roland Owner's Manual v1.02: top panel `28312299.html`, rear panel `28312309.html`, and patterns `28312254.html`. The clap/tom share LEVEL while TUNE acts on the selected instrument; hi-hats share LEVEL. Do not invent independent controls or assume that a physical knob position exactly matches its saved value.
-- This is a local preview, not a new public lesson. Do not add it to the public home page or deploy before Raz reviews it. After approval, integrate the agreed content into the existing lesson source and retain the original progress IDs where their meaning is unchanged.
-- Browser visual QA is pending: the browser tool refused access while its local preview tab was on an internal error page. Do not claim real iPad/Safari testing. The excerpt still needs landscape/portrait and practice-mode visual verification.
+- Raz requested a separate Codex entry in the same public site as Claude and Grok. Publish the prepared first excerpt under `codex/`, with a home-page card and author filter. Full-lesson expansion still awaits feedback.
+- Editable source: `codex/src/t8-intro.html`. Build: `python codex/build.py`. Sole output: `codex/index.html`. The prototype files formerly in `claude/` were moved and its build script restored; existing Claude lessons remain unchanged.
+- Reuse-first decision: reuse the existing `claude/app.css`, `app.js`, practice mode and T-8 SVG diagrams by relative URLs. No new dependency. The local build function was moved to Codex and retains an exclusive lock plus atomic replace.
+- Lessons explain concepts before actions. Landscape uses text beside the picture; portrait stacks them. Practice position uses `codex-t8-intro`; original lesson progress is not changed.
+- Raz clarified that he meant replacing a part's base sound, not only changing its volume or pitch. The excerpt now distinguishes the two and includes a guided clap-to-tom replacement. Kick, snare and each hi-hat have fixed base sounds; clap offers CP/hnt/htON, tom offers tON1/tON2, bass offers saw/square. Cross-checked against Roland support and the manual menu list.
+- Sources: https://support.roland.com/hc/en-us/articles/6145882578715-T-8-Can-I-change-the-sound-for-each-part and https://static.roland.com/manuals/T-8_manual_v102/eng/28312322.html . Existing panel/pattern instructions were checked against the same v1.02 manual.
+- Official Roland diagrams: `codex/img/t8-manual-top.png` and `t8-manual-rear.png`, sourced from https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312299_28312304.png and https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312309_28312312.png . Attribution is visible on the page.
+- No pattern clearing or saving is taught. Return menu choices to their recorded initial values. A physical knob position may differ from a saved value, so returning the knob is not an exact restoration.
+- Browser visual verification of the public page is pending. Earlier local browser access was refused on an internal error page; do not bypass that restriction or claim real iPad/Safari testing.
 
 ## לגרוק, מקלוד (15.10)
 
