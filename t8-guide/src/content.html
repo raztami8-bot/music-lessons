@@ -1,0 +1,508 @@
+<section id="start" class="card">
+<h2><span class="sn">01</span> התחלה מהירה: ביט מתנגן תוך 2 דקות</h2>
+<p class="lead">שמונה צעדים. בלי לשמור, בלי תפריטים. בסוף יש לך תוף בס ובס שמתנגנים.</p>
+<ol class="steps">
+<li>מחברים אוזניות או רמקול לשקע {{MIX OUT}}. מדליקים במתג {{[POWER]}} בגב. מרימים את {{[VOLUME]}} עד האמצע.</li>
+<li>לוחצים {{[PATTERN]}}. הכפתור נדלק, ו־16 כפתורי הצעד הופכים למספרי פטרנים. כפתור שדולק חלש = יש בו פטרן.</li>
+<li>לוחצים על כפתור צעד שדולק חלש. זה הפטרן שיתנגן.</li>
+<li>לוחצים {{[▶] (PLAY)}}. הפטרן מתנגן. לוחצים שוב כדי לעצור.</li>
+<li>מסובבים את {{[TEMPO/VALUE]}} כדי לשנות קצב. הקצב תמיד מופיע בתצוגה. לאסיד נסה 128–132.</li>
+<li>רוצים ביט משלך? לוחצים {{[BASS DRUM]}}. עכשיו כפתורי הצעד מראים את תוף הבס.</li>
+<li>לוחצים צעדים 1, 5, 9, 13. כל לחיצה מדליקה צעד. לחיצה על צעד דולק מוחקת אותו.</li>
+<li>לוחצים {{[BASS]}} ואז כמה צעדים, למשל 3, 7, 11, 15. כל צעד חדש מקבל את התו C2. מסובבים את {{[CUTOFF]}} ו־{{[RESO]}} ושומעים את החומצה.</li>
+</ol>
+<grid label="תוף בס" on="1,5,9,13" c="pink"></grid>
+<grid label="בס" on="3,7,11,15" c="cyan"></grid>
+<div class="note warn"><b>חשוב:</b> כשמכבים את המכשיר, כל מה שלא נשמר חוזר למצב השמור האחרון. איך שומרים? בפרק <a href="#patterns">פטרנים</a>.</div>
+</section>
+
+<section id="panel" class="card">
+<h2><span class="sn">02</span> סיור בפאנל</h2>
+<p class="lead">ציור פשוט של הפאנל (לא בקנה מידה). נוגעים בכפתור או בכפתור סיבובי, והסבר מופיע למטה.</p>
+<div class="panelwrap"><div class="panelscroll" id="panelscroll">PANEL_SVG</div></div>
+<p class="hint narrow-only">בטלפון: גוללים את הציור לצדדים.</p>
+<div class="info" id="info" aria-live="polite"><div class="info-k" id="info-k">{{[SHIFT]}}</div><div class="info-d" id="info-d">נגיעה בפקד בציור תראה כאן מה הוא עושה.</div></div>
+
+<h3>כפתורי הצעד: לכל כפתור שלושה תפקידים</h3>
+<p>16 הכפתורים בשורה התחתונה הם הצעדים 1–16. בנוסף, על כל כפתור מודפס תו (לנגינת בס במצב {{[KYBD]}}), ומתחתיו פונקציה (עם {{[SHIFT]}}).</p>
+<div class="tbl"><table>
+<thead><tr><th>צעד</th><th>תו</th><th>עם [SHIFT]</th><th>מה זה עושה</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>{{C}}</td><td>{{EXIT}}</td><td>יציאה מתפריט</td></tr>
+<tr><td>2</td><td>{{C#}}</td><td>{{ENTER}}</td><td>אישור</td></tr>
+<tr><td>3</td><td>{{D}}</td><td>{{SHUFFLE}}</td><td>שאפל (סווינג)</td></tr>
+<tr><td>4</td><td>{{D#}}</td><td>{{LAST}}</td><td>אורך הפטרן (הצעד האחרון)</td></tr>
+<tr><td>5</td><td>{{E}}</td><td>{{STEP 1-16}}</td><td>עמוד ראשון של צעדים</td></tr>
+<tr><td>6</td><td>{{F}}</td><td>{{STEP 17-32}}</td><td>עמוד שני של צעדים</td></tr>
+<tr><td>7</td><td>{{F#}}</td><td>{{FILL TRG}}</td><td>מפעיל מעבר (פיל) בסוף הפטרן</td></tr>
+<tr><td>8</td><td>{{G}}</td><td>{{FILL PTN}}</td><td>בוחר איזה פטרן ישמש כפיל</td></tr>
+<tr><td>9</td><td>{{G#}}</td><td>{{RANDOM RHYTHM}}</td><td>תופים אקראיים</td></tr>
+<tr><td>10</td><td>{{A}}</td><td>{{RANDOM BASS}}</td><td>בס אקראי</td></tr>
+<tr><td>11</td><td>{{A#}}</td><td>{{PTN CLEAR ALL}}</td><td>מחיקת כל הפטרן</td></tr>
+<tr><td>12</td><td>{{B}}</td><td>{{PTN CLEAR INST}}</td><td>מחיקת הכלי הנבחר בלבד</td></tr>
+<tr><td>13</td><td>{{C}}</td><td>{{DELAY}}</td><td>הגדרות דיליי (כמה כל כלי שולח)</td></tr>
+<tr><td>14</td><td>{{OCT-}}</td><td>{{REVERB}}</td><td>הגדרות ריוורב</td></tr>
+<tr><td>15</td><td>{{OCT+}}</td><td>{{MENU}}</td><td>התפריט</td></tr>
+<tr><td>16</td><td>{{SLIDE}}</td><td>{{WRITE}}</td><td>שמירה</td></tr>
+</tbody></table></div>
+<p class="small">בספר ההפעלה הכפתורים נקראים בשני השמות יחד, למשל {{[C# (ENTER)]}} או {{[SLIDE (WRITE)]}}. ככה נכתוב גם כאן.</p>
+</section>
+
+<section id="drums" class="card">
+<h2><span class="sn">03</span> תופים</h2>
+<p class="lead">שישה כלים: {{BASS DRUM}}, {{SNARE DRUM}}, {{HAND CLAP}}, {{TOM}}, {{CLOSED HIHAT}}, {{OPEN HIHAT}}.</p>
+
+<h3>כתיבת צעדים</h3>
+<ol class="steps">
+<li>לוחצים על כפתור הכלי, למשל {{[CLOSED HIHAT]}}. הוא נדלק.</li>
+<li>לוחצים על הצעדים שרוצים. הם נדלקים.</li>
+<li>לחיצה על צעד דולק מוחקת אותו.</li>
+</ol>
+<p>אפשר לכתוב גם בזמן שהפטרן מתנגן. ככה שומעים מיד.</p>
+
+<h3>32 צעדים: שני עמודים</h3>
+<p>כל פטרן יכול להגיע ל־32 צעדים, בשני עמודים של 16.</p>
+<ol class="steps">
+<li>מחזיקים {{[SHIFT]}}. עמוד אחד דולק והשני מהבהב.</li>
+<li>תוך כדי, לוחצים {{[E (STEP 1-16)]}} לעמוד הראשון או {{[F (STEP 17-32)]}} לשני.</li>
+</ol>
+<div class="note">טריק: אם הפטרן באורך 16 או פחות, ועוברים לעמוד 17–32 כשהוא ריק, המכשיר מעתיק את צעדים 1–16 לשם ומאריך את הפטרן ל־32. נוח מאוד כדי לבנות וריאציה.</div>
+
+<h3>הקלטה חיה (טאפ)</h3>
+<ol class="steps">
+<li>לוחצים {{[●] (REC)}}. הוא נדלק.</li>
+<li>לוחצים {{[▶] (PLAY)}}. ההקלטה מתחילה.</li>
+<li>מתופפים על כפתורי הכלים. כל מכה נכתבת לצעד שמתנגן באותו רגע.</li>
+</ol>
+
+<h3>אקסנט (הדגשה)</h3>
+<ol class="steps">
+<li>בוחרים כלי תוף כלשהו, ולוחצים {{[ACCENT]}}. הוא נדלק.</li>
+<li>לוחצים על הצעדים שרוצים להדגיש.</li>
+</ol>
+<p>האקסנט של התופים משותף לכל ששת הכלים. צעד מודגש מדגיש את כל מה שמתנגן בו.</p>
+<p><b>עוצמת האקסנט:</b> כשכלי תוף נבחר, מחזיקים {{[ACCENT]}} ומסובבים {{[TEMPO/VALUE]}}.</p>
+
+<h3>סאב־סטפים: גלגולים ומכות כפולות</h3>
+<p>מחלקים צעד אחד לכמה מכות מהירות. מושלם לגלגול סנר לפני דרופ.</p>
+<ol class="steps">
+<li>מחזיקים את כפתור הכלי (למשל {{[SNARE DRUM]}}) ולוחצים על צעד. התצוגה מראה את המצב הנוכחי.</li>
+<li>עדיין מחזיקים את הכלי, ולוחצים שוב על אותו צעד. כל לחיצה מחליפה: {{OFF}} ← {{1_2}} ← {{1_3}} ← {{1_4}} ← {{FLAN}}.</li>
+</ol>
+<p class="small">{{1_2}} = שתי מכות בצעד, {{1_3}} = שלוש, {{1_4}} = ארבע. {{FLAN}} = פלאם (מכה כפולה צמודה). הספר לא מסביר את FLAN יותר מזה.</p>
+
+<h3>הסתברות (Probability)</h3>
+<p>כל צעד יכול להתנגן רק בחלק מהפעמים. ככה הפטרן משתנה קצת כל סיבוב, בלי שתיגע.</p>
+<ol class="steps">
+<li>בוחרים כלי. מחזיקים צעד. התצוגה מראה {{P.0}}–{{P.100}}.</li>
+<li>תוך כדי, מסובבים {{[TEMPO/VALUE]}}. {{P.100}} = תמיד. {{P.50}} = בערך חצי מהפעמים.</li>
+</ol>
+<p><b>הסתברות לסאב־סטפ:</b> מחזיקים את הכלי, לוחצים את הצעד (מופיע מצב הסאב־סטפ), לוחצים {{[ACCENT]}}, ומסובבים {{[TEMPO/VALUE]}}.</p>
+<p><b>הסתברות ראשית (Master):</b> מחזיקים {{[PATTERN]}} ומסובבים {{[TEMPO/VALUE]}}. משפיעה על כל הפטרן, אבל רק על צעדים שכבר יש להם הסתברות משלהם.</p>
+
+<h3>וולוסיטי (כמה חזק כל מכה)</h3>
+<ol class="steps">
+<li>בוחרים כלי ומחזיקים צעד (מופיע {{P.}}).</li>
+<li>עדיין מחזיקים, לוחצים {{[ACCENT]}}. מופיע {{v.0}}–{{v.10}}.</li>
+<li>מסובבים {{[TEMPO/VALUE]}}.</li>
+</ol>
+<div class="note">רעיון לטראנס: היי־האט סגור בכל 16 הצעדים, עם וולוסיטי נמוך בצעדים הזוגיים. ההיי־האט "נושם".</div>
+
+<h3>לולאת צעדים (Step Loop)</h3>
+<p>לופ קצר על צעד או כמה צעדים, בזמן נגינה. רק התופים נכנסים ללופ, הבס ממשיך. כלי חי מעולה לבילד־אפ.</p>
+<ol class="steps">
+<li>מחזיקים {{[SHIFT]}} ולוחצים {{[PATTERN]}}. {{[PATTERN]}} מהבהב (כתוב מתחתיו STEP LOOP).</li>
+<li>לוחצים צעד אחד או יותר.</li>
+<li>כדי לסיים: לוחצים {{[PATTERN]}}.</li>
+</ol>
+
+<h3>הזזת כלי קדימה ואחורה</h3>
+<p>מחזיקים את כפתור הכלי ומסובבים {{[TEMPO/VALUE]}}. כל התבנית של הכלי זזה קדימה או אחורה בצעדים.</p>
+
+<h3>הסאונד של כל תוף</h3>
+<div class="tbl"><table>
+<thead><tr><th>כלי</th><th>על הפאנל</th></tr></thead>
+<tbody>
+<tr><td>{{BASS DRUM}}</td><td>{{[LEVEL]}} עוצמה. {{[TUNE]}} גובה. לוחצים {{[DECAY]}} ואז {{[TUNE]}} שולט באורך הצליל.</td></tr>
+<tr><td>{{SNARE DRUM}}</td><td>אותו דבר: {{[LEVEL]}}, {{[TUNE]}}, וכפתור {{[DECAY]}} שמעביר את {{[TUNE]}} לאורך.</td></tr>
+<tr><td>{{TOM}} / {{HAND CLAP}}</td><td>{{[LEVEL]}} משותף לשניהם. {{[TUNE]}} משנה את הגובה של הכלי שנבחר.</td></tr>
+<tr><td>{{CLOSED HIHAT}} / {{OPEN HIHAT}}</td><td>{{[LEVEL]}} משותף. {{[DECAY]}} (כפתור סיבובי) לאורך ההיי־האט.</td></tr>
+</tbody></table></div>
+<p>עוד פרמטרים לכל כלי נמצאים בתפריט ({{[SHIFT] + [OCT+ (MENU)]}}, ואז בוחרים כלי בכפתור שלו):</p>
+<ul class="dots">
+<li>{{GAIn}} עוצמה פנימית 0–200. {{tUnE}} כיוון. {{dECY}} אורך. {{PAn}} מיקום בסטריאו.</li>
+<li>{{AtK}} כמה "קליק" יש בתוף הבס (0–255).</li>
+<li>{{SnPy}} כמה "רעש קפיצים" יש בסנר (0–255).</li>
+<li>{{CoIr}} כמות הרעש בטומים.</li>
+<li>{{tON}} בוחר בין שני צלילי טום: {{tON1}} או {{tON2}}.</li>
+<li>{{CLAP}} מחליף את צליל הכלי הזה: {{CP}} קלאפ, {{hnt}} טום רעש, {{htON}} טום גבוה.</li>
+<li>Open HiHat Tempo Sync: כשהוא דלוק, אורך ההיי־האט הפתוח נמתח לפי הקצב.</li>
+</ul>
+<p><b>השתקה:</b> מחזיקים {{[SHIFT]}} ולוחצים על כפתור כלי. הכלי מהבהב = מושתק. ההשתקה מתבטלת כשמכבים את המכשיר.</p>
+</section>
+
+<section id="bass" class="card">
+<h2><span class="sn">04</span> הבס (חלק ה־303)</h2>
+<p class="lead">קו בס אחד, עד 32 צעדים. לכל צעד יש תו, ואפשר להוסיף אקסנט, סלייד או טיי (המשך של התו הקודם).</p>
+
+<h3>הדרך הכי מהירה</h3>
+<ol class="steps">
+<li>לוחצים {{[BASS]}}. צעדים עם תו דולקים. צעד עם טיי דולק חלש.</li>
+<li>לוחצים צעד ריק. נכנס התו C2 (או התו האחרון שמחקת בצעד הזה).</li>
+<li>לחיצה על צעד מלא מוחקת אותו.</li>
+</ol>
+
+<h3>עריכת צעד אחד (Step mode)</h3>
+<ol class="steps">
+<li>מחזיקים צעד. התצוגה מראה את התו.</li>
+<li>תוך כדי, מסובבים {{[TEMPO/VALUE]}}: {{n.oFF}}, {{n.C0}} עד {{n.C7}}, או {{n.tie}}.</li>
+<li>עדיין מחזיקים, לוחצים {{[ACCENT]}}: מופיע אקסנט ({{A.OFF}} / {{A.On}}). לוחצים שוב: סלייד ({{S.OFF}} / {{S.On}}). כל לחיצה מסובבת: תו ← אקסנט ← סלייד.</li>
+<li>מסובבים {{[TEMPO/VALUE]}} כדי לשנות את מה שמוצג.</li>
+</ol>
+
+<h3>כתיבה עם מקלדת (Keyboard mode) — הכי נוח לאסיד</h3>
+<p>כפתורי הצעד הופכים לקלידים: {{C}} {{C#}} {{D}} … {{B}} {{C}}, ואחריהם {{[OCT-]}}, {{[OCT+]}} ו־{{[SLIDE]}}.</p>
+<ol class="steps">
+<li>עוצרים את הנגינה. לוחצים {{[KYBD]}}.</li>
+<li>לוחצים {{[●] (REC)}}. {{[KYBD]}} מהבהב. בתצוגה מופיע מספר הצעד, למשל {{St. 1}}.</li>
+<li>לוחצים קליד: התו נכנס לצעד הזה. {{[OCT-]}} / {{[OCT+]}} מזיזים אוקטבה.</li>
+<li>{{[SLIDE]}} מדליק/מכבה סלייד לצעד. {{[ACCENT]}} מדליק/מכבה אקסנט.</li>
+<li>טיי: מחזיקים {{[KYBD]}} ולוחצים {{[SLIDE]}}. התו של הצעד הקודם נמשך לתוך הצעד הזה.</li>
+<li>מסובבים {{[TEMPO/VALUE]}} כדי לעבור לצעד הבא או הקודם.</li>
+<li>סיום: לוחצים {{[●] (REC)}} או {{[KYBD]}}.</li>
+</ol>
+<p class="small">האם הצעד מתקדם לבד אחרי שלוחצים קליד? הספר לא אומר. הוא רק אומר שעוברים צעד עם {{[TEMPO/VALUE]}}. <span class="tv">לבדוק על המכשיר</span></p>
+<p><b>לתקן צעד בודד:</b> כש־{{[●] (REC)}} כבוי, מחזיקים {{[KYBD]}} ולוחצים על הצעד שרוצים. אפשר גם תוך כדי נגינה.</p>
+<p><b>רק לנגן, בלי להקליט:</b> {{[KYBD]}} דולק ו־REC כבוי = כפתורי הצעד הם מקלדת לנגינה חיה.</p>
+
+<h3>הקלטה חיה של בס</h3>
+<ul class="dots">
+<li><b>רק קצב:</b> {{[●] (REC)}} דולק, {{[KYBD]}} כבוי, מנגנים ולוחצים {{[BASS]}} בזמן. כל התווים יוצאים C2.</li>
+<li><b>עם תווים:</b> {{[●] (REC)}} דולק ו־{{[KYBD]}} מהבהב, לוחצים {{[▶] (PLAY)}}. המכשיר עובר מצעד לצעד, ואתה מנגן תווים, טיי וסלייד בזמן אמת.</li>
+</ul>
+
+<h3>אקסנט וסלייד לכל הצעדים בבת אחת</h3>
+<ol class="steps">
+<li>לוחצים {{[BASS]}}, ואז {{[ACCENT]}}. מופיע {{b.ACC}}: לוחצים על הצעדים שיקבלו אקסנט.</li>
+<li>לוחצים {{[ACCENT]}} שוב. מופיע {{b.SLd}}: לוחצים על הצעדים שיקבלו סלייד.</li>
+</ol>
+<p class="small">איך יוצאים מהמצב הזה? הספר לא מפרט. <span class="tv">לבדוק</span> (כנראה בחירת כלי אחר או לחיצה נוספת).</p>
+<p><b>עוצמת אקסנט הבס:</b> {{[BASS]}} נבחר, מחזיקים {{[ACCENT]}} ומסובבים {{[TEMPO/VALUE]}}.</p>
+<p><b>טרנספוז לכל הקו:</b> מחזיקים {{[BASS]}} + {{[KYBD]}} ומסובבים {{[TEMPO/VALUE]}}.</p>
+
+<h3>הכפתורים של הבס</h3>
+<div class="tbl"><table>
+<thead><tr><th>כפתור</th><th>מה הוא עושה</th><th>טיפ אסיד</th></tr></thead>
+<tbody>
+<tr><td>{{[LEVEL]}}</td><td>עוצמת הבס</td><td></td></tr>
+<tr><td>{{[PITCH]}}</td><td>גובה הצליל</td><td>לכוון לסולם של שאר הכלים</td></tr>
+<tr><td>{{[DECAY]}}</td><td>אורך התו</td><td>קצר = "פלאקי", ארוך = נוזלי</td></tr>
+<tr><td>{{[CUTOFF]}}</td><td>כמה בהיר הצליל</td><td>הכפתור שמסובבים כל הזמן</td></tr>
+<tr><td>{{[RESO]}}</td><td>הדגשה סביב ה־CUTOFF</td><td>גבוה = ה"צווחה" של אסיד</td></tr>
+<tr><td>{{[ENV MOD]}}</td><td>כמה ה־CUTOFF זז עם כל תו</td><td>יחד עם DECAY נותן את ה"וואו"</td></tr>
+</tbody></table></div>
+<p><b>צורת גל:</b> בתפריט, Bass Wave: {{SAW}} (משור) או {{Sqr}} (ריבוע). קיצור: {{[PATTERN] + [A# (PTN CLEAR ALL)]}}.</p>
+<p><b>בס בטריולות:</b> בתפריט, Bass Step Triplet = On. אז כל צעד של בס הוא שמינית בטריולה.</p>
+</section>
+
+<section id="patterns" class="card">
+<h2><span class="sn">05</span> פטרנים: בחירה, אורך, העתקה, שמירה</h2>
+<p class="lead">64 פטרנים: 4 בנקים × 16. כל פטרן כולל גם תופים וגם בס.</p>
+
+<h3>מעבר בין פטרנים</h3>
+<ol class="steps">
+<li>{{[PATTERN]}}, ואז צעד 1–16.</li>
+<li>אם מתנגן משהו, הפטרן החדש מהבהב: "הבא בתור". הוא יתחיל כשהנוכחי ייגמר.</li>
+</ol>
+<div class="legend"><span><i class="led on"></i>דולק = מתנגן</span><span><i class="led blink"></i>מהבהב = הבא בתור</span><span><i class="led dim"></i>חלש = יש פטרן</span><span><i class="led"></i>כבוי = ריק</span></div>
+<p><b>בנקים:</b> מחזיקים {{[PATTERN]}} ולוחצים צעד 1–4 = בנק 1–4.</p>
+<p><b>שרשור (Chain):</b> הספר לא מתאר פונקציית שרשור. מה שיש: בוחרים בזמן נגינה את הפטרן הבא, והוא נכנס בסוף הפטרן הנוכחי. ויש פיל, למטה.</p>
+
+<h3>פיל (Fill)</h3>
+<ul class="dots">
+<li>{{[SHIFT] + [G (FILL PTN)]}}, ואז צעד 1–16: איזה פטרן ישמש כפיל. מוגדר לכל בנק בנפרד.</li>
+<li>{{[SHIFT] + [F# (FILL TRG)]}}: מכניס את הפיל בסוף הפטרן.</li>
+</ul>
+
+<h3>אורך הפטרן</h3>
+<ol class="steps">
+<li>{{[SHIFT] + [D# (LAST)]}}.</li>
+<li>מסובבים {{[TEMPO/VALUE]}} לבחירת הצעד האחרון.</li>
+<li>{{[C (EXIT)]}} לסיום.</li>
+</ol>
+<p>האורך נקבע בנפרד לתופים ולבס. אורכים שונים = פולי־ריתם, והם יוצאים מסנכרון. מה קורה במעבר פטרן? תפריט Pattern Sync:</p>
+<ul class="dots">
+<li>{{OFF}}: כל חלק עובר לפטרן הבא כשהוא נגמר.</li>
+<li>{{OnCE}}: הבס עובר יחד עם התופים, ואז כל אחד ממשיך באורך שלו.</li>
+<li>Always: הבס חוזר להתחלה בכל פעם שהתופים חוזרים להתחלה.</li>
+</ul>
+
+<h3>מחיקה</h3>
+<ul class="dots">
+<li>{{[SHIFT] + [A# (PTN CLEAR ALL)]}}: מוחק את כל הפטרן.</li>
+<li>{{[SHIFT] + [B (PTN CLEAR INST)]}}: מוחק רק את הכלי הנבחר.</li>
+<li>טעית? בתפריט {{rLod}} מחזיר את הפטרן לשמירה האחרונה. יש גם החזרה רק לתופים או רק לבס.</li>
+</ul>
+
+<h3>העתקה</h3>
+<ol class="steps">
+<li>{{[SHIFT] + [OCT+ (MENU)]}}. מסובבים עד {{COPY}} ולוחצים {{[C# (ENTER)]}}.</li>
+<li>מסובבים {{[TEMPO/VALUE]}} לבחירת מספר היעד.</li>
+<li>{{[C# (ENTER)]}} מעתיק. {{[C (EXIT)]}} מבטל.</li>
+</ol>
+<p class="small">בתפריט יש גם העתקה של התופים בלבד או של הבס בלבד.</p>
+
+<h3>שמירה</h3>
+<ol class="steps">
+<li>{{[SHIFT] + [SLIDE (WRITE)]}}.</li>
+<li>מסובבים {{[TEMPO/VALUE]}}: {{Ptn}} = הפטרן הנוכחי, {{ALL}} = כל הפטרנים.</li>
+<li>{{[C# (ENTER)]}}. נשמר.</li>
+</ol>
+<div class="note warn">בלי שמירה, הכל חוזר למצב השמור האחרון כשמכבים. שמור כל פעם שאתה אוהב משהו.</div>
+
+<h3>אקראי</h3>
+<p>{{[SHIFT] + [G# (RANDOM RHYTHM)]}} יוצר תופים אקראיים. {{[SHIFT] + [A (RANDOM BASS)]}} יוצר בס אקראי. טוב לרעיונות. לא אהבת? {{rLod}} מחזיר.</p>
+</section>
+
+<section id="tempo" class="card">
+<h2><span class="sn">06</span> קצב, שאפל וגריד</h2>
+<ul class="dots">
+<li><b>קצב:</b> מסובבים {{[TEMPO/VALUE]}} (כשלא מחזיקים שום דבר). הקצב מוצג תמיד.</li>
+<li><b>עשיריות:</b> מחזיקים {{[SHIFT]}} ומסובבים.</li>
+<li>הקצב משותף לכל הפטרנים ונשמר במכשיר.</li>
+<li><b>שאפל:</b> {{[SHIFT] + [D (SHUFFLE)]}}, מסובבים {{[TEMPO/VALUE]}}, ואז {{[C (EXIT)]}}. השאפל הוא של הפטרן.</li>
+<li><b>גריד התופים</b> (תפריט Rhythm Step Scale): {{16}} שש־עשריות, {{32}} שלושים־ושתיים, {{8-3}} טריולות שמיניות, {{16-3}} טריולות שש־עשריות.</li>
+<li><b>גריד הבס</b> (Bass Step Triplet): {{OFF}} = שש־עשריות, {{On}} = טריולות שמיניות.</li>
+</ul>
+<div class="note">קצבים מומלצים: אסיד 125–135. טראנס 136–142. טראנס פסיכדלי 140–146.</div>
+</section>
+
+<section id="fx" class="card">
+<h2><span class="sn">07</span> אפקטים</h2>
+<p class="lead">ארבעה: דיליי, ריוורב, אוברדרייב, סייד־צ׳יין.</p>
+<h3>דיליי</h3>
+<ul class="dots">
+<li>{{[DELAY]}}: עוצמת הדיליי והחזרות (Feedback).</li>
+<li>{{[SHIFT]}} + סיבוב {{[DELAY]}}: זמן הדיליי.</li>
+<li>בתפריט Delay Sync = On: הזמן הולך לפי הקצב, בערכים כמו {{1_16}}, {{16d}} (שש־עשרית מנוקדת), {{8t}} (טריולה), {{1_8}}, {{8d}}, {{1_4}} ועוד.</li>
+<li>כמה כל כלי שולח: {{[SHIFT] + [C (DELAY)]}}, מופיע {{d.Snd}}. לוחצים על כלי, מסובבים (0–127), ו־{{[C (EXIT)]}}. {{[ACCENT]}} במקום כלי = הסאונד שנכנס ב־USB.</li>
+<li>בתפריט יש גם שליחה מהדיליי לריוורב (0–127).</li>
+</ul>
+<h3>ריוורב</h3>
+<ul class="dots">
+<li>{{[REVERB]}}: עוצמה. {{[SHIFT]}} + סיבוב {{[REVERB]}}: זמן.</li>
+<li>כמה כל כלי שולח: {{[SHIFT] + [OCT- (REVERB)]}}, מופיע {{r.Snd}}, ואז כמו בדיליי.</li>
+</ul>
+<h3>אוברדרייב</h3>
+<p>בתפריט: {{Od.On}} מדליק לכל כלי בנפרד. Overdrive Drive קובע כמה עיוות (משותף לכולם). Overdrive Level קובע עוצמה לכל כלי. קיצור ל־{{Od.On}}: {{[PATTERN] + [A (RANDOM BASS)]}}.</p>
+<h3>סייד־צ׳יין (ה"פאמפ" של טראנס)</h3>
+<ul class="dots">
+<li>{{SC}}: עומק (1–50), ומעל 50 משנה כמה זמן האפקט מחזיק. {{OFF}} = כבוי. קיצור: {{[PATTERN] + [B (PTN CLEAR INST)]}}.</li>
+<li>Side Chain Trigger Source: מי מפעיל. בדרך כלל {{bd}} (תוף בס).</li>
+<li>Side Chain Ducking/Gate: לכל כלי כמה הוא "מתכווץ". {{dv.}} = דאקינג, {{Gt.}} = גייט. בוחרים יעד בכפתור הכלי, {{[ACCENT]}} = דיליי/ריוורב, {{[SHIFT] + [ACCENT]}} = כניסת USB.</li>
+<li>Side Chain Time Ratio: {{0.5}}–{{2.0}}. ב־{{1.0}} האפקט באורך שמינית.</li>
+</ul>
+<p class="small">שים לב: אם משתיקים את כלי הטריגר, הסייד־צ׳יין נעלם. אם רק מורידים לו {{[LEVEL]}}, הוא נשאר. טריק: בס־דראם בלי קול שרק "מנשים" את הבס.</p>
+</section>
+
+<section id="sync" class="card">
+<h2><span class="sn">08</span> סנכרון עם Volca Bass ו־Volca Beats</h2>
+<p class="lead">הדרך הפשוטה: כבלי SYNC (מיני־ג׳ק מונו). ה־T-8 מוביל, הוולקות עוקבות.</p>
+<div class="wire" dir="ltr">
+<div class="box t8">T-8<small>SYNC OUT</small></div><div class="arrow">→</div>
+<div class="box">volca beats<small>SYNC IN · SYNC OUT</small></div><div class="arrow">→</div>
+<div class="box">volca bass<small>SYNC IN</small></div>
+</div>
+<ol class="steps">
+<li>כבל מ־{{SYNC OUT}} של ה־T-8 ל־{{SYNC IN}} של ה־Volca Beats.</li>
+<li>כבל מ־{{SYNC OUT}} של ה־Volca Beats ל־{{SYNC IN}} של ה־Volca Bass. <span class="tv">לפי מדריך Korg; לבדוק</span></li>
+<li>ב־T-8, תפריט Sync Clock: כמה פולסים לפעמה (1, 2, 3, 4, 6, 8, 12, 24).</li>
+<li>מנגנים. הקצב נקבע ב־T-8.</li>
+</ol>
+<div class="note"><b>איזה ערך Sync Clock?</b> לפי מדריך ה־volca bass של Korg, הוולקה שולחת פולס אחד בכל צעד (שש־עשרית). זה 4 לפעמה. אז מתחילים ב־{{4}}. אם הוולקה רצה כפול או חצי מהר, נסה {{2}} או {{8}}, או בדוק את הגדרת הסנכרון בוולקה עצמה. <span class="tv">לבדוק על המכשירים</span></div>
+<ul class="dots">
+<li><b>כבלים:</b> לסנכרון רק מיני־ג׳ק <b>מונו</b>. כבל סטריאו לא עובד (כך כתוב בספר). כבל הסנכרון שבא עם הוולקה מתאים.</li>
+<li><b>אזהרה:</b> לא לחבר ציוד אודיו ל־{{SYNC OUT}}.</li>
+<li><b>הפוך (וולקה מובילה):</b> {{SYNC OUT}} של הוולקה ל־{{SYNC IN}} של ה־T-8. כשמשהו מחובר ל־{{SYNC IN}}, ה־T-8 תמיד עוקב אחריו, לא משנה מה בתפריט.</li>
+<li><b>ההתחלה:</b> אם הם לא מתחילים יחד, עצור הכל, לחץ play על העוקבים, ורק אז על המוביל. <span class="tv">טיפ כללי, לבדוק</span></li>
+</ul>
+<h3>MIDI</h3>
+<ul class="dots">
+<li>שקעי MIDI של ה־T-8 הם מיני־ג׳ק TRS. לוולקות יש MIDI IN רגיל (5 פינים). צריך כבל המרה, למשל BMIDI-5-35 של רולנד.</li>
+<li>ה־T-8 משדר MIDI Clock, Start ו־Stop. ערוצי ברירת מחדל: בס 2, תופים 10, החלפת פטרנים 16.</li>
+<li>תפריט MIDI Clock Sync: {{AUTO}} מקבל שעון מבחוץ, {{Int}} רק שעון פנימי, MIDI רק משקע MIDI, {{USB}} רק מ־USB.</li>
+<li>האם הוולקה עוקבת אחרי MIDI Clock, ובאיזה ערוץ, נקבע בוולקה. ראה המדריך שלה. <span class="tv">לבדוק</span></li>
+</ul>
+<h3>לשמוע את הוולקה דרך ה־T-8</h3>
+<p>{{MIX IN}}: מה שנכנס יוצא מ־{{MIX OUT}} יחד עם ה־T-8. כבל מיני־ג׳ק <b>סטריאו</b>. יש רק כניסה אחת, אז לשתי וולקות צריך מיקסר קטן. האם {{MIX IN}} עובר דרך האפקטים? הספר לא אומר.</p>
+</section>
+
+<section id="usb" class="card">
+<h2><span class="sn">09</span> USB, אייפד ואייפון</h2>
+<ul class="dots">
+<li>USB-C אחד עושה הכל: אודיו, MIDI וטעינה. אין צורך בדרייבר.</li>
+<li><b>אייפד עם USB-C:</b> כבל USB-C ל־USB-C. האייפד גם מטעין את ה־T-8.</li>
+<li><b>אייפון עם Lightning:</b> מחזיקים {{[C (EXIT)]}} ומדליקים (מצב סוללה בלבד). מחברים דרך מתאם מצלמה של אפל (Lightning to USB Camera Adapter) והכבל שבקופסה. כבל USB-C ל־Lightning רגיל לא יעבוד.</li>
+<li><b>אייפון עם USB-C:</b> כמו באייפד.</li>
+<li>אסור כבל טעינה בלבד, ואסור דרך USB hub.</li>
+<li>באפליקציה (למשל GarageBand) בוחרים את ה־T-8 ככניסת אודיו ומקליטים. סאונד מהאייפד יכול גם להיכנס ל־T-8, ואפשר לשלוח אותו לדיליי/ריוורב (ראה אפקטים).</li>
+<li>תפריט USB Direct Out: {{OFF}} = כפתור {{[VOLUME]}} משפיע גם על ה־USB. {{1}}–{{127}} = עוצמה קבועה ל־USB, בלי קשר ל־VOLUME.</li>
+<li>תפריט {{A.Lnk}} (AIRA Link): רק למיקסר כמו MX-1. אחרת להשאיר {{OFF}}. השינוי נכנס לתוקף אחרי כיבוי והדלקה.</li>
+</ul>
+</section>
+
+<section id="recipes" class="card">
+<h2><span class="sn">10</span> מתכונים: אסיד וטראנס</h2>
+<p class="lead">ארבעה תרגילים. כל אחד 10–15 דקות. סמן ✓ כשסיימת שלב — זה נשמר באייפד.</p>
+
+<div class="recipe" data-r="r1">
+<h3>מתכון 1: קו אסיד קלאסי</h3>
+<p class="meta">קצב 130 · בס במקלדת · אקסנט וסלייד</p>
+<ol class="check">
+<li>פטרן ריק: בוחרים פטרן ולוחצים {{[SHIFT] + [A# (PTN CLEAR ALL)]}}. קצב 130.</li>
+<li>{{[BASS DRUM]}} בצעדים 1, 5, 9, 13. {{[CLOSED HIHAT]}} בצעדים 3, 7, 11, 15.</li>
+<li>צורת גל משור: {{[PATTERN] + [A# (PTN CLEAR ALL)]}} ובוחרים {{SAW}}.</li>
+<li>{{[KYBD]}} ואז {{[●] (REC)}}. כותבים 16 צעדים בעזרת קלידים ו־{{[TEMPO/VALUE]}}: רוב הצעדים {{C}}, כמה {{C}} באוקטבה גבוהה ({{[OCT+]}}), ואחד או שניים {{D#}} או {{G}}. סיום: {{[KYBD]}}.</li>
+<li>{{[BASS]}}, {{[ACCENT]}} ({{b.ACC}}): אקסנט על 3 צעדים. עוד {{[ACCENT]}} ({{b.SLd}}): סלייד על 2–3 צעדים, תמיד לפני תו בגובה אחר.</li>
+<li>כפתורים: {{[CUTOFF]}} נמוך, {{[RESO]}} גבוה, {{[ENV MOD]}} באמצע, {{[DECAY]}} קצר. מנגנים ומסובבים לאט את {{[CUTOFF]}} למעלה במשך 8 תיבות.</li>
+<li>דיליי: Delay Sync = On, {{[SHIFT]}} + {{[DELAY]}} עד {{16d}}, ו־{{[DELAY]}} קצת. שומרים: {{[SHIFT] + [SLIDE (WRITE)]}}, {{Ptn}}, {{[C# (ENTER)]}}.</li>
+</ol>
+<grid label="BD" on="1,5,9,13" c="pink"></grid>
+<grid label="CH" on="3,7,11,15" c="amber"></grid>
+<grid label="ACC" on="1,8,11" c="cyan"></grid>
+</div>
+
+<div class="recipe" data-r="r2">
+<h3>מתכון 2: בס טראנס מתגלגל עם פאמפ</h3>
+<p class="meta">קצב 138 · בס בין התופים · סייד־צ׳יין</p>
+<ol class="check">
+<li>פטרן חדש, קצב 138. {{[BASS DRUM]}} ב־1, 5, 9, 13. {{[OPEN HIHAT]}} ב־3, 7, 11, 15.</li>
+<li>{{[CLOSED HIHAT]}} בכל 16 הצעדים. וולוסיטי נמוך (למשל {{v.4}}) בצעדים הזוגיים.</li>
+<li>{{[BASS]}}: צעדים 2, 3, 4, 6, 7, 8, 10, 11, 12, 14, 15, 16 (הכל חוץ מהקיק). כולם אותו תו.</li>
+<li>{{[DECAY]}} של הבס קצר. {{[RESO]}} נמוך. {{[CUTOFF]}} באמצע. זה צליל טראנס, לא אסיד.</li>
+<li>סייד־צ׳יין: {{SC}} בערך 30, מקור {{bd}}. שומעים את הבס "נושם" עם הקיק.</li>
+<li>וריאציה בתיבות 3–4: בוחרים כלי תוף, מחזיקים {{[SHIFT]}} ולוחצים {{[F (STEP 17-32)]}}. התופים מועתקים לצעדים 17–32. בעמוד השני מוסיפים {{[HAND CLAP]}} בצעדים 13–16 (כלומר 29–32).</li>
+</ol>
+<grid label="BD" on="1,5,9,13" c="pink"></grid>
+<grid label="BASS" on="2,3,4,6,7,8,10,11,12,14,15,16" c="cyan"></grid>
+<grid label="OH" on="3,7,11,15" c="amber"></grid>
+</div>
+
+<div class="recipe" data-r="r3">
+<h3>מתכון 3: בילד־אפ ודרופ</h3>
+<p class="meta">סאב־סטפים · לולאת צעדים · פיל</p>
+<ol class="check">
+<li>מעתיקים את פטרן מתכון 2 לפטרן הבא ({{COPY}} בתפריט).</li>
+<li>בפטרן החדש: {{[SNARE DRUM]}} בצעדים 9–16.</li>
+<li>סאב־סטפים: מחזיקים {{[SNARE DRUM]}}, וב־13–14 בוחרים {{1_2}}, ב־15 {{1_3}}, ב־16 {{1_4}}. הגלגול מאיץ.</li>
+<li>מגדירים אותו כפיל: {{[SHIFT] + [G (FILL PTN)]}} ובוחרים את מספר הפטרן.</li>
+<li>מנגנים את הפטרן הראשי. לפני הדרופ: {{[SHIFT] + [F# (FILL TRG)]}}.</li>
+<li>בונוס: בזמן נגינה, {{[SHIFT] + [PATTERN]}} (Step Loop) ולוחצים צעד אחד. הקיק חוזר על עצמו. {{[PATTERN]}} משחרר = דרופ.</li>
+</ol>
+<grid label="SD" on="9,10,11,12,13,14,15,16" sub="13:2,14:2,15:3,16:4" c="pink"></grid>
+</div>
+
+<div class="recipe" data-r="r4">
+<h3>מתכון 4: ג׳אם עם שתי הוולקות</h3>
+<p class="meta">T-8 מוביל · Volca Beats מוסיף · Volca Bass עונה</p>
+<ol class="check">
+<li>מחברים סנכרון כמו בפרק <a href="#sync">סנכרון</a>. Sync Clock ב־T-8 על {{4}}.</li>
+<li>Volca Bass ל־{{MIX IN}} של ה־T-8 (כבל סטריאו). אוזניות ב־{{MIX OUT}}.</li>
+<li>ב־T-8: קיק ובס אסיד ממתכון 1. ב־Volca Beats: רק קלאפ והיי־האטים.</li>
+<li>ב־Volca Bass: קו קצר וגבוה, 2–3 תווים, שעונה לבס של ה־T-8.</li>
+<li>הסתברות: ב־T-8, היי־האט סגור עם {{P.70}} בכמה צעדים. החזק {{[PATTERN]}} וסובב לשינוי ההסתברות הראשית בזמן הג׳אם.</li>
+<li>תרגיל ידיים: יד אחת על {{[CUTOFF]}} של ה־T-8, השנייה על CUTOFF של ה־Volca Bass. מעלים אחד, מורידים את השני.</li>
+</ol>
+</div>
+</section>
+
+<section id="cheat" class="card">
+<h2><span class="sn">11</span> דף קיצורים</h2>
+<div class="tbl cheat"><table>
+<thead><tr><th>צירוף</th><th>מה קורה</th></tr></thead>
+<tbody>
+<tr class="grp"><td colspan="2">עם [SHIFT]</td></tr>
+<tr><td>{{[SHIFT] + [TEMPO/VALUE]}}</td><td>קצב בעשיריות</td></tr>
+<tr><td>{{[SHIFT] + [C (EXIT)]}}</td><td>יציאה מתפריט</td></tr>
+<tr><td>{{[SHIFT] + [C# (ENTER)]}}</td><td>אישור</td></tr>
+<tr><td>{{[SHIFT] + [D (SHUFFLE)]}}</td><td>שאפל</td></tr>
+<tr><td>{{[SHIFT] + [D# (LAST)]}}</td><td>אורך פטרן</td></tr>
+<tr><td>{{[SHIFT] + [E (STEP 1-16)]}}</td><td>עמוד צעדים 1</td></tr>
+<tr><td>{{[SHIFT] + [F (STEP 17-32)]}}</td><td>עמוד צעדים 2</td></tr>
+<tr><td>{{[SHIFT] + [F# (FILL TRG)]}}</td><td>הפעלת פיל</td></tr>
+<tr><td>{{[SHIFT] + [G (FILL PTN)]}}</td><td>בחירת פטרן פיל</td></tr>
+<tr><td>{{[SHIFT] + [G# (RANDOM RHYTHM)]}}</td><td>תופים אקראיים</td></tr>
+<tr><td>{{[SHIFT] + [A (RANDOM BASS)]}}</td><td>בס אקראי</td></tr>
+<tr><td>{{[SHIFT] + [A# (PTN CLEAR ALL)]}}</td><td>מחיקת פטרן</td></tr>
+<tr><td>{{[SHIFT] + [B (PTN CLEAR INST)]}}</td><td>מחיקת כלי</td></tr>
+<tr><td>{{[SHIFT] + [C (DELAY)]}}</td><td>שליחה לדיליי</td></tr>
+<tr><td>{{[SHIFT] + [OCT- (REVERB)]}}</td><td>שליחה לריוורב</td></tr>
+<tr><td>{{[SHIFT] + [OCT+ (MENU)]}}</td><td>תפריט</td></tr>
+<tr><td>{{[SHIFT] + [SLIDE (WRITE)]}}</td><td>שמירה</td></tr>
+<tr><td>{{[SHIFT] + [PATTERN]}}</td><td>לולאת צעדים</td></tr>
+<tr><td>{{[SHIFT] + [DELAY]}} (סיבוב)</td><td>זמן דיליי</td></tr>
+<tr><td>{{[SHIFT] + [REVERB]}} (סיבוב)</td><td>זמן ריוורב</td></tr>
+<tr><td>{{[SHIFT]}} + כפתור כלי</td><td>השתקה</td></tr>
+<tr class="grp"><td colspan="2">עם [PATTERN]</td></tr>
+<tr><td>{{[PATTERN]}} + צעד 1–4</td><td>בנק 1–4</td></tr>
+<tr><td>{{[PATTERN] + [TEMPO/VALUE]}}</td><td>הסתברות ראשית</td></tr>
+<tr><td>{{[PATTERN] + [A (RANDOM BASS)]}}</td><td>אוברדרייב ({{Od.On}})</td></tr>
+<tr><td>{{[PATTERN] + [A# (PTN CLEAR ALL)]}}</td><td>צורת גל בס</td></tr>
+<tr><td>{{[PATTERN] + [B (PTN CLEAR INST)]}}</td><td>סייד־צ׳יין ({{SC}})</td></tr>
+<tr><td>{{[PATTERN] + [OCT- (REVERB)]}}</td><td>החזרת תופים לשמור</td></tr>
+<tr><td>{{[PATTERN] + [OCT+ (MENU)]}}</td><td>החזרת בס לשמור</td></tr>
+<tr><td>{{[PATTERN] + [SLIDE (WRITE)]}}</td><td>החזרת פטרן לשמור</td></tr>
+<tr class="grp"><td colspan="2">החזקות</td></tr>
+<tr><td>צעד + {{[TEMPO/VALUE]}}</td><td>הסתברות (תופים) / תו (בס)</td></tr>
+<tr><td>צעד + {{[ACCENT]}}</td><td>וולוסיטי (תופים) / אקסנט, סלייד (בס)</td></tr>
+<tr><td>כלי + צעד</td><td>סאב־סטפ</td></tr>
+<tr><td>כלי + {{[TEMPO/VALUE]}}</td><td>הזזת הכלי קדימה/אחורה</td></tr>
+<tr><td>{{[ACCENT] + [TEMPO/VALUE]}}</td><td>עוצמת אקסנט (של הכלי הנבחר: תופים או בס)</td></tr>
+<tr><td>{{[BASS] + [KYBD] + [TEMPO/VALUE]}}</td><td>טרנספוז בס</td></tr>
+<tr><td>{{[KYBD] + [SLIDE]}}</td><td>טיי (בעריכה במקלדת)</td></tr>
+<tr class="grp"><td colspan="2">בהדלקה (מחזיקים ומדליקים)</td></tr>
+<tr><td>{{[C (EXIT)]}}</td><td>מצב סוללה בלבד (לאייפון Lightning)</td></tr>
+<tr><td>{{[SLIDE (WRITE)]}}</td><td>איפוס למצב מפעל</td></tr>
+<tr><td>{{[▶] (PLAY)}}</td><td>גיבוי/שחזור (מחשב)</td></tr>
+<tr><td>{{[PATTERN]}}</td><td>מציג את גרסת התוכנה</td></tr>
+</tbody></table></div>
+<h3>התפריט: מה יש בו</h3>
+<p>{{[SHIFT] + [OCT+ (MENU)]}}, מסובבים לבחירה, {{[C# (ENTER)]}} (או כפתור כלי) לכניסה, מסובבים לשינוי, {{[C (EXIT)]}} חזרה, ושוב {{[C (EXIT)]}} ליציאה.</p>
+<div class="menu-grid">
+<div><b>כלים</b>{{NUtE}} השתקה · {{GAIn}} · {{tUnE}} · {{dECY}} · {{PAn}} · {{AtK}} · {{SnPy}} · {{CoIr}} · {{tON}} · {{CLAP}} · OH Tempo Sync</div>
+<div><b>בס</b>Bass Wave · Bass Accent · Bass Step Triplet</div>
+<div><b>תופים</b>Rhythm Accent · Rhythm Step Scale</div>
+<div><b>פטרן</b>Pattern Sync · {{rLod}} ושני ה־Reload · {{COPY}} ושני ההעתקים</div>
+<div><b>אפקטים</b>Overdrive On/Drive/Level · Delay Sync · Delay→Reverb · {{SC}} · Ducking/Gate · Time Ratio · Trigger Source</div>
+<div><b>חיבורים</b>Sync Clock · Rhythm/Bass MIDI Ch · TX/RX Program Change · PC Channel · {{SYnC}} · MIDI Thru · USB Direct Out · {{A.Lnk}} · Level Curve</div>
+</div>
+<p class="small">בתצוגה כל פריט מופיע כקוד קצר. כשהקוד בספר ברור, הוא כתוב כאן. אחרים מופיעים בשמם האנגלי מהספר.</p>
+</section>
+
+<section id="trouble" class="card">
+<h2><span class="sn">12</span> פתרון בעיות</h2>
+<details><summary>הפטרן שלי נעלם אחרי כיבוי</summary><p>לא שמרת. {{[SHIFT] + [SLIDE (WRITE)]}}, {{Ptn}}, {{[C# (ENTER)]}}. מעכשיו, שמור כל פעם שאתה אוהב משהו.</p></details>
+<details><summary>כלי לא נשמע</summary><p>אולי הוא מושתק (הכפתור מהבהב): {{[SHIFT]}} + כפתור הכלי. בדוק {{[LEVEL]}}, ו־{{GAIn}} בתפריט. בטום/קלאפ ובהיי־האטים ה־LEVEL משותף לשניים.</p></details>
+<details><summary>צעדים נעלמים באקראי</summary><p>יש הסתברות מתחת ל־{{P.100}}. מחזיקים את הצעד ובודקים. בדוק גם את ההסתברות הראשית ({{[PATTERN] + [TEMPO/VALUE]}}).</p></details>
+<details><summary>הקצב לא משתנה או קופץ</summary><p>ייתכן שה־T-8 עוקב אחרי שעון חיצוני. אם מחובר כבל ל־{{SYNC IN}}, הוא תמיד עוקב אחריו. אחרת, בתפריט {{SYnC}} בחר {{Int}}.</p></details>
+<details><summary>הוולקה לא עוקבת, או רצה כפול/חצי</summary><p>כבל מונו? הוא ב־{{SYNC OUT}} של ה־T-8 וב־{{SYNC IN}} של הוולקה? שנה את Sync Clock (התחל ב־4, נסה 2 או 8). <span class="tv">לבדוק</span></p></details>
+<details><summary>התופים והבס לא מתיישרים</summary><p>אורכים שונים ({{[SHIFT] + [D# (LAST)]}}). השווה אורכים, או Pattern Sync = Always.</p></details>
+<details><summary>לא שומעים אקסנט</summary><p>עוצמת האקסנט אולי על {{OFF}}. כלי נבחר, מחזיקים {{[ACCENT]}} ומסובבים.</p></details>
+<details><summary>האייפד/אייפון לא מזהה</summary><p>כבל נתונים (לא טעינה בלבד), בלי hub. באייפון Lightning: מתאם מצלמה של אפל ומצב סוללה בלבד ({{[C (EXIT)]}} בהדלקה). בדוק ש־{{A.Lnk}} על {{OFF}}, וכבה והדלק.</p></details>
+<details><summary>ההקלטה ב־USB חלשה או משתנה עם VOLUME</summary><p>תפריט USB Direct Out: ערך 1–127 נותן עוצמה קבועה ל־USB.</p></details>
+<details><summary>נורית CHARGE</summary><p>כתום = נטען. ירוק = מלא. אדום (בלי USB) = סוללה חלשה, המכשיר ייכבה תוך 30 דקות. ירוק־כתום מהבהב = תקלה, לפנות לשירות של רולנד.</p></details>
+<details class="danger"><summary>איפוס למצב מפעל (מוחק הכל)</summary>
+<p>זה מחזיר את כל המכשיר למצב מפעל. הפטרנים שלך יימחקו. גיבוי לפי הספר דורש מחשב (Windows/Mac), לא אייפד.</p>
+<ol class="steps">
+<li>מחזיקים {{[SLIDE (WRITE)]}} ומדליקים. מופיע {{FACt}}, ו־{{[ACCENT]}} מהבהב. לביטול: מכבים.</li>
+<li>לוחצים {{[ACCENT]}}.</li>
+<li>כשמופיע {{dOnE}} וכל הכפתורים מהבהבים: מכבים ומדליקים.</li>
+</ol></details>
+<details><summary>איזו גרסת תוכנה יש לי?</summary><p>מחזיקים {{[PATTERN]}} ומדליקים. הגרסה מופיעה בתצוגה. הגרסה האחרונה מרולנד היא 1.02 (מאי 2022). העדכון דורש מחשב.</p></details>
+</section>
+
+<section id="src" class="card src">
+<h2>מקורות</h2>
+<p>הכל מבוסס על <a href="https://static.roland.com/assets/media/pdf/T-8_eng01_W.pdf" target="_blank" rel="noopener">T-8 Owner’s Manual, Version 1.02</a> של רולנד (2022), ו<a href="https://www.roland.com/global/support/by_product/t-8/updates_drivers/" target="_blank" rel="noopener">דף העדכונים</a> (System Program 1.02). פרטי הסנכרון של הוולקה: מדריך volca bass של Korg. מה שמסומן <span class="tv">לבדוק</span> לא כתוב בספר במפורש.</p>
+<p class="small">הציור של הפאנל צויר כאן מחדש ואינו בקנה מידה. Roland, T-8 ו־AIRA הם סימנים של Roland Corporation.</p>
+</section>

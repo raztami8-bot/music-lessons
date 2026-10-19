@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#120d1f">
+<meta name="format-detection" content="telephone=no">
+<title>T-8 · המדריך של רז</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --ink:#120d1f; --panel:#1a1430; --raise:#241c40; --line:#33284f;
+  --fg:#f1ebff; --dim:#9c91bd; --deep:#5cc8ff; --acid:#ff4fa3; --heat:#ffb02e; --rec:#ff5a4f;
+  --f-display:"Karantina","Assistant",system-ui,sans-serif;
+  --f-body:"Assistant",system-ui,-apple-system,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:18px;line-height:1.6;
+  -webkit-tap-highlight-color:transparent;overflow-x:hidden}
+a{color:var(--deep)}
+.wrap{max-width:900px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left))}
+header.hero{padding:calc(28px + env(safe-area-inset-top)) 0 18px;text-align:center}
+.hero .kicker{font-family:var(--f-num);font-size:13px;color:var(--dim);letter-spacing:2px}
+.hero h1{font-family:var(--f-display);font-size:clamp(56px,13vw,104px);line-height:.95;margin:6px 0;
+  background:linear-gradient(90deg,var(--acid),var(--deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 auto;max-width:34em;color:var(--dim)}
+.hero .back{display:inline-block;margin-top:10px;font-size:15px}
+nav.toc{position:sticky;top:0;z-index:20;background:rgba(18,13,31,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+nav.toc .in{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none;max-width:900px;margin:0 auto;overscroll-behavior-x:contain}
+nav.toc .in::-webkit-scrollbar{display:none}
+nav.toc a{flex:0 0 auto;min-height:46px;display:flex;align-items:center;padding:0 16px;border-radius:23px;background:var(--panel);
+  border:1px solid var(--line);color:var(--fg);text-decoration:none;font-weight:600;font-size:16px;white-space:nowrap}
+nav.toc a.cur{background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px 20px 14px;margin:18px 0}
+.card h2{font-family:var(--f-display);font-size:40px;line-height:1.05;margin:0 0 8px;font-weight:700}
+.sn{font-family:var(--f-num);font-size:15px;color:var(--acid);vertical-align:middle;margin-inline-end:6px;
+  border:1px solid var(--acid);border-radius:8px;padding:1px 6px}
+.card h3{font-size:20px;margin:22px 0 6px;color:var(--deep)}
+.lead{font-size:19px;color:var(--fg);margin-top:0}
+.small{font-size:15px;color:var(--dim)}
+.k{display:inline-block;font-family:var(--f-num);font-size:.78em;line-height:1.35;padding:1px 7px;margin:1px 0;border-radius:6px;
+  background:var(--raise);border:1px solid #4a3d70;color:#fff;white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+.kc{unicode-bidi:isolate;direction:ltr;display:inline-block;max-width:100%}
+.plus{color:var(--heat);font-family:var(--f-num);font-size:.85em;margin:0 3px}
+ol.steps,ol.check{padding:0;margin:8px 0;list-style:none;counter-reset:s}
+ol.steps>li,ol.check>li{counter-increment:s;position:relative;padding:8px 46px 8px 4px;margin:4px 0;border-radius:12px}
+ol.steps>li::before{content:counter(s);position:absolute;right:4px;top:8px;width:30px;height:30px;border-radius:50%;
+  background:var(--raise);border:1px solid var(--line);color:var(--heat);font-family:var(--f-num);font-size:15px;display:flex;align-items:center;justify-content:center}
+ol.check>li{cursor:pointer;min-height:48px;background:rgba(36,28,64,.5);border:1px solid transparent;user-select:none;-webkit-user-select:none}
+ol.check>li::before{content:counter(s);position:absolute;right:6px;top:9px;width:30px;height:30px;border-radius:9px;border:2px solid var(--line);
+  color:var(--dim);font-family:var(--f-num);font-size:14px;display:flex;align-items:center;justify-content:center}
+ol.check>li.done{opacity:.6;border-color:var(--line)}
+ol.check>li.done::before{content:"✓";background:var(--acid);border-color:var(--acid);color:var(--ink);font-size:18px}
+ul.dots{padding-inline-start:22px;margin:8px 0}
+ul.dots li{margin:6px 0}
+ul.dots li::marker{color:var(--acid)}
+.note{background:rgba(92,200,255,.08);border:1px solid rgba(92,200,255,.35);border-radius:14px;padding:10px 14px;margin:12px 0;font-size:17px}
+.note.warn{background:rgba(255,176,46,.08);border-color:rgba(255,176,46,.45)}
+.tv{display:inline-block;font-size:13px;font-weight:700;color:var(--ink);background:var(--heat);border-radius:6px;padding:0 7px;line-height:1.6;white-space:nowrap}
+.tbl{overflow-x:auto;margin:10px 0;border-radius:12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{padding:9px 10px;text-align:right;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--raise);color:var(--dim);font-weight:600;font-size:14px}
+tr:last-child td{border-bottom:0}
+.cheat tr.grp td{background:var(--raise);color:var(--heat);font-weight:700;font-size:15px}
+.cheat td:first-child{width:52%}
+/* grid */
+.grid{display:flex;align-items:center;gap:8px;margin:6px 0}
+.gl{font-family:var(--f-num);font-size:12px;color:var(--dim);width:44px;flex:0 0 44px;text-align:left}
+.cells{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;flex:1;min-width:0}
+.c{position:relative;aspect-ratio:1/1.15;border-radius:4px;background:#2a2148;border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:center;min-width:0}
+.c.beat{border-color:#5a4c84}
+.c em{font-style:normal;font-family:var(--f-num);font-size:9px;color:var(--dim);line-height:1.4}
+.g-pink .c.on{background:var(--acid);border-color:var(--acid)}
+.g-cyan .c.on{background:var(--deep);border-color:var(--deep)}
+.g-amber .c.on{background:var(--heat);border-color:var(--heat)}
+.c.on em{color:var(--ink)}
+.sub{position:absolute;top:3px;left:0;right:0;display:flex;justify-content:center;gap:2px}
+.sub i{width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:15px;color:var(--dim);margin:8px 0}
+.led{display:inline-block;width:14px;height:14px;border-radius:3px;background:#2a2148;border:1px solid var(--line);margin-inline-end:6px;vertical-align:-2px}
+.led.on{background:var(--acid)}.led.dim{background:rgba(255,79,163,.35)}
+.led.blink{background:var(--acid);animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:.15}}
+/* panel */
+.panelwrap{margin:10px -6px 0;border-radius:16px;background:#0c0916;border:1px solid var(--line);overflow:hidden}
+.panelscroll{direction:ltr;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#t8svg{direction:ltr;display:block;width:100%;min-width:640px;height:auto;user-select:none;-webkit-user-select:none}
+.body{fill:#3a3842;stroke:#55525e;stroke-width:2}
+.frame{fill:#33313b;stroke:#4a4754;stroke-width:1.5}
+.knob{fill:#1d1c22;stroke:#55525e;stroke-width:2}
+.ring{fill:none;stroke-width:4}
+.tick{stroke:#f1ebff;stroke-width:3;stroke-linecap:round}
+#t8svg text{direction:ltr;unicode-bidi:normal}
+.lbl{fill:#e8e4f0;font:600 13px "IBM Plex Mono",monospace;text-anchor:middle}
+.lbl.sm{font-size:11px}.lbl.xs{font-size:9.5px}
+.grpl{fill:#cfc8dc}
+.brand{fill:#f1ebff;font:700 30px "IBM Plex Mono",monospace}
+.btn{fill:#4a4854;stroke:#6d6a78;stroke-width:1.5}
+.btn.round{fill:#2a2930}
+.btn.kb{stroke:#f1ebff;stroke-width:2.5}
+.bt{fill:#fff;font:600 11.5px "IBM Plex Mono",monospace;text-anchor:middle;pointer-events:none}
+.play+.bt{fill:#58e07a;font-size:18px}.rec+.bt{fill:var(--rec);font-size:18px}
+.disp{fill:#1a0b0e;stroke:#55525e}
+.seg{fill:#ff3b3b;font:500 34px "IBM Plex Mono",monospace;text-anchor:middle;letter-spacing:3px}
+.jack{fill:#1a191e;stroke:#6d6a78;stroke-width:2}.jack-in{fill:#000}
+.led-g{fill:#3cdc6a}
+.step{fill:#d9d6df;stroke:#8e8a99}
+.stepled{fill:#9a96a5}
+.st{fill:#222;font:700 12px "IBM Plex Mono",monospace;text-anchor:middle;pointer-events:none}
+.num{fill:#8d86a3;font:500 10px "IBM Plex Mono",monospace;text-anchor:middle}
+.conn{stroke:#a39fb0;stroke-width:1.5}
+.hit{fill:transparent;cursor:pointer}
+.ctl{outline:none}
+.ctl.sel .knob,.ctl.sel .btn,.ctl.sel .step,.ctl.sel .jack,.ctl.sel .disp{stroke:var(--acid);stroke-width:4}
+.ctl.sel .stepled{fill:var(--acid)}
+.ctl:focus-visible .hit{stroke:var(--deep);stroke-width:2}
+.info{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;min-height:76px}
+.info-k .k{font-size:15px;background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.info-d{flex:1 1 240px;font-size:17px}
+.hint{color:var(--dim);font-size:14px;margin:4px 0;text-align:center}
+@media (min-width:700px){.narrow-only{display:none}}
+@media (max-height:500px) and (orientation:landscape){#t8svg{min-width:0;max-width:150vh;margin:0 auto}}
+/* wire */
+.wire{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:12px 0}
+.wire .box{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-align:center;font-weight:700;font-family:var(--f-num);font-size:15px}
+.wire .box.t8{border-color:var(--acid);color:var(--acid)}
+.wire .box small{display:block;font-weight:500;font-size:11px;color:var(--dim)}
+.wire .arrow{color:var(--heat);font-size:22px}
+.recipe{border:1px solid var(--line);border-radius:16px;padding:6px 14px 12px;margin:14px 0;background:rgba(18,13,31,.45)}
+.recipe h3{margin-top:12px;color:var(--acid)}
+.meta{font-family:var(--f-num);font-size:13px;color:var(--heat);margin:0 0 6px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;font-size:15px}
+.menu-grid>div{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.menu-grid b{display:block;color:var(--deep);margin-bottom:4px}
+details{border:1px solid var(--line);border-radius:14px;margin:8px 0;background:var(--raise)}
+details summary{min-height:52px;display:flex;align-items:center;padding:6px 16px;cursor:pointer;font-weight:700;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";color:var(--acid);font-family:var(--f-num);font-size:20px;margin-inline-end:10px;width:14px}
+details[open] summary::before{content:"−"}
+details>p,details>ol{padding:0 16px;margin:4px 0 12px}
+details.danger{border-color:rgba(255,90,79,.5)}
+details.danger summary{color:var(--rec)}
+.src{font-size:16px}
+.top-btn{position:fixed;left:max(14px,env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;width:52px;height:52px;border-radius:50%;
+  background:var(--acid);color:var(--ink);border:0;font-size:22px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s}
+.top-btn.show{opacity:1;pointer-events:auto}
+@media (max-width:520px){body{font-size:17px}.card{padding:16px 14px 10px;border-radius:16px}.card h2{font-size:34px}
+  th,td{padding:8px 7px;font-size:15px}.gl{width:34px;flex-basis:34px;font-size:10px}.c em{font-size:7px}}
+@media (min-width:1100px){.wrap{max-width:960px}}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+<div class="kicker" dir="ltr">ROLAND · AIRA COMPACT · T-8</div>
+<h1>מדריך T-8</h1>
+<p>מכונת תופים קטנה עם בס בסגנון 303. מדריך פשוט, לפי ספר ההפעלה הרשמי (גרסה 1.02).</p>
+<a class="back" href="../">→ לכל השיעורים</a>
+</header>
+<nav class="toc" aria-label="תוכן"><div class="in"><a href="#start" data-t="start">התחלה מהירה</a><a href="#panel" data-t="panel">הפאנל</a><a href="#drums" data-t="drums">תופים</a><a href="#bass" data-t="bass">בס 303</a><a href="#patterns" data-t="patterns">פטרנים</a><a href="#tempo" data-t="tempo">קצב ושאפל</a><a href="#fx" data-t="fx">אפקטים</a><a href="#sync" data-t="sync">סנכרון וולקה</a><a href="#usb" data-t="usb">USB ואייפד</a><a href="#recipes" data-t="recipes">מתכונים</a><a href="#cheat" data-t="cheat">קיצורים</a><a href="#trouble" data-t="trouble">בעיות</a><a href="#src" data-t="src">מקורות</a></div></nav>
+<main class="wrap">
+<section id="start" class="card">
+<h2><span class="sn">01</span> התחלה מהירה: ביט מתנגן תוך 2 דקות</h2>
+<p class="lead">שמונה צעדים. בלי לשמור, בלי תפריטים. בסוף יש לך תוף בס ובס שמתנגנים.</p>
+<ol class="steps">
+<li>מחברים אוזניות או רמקול לשקע <bdi class="kc" dir="ltr"><span class="k">MIX OUT</span></bdi>. מדליקים במתג <bdi class="kc" dir="ltr"><span class="k">[POWER]</span></bdi> בגב. מרימים את <bdi class="kc" dir="ltr"><span class="k">[VOLUME]</span></bdi> עד האמצע.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi>. הכפתור נדלק, ו־16 כפתורי הצעד הופכים למספרי פטרנים. כפתור שדולק חלש = יש בו פטרן.</li>
+<li>לוחצים על כפתור צעד שדולק חלש. זה הפטרן שיתנגן.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[▶] (PLAY)</span></bdi>. הפטרן מתנגן. לוחצים שוב כדי לעצור.</li>
+<li>מסובבים את <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi> כדי לשנות קצב. הקצב תמיד מופיע בתצוגה. לאסיד נסה 128–132.</li>
+<li>רוצים ביט משלך? לוחצים <bdi class="kc" dir="ltr"><span class="k">[BASS DRUM]</span></bdi>. עכשיו כפתורי הצעד מראים את תוף הבס.</li>
+<li>לוחצים צעדים 1, 5, 9, 13. כל לחיצה מדליקה צעד. לחיצה על צעד דולק מוחקת אותו.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi> ואז כמה צעדים, למשל 3, 7, 11, 15. כל צעד חדש מקבל את התו C2. מסובבים את <bdi class="kc" dir="ltr"><span class="k">[CUTOFF]</span></bdi> ו־<bdi class="kc" dir="ltr"><span class="k">[RESO]</span></bdi> ושומעים את החומצה.</li>
+</ol>
+<div class="grid g-pink" dir="ltr"><span class="gl">תוף בס</span><div class="cells"><span class="c on beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c "><em>3</em></span><span class="c "><em>4</em></span><span class="c on beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c "><em>7</em></span><span class="c "><em>8</em></span><span class="c on beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c "><em>11</em></span><span class="c "><em>12</em></span><span class="c on beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c "><em>15</em></span><span class="c "><em>16</em></span></div></div>
+<div class="grid g-cyan" dir="ltr"><span class="gl">בס</span><div class="cells"><span class="c beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c on"><em>3</em></span><span class="c "><em>4</em></span><span class="c beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c on"><em>7</em></span><span class="c "><em>8</em></span><span class="c beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c on"><em>11</em></span><span class="c "><em>12</em></span><span class="c beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c on"><em>15</em></span><span class="c "><em>16</em></span></div></div>
+<div class="note warn"><b>חשוב:</b> כשמכבים את המכשיר, כל מה שלא נשמר חוזר למצב השמור האחרון. איך שומרים? בפרק <a href="#patterns">פטרנים</a>.</div>
+</section>
+
+<section id="panel" class="card">
+<h2><span class="sn">02</span> סיור בפאנל</h2>
+<p class="lead">ציור פשוט של הפאנל (לא בקנה מידה). נוגעים בכפתור או בכפתור סיבובי, והסבר מופיע למטה.</p>
+<div class="panelwrap"><div class="panelscroll" id="panelscroll"><svg id="t8svg" viewBox="0 0 1000 560" dir="ltr" xmlns="http://www.w3.org/2000/svg" aria-label="T-8 panel diagram"><rect x="4" y="4" width="992" height="552" rx="28" class="body"/><g class="ctl" data-id="charge" tabindex="0" role="button" aria-label="CHARGE"><circle cx="440" cy="52" r="6" class="led-g"/><text x="490" y="57" class="lbl">CHARGE</text><rect x="420" y="30" width="110" height="44" class="hit"/></g><g class="ctl" data-id="syncin" tabindex="0" role="button" aria-label="SYNC IN"><circle cx="575" cy="52" r="17" class="jack"/><circle cx="575" cy="52" r="8" class="jack-in"/><rect x="547" y="25" width="56" height="60" class="hit"/></g><g class="ctl" data-id="syncout" tabindex="0" role="button" aria-label="SYNC OUT"><circle cx="640" cy="52" r="17" class="jack"/><circle cx="640" cy="52" r="8" class="jack-in"/><rect x="612" y="25" width="56" height="60" class="hit"/></g><g class="ctl" data-id="mixin" tabindex="0" role="button" aria-label="MIX IN"><circle cx="725" cy="52" r="17" class="jack"/><circle cx="725" cy="52" r="8" class="jack-in"/><rect x="697" y="25" width="56" height="60" class="hit"/></g><g class="ctl" data-id="mixout" tabindex="0" role="button" aria-label="MIX OUT"><circle cx="790" cy="52" r="17" class="jack"/><circle cx="790" cy="52" r="8" class="jack-in"/><rect x="762" y="25" width="56" height="60" class="hit"/></g><text x="607" y="96" class="lbl sm">IN — SYNC — OUT</text><text x="757" y="96" class="lbl sm">IN — MIX — OUT</text><g class="ctl" data-id="volume" tabindex="0" role="button" aria-label="[VOLUME]"><circle cx="905" cy="50" r="15" class="knob"/><line x1="905" y1="39" x2="905" y2="44" class="tick"/><text x="905" y="96" class="lbl">VOLUME</text><rect x="860" y="27" width="90" height="64" class="hit"/></g><text x="40" y="62" class="brand">T-8</text><text x="40" y="84" class="lbl sm" style="text-anchor:start">AIRA COMPACT</text><rect x="30" y="112" width="195" height="310" rx="10" class="frame"/><rect x="235" y="112" width="100" height="310" rx="10" class="frame"/><rect x="345" y="112" width="100" height="310" rx="10" class="frame"/><rect x="455" y="112" width="100" height="310" rx="10" class="frame"/><rect x="565" y="112" width="100" height="310" rx="10" class="frame"/><rect x="675" y="112" width="200" height="310" rx="10" class="frame"/><rect x="885" y="112" width="90" height="310" rx="10" class="frame"/><g class="ctl" data-id="display" tabindex="0" role="button" aria-label="Display"><rect x="50" y="128" width="155" height="56" rx="6" class="disp"/><text x="128" y="168" class="seg">130.0</text><rect x="45" y="122" width="165" height="68" class="hit"/></g><g class="ctl" data-id="tempo" tabindex="0" role="button" aria-label="[TEMPO/VALUE]"><circle cx="128" cy="238" r="30" class="knob"/><line x1="128" y1="212" x2="128" y2="227" class="tick"/><text x="128" y="288" class="lbl">TEMPO/VALUE</text><rect x="83" y="200" width="90" height="94" class="hit"/></g><g class="ctl" data-id="shift" tabindex="0" role="button" aria-label="[SHIFT]"><rect x="48" y="300" width="70" height="34" rx="7" class="btn"/><text x="83" y="322" class="bt">SHIFT</text><rect x="42" y="294" width="82" height="46" class="hit"/></g><g class="ctl" data-id="pattern" tabindex="0" role="button" aria-label="[PATTERN]"><rect x="138" y="300" width="70" height="34" rx="7" class="btn"/><text x="173" y="322" class="bt">PATTERN</text><text x="173" y="350" class="lbl sm">STEP LOOP</text><rect x="132" y="294" width="82" height="62" class="hit"/></g><g class="ctl" data-id="play" tabindex="0" role="button" aria-label="[▶] (PLAY)"><rect x="48" y="365" width="70" height="36" rx="7" class="btn play"/><text x="83" y="388" class="bt">▶</text><rect x="42" y="359" width="82" height="48" class="hit"/></g><g class="ctl" data-id="rec" tabindex="0" role="button" aria-label="[●] (REC)"><rect x="138" y="365" width="70" height="36" rx="7" class="btn rec"/><text x="173" y="388" class="bt">●</text><rect x="132" y="359" width="82" height="48" class="hit"/></g><g class="ctl" data-id="bdlvl" tabindex="0" role="button" aria-label="[LEVEL]"><circle cx="285" cy="150" r="22" class="ring" style="stroke:#ff4f5e"/><circle cx="285" cy="150" r="17" class="knob"/><line x1="285" y1="137" x2="285" y2="144" class="tick"/><text x="285" y="187" class="lbl">LEVEL</text><rect x="240" y="125" width="90" height="68" class="hit"/></g><g class="ctl" data-id="bdtune" tabindex="0" role="button" aria-label="[TUNE]"><circle cx="285" cy="225" r="13" class="knob"/><line x1="285" y1="216" x2="285" y2="220" class="tick"/><text x="285" y="258" class="lbl">TUNE</text><rect x="240" y="204" width="90" height="60" class="hit"/></g><g class="ctl" data-id="bddec" tabindex="0" role="button" aria-label="[DECAY]"><circle cx="285" cy="298" r="24" class="btn round"/><text x="285" y="303" class="bt">DECAY</text><rect x="245" y="268" width="80" height="60" class="hit"/></g><g class="ctl" data-id="bdbtn" tabindex="0" role="button" aria-label="[BASS DRUM]"><rect x="247" y="365" width="76" height="38" rx="7" class="btn"/><text x="285" y="382" class="bt">BASS</text><text x="285" y="396" class="bt">DRUM</text><rect x="241" y="359" width="88" height="50" class="hit"/></g><g class="ctl" data-id="sdlvl" tabindex="0" role="button" aria-label="[LEVEL]"><circle cx="395" cy="150" r="22" class="ring" style="stroke:#ff9a3c"/><circle cx="395" cy="150" r="17" class="knob"/><line x1="395" y1="137" x2="395" y2="144" class="tick"/><text x="395" y="187" class="lbl">LEVEL</text><rect x="350" y="125" width="90" height="68" class="hit"/></g><g class="ctl" data-id="sdtune" tabindex="0" role="button" aria-label="[TUNE]"><circle cx="395" cy="225" r="13" class="knob"/><line x1="395" y1="216" x2="395" y2="220" class="tick"/><text x="395" y="258" class="lbl">TUNE</text><rect x="350" y="204" width="90" height="60" class="hit"/></g><g class="ctl" data-id="sddec" tabindex="0" role="button" aria-label="[DECAY]"><circle cx="395" cy="298" r="24" class="btn round"/><text x="395" y="303" class="bt">DECAY</text><rect x="355" y="268" width="80" height="60" class="hit"/></g><g class="ctl" data-id="sdbtn" tabindex="0" role="button" aria-label="[SNARE DRUM]"><rect x="357" y="365" width="76" height="38" rx="7" class="btn"/><text x="395" y="382" class="bt">SNARE</text><text x="395" y="396" class="bt">DRUM</text><rect x="351" y="359" width="88" height="50" class="hit"/></g><g class="ctl" data-id="tclvl" tabindex="0" role="button" aria-label="[LEVEL]"><circle cx="505" cy="150" r="22" class="ring" style="stroke:#ffd84f"/><circle cx="505" cy="150" r="17" class="knob"/><line x1="505" y1="137" x2="505" y2="144" class="tick"/><text x="505" y="187" class="lbl">LEVEL</text><rect x="460" y="125" width="90" height="68" class="hit"/></g><g class="ctl" data-id="tctune" tabindex="0" role="button" aria-label="[TUNE]"><circle cx="505" cy="225" r="13" class="knob"/><line x1="505" y1="216" x2="505" y2="220" class="tick"/><text x="505" y="258" class="lbl">TUNE</text><rect x="460" y="204" width="90" height="60" class="hit"/></g><g class="ctl" data-id="clap" tabindex="0" role="button" aria-label="[HAND CLAP]"><rect x="467" y="282" width="76" height="38" rx="7" class="btn"/><text x="505" y="299" class="bt">HAND</text><text x="505" y="313" class="bt">CLAP</text><rect x="461" y="276" width="88" height="50" class="hit"/></g><g class="ctl" data-id="tom" tabindex="0" role="button" aria-label="[TOM]"><rect x="467" y="365" width="76" height="38" rx="7" class="btn"/><text x="505" y="389" class="bt">TOM</text><rect x="461" y="359" width="88" height="50" class="hit"/></g><g class="ctl" data-id="hhlvl" tabindex="0" role="button" aria-label="[LEVEL]"><circle cx="615" cy="150" r="22" class="ring" style="stroke:#f1ebff"/><circle cx="615" cy="150" r="17" class="knob"/><line x1="615" y1="137" x2="615" y2="144" class="tick"/><text x="615" y="187" class="lbl">LEVEL</text><rect x="570" y="125" width="90" height="68" class="hit"/></g><g class="ctl" data-id="hhdec" tabindex="0" role="button" aria-label="[DECAY]"><circle cx="615" cy="225" r="13" class="knob"/><line x1="615" y1="216" x2="615" y2="220" class="tick"/><text x="615" y="258" class="lbl">DECAY</text><rect x="570" y="204" width="90" height="60" class="hit"/></g><g class="ctl" data-id="ch" tabindex="0" role="button" aria-label="[CLOSED HIHAT]"><rect x="577" y="282" width="76" height="38" rx="7" class="btn"/><text x="615" y="299" class="bt">CLOSED</text><text x="615" y="313" class="bt">HIHAT</text><rect x="571" y="276" width="88" height="50" class="hit"/></g><g class="ctl" data-id="oh" tabindex="0" role="button" aria-label="[OPEN HIHAT]"><rect x="577" y="365" width="76" height="38" rx="7" class="btn"/><text x="615" y="382" class="bt">OPEN</text><text x="615" y="396" class="bt">HIHAT</text><rect x="571" y="359" width="88" height="50" class="hit"/></g><g class="ctl" data-id="blvl" tabindex="0" role="button" aria-label="[LEVEL]"><circle cx="725" cy="150" r="22" class="ring" style="stroke:#b8b0cc"/><circle cx="725" cy="150" r="17" class="knob"/><line x1="725" y1="137" x2="725" y2="144" class="tick"/><text x="725" y="187" class="lbl">LEVEL</text><rect x="680" y="125" width="90" height="68" class="hit"/></g><g class="ctl" data-id="bpitch" tabindex="0" role="button" aria-label="[PITCH]"><circle cx="725" cy="225" r="15" class="knob"/><line x1="725" y1="214" x2="725" y2="219" class="tick"/><text x="725" y="260" class="lbl">PITCH</text><rect x="680" y="202" width="90" height="64" class="hit"/></g><g class="ctl" data-id="bdec" tabindex="0" role="button" aria-label="[DECAY]"><circle cx="725" cy="300" r="15" class="knob"/><line x1="725" y1="289" x2="725" y2="294" class="tick"/><text x="725" y="335" class="lbl">DECAY</text><rect x="680" y="277" width="90" height="64" class="hit"/></g><g class="ctl" data-id="cutoff" tabindex="0" role="button" aria-label="[CUTOFF]"><circle cx="825" cy="150" r="15" class="knob"/><line x1="825" y1="139" x2="825" y2="144" class="tick"/><text x="825" y="185" class="lbl">CUTOFF</text><rect x="780" y="127" width="90" height="64" class="hit"/></g><g class="ctl" data-id="reso" tabindex="0" role="button" aria-label="[RESO]"><circle cx="825" cy="225" r="15" class="knob"/><line x1="825" y1="214" x2="825" y2="219" class="tick"/><text x="825" y="260" class="lbl">RESO</text><rect x="780" y="202" width="90" height="64" class="hit"/></g><g class="ctl" data-id="envmod" tabindex="0" role="button" aria-label="[ENV MOD]"><circle cx="825" cy="300" r="15" class="knob"/><line x1="825" y1="289" x2="825" y2="294" class="tick"/><text x="825" y="335" class="lbl">ENV MOD</text><rect x="780" y="277" width="90" height="64" class="hit"/></g><g class="ctl" data-id="bass" tabindex="0" role="button" aria-label="[BASS]"><rect x="690" y="370" width="70" height="34" rx="7" class="btn"/><text x="725" y="392" class="bt">BASS</text><rect x="684" y="364" width="82" height="46" class="hit"/></g><g class="ctl" data-id="kybd" tabindex="0" role="button" aria-label="[KYBD]"><rect x="790" y="370" width="70" height="34" rx="7" class="btn kb"/><text x="825" y="392" class="bt">KYBD</text><rect x="784" y="364" width="82" height="46" class="hit"/></g><line x1="760" y1="387" x2="790" y2="387" class="conn"/><g class="ctl" data-id="delay" tabindex="0" role="button" aria-label="[DELAY]"><circle cx="930" cy="150" r="15" class="knob"/><line x1="930" y1="139" x2="930" y2="144" class="tick"/><text x="930" y="185" class="lbl">DELAY</text><rect x="885" y="127" width="90" height="64" class="hit"/></g><g class="ctl" data-id="reverb" tabindex="0" role="button" aria-label="[REVERB]"><circle cx="930" cy="225" r="15" class="knob"/><line x1="930" y1="214" x2="930" y2="219" class="tick"/><text x="930" y="260" class="lbl">REVERB</text><rect x="885" y="202" width="90" height="64" class="hit"/></g><g class="ctl" data-id="accent" tabindex="0" role="button" aria-label="[ACCENT]"><rect x="895" y="370" width="70" height="34" rx="7" class="btn"/><text x="930" y="392" class="bt">ACCENT</text><rect x="889" y="364" width="82" height="46" class="hit"/></g><rect x="20" y="432" width="960" height="118" rx="10" class="frame"/><g class="ctl" data-id="s1" tabindex="0" role="button" aria-label="step 1"><rect x="34.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="41.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="56.0" y="485" class="st">C</text><text x="56.0" y="512" class="lbl xs">EXIT</text><text x="56.0" y="547" class="num">1</text><rect x="28.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s2" tabindex="0" role="button" aria-label="step 2"><rect x="92.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="99.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="114.5" y="485" class="st">C#</text><text x="114.5" y="512" class="lbl xs">ENTER</text><text x="114.5" y="547" class="num">2</text><rect x="86.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s3" tabindex="0" role="button" aria-label="step 3"><rect x="151.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="158.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="173.0" y="485" class="st">D</text><text x="173.0" y="512" class="lbl xs">SHUFFLE</text><text x="173.0" y="547" class="num">3</text><rect x="145.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s4" tabindex="0" role="button" aria-label="step 4"><rect x="209.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="216.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="231.5" y="485" class="st">D#</text><text x="231.5" y="512" class="lbl xs">LAST</text><text x="231.5" y="547" class="num">4</text><rect x="203.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s5" tabindex="0" role="button" aria-label="step 5"><rect x="268.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="275.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="290.0" y="485" class="st">E</text><text x="290.0" y="512" class="lbl xs">1-16</text><text x="290.0" y="547" class="num">5</text><rect x="262.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s6" tabindex="0" role="button" aria-label="step 6"><rect x="326.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="333.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="348.5" y="485" class="st">F</text><text x="348.5" y="512" class="lbl xs">17-32</text><text x="348.5" y="547" class="num">6</text><rect x="320.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s7" tabindex="0" role="button" aria-label="step 7"><rect x="385.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="392.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="407.0" y="485" class="st">F#</text><text x="407.0" y="512" class="lbl xs">TRG</text><text x="407.0" y="547" class="num">7</text><rect x="379.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s8" tabindex="0" role="button" aria-label="step 8"><rect x="443.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="450.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="465.5" y="485" class="st">G</text><text x="465.5" y="512" class="lbl xs">PTN</text><text x="465.5" y="547" class="num">8</text><rect x="437.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s9" tabindex="0" role="button" aria-label="step 9"><rect x="502.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="509.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="524.0" y="485" class="st">G#</text><text x="524.0" y="512" class="lbl xs">RHYTHM</text><text x="524.0" y="547" class="num">9</text><rect x="496.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s10" tabindex="0" role="button" aria-label="step 10"><rect x="560.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="567.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="582.5" y="485" class="st">A</text><text x="582.5" y="512" class="lbl xs">BASS</text><text x="582.5" y="547" class="num">10</text><rect x="554.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s11" tabindex="0" role="button" aria-label="step 11"><rect x="619.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="626.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="641.0" y="485" class="st">A#</text><text x="641.0" y="512" class="lbl xs">ALL</text><text x="641.0" y="547" class="num">11</text><rect x="613.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s12" tabindex="0" role="button" aria-label="step 12"><rect x="677.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="684.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="699.5" y="485" class="st">B</text><text x="699.5" y="512" class="lbl xs">INST</text><text x="699.5" y="547" class="num">12</text><rect x="671.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s13" tabindex="0" role="button" aria-label="step 13"><rect x="736.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="743.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="758.0" y="485" class="st">C</text><text x="758.0" y="512" class="lbl xs">DELAY</text><text x="758.0" y="547" class="num">13</text><rect x="730.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s14" tabindex="0" role="button" aria-label="step 14"><rect x="794.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="801.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="816.5" y="485" class="st">OCT-</text><text x="816.5" y="512" class="lbl xs">REVERB</text><text x="816.5" y="547" class="num">14</text><rect x="788.5" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s15" tabindex="0" role="button" aria-label="step 15"><rect x="853.0" y="446" width="44" height="46" rx="5" class="step"/><rect x="860.0" y="452" width="30" height="13" rx="2" class="stepled"/><text x="875.0" y="485" class="st">OCT+</text><text x="875.0" y="512" class="lbl xs">MENU</text><text x="875.0" y="547" class="num">15</text><rect x="847.0" y="440" width="56" height="108" class="hit"/></g><g class="ctl" data-id="s16" tabindex="0" role="button" aria-label="step 16"><rect x="911.5" y="446" width="44" height="46" rx="5" class="step"/><rect x="918.5" y="452" width="30" height="13" rx="2" class="stepled"/><text x="933.5" y="485" class="st">SLIDE</text><text x="933.5" y="512" class="lbl xs">WRITE</text><text x="933.5" y="547" class="num">16</text><rect x="905.5" y="440" width="56" height="108" class="hit"/></g><line x1="268" y1="519" x2="373" y2="519" class="conn"/><text x="320" y="532" class="lbl xs grpl">STEP</text><line x1="385" y1="519" x2="490" y2="519" class="conn"/><text x="437" y="532" class="lbl xs grpl">FILL</text><line x1="502" y1="519" x2="607" y2="519" class="conn"/><text x="554" y="532" class="lbl xs grpl">RANDOM</text><line x1="619" y1="519" x2="724" y2="519" class="conn"/><text x="671" y="532" class="lbl xs grpl">PTN CLEAR</text></svg></div></div>
+<p class="hint narrow-only">בטלפון: גוללים את הציור לצדדים.</p>
+<div class="info" id="info" aria-live="polite"><div class="info-k" id="info-k"><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi></div><div class="info-d" id="info-d">נגיעה בפקד בציור תראה כאן מה הוא עושה.</div></div>
+
+<h3>כפתורי הצעד: לכל כפתור שלושה תפקידים</h3>
+<p>16 הכפתורים בשורה התחתונה הם הצעדים 1–16. בנוסף, על כל כפתור מודפס תו (לנגינת בס במצב <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi>), ומתחתיו פונקציה (עם <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi>).</p>
+<div class="tbl"><table>
+<thead><tr><th>צעד</th><th>תו</th><th>עם [SHIFT]</th><th>מה זה עושה</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><bdi class="kc" dir="ltr"><span class="k">C</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">EXIT</span></bdi></td><td>יציאה מתפריט</td></tr>
+<tr><td>2</td><td><bdi class="kc" dir="ltr"><span class="k">C#</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">ENTER</span></bdi></td><td>אישור</td></tr>
+<tr><td>3</td><td><bdi class="kc" dir="ltr"><span class="k">D</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">SHUFFLE</span></bdi></td><td>שאפל (סווינג)</td></tr>
+<tr><td>4</td><td><bdi class="kc" dir="ltr"><span class="k">D#</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">LAST</span></bdi></td><td>אורך הפטרן (הצעד האחרון)</td></tr>
+<tr><td>5</td><td><bdi class="kc" dir="ltr"><span class="k">E</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">STEP 1-16</span></bdi></td><td>עמוד ראשון של צעדים</td></tr>
+<tr><td>6</td><td><bdi class="kc" dir="ltr"><span class="k">F</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">STEP 17-32</span></bdi></td><td>עמוד שני של צעדים</td></tr>
+<tr><td>7</td><td><bdi class="kc" dir="ltr"><span class="k">F#</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">FILL TRG</span></bdi></td><td>מפעיל מעבר (פיל) בסוף הפטרן</td></tr>
+<tr><td>8</td><td><bdi class="kc" dir="ltr"><span class="k">G</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">FILL PTN</span></bdi></td><td>בוחר איזה פטרן ישמש כפיל</td></tr>
+<tr><td>9</td><td><bdi class="kc" dir="ltr"><span class="k">G#</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">RANDOM RHYTHM</span></bdi></td><td>תופים אקראיים</td></tr>
+<tr><td>10</td><td><bdi class="kc" dir="ltr"><span class="k">A</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">RANDOM BASS</span></bdi></td><td>בס אקראי</td></tr>
+<tr><td>11</td><td><bdi class="kc" dir="ltr"><span class="k">A#</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">PTN CLEAR ALL</span></bdi></td><td>מחיקת כל הפטרן</td></tr>
+<tr><td>12</td><td><bdi class="kc" dir="ltr"><span class="k">B</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">PTN CLEAR INST</span></bdi></td><td>מחיקת הכלי הנבחר בלבד</td></tr>
+<tr><td>13</td><td><bdi class="kc" dir="ltr"><span class="k">C</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">DELAY</span></bdi></td><td>הגדרות דיליי (כמה כל כלי שולח)</td></tr>
+<tr><td>14</td><td><bdi class="kc" dir="ltr"><span class="k">OCT-</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">REVERB</span></bdi></td><td>הגדרות ריוורב</td></tr>
+<tr><td>15</td><td><bdi class="kc" dir="ltr"><span class="k">OCT+</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">MENU</span></bdi></td><td>התפריט</td></tr>
+<tr><td>16</td><td><bdi class="kc" dir="ltr"><span class="k">SLIDE</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">WRITE</span></bdi></td><td>שמירה</td></tr>
+</tbody></table></div>
+<p class="small">בספר ההפעלה הכפתורים נקראים בשני השמות יחד, למשל <bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi> או <bdi class="kc" dir="ltr"><span class="k">[SLIDE (WRITE)]</span></bdi>. ככה נכתוב גם כאן.</p>
+</section>
+
+<section id="drums" class="card">
+<h2><span class="sn">03</span> תופים</h2>
+<p class="lead">שישה כלים: <bdi class="kc" dir="ltr"><span class="k">BASS DRUM</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">SNARE DRUM</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">HAND CLAP</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">TOM</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">CLOSED HIHAT</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">OPEN HIHAT</span></bdi>.</p>
+
+<h3>כתיבת צעדים</h3>
+<ol class="steps">
+<li>לוחצים על כפתור הכלי, למשל <bdi class="kc" dir="ltr"><span class="k">[CLOSED HIHAT]</span></bdi>. הוא נדלק.</li>
+<li>לוחצים על הצעדים שרוצים. הם נדלקים.</li>
+<li>לחיצה על צעד דולק מוחקת אותו.</li>
+</ol>
+<p>אפשר לכתוב גם בזמן שהפטרן מתנגן. ככה שומעים מיד.</p>
+
+<h3>32 צעדים: שני עמודים</h3>
+<p>כל פטרן יכול להגיע ל־32 צעדים, בשני עמודים של 16.</p>
+<ol class="steps">
+<li>מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi>. עמוד אחד דולק והשני מהבהב.</li>
+<li>תוך כדי, לוחצים <bdi class="kc" dir="ltr"><span class="k">[E (STEP 1-16)]</span></bdi> לעמוד הראשון או <bdi class="kc" dir="ltr"><span class="k">[F (STEP 17-32)]</span></bdi> לשני.</li>
+</ol>
+<div class="note">טריק: אם הפטרן באורך 16 או פחות, ועוברים לעמוד 17–32 כשהוא ריק, המכשיר מעתיק את צעדים 1–16 לשם ומאריך את הפטרן ל־32. נוח מאוד כדי לבנות וריאציה.</div>
+
+<h3>הקלטה חיה (טאפ)</h3>
+<ol class="steps">
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi>. הוא נדלק.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[▶] (PLAY)</span></bdi>. ההקלטה מתחילה.</li>
+<li>מתופפים על כפתורי הכלים. כל מכה נכתבת לצעד שמתנגן באותו רגע.</li>
+</ol>
+
+<h3>אקסנט (הדגשה)</h3>
+<ol class="steps">
+<li>בוחרים כלי תוף כלשהו, ולוחצים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi>. הוא נדלק.</li>
+<li>לוחצים על הצעדים שרוצים להדגיש.</li>
+</ol>
+<p>האקסנט של התופים משותף לכל ששת הכלים. צעד מודגש מדגיש את כל מה שמתנגן בו.</p>
+<p><b>עוצמת האקסנט:</b> כשכלי תוף נבחר, מחזיקים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> ומסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>.</p>
+
+<h3>סאב־סטפים: גלגולים ומכות כפולות</h3>
+<p>מחלקים צעד אחד לכמה מכות מהירות. מושלם לגלגול סנר לפני דרופ.</p>
+<ol class="steps">
+<li>מחזיקים את כפתור הכלי (למשל <bdi class="kc" dir="ltr"><span class="k">[SNARE DRUM]</span></bdi>) ולוחצים על צעד. התצוגה מראה את המצב הנוכחי.</li>
+<li>עדיין מחזיקים את הכלי, ולוחצים שוב על אותו צעד. כל לחיצה מחליפה: <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi> ← <bdi class="kc" dir="ltr"><span class="k">1_2</span></bdi> ← <bdi class="kc" dir="ltr"><span class="k">1_3</span></bdi> ← <bdi class="kc" dir="ltr"><span class="k">1_4</span></bdi> ← <bdi class="kc" dir="ltr"><span class="k">FLAN</span></bdi>.</li>
+</ol>
+<p class="small"><bdi class="kc" dir="ltr"><span class="k">1_2</span></bdi> = שתי מכות בצעד, <bdi class="kc" dir="ltr"><span class="k">1_3</span></bdi> = שלוש, <bdi class="kc" dir="ltr"><span class="k">1_4</span></bdi> = ארבע. <bdi class="kc" dir="ltr"><span class="k">FLAN</span></bdi> = פלאם (מכה כפולה צמודה). הספר לא מסביר את FLAN יותר מזה.</p>
+
+<h3>הסתברות (Probability)</h3>
+<p>כל צעד יכול להתנגן רק בחלק מהפעמים. ככה הפטרן משתנה קצת כל סיבוב, בלי שתיגע.</p>
+<ol class="steps">
+<li>בוחרים כלי. מחזיקים צעד. התצוגה מראה <bdi class="kc" dir="ltr"><span class="k">P.0</span></bdi>–<bdi class="kc" dir="ltr"><span class="k">P.100</span></bdi>.</li>
+<li>תוך כדי, מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>. <bdi class="kc" dir="ltr"><span class="k">P.100</span></bdi> = תמיד. <bdi class="kc" dir="ltr"><span class="k">P.50</span></bdi> = בערך חצי מהפעמים.</li>
+</ol>
+<p><b>הסתברות לסאב־סטפ:</b> מחזיקים את הכלי, לוחצים את הצעד (מופיע מצב הסאב־סטפ), לוחצים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi>, ומסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>.</p>
+<p><b>הסתברות ראשית (Master):</b> מחזיקים <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> ומסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>. משפיעה על כל הפטרן, אבל רק על צעדים שכבר יש להם הסתברות משלהם.</p>
+
+<h3>וולוסיטי (כמה חזק כל מכה)</h3>
+<ol class="steps">
+<li>בוחרים כלי ומחזיקים צעד (מופיע <bdi class="kc" dir="ltr"><span class="k">P.</span></bdi>).</li>
+<li>עדיין מחזיקים, לוחצים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi>. מופיע <bdi class="kc" dir="ltr"><span class="k">v.0</span></bdi>–<bdi class="kc" dir="ltr"><span class="k">v.10</span></bdi>.</li>
+<li>מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>.</li>
+</ol>
+<div class="note">רעיון לטראנס: היי־האט סגור בכל 16 הצעדים, עם וולוסיטי נמוך בצעדים הזוגיים. ההיי־האט "נושם".</div>
+
+<h3>לולאת צעדים (Step Loop)</h3>
+<p>לופ קצר על צעד או כמה צעדים, בזמן נגינה. רק התופים נכנסים ללופ, הבס ממשיך. כלי חי מעולה לבילד־אפ.</p>
+<ol class="steps">
+<li>מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> ולוחצים <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi>. <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> מהבהב (כתוב מתחתיו STEP LOOP).</li>
+<li>לוחצים צעד אחד או יותר.</li>
+<li>כדי לסיים: לוחצים <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi>.</li>
+</ol>
+
+<h3>הזזת כלי קדימה ואחורה</h3>
+<p>מחזיקים את כפתור הכלי ומסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>. כל התבנית של הכלי זזה קדימה או אחורה בצעדים.</p>
+
+<h3>הסאונד של כל תוף</h3>
+<div class="tbl"><table>
+<thead><tr><th>כלי</th><th>על הפאנל</th></tr></thead>
+<tbody>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">BASS DRUM</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi> עוצמה. <bdi class="kc" dir="ltr"><span class="k">[TUNE]</span></bdi> גובה. לוחצים <bdi class="kc" dir="ltr"><span class="k">[DECAY]</span></bdi> ואז <bdi class="kc" dir="ltr"><span class="k">[TUNE]</span></bdi> שולט באורך הצליל.</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">SNARE DRUM</span></bdi></td><td>אותו דבר: <bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">[TUNE]</span></bdi>, וכפתור <bdi class="kc" dir="ltr"><span class="k">[DECAY]</span></bdi> שמעביר את <bdi class="kc" dir="ltr"><span class="k">[TUNE]</span></bdi> לאורך.</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">TOM</span></bdi> / <bdi class="kc" dir="ltr"><span class="k">HAND CLAP</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi> משותף לשניהם. <bdi class="kc" dir="ltr"><span class="k">[TUNE]</span></bdi> משנה את הגובה של הכלי שנבחר.</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">CLOSED HIHAT</span></bdi> / <bdi class="kc" dir="ltr"><span class="k">OPEN HIHAT</span></bdi></td><td><bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi> משותף. <bdi class="kc" dir="ltr"><span class="k">[DECAY]</span></bdi> (כפתור סיבובי) לאורך ההיי־האט.</td></tr>
+</tbody></table></div>
+<p>עוד פרמטרים לכל כלי נמצאים בתפריט (<bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[OCT+ (MENU)]</span></bdi>, ואז בוחרים כלי בכפתור שלו):</p>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">GAIn</span></bdi> עוצמה פנימית 0–200. <bdi class="kc" dir="ltr"><span class="k">tUnE</span></bdi> כיוון. <bdi class="kc" dir="ltr"><span class="k">dECY</span></bdi> אורך. <bdi class="kc" dir="ltr"><span class="k">PAn</span></bdi> מיקום בסטריאו.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">AtK</span></bdi> כמה "קליק" יש בתוף הבס (0–255).</li>
+<li><bdi class="kc" dir="ltr"><span class="k">SnPy</span></bdi> כמה "רעש קפיצים" יש בסנר (0–255).</li>
+<li><bdi class="kc" dir="ltr"><span class="k">CoIr</span></bdi> כמות הרעש בטומים.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">tON</span></bdi> בוחר בין שני צלילי טום: <bdi class="kc" dir="ltr"><span class="k">tON1</span></bdi> או <bdi class="kc" dir="ltr"><span class="k">tON2</span></bdi>.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">CLAP</span></bdi> מחליף את צליל הכלי הזה: <bdi class="kc" dir="ltr"><span class="k">CP</span></bdi> קלאפ, <bdi class="kc" dir="ltr"><span class="k">hnt</span></bdi> טום רעש, <bdi class="kc" dir="ltr"><span class="k">htON</span></bdi> טום גבוה.</li>
+<li>Open HiHat Tempo Sync: כשהוא דלוק, אורך ההיי־האט הפתוח נמתח לפי הקצב.</li>
+</ul>
+<p><b>השתקה:</b> מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> ולוחצים על כפתור כלי. הכלי מהבהב = מושתק. ההשתקה מתבטלת כשמכבים את המכשיר.</p>
+</section>
+
+<section id="bass" class="card">
+<h2><span class="sn">04</span> הבס (חלק ה־303)</h2>
+<p class="lead">קו בס אחד, עד 32 צעדים. לכל צעד יש תו, ואפשר להוסיף אקסנט, סלייד או טיי (המשך של התו הקודם).</p>
+
+<h3>הדרך הכי מהירה</h3>
+<ol class="steps">
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi>. צעדים עם תו דולקים. צעד עם טיי דולק חלש.</li>
+<li>לוחצים צעד ריק. נכנס התו C2 (או התו האחרון שמחקת בצעד הזה).</li>
+<li>לחיצה על צעד מלא מוחקת אותו.</li>
+</ol>
+
+<h3>עריכת צעד אחד (Step mode)</h3>
+<ol class="steps">
+<li>מחזיקים צעד. התצוגה מראה את התו.</li>
+<li>תוך כדי, מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>: <bdi class="kc" dir="ltr"><span class="k">n.oFF</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">n.C0</span></bdi> עד <bdi class="kc" dir="ltr"><span class="k">n.C7</span></bdi>, או <bdi class="kc" dir="ltr"><span class="k">n.tie</span></bdi>.</li>
+<li>עדיין מחזיקים, לוחצים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi>: מופיע אקסנט (<bdi class="kc" dir="ltr"><span class="k">A.OFF</span></bdi> / <bdi class="kc" dir="ltr"><span class="k">A.On</span></bdi>). לוחצים שוב: סלייד (<bdi class="kc" dir="ltr"><span class="k">S.OFF</span></bdi> / <bdi class="kc" dir="ltr"><span class="k">S.On</span></bdi>). כל לחיצה מסובבת: תו ← אקסנט ← סלייד.</li>
+<li>מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi> כדי לשנות את מה שמוצג.</li>
+</ol>
+
+<h3>כתיבה עם מקלדת (Keyboard mode) — הכי נוח לאסיד</h3>
+<p>כפתורי הצעד הופכים לקלידים: <bdi class="kc" dir="ltr"><span class="k">C</span></bdi> <bdi class="kc" dir="ltr"><span class="k">C#</span></bdi> <bdi class="kc" dir="ltr"><span class="k">D</span></bdi> … <bdi class="kc" dir="ltr"><span class="k">B</span></bdi> <bdi class="kc" dir="ltr"><span class="k">C</span></bdi>, ואחריהם <bdi class="kc" dir="ltr"><span class="k">[OCT-]</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">[OCT+]</span></bdi> ו־<bdi class="kc" dir="ltr"><span class="k">[SLIDE]</span></bdi>.</p>
+<ol class="steps">
+<li>עוצרים את הנגינה. לוחצים <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi>.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi>. <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> מהבהב. בתצוגה מופיע מספר הצעד, למשל <bdi class="kc" dir="ltr"><span class="k">St. 1</span></bdi>.</li>
+<li>לוחצים קליד: התו נכנס לצעד הזה. <bdi class="kc" dir="ltr"><span class="k">[OCT-]</span></bdi> / <bdi class="kc" dir="ltr"><span class="k">[OCT+]</span></bdi> מזיזים אוקטבה.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[SLIDE]</span></bdi> מדליק/מכבה סלייד לצעד. <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> מדליק/מכבה אקסנט.</li>
+<li>טיי: מחזיקים <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> ולוחצים <bdi class="kc" dir="ltr"><span class="k">[SLIDE]</span></bdi>. התו של הצעד הקודם נמשך לתוך הצעד הזה.</li>
+<li>מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi> כדי לעבור לצעד הבא או הקודם.</li>
+<li>סיום: לוחצים <bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi> או <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi>.</li>
+</ol>
+<p class="small">האם הצעד מתקדם לבד אחרי שלוחצים קליד? הספר לא אומר. הוא רק אומר שעוברים צעד עם <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>. <span class="tv">לבדוק על המכשיר</span></p>
+<p><b>לתקן צעד בודד:</b> כש־<bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi> כבוי, מחזיקים <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> ולוחצים על הצעד שרוצים. אפשר גם תוך כדי נגינה.</p>
+<p><b>רק לנגן, בלי להקליט:</b> <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> דולק ו־REC כבוי = כפתורי הצעד הם מקלדת לנגינה חיה.</p>
+
+<h3>הקלטה חיה של בס</h3>
+<ul class="dots">
+<li><b>רק קצב:</b> <bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi> דולק, <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> כבוי, מנגנים ולוחצים <bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi> בזמן. כל התווים יוצאים C2.</li>
+<li><b>עם תווים:</b> <bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi> דולק ו־<bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> מהבהב, לוחצים <bdi class="kc" dir="ltr"><span class="k">[▶] (PLAY)</span></bdi>. המכשיר עובר מצעד לצעד, ואתה מנגן תווים, טיי וסלייד בזמן אמת.</li>
+</ul>
+
+<h3>אקסנט וסלייד לכל הצעדים בבת אחת</h3>
+<ol class="steps">
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi>, ואז <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi>. מופיע <bdi class="kc" dir="ltr"><span class="k">b.ACC</span></bdi>: לוחצים על הצעדים שיקבלו אקסנט.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> שוב. מופיע <bdi class="kc" dir="ltr"><span class="k">b.SLd</span></bdi>: לוחצים על הצעדים שיקבלו סלייד.</li>
+</ol>
+<p class="small">איך יוצאים מהמצב הזה? הספר לא מפרט. <span class="tv">לבדוק</span> (כנראה בחירת כלי אחר או לחיצה נוספת).</p>
+<p><b>עוצמת אקסנט הבס:</b> <bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi> נבחר, מחזיקים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> ומסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>.</p>
+<p><b>טרנספוז לכל הקו:</b> מחזיקים <bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi> + <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> ומסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>.</p>
+
+<h3>הכפתורים של הבס</h3>
+<div class="tbl"><table>
+<thead><tr><th>כפתור</th><th>מה הוא עושה</th><th>טיפ אסיד</th></tr></thead>
+<tbody>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi></td><td>עוצמת הבס</td><td></td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PITCH]</span></bdi></td><td>גובה הצליל</td><td>לכוון לסולם של שאר הכלים</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[DECAY]</span></bdi></td><td>אורך התו</td><td>קצר = "פלאקי", ארוך = נוזלי</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[CUTOFF]</span></bdi></td><td>כמה בהיר הצליל</td><td>הכפתור שמסובבים כל הזמן</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[RESO]</span></bdi></td><td>הדגשה סביב ה־CUTOFF</td><td>גבוה = ה"צווחה" של אסיד</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[ENV MOD]</span></bdi></td><td>כמה ה־CUTOFF זז עם כל תו</td><td>יחד עם DECAY נותן את ה"וואו"</td></tr>
+</tbody></table></div>
+<p><b>צורת גל:</b> בתפריט, Bass Wave: <bdi class="kc" dir="ltr"><span class="k">SAW</span></bdi> (משור) או <bdi class="kc" dir="ltr"><span class="k">Sqr</span></bdi> (ריבוע). קיצור: <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[A# (PTN CLEAR ALL)]</span></bdi>.</p>
+<p><b>בס בטריולות:</b> בתפריט, Bass Step Triplet = On. אז כל צעד של בס הוא שמינית בטריולה.</p>
+</section>
+
+<section id="patterns" class="card">
+<h2><span class="sn">05</span> פטרנים: בחירה, אורך, העתקה, שמירה</h2>
+<p class="lead">64 פטרנים: 4 בנקים × 16. כל פטרן כולל גם תופים וגם בס.</p>
+
+<h3>מעבר בין פטרנים</h3>
+<ol class="steps">
+<li><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi>, ואז צעד 1–16.</li>
+<li>אם מתנגן משהו, הפטרן החדש מהבהב: "הבא בתור". הוא יתחיל כשהנוכחי ייגמר.</li>
+</ol>
+<div class="legend"><span><i class="led on"></i>דולק = מתנגן</span><span><i class="led blink"></i>מהבהב = הבא בתור</span><span><i class="led dim"></i>חלש = יש פטרן</span><span><i class="led"></i>כבוי = ריק</span></div>
+<p><b>בנקים:</b> מחזיקים <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> ולוחצים צעד 1–4 = בנק 1–4.</p>
+<p><b>שרשור (Chain):</b> הספר לא מתאר פונקציית שרשור. מה שיש: בוחרים בזמן נגינה את הפטרן הבא, והוא נכנס בסוף הפטרן הנוכחי. ויש פיל, למטה.</p>
+
+<h3>פיל (Fill)</h3>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[G (FILL PTN)]</span></bdi>, ואז צעד 1–16: איזה פטרן ישמש כפיל. מוגדר לכל בנק בנפרד.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[F# (FILL TRG)]</span></bdi>: מכניס את הפיל בסוף הפטרן.</li>
+</ul>
+
+<h3>אורך הפטרן</h3>
+<ol class="steps">
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[D# (LAST)]</span></bdi>.</li>
+<li>מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi> לבחירת הצעד האחרון.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi> לסיום.</li>
+</ol>
+<p>האורך נקבע בנפרד לתופים ולבס. אורכים שונים = פולי־ריתם, והם יוצאים מסנכרון. מה קורה במעבר פטרן? תפריט Pattern Sync:</p>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi>: כל חלק עובר לפטרן הבא כשהוא נגמר.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">OnCE</span></bdi>: הבס עובר יחד עם התופים, ואז כל אחד ממשיך באורך שלו.</li>
+<li>Always: הבס חוזר להתחלה בכל פעם שהתופים חוזרים להתחלה.</li>
+</ul>
+
+<h3>מחיקה</h3>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[A# (PTN CLEAR ALL)]</span></bdi>: מוחק את כל הפטרן.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[B (PTN CLEAR INST)]</span></bdi>: מוחק רק את הכלי הנבחר.</li>
+<li>טעית? בתפריט <bdi class="kc" dir="ltr"><span class="k">rLod</span></bdi> מחזיר את הפטרן לשמירה האחרונה. יש גם החזרה רק לתופים או רק לבס.</li>
+</ul>
+
+<h3>העתקה</h3>
+<ol class="steps">
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[OCT+ (MENU)]</span></bdi>. מסובבים עד <bdi class="kc" dir="ltr"><span class="k">COPY</span></bdi> ולוחצים <bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi>.</li>
+<li>מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi> לבחירת מספר היעד.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi> מעתיק. <bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi> מבטל.</li>
+</ol>
+<p class="small">בתפריט יש גם העתקה של התופים בלבד או של הבס בלבד.</p>
+
+<h3>שמירה</h3>
+<ol class="steps">
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[SLIDE (WRITE)]</span></bdi>.</li>
+<li>מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>: <bdi class="kc" dir="ltr"><span class="k">Ptn</span></bdi> = הפטרן הנוכחי, <bdi class="kc" dir="ltr"><span class="k">ALL</span></bdi> = כל הפטרנים.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi>. נשמר.</li>
+</ol>
+<div class="note warn">בלי שמירה, הכל חוזר למצב השמור האחרון כשמכבים. שמור כל פעם שאתה אוהב משהו.</div>
+
+<h3>אקראי</h3>
+<p><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[G# (RANDOM RHYTHM)]</span></bdi> יוצר תופים אקראיים. <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[A (RANDOM BASS)]</span></bdi> יוצר בס אקראי. טוב לרעיונות. לא אהבת? <bdi class="kc" dir="ltr"><span class="k">rLod</span></bdi> מחזיר.</p>
+</section>
+
+<section id="tempo" class="card">
+<h2><span class="sn">06</span> קצב, שאפל וגריד</h2>
+<ul class="dots">
+<li><b>קצב:</b> מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi> (כשלא מחזיקים שום דבר). הקצב מוצג תמיד.</li>
+<li><b>עשיריות:</b> מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> ומסובבים.</li>
+<li>הקצב משותף לכל הפטרנים ונשמר במכשיר.</li>
+<li><b>שאפל:</b> <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[D (SHUFFLE)]</span></bdi>, מסובבים <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>, ואז <bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi>. השאפל הוא של הפטרן.</li>
+<li><b>גריד התופים</b> (תפריט Rhythm Step Scale): <bdi class="kc" dir="ltr"><span class="k">16</span></bdi> שש־עשריות, <bdi class="kc" dir="ltr"><span class="k">32</span></bdi> שלושים־ושתיים, <bdi class="kc" dir="ltr"><span class="k">8-3</span></bdi> טריולות שמיניות, <bdi class="kc" dir="ltr"><span class="k">16-3</span></bdi> טריולות שש־עשריות.</li>
+<li><b>גריד הבס</b> (Bass Step Triplet): <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi> = שש־עשריות, <bdi class="kc" dir="ltr"><span class="k">On</span></bdi> = טריולות שמיניות.</li>
+</ul>
+<div class="note">קצבים מומלצים: אסיד 125–135. טראנס 136–142. טראנס פסיכדלי 140–146.</div>
+</section>
+
+<section id="fx" class="card">
+<h2><span class="sn">07</span> אפקטים</h2>
+<p class="lead">ארבעה: דיליי, ריוורב, אוברדרייב, סייד־צ׳יין.</p>
+<h3>דיליי</h3>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">[DELAY]</span></bdi>: עוצמת הדיליי והחזרות (Feedback).</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> + סיבוב <bdi class="kc" dir="ltr"><span class="k">[DELAY]</span></bdi>: זמן הדיליי.</li>
+<li>בתפריט Delay Sync = On: הזמן הולך לפי הקצב, בערכים כמו <bdi class="kc" dir="ltr"><span class="k">1_16</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">16d</span></bdi> (שש־עשרית מנוקדת), <bdi class="kc" dir="ltr"><span class="k">8t</span></bdi> (טריולה), <bdi class="kc" dir="ltr"><span class="k">1_8</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">8d</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">1_4</span></bdi> ועוד.</li>
+<li>כמה כל כלי שולח: <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[C (DELAY)]</span></bdi>, מופיע <bdi class="kc" dir="ltr"><span class="k">d.Snd</span></bdi>. לוחצים על כלי, מסובבים (0–127), ו־<bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi>. <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> במקום כלי = הסאונד שנכנס ב־USB.</li>
+<li>בתפריט יש גם שליחה מהדיליי לריוורב (0–127).</li>
+</ul>
+<h3>ריוורב</h3>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">[REVERB]</span></bdi>: עוצמה. <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> + סיבוב <bdi class="kc" dir="ltr"><span class="k">[REVERB]</span></bdi>: זמן.</li>
+<li>כמה כל כלי שולח: <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[OCT- (REVERB)]</span></bdi>, מופיע <bdi class="kc" dir="ltr"><span class="k">r.Snd</span></bdi>, ואז כמו בדיליי.</li>
+</ul>
+<h3>אוברדרייב</h3>
+<p>בתפריט: <bdi class="kc" dir="ltr"><span class="k">Od.On</span></bdi> מדליק לכל כלי בנפרד. Overdrive Drive קובע כמה עיוות (משותף לכולם). Overdrive Level קובע עוצמה לכל כלי. קיצור ל־<bdi class="kc" dir="ltr"><span class="k">Od.On</span></bdi>: <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[A (RANDOM BASS)]</span></bdi>.</p>
+<h3>סייד־צ׳יין (ה"פאמפ" של טראנס)</h3>
+<ul class="dots">
+<li><bdi class="kc" dir="ltr"><span class="k">SC</span></bdi>: עומק (1–50), ומעל 50 משנה כמה זמן האפקט מחזיק. <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi> = כבוי. קיצור: <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[B (PTN CLEAR INST)]</span></bdi>.</li>
+<li>Side Chain Trigger Source: מי מפעיל. בדרך כלל <bdi class="kc" dir="ltr"><span class="k">bd</span></bdi> (תוף בס).</li>
+<li>Side Chain Ducking/Gate: לכל כלי כמה הוא "מתכווץ". <bdi class="kc" dir="ltr"><span class="k">dv.</span></bdi> = דאקינג, <bdi class="kc" dir="ltr"><span class="k">Gt.</span></bdi> = גייט. בוחרים יעד בכפתור הכלי, <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> = דיליי/ריוורב, <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[ACCENT]</span></bdi> = כניסת USB.</li>
+<li>Side Chain Time Ratio: <bdi class="kc" dir="ltr"><span class="k">0.5</span></bdi>–<bdi class="kc" dir="ltr"><span class="k">2.0</span></bdi>. ב־<bdi class="kc" dir="ltr"><span class="k">1.0</span></bdi> האפקט באורך שמינית.</li>
+</ul>
+<p class="small">שים לב: אם משתיקים את כלי הטריגר, הסייד־צ׳יין נעלם. אם רק מורידים לו <bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi>, הוא נשאר. טריק: בס־דראם בלי קול שרק "מנשים" את הבס.</p>
+</section>
+
+<section id="sync" class="card">
+<h2><span class="sn">08</span> סנכרון עם Volca Bass ו־Volca Beats</h2>
+<p class="lead">הדרך הפשוטה: כבלי SYNC (מיני־ג׳ק מונו). ה־T-8 מוביל, הוולקות עוקבות.</p>
+<div class="wire" dir="ltr">
+<div class="box t8">T-8<small>SYNC OUT</small></div><div class="arrow">→</div>
+<div class="box">volca beats<small>SYNC IN · SYNC OUT</small></div><div class="arrow">→</div>
+<div class="box">volca bass<small>SYNC IN</small></div>
+</div>
+<ol class="steps">
+<li>כבל מ־<bdi class="kc" dir="ltr"><span class="k">SYNC OUT</span></bdi> של ה־T-8 ל־<bdi class="kc" dir="ltr"><span class="k">SYNC IN</span></bdi> של ה־Volca Beats.</li>
+<li>כבל מ־<bdi class="kc" dir="ltr"><span class="k">SYNC OUT</span></bdi> של ה־Volca Beats ל־<bdi class="kc" dir="ltr"><span class="k">SYNC IN</span></bdi> של ה־Volca Bass. <span class="tv">לפי מדריך Korg; לבדוק</span></li>
+<li>ב־T-8, תפריט Sync Clock: כמה פולסים לפעמה (1, 2, 3, 4, 6, 8, 12, 24).</li>
+<li>מנגנים. הקצב נקבע ב־T-8.</li>
+</ol>
+<div class="note"><b>איזה ערך Sync Clock?</b> לפי מדריך ה־volca bass של Korg, הוולקה שולחת פולס אחד בכל צעד (שש־עשרית). זה 4 לפעמה. אז מתחילים ב־<bdi class="kc" dir="ltr"><span class="k">4</span></bdi>. אם הוולקה רצה כפול או חצי מהר, נסה <bdi class="kc" dir="ltr"><span class="k">2</span></bdi> או <bdi class="kc" dir="ltr"><span class="k">8</span></bdi>, או בדוק את הגדרת הסנכרון בוולקה עצמה. <span class="tv">לבדוק על המכשירים</span></div>
+<ul class="dots">
+<li><b>כבלים:</b> לסנכרון רק מיני־ג׳ק <b>מונו</b>. כבל סטריאו לא עובד (כך כתוב בספר). כבל הסנכרון שבא עם הוולקה מתאים.</li>
+<li><b>אזהרה:</b> לא לחבר ציוד אודיו ל־<bdi class="kc" dir="ltr"><span class="k">SYNC OUT</span></bdi>.</li>
+<li><b>הפוך (וולקה מובילה):</b> <bdi class="kc" dir="ltr"><span class="k">SYNC OUT</span></bdi> של הוולקה ל־<bdi class="kc" dir="ltr"><span class="k">SYNC IN</span></bdi> של ה־T-8. כשמשהו מחובר ל־<bdi class="kc" dir="ltr"><span class="k">SYNC IN</span></bdi>, ה־T-8 תמיד עוקב אחריו, לא משנה מה בתפריט.</li>
+<li><b>ההתחלה:</b> אם הם לא מתחילים יחד, עצור הכל, לחץ play על העוקבים, ורק אז על המוביל. <span class="tv">טיפ כללי, לבדוק</span></li>
+</ul>
+<h3>MIDI</h3>
+<ul class="dots">
+<li>שקעי MIDI של ה־T-8 הם מיני־ג׳ק TRS. לוולקות יש MIDI IN רגיל (5 פינים). צריך כבל המרה, למשל BMIDI-5-35 של רולנד.</li>
+<li>ה־T-8 משדר MIDI Clock, Start ו־Stop. ערוצי ברירת מחדל: בס 2, תופים 10, החלפת פטרנים 16.</li>
+<li>תפריט MIDI Clock Sync: <bdi class="kc" dir="ltr"><span class="k">AUTO</span></bdi> מקבל שעון מבחוץ, <bdi class="kc" dir="ltr"><span class="k">Int</span></bdi> רק שעון פנימי, MIDI רק משקע MIDI, <bdi class="kc" dir="ltr"><span class="k">USB</span></bdi> רק מ־USB.</li>
+<li>האם הוולקה עוקבת אחרי MIDI Clock, ובאיזה ערוץ, נקבע בוולקה. ראה המדריך שלה. <span class="tv">לבדוק</span></li>
+</ul>
+<h3>לשמוע את הוולקה דרך ה־T-8</h3>
+<p><bdi class="kc" dir="ltr"><span class="k">MIX IN</span></bdi>: מה שנכנס יוצא מ־<bdi class="kc" dir="ltr"><span class="k">MIX OUT</span></bdi> יחד עם ה־T-8. כבל מיני־ג׳ק <b>סטריאו</b>. יש רק כניסה אחת, אז לשתי וולקות צריך מיקסר קטן. האם <bdi class="kc" dir="ltr"><span class="k">MIX IN</span></bdi> עובר דרך האפקטים? הספר לא אומר.</p>
+</section>
+
+<section id="usb" class="card">
+<h2><span class="sn">09</span> USB, אייפד ואייפון</h2>
+<ul class="dots">
+<li>USB-C אחד עושה הכל: אודיו, MIDI וטעינה. אין צורך בדרייבר.</li>
+<li><b>אייפד עם USB-C:</b> כבל USB-C ל־USB-C. האייפד גם מטעין את ה־T-8.</li>
+<li><b>אייפון עם Lightning:</b> מחזיקים <bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi> ומדליקים (מצב סוללה בלבד). מחברים דרך מתאם מצלמה של אפל (Lightning to USB Camera Adapter) והכבל שבקופסה. כבל USB-C ל־Lightning רגיל לא יעבוד.</li>
+<li><b>אייפון עם USB-C:</b> כמו באייפד.</li>
+<li>אסור כבל טעינה בלבד, ואסור דרך USB hub.</li>
+<li>באפליקציה (למשל GarageBand) בוחרים את ה־T-8 ככניסת אודיו ומקליטים. סאונד מהאייפד יכול גם להיכנס ל־T-8, ואפשר לשלוח אותו לדיליי/ריוורב (ראה אפקטים).</li>
+<li>תפריט USB Direct Out: <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi> = כפתור <bdi class="kc" dir="ltr"><span class="k">[VOLUME]</span></bdi> משפיע גם על ה־USB. <bdi class="kc" dir="ltr"><span class="k">1</span></bdi>–<bdi class="kc" dir="ltr"><span class="k">127</span></bdi> = עוצמה קבועה ל־USB, בלי קשר ל־VOLUME.</li>
+<li>תפריט <bdi class="kc" dir="ltr"><span class="k">A.Lnk</span></bdi> (AIRA Link): רק למיקסר כמו MX-1. אחרת להשאיר <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi>. השינוי נכנס לתוקף אחרי כיבוי והדלקה.</li>
+</ul>
+</section>
+
+<section id="recipes" class="card">
+<h2><span class="sn">10</span> מתכונים: אסיד וטראנס</h2>
+<p class="lead">ארבעה תרגילים. כל אחד 10–15 דקות. סמן ✓ כשסיימת שלב — זה נשמר באייפד.</p>
+
+<div class="recipe" data-r="r1">
+<h3>מתכון 1: קו אסיד קלאסי</h3>
+<p class="meta">קצב 130 · בס במקלדת · אקסנט וסלייד</p>
+<ol class="check">
+<li>פטרן ריק: בוחרים פטרן ולוחצים <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[A# (PTN CLEAR ALL)]</span></bdi>. קצב 130.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[BASS DRUM]</span></bdi> בצעדים 1, 5, 9, 13. <bdi class="kc" dir="ltr"><span class="k">[CLOSED HIHAT]</span></bdi> בצעדים 3, 7, 11, 15.</li>
+<li>צורת גל משור: <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[A# (PTN CLEAR ALL)]</span></bdi> ובוחרים <bdi class="kc" dir="ltr"><span class="k">SAW</span></bdi>.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi> ואז <bdi class="kc" dir="ltr"><span class="k">[●] (REC)</span></bdi>. כותבים 16 צעדים בעזרת קלידים ו־<bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi>: רוב הצעדים <bdi class="kc" dir="ltr"><span class="k">C</span></bdi>, כמה <bdi class="kc" dir="ltr"><span class="k">C</span></bdi> באוקטבה גבוהה (<bdi class="kc" dir="ltr"><span class="k">[OCT+]</span></bdi>), ואחד או שניים <bdi class="kc" dir="ltr"><span class="k">D#</span></bdi> או <bdi class="kc" dir="ltr"><span class="k">G</span></bdi>. סיום: <bdi class="kc" dir="ltr"><span class="k">[KYBD]</span></bdi>.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> (<bdi class="kc" dir="ltr"><span class="k">b.ACC</span></bdi>): אקסנט על 3 צעדים. עוד <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> (<bdi class="kc" dir="ltr"><span class="k">b.SLd</span></bdi>): סלייד על 2–3 צעדים, תמיד לפני תו בגובה אחר.</li>
+<li>כפתורים: <bdi class="kc" dir="ltr"><span class="k">[CUTOFF]</span></bdi> נמוך, <bdi class="kc" dir="ltr"><span class="k">[RESO]</span></bdi> גבוה, <bdi class="kc" dir="ltr"><span class="k">[ENV MOD]</span></bdi> באמצע, <bdi class="kc" dir="ltr"><span class="k">[DECAY]</span></bdi> קצר. מנגנים ומסובבים לאט את <bdi class="kc" dir="ltr"><span class="k">[CUTOFF]</span></bdi> למעלה במשך 8 תיבות.</li>
+<li>דיליי: Delay Sync = On, <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> + <bdi class="kc" dir="ltr"><span class="k">[DELAY]</span></bdi> עד <bdi class="kc" dir="ltr"><span class="k">16d</span></bdi>, ו־<bdi class="kc" dir="ltr"><span class="k">[DELAY]</span></bdi> קצת. שומרים: <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[SLIDE (WRITE)]</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">Ptn</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi>.</li>
+</ol>
+<div class="grid g-pink" dir="ltr"><span class="gl">BD</span><div class="cells"><span class="c on beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c "><em>3</em></span><span class="c "><em>4</em></span><span class="c on beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c "><em>7</em></span><span class="c "><em>8</em></span><span class="c on beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c "><em>11</em></span><span class="c "><em>12</em></span><span class="c on beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c "><em>15</em></span><span class="c "><em>16</em></span></div></div>
+<div class="grid g-amber" dir="ltr"><span class="gl">CH</span><div class="cells"><span class="c beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c on"><em>3</em></span><span class="c "><em>4</em></span><span class="c beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c on"><em>7</em></span><span class="c "><em>8</em></span><span class="c beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c on"><em>11</em></span><span class="c "><em>12</em></span><span class="c beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c on"><em>15</em></span><span class="c "><em>16</em></span></div></div>
+<div class="grid g-cyan" dir="ltr"><span class="gl">ACC</span><div class="cells"><span class="c on beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c "><em>3</em></span><span class="c "><em>4</em></span><span class="c beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c "><em>7</em></span><span class="c on"><em>8</em></span><span class="c beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c on"><em>11</em></span><span class="c "><em>12</em></span><span class="c beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c "><em>15</em></span><span class="c "><em>16</em></span></div></div>
+</div>
+
+<div class="recipe" data-r="r2">
+<h3>מתכון 2: בס טראנס מתגלגל עם פאמפ</h3>
+<p class="meta">קצב 138 · בס בין התופים · סייד־צ׳יין</p>
+<ol class="check">
+<li>פטרן חדש, קצב 138. <bdi class="kc" dir="ltr"><span class="k">[BASS DRUM]</span></bdi> ב־1, 5, 9, 13. <bdi class="kc" dir="ltr"><span class="k">[OPEN HIHAT]</span></bdi> ב־3, 7, 11, 15.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[CLOSED HIHAT]</span></bdi> בכל 16 הצעדים. וולוסיטי נמוך (למשל <bdi class="kc" dir="ltr"><span class="k">v.4</span></bdi>) בצעדים הזוגיים.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[BASS]</span></bdi>: צעדים 2, 3, 4, 6, 7, 8, 10, 11, 12, 14, 15, 16 (הכל חוץ מהקיק). כולם אותו תו.</li>
+<li><bdi class="kc" dir="ltr"><span class="k">[DECAY]</span></bdi> של הבס קצר. <bdi class="kc" dir="ltr"><span class="k">[RESO]</span></bdi> נמוך. <bdi class="kc" dir="ltr"><span class="k">[CUTOFF]</span></bdi> באמצע. זה צליל טראנס, לא אסיד.</li>
+<li>סייד־צ׳יין: <bdi class="kc" dir="ltr"><span class="k">SC</span></bdi> בערך 30, מקור <bdi class="kc" dir="ltr"><span class="k">bd</span></bdi>. שומעים את הבס "נושם" עם הקיק.</li>
+<li>וריאציה בתיבות 3–4: בוחרים כלי תוף, מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> ולוחצים <bdi class="kc" dir="ltr"><span class="k">[F (STEP 17-32)]</span></bdi>. התופים מועתקים לצעדים 17–32. בעמוד השני מוסיפים <bdi class="kc" dir="ltr"><span class="k">[HAND CLAP]</span></bdi> בצעדים 13–16 (כלומר 29–32).</li>
+</ol>
+<div class="grid g-pink" dir="ltr"><span class="gl">BD</span><div class="cells"><span class="c on beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c "><em>3</em></span><span class="c "><em>4</em></span><span class="c on beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c "><em>7</em></span><span class="c "><em>8</em></span><span class="c on beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c "><em>11</em></span><span class="c "><em>12</em></span><span class="c on beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c "><em>15</em></span><span class="c "><em>16</em></span></div></div>
+<div class="grid g-cyan" dir="ltr"><span class="gl">BASS</span><div class="cells"><span class="c beat"><em>1</em></span><span class="c on"><em>2</em></span><span class="c on"><em>3</em></span><span class="c on"><em>4</em></span><span class="c beat"><em>5</em></span><span class="c on"><em>6</em></span><span class="c on"><em>7</em></span><span class="c on"><em>8</em></span><span class="c beat"><em>9</em></span><span class="c on"><em>10</em></span><span class="c on"><em>11</em></span><span class="c on"><em>12</em></span><span class="c beat"><em>13</em></span><span class="c on"><em>14</em></span><span class="c on"><em>15</em></span><span class="c on"><em>16</em></span></div></div>
+<div class="grid g-amber" dir="ltr"><span class="gl">OH</span><div class="cells"><span class="c beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c on"><em>3</em></span><span class="c "><em>4</em></span><span class="c beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c on"><em>7</em></span><span class="c "><em>8</em></span><span class="c beat"><em>9</em></span><span class="c "><em>10</em></span><span class="c on"><em>11</em></span><span class="c "><em>12</em></span><span class="c beat"><em>13</em></span><span class="c "><em>14</em></span><span class="c on"><em>15</em></span><span class="c "><em>16</em></span></div></div>
+</div>
+
+<div class="recipe" data-r="r3">
+<h3>מתכון 3: בילד־אפ ודרופ</h3>
+<p class="meta">סאב־סטפים · לולאת צעדים · פיל</p>
+<ol class="check">
+<li>מעתיקים את פטרן מתכון 2 לפטרן הבא (<bdi class="kc" dir="ltr"><span class="k">COPY</span></bdi> בתפריט).</li>
+<li>בפטרן החדש: <bdi class="kc" dir="ltr"><span class="k">[SNARE DRUM]</span></bdi> בצעדים 9–16.</li>
+<li>סאב־סטפים: מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SNARE DRUM]</span></bdi>, וב־13–14 בוחרים <bdi class="kc" dir="ltr"><span class="k">1_2</span></bdi>, ב־15 <bdi class="kc" dir="ltr"><span class="k">1_3</span></bdi>, ב־16 <bdi class="kc" dir="ltr"><span class="k">1_4</span></bdi>. הגלגול מאיץ.</li>
+<li>מגדירים אותו כפיל: <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[G (FILL PTN)]</span></bdi> ובוחרים את מספר הפטרן.</li>
+<li>מנגנים את הפטרן הראשי. לפני הדרופ: <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[F# (FILL TRG)]</span></bdi>.</li>
+<li>בונוס: בזמן נגינה, <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[PATTERN]</span></bdi> (Step Loop) ולוחצים צעד אחד. הקיק חוזר על עצמו. <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> משחרר = דרופ.</li>
+</ol>
+<div class="grid g-pink" dir="ltr"><span class="gl">SD</span><div class="cells"><span class="c beat"><em>1</em></span><span class="c "><em>2</em></span><span class="c "><em>3</em></span><span class="c "><em>4</em></span><span class="c beat"><em>5</em></span><span class="c "><em>6</em></span><span class="c "><em>7</em></span><span class="c "><em>8</em></span><span class="c on beat"><em>9</em></span><span class="c on"><em>10</em></span><span class="c on"><em>11</em></span><span class="c on"><em>12</em></span><span class="c on beat"><em>13</em><span class="sub"><i></i><i></i></span></span><span class="c on"><em>14</em><span class="sub"><i></i><i></i></span></span><span class="c on"><em>15</em><span class="sub"><i></i><i></i><i></i></span></span><span class="c on"><em>16</em><span class="sub"><i></i><i></i><i></i><i></i></span></span></div></div>
+</div>
+
+<div class="recipe" data-r="r4">
+<h3>מתכון 4: ג׳אם עם שתי הוולקות</h3>
+<p class="meta">T-8 מוביל · Volca Beats מוסיף · Volca Bass עונה</p>
+<ol class="check">
+<li>מחברים סנכרון כמו בפרק <a href="#sync">סנכרון</a>. Sync Clock ב־T-8 על <bdi class="kc" dir="ltr"><span class="k">4</span></bdi>.</li>
+<li>Volca Bass ל־<bdi class="kc" dir="ltr"><span class="k">MIX IN</span></bdi> של ה־T-8 (כבל סטריאו). אוזניות ב־<bdi class="kc" dir="ltr"><span class="k">MIX OUT</span></bdi>.</li>
+<li>ב־T-8: קיק ובס אסיד ממתכון 1. ב־Volca Beats: רק קלאפ והיי־האטים.</li>
+<li>ב־Volca Bass: קו קצר וגבוה, 2–3 תווים, שעונה לבס של ה־T-8.</li>
+<li>הסתברות: ב־T-8, היי־האט סגור עם <bdi class="kc" dir="ltr"><span class="k">P.70</span></bdi> בכמה צעדים. החזק <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> וסובב לשינוי ההסתברות הראשית בזמן הג׳אם.</li>
+<li>תרגיל ידיים: יד אחת על <bdi class="kc" dir="ltr"><span class="k">[CUTOFF]</span></bdi> של ה־T-8, השנייה על CUTOFF של ה־Volca Bass. מעלים אחד, מורידים את השני.</li>
+</ol>
+</div>
+</section>
+
+<section id="cheat" class="card">
+<h2><span class="sn">11</span> דף קיצורים</h2>
+<div class="tbl cheat"><table>
+<thead><tr><th>צירוף</th><th>מה קורה</th></tr></thead>
+<tbody>
+<tr class="grp"><td colspan="2">עם [SHIFT]</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[TEMPO/VALUE]</span></bdi></td><td>קצב בעשיריות</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[C (EXIT)]</span></bdi></td><td>יציאה מתפריט</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[C# (ENTER)]</span></bdi></td><td>אישור</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[D (SHUFFLE)]</span></bdi></td><td>שאפל</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[D# (LAST)]</span></bdi></td><td>אורך פטרן</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[E (STEP 1-16)]</span></bdi></td><td>עמוד צעדים 1</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[F (STEP 17-32)]</span></bdi></td><td>עמוד צעדים 2</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[F# (FILL TRG)]</span></bdi></td><td>הפעלת פיל</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[G (FILL PTN)]</span></bdi></td><td>בחירת פטרן פיל</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[G# (RANDOM RHYTHM)]</span></bdi></td><td>תופים אקראיים</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[A (RANDOM BASS)]</span></bdi></td><td>בס אקראי</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[A# (PTN CLEAR ALL)]</span></bdi></td><td>מחיקת פטרן</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[B (PTN CLEAR INST)]</span></bdi></td><td>מחיקת כלי</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[C (DELAY)]</span></bdi></td><td>שליחה לדיליי</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[OCT- (REVERB)]</span></bdi></td><td>שליחה לריוורב</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[OCT+ (MENU)]</span></bdi></td><td>תפריט</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[SLIDE (WRITE)]</span></bdi></td><td>שמירה</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[PATTERN]</span></bdi></td><td>לולאת צעדים</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[DELAY]</span></bdi> (סיבוב)</td><td>זמן דיליי</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[REVERB]</span></bdi> (סיבוב)</td><td>זמן ריוורב</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> + כפתור כלי</td><td>השתקה</td></tr>
+<tr class="grp"><td colspan="2">עם [PATTERN]</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> + צעד 1–4</td><td>בנק 1–4</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[TEMPO/VALUE]</span></bdi></td><td>הסתברות ראשית</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[A (RANDOM BASS)]</span></bdi></td><td>אוברדרייב (<bdi class="kc" dir="ltr"><span class="k">Od.On</span></bdi>)</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[A# (PTN CLEAR ALL)]</span></bdi></td><td>צורת גל בס</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[B (PTN CLEAR INST)]</span></bdi></td><td>סייד־צ׳יין (<bdi class="kc" dir="ltr"><span class="k">SC</span></bdi>)</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[OCT- (REVERB)]</span></bdi></td><td>החזרת תופים לשמור</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[OCT+ (MENU)]</span></bdi></td><td>החזרת בס לשמור</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[SLIDE (WRITE)]</span></bdi></td><td>החזרת פטרן לשמור</td></tr>
+<tr class="grp"><td colspan="2">החזקות</td></tr>
+<tr><td>צעד + <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi></td><td>הסתברות (תופים) / תו (בס)</td></tr>
+<tr><td>צעד + <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi></td><td>וולוסיטי (תופים) / אקסנט, סלייד (בס)</td></tr>
+<tr><td>כלי + צעד</td><td>סאב־סטפ</td></tr>
+<tr><td>כלי + <bdi class="kc" dir="ltr"><span class="k">[TEMPO/VALUE]</span></bdi></td><td>הזזת הכלי קדימה/אחורה</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span><span class="plus">+</span><span class="k">[TEMPO/VALUE]</span></bdi></td><td>עוצמת אקסנט (של הכלי הנבחר: תופים או בס)</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[BASS]</span><span class="plus">+</span><span class="k">[KYBD]</span><span class="plus">+</span><span class="k">[TEMPO/VALUE]</span></bdi></td><td>טרנספוז בס</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[KYBD]</span><span class="plus">+</span><span class="k">[SLIDE]</span></bdi></td><td>טיי (בעריכה במקלדת)</td></tr>
+<tr class="grp"><td colspan="2">בהדלקה (מחזיקים ומדליקים)</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi></td><td>מצב סוללה בלבד (לאייפון Lightning)</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[SLIDE (WRITE)]</span></bdi></td><td>איפוס למצב מפעל</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[▶] (PLAY)</span></bdi></td><td>גיבוי/שחזור (מחשב)</td></tr>
+<tr><td><bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi></td><td>מציג את גרסת התוכנה</td></tr>
+</tbody></table></div>
+<h3>התפריט: מה יש בו</h3>
+<p><bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[OCT+ (MENU)]</span></bdi>, מסובבים לבחירה, <bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi> (או כפתור כלי) לכניסה, מסובבים לשינוי, <bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi> חזרה, ושוב <bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi> ליציאה.</p>
+<div class="menu-grid">
+<div><b>כלים</b><bdi class="kc" dir="ltr"><span class="k">NUtE</span></bdi> השתקה · <bdi class="kc" dir="ltr"><span class="k">GAIn</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">tUnE</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">dECY</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">PAn</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">AtK</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">SnPy</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">CoIr</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">tON</span></bdi> · <bdi class="kc" dir="ltr"><span class="k">CLAP</span></bdi> · OH Tempo Sync</div>
+<div><b>בס</b>Bass Wave · Bass Accent · Bass Step Triplet</div>
+<div><b>תופים</b>Rhythm Accent · Rhythm Step Scale</div>
+<div><b>פטרן</b>Pattern Sync · <bdi class="kc" dir="ltr"><span class="k">rLod</span></bdi> ושני ה־Reload · <bdi class="kc" dir="ltr"><span class="k">COPY</span></bdi> ושני ההעתקים</div>
+<div><b>אפקטים</b>Overdrive On/Drive/Level · Delay Sync · Delay→Reverb · <bdi class="kc" dir="ltr"><span class="k">SC</span></bdi> · Ducking/Gate · Time Ratio · Trigger Source</div>
+<div><b>חיבורים</b>Sync Clock · Rhythm/Bass MIDI Ch · TX/RX Program Change · PC Channel · <bdi class="kc" dir="ltr"><span class="k">SYnC</span></bdi> · MIDI Thru · USB Direct Out · <bdi class="kc" dir="ltr"><span class="k">A.Lnk</span></bdi> · Level Curve</div>
+</div>
+<p class="small">בתצוגה כל פריט מופיע כקוד קצר. כשהקוד בספר ברור, הוא כתוב כאן. אחרים מופיעים בשמם האנגלי מהספר.</p>
+</section>
+
+<section id="trouble" class="card">
+<h2><span class="sn">12</span> פתרון בעיות</h2>
+<details><summary>הפטרן שלי נעלם אחרי כיבוי</summary><p>לא שמרת. <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[SLIDE (WRITE)]</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">Ptn</span></bdi>, <bdi class="kc" dir="ltr"><span class="k">[C# (ENTER)]</span></bdi>. מעכשיו, שמור כל פעם שאתה אוהב משהו.</p></details>
+<details><summary>כלי לא נשמע</summary><p>אולי הוא מושתק (הכפתור מהבהב): <bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span></bdi> + כפתור הכלי. בדוק <bdi class="kc" dir="ltr"><span class="k">[LEVEL]</span></bdi>, ו־<bdi class="kc" dir="ltr"><span class="k">GAIn</span></bdi> בתפריט. בטום/קלאפ ובהיי־האטים ה־LEVEL משותף לשניים.</p></details>
+<details><summary>צעדים נעלמים באקראי</summary><p>יש הסתברות מתחת ל־<bdi class="kc" dir="ltr"><span class="k">P.100</span></bdi>. מחזיקים את הצעד ובודקים. בדוק גם את ההסתברות הראשית (<bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span><span class="plus">+</span><span class="k">[TEMPO/VALUE]</span></bdi>).</p></details>
+<details><summary>הקצב לא משתנה או קופץ</summary><p>ייתכן שה־T-8 עוקב אחרי שעון חיצוני. אם מחובר כבל ל־<bdi class="kc" dir="ltr"><span class="k">SYNC IN</span></bdi>, הוא תמיד עוקב אחריו. אחרת, בתפריט <bdi class="kc" dir="ltr"><span class="k">SYnC</span></bdi> בחר <bdi class="kc" dir="ltr"><span class="k">Int</span></bdi>.</p></details>
+<details><summary>הוולקה לא עוקבת, או רצה כפול/חצי</summary><p>כבל מונו? הוא ב־<bdi class="kc" dir="ltr"><span class="k">SYNC OUT</span></bdi> של ה־T-8 וב־<bdi class="kc" dir="ltr"><span class="k">SYNC IN</span></bdi> של הוולקה? שנה את Sync Clock (התחל ב־4, נסה 2 או 8). <span class="tv">לבדוק</span></p></details>
+<details><summary>התופים והבס לא מתיישרים</summary><p>אורכים שונים (<bdi class="kc" dir="ltr"><span class="k">[SHIFT]</span><span class="plus">+</span><span class="k">[D# (LAST)]</span></bdi>). השווה אורכים, או Pattern Sync = Always.</p></details>
+<details><summary>לא שומעים אקסנט</summary><p>עוצמת האקסנט אולי על <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi>. כלי נבחר, מחזיקים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> ומסובבים.</p></details>
+<details><summary>האייפד/אייפון לא מזהה</summary><p>כבל נתונים (לא טעינה בלבד), בלי hub. באייפון Lightning: מתאם מצלמה של אפל ומצב סוללה בלבד (<bdi class="kc" dir="ltr"><span class="k">[C (EXIT)]</span></bdi> בהדלקה). בדוק ש־<bdi class="kc" dir="ltr"><span class="k">A.Lnk</span></bdi> על <bdi class="kc" dir="ltr"><span class="k">OFF</span></bdi>, וכבה והדלק.</p></details>
+<details><summary>ההקלטה ב־USB חלשה או משתנה עם VOLUME</summary><p>תפריט USB Direct Out: ערך 1–127 נותן עוצמה קבועה ל־USB.</p></details>
+<details><summary>נורית CHARGE</summary><p>כתום = נטען. ירוק = מלא. אדום (בלי USB) = סוללה חלשה, המכשיר ייכבה תוך 30 דקות. ירוק־כתום מהבהב = תקלה, לפנות לשירות של רולנד.</p></details>
+<details class="danger"><summary>איפוס למצב מפעל (מוחק הכל)</summary>
+<p>זה מחזיר את כל המכשיר למצב מפעל. הפטרנים שלך יימחקו. גיבוי לפי הספר דורש מחשב (Windows/Mac), לא אייפד.</p>
+<ol class="steps">
+<li>מחזיקים <bdi class="kc" dir="ltr"><span class="k">[SLIDE (WRITE)]</span></bdi> ומדליקים. מופיע <bdi class="kc" dir="ltr"><span class="k">FACt</span></bdi>, ו־<bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi> מהבהב. לביטול: מכבים.</li>
+<li>לוחצים <bdi class="kc" dir="ltr"><span class="k">[ACCENT]</span></bdi>.</li>
+<li>כשמופיע <bdi class="kc" dir="ltr"><span class="k">dOnE</span></bdi> וכל הכפתורים מהבהבים: מכבים ומדליקים.</li>
+</ol></details>
+<details><summary>איזו גרסת תוכנה יש לי?</summary><p>מחזיקים <bdi class="kc" dir="ltr"><span class="k">[PATTERN]</span></bdi> ומדליקים. הגרסה מופיעה בתצוגה. הגרסה האחרונה מרולנד היא 1.02 (מאי 2022). העדכון דורש מחשב.</p></details>
+</section>
+
+<section id="src" class="card src">
+<h2>מקורות</h2>
+<p>הכל מבוסס על <a href="https://static.roland.com/assets/media/pdf/T-8_eng01_W.pdf" target="_blank" rel="noopener">T-8 Owner’s Manual, Version 1.02</a> של רולנד (2022), ו<a href="https://www.roland.com/global/support/by_product/t-8/updates_drivers/" target="_blank" rel="noopener">דף העדכונים</a> (System Program 1.02). פרטי הסנכרון של הוולקה: מדריך volca bass של Korg. מה שמסומן <span class="tv">לבדוק</span> לא כתוב בספר במפורש.</p>
+<p class="small">הציור של הפאנל צויר כאן מחדש ואינו בקנה מידה. Roland, T-8 ו־AIRA הם סימנים של Roland Corporation.</p>
+</section>
+
+</main>
+<button class="top-btn" id="top" aria-label="למעלה">↑</button>
+<script>
+(function(){
+var INFO={"charge": {"k": "CHARGE", "d": "נורית טעינה. כתום = נטען, ירוק = מלא. אדום כשלא מחובר USB = סוללה חלשה (המכשיר ייכבה תוך 30 דקות). ירוק־כתום מהבהב = תקלה."}, "syncin": {"k": "SYNC IN", "d": "כניסת סנכרון (מיני־ג׳ק מונו). כשמחובר כאן משהו, ה־T-8 תמיד עוקב אחרי הפולסים שנכנסים, בלי קשר להגדרת MIDI Clock Sync."}, "syncout": {"k": "SYNC OUT", "d": "יציאת סנכרון (מיני־ג׳ק מונו). מכאן ל־SYNC IN של Volca. לא לחבר לכאן ציוד אודיו."}, "mixin": {"k": "MIX IN", "d": "כניסת אודיו (מיני־ג׳ק סטריאו). מה שנכנס כאן יוצא מ־MIX OUT. מקום טוב ל־Volca Bass."}, "mixout": {"k": "MIX OUT", "d": "יציאת אודיו (מיני־ג׳ק סטריאו). גם לאוזניות."}, "volume": {"k": "[VOLUME]", "d": "עוצמת היציאה מ־MIX OUT (ובברירת מחדל גם ל־USB; ראה USB Direct Out)."}, "display": {"k": "Display", "d": "תצוגת LED של 4 תווים. מראה קצב, ערכים וקודים כמו P.100, n.C2, b.ACC."}, "tempo": {"k": "[TEMPO/VALUE]", "d": "מסובבים = קצב (או ערך, כשמחזיקים משהו או בתפריט). עם [SHIFT] = עשיריות של קצב. עם [PATTERN] = הסתברות ראשית."}, "shift": {"k": "[SHIFT]", "d": "מחזיקים יחד עם פקד אחר. הפונקציות מודפסות מתחת לכפתורי הצעד. [SHIFT] + כפתור כלי = השתקה."}, "pattern": {"k": "[PATTERN]", "d": "מצב בחירת פטרן: כפתורי הצעד = פטרנים 1–16. מחזיקים ולוחצים צעד 1–4 = בנק. [SHIFT] + [PATTERN] = לולאת צעדים (STEP LOOP)."}, "play": {"k": "[▶] (PLAY)", "d": "מנגן את הפטרן. לחיצה נוספת עוצרת. מחזיקים בהדלקה = מצב גיבוי (מחשב)."}, "rec": {"k": "[●] (REC)", "d": "מצב הקלטה. אחרי [▶], לחיצה על כפתור כלי מקליטה בזמן אמת. עם [KYBD] = עריכת בס במקלדת."}, "bdlvl": {"k": "[LEVEL]", "d": "עוצמת ה־תוף הבס."}, "bdtune": {"k": "[TUNE]", "d": "גובה הצליל. אחרי לחיצה על [DECAY], הכפתור הזה שולט באורך הצליל."}, "bddec": {"k": "[DECAY]", "d": "כפתור לחיצה: מעביר את [TUNE] לשלוט באורך (decay) של ה־תוף הבס."}, "bdbtn": {"k": "[BASS DRUM]", "d": "כפתור כלי: בוחר את ה־תוף הבס. אחר כך הצעדים מראים ועורכים אותו. החזקה + צעד = סאב־סטפ. החזקה + [TEMPO/VALUE] = הזזת התבנית."}, "sdlvl": {"k": "[LEVEL]", "d": "עוצמת ה־סנר."}, "sdtune": {"k": "[TUNE]", "d": "גובה הצליל. אחרי לחיצה על [DECAY], הכפתור הזה שולט באורך הצליל."}, "sddec": {"k": "[DECAY]", "d": "כפתור לחיצה: מעביר את [TUNE] לשלוט באורך (decay) של ה־סנר."}, "sdbtn": {"k": "[SNARE DRUM]", "d": "כפתור כלי: בוחר את ה־סנר. אחר כך הצעדים מראים ועורכים אותו. החזקה + צעד = סאב־סטפ. החזקה + [TEMPO/VALUE] = הזזת התבנית."}, "tclvl": {"k": "[LEVEL]", "d": "עוצמה משותפת לטום ולקלאפ."}, "tctune": {"k": "[TUNE]", "d": "גובה הצליל של הכלי הנבחר: [HAND CLAP] או [TOM]."}, "clap": {"k": "[HAND CLAP]", "d": "בוחר קלאפ. בתפריט (CLAP) אפשר להחליף לטום רעש או טום גבוה."}, "tom": {"k": "[TOM]", "d": "בוחר טום. בתפריט (tON) שני צלילי טום."}, "hhlvl": {"k": "[LEVEL]", "d": "עוצמה משותפת להיי־האט סגור ופתוח."}, "hhdec": {"k": "[DECAY]", "d": "אורך צליל ההיי־האט."}, "ch": {"k": "[CLOSED HIHAT]", "d": "בוחר היי־האט סגור."}, "oh": {"k": "[OPEN HIHAT]", "d": "בוחר היי־האט פתוח."}, "blvl": {"k": "[LEVEL]", "d": "עוצמת הבס."}, "bpitch": {"k": "[PITCH]", "d": "גובה הבס."}, "bdec": {"k": "[DECAY]", "d": "אורך כל תו בבס."}, "cutoff": {"k": "[CUTOFF]", "d": "כמה הצליל בהיר. הכפתור הכי חשוב באסיד."}, "reso": {"k": "[RESO]", "d": "הדגשה סביב ה־CUTOFF. גבוה = צווחה."}, "envmod": {"k": "[ENV MOD]", "d": "כמה ה־CUTOFF זז עם כל תו."}, "bass": {"k": "[BASS]", "d": "בוחר את הבס. הצעדים מראים תווים (טיי = דולק חלש). לחיצה על צעד ריק = C2."}, "kybd": {"k": "[KYBD]", "d": "כפתורי הצעד הופכים למקלדת. עם [●] (REC) = כתיבת תווים. אם נבחר תוף, עובר לבס."}, "delay": {"k": "[DELAY]", "d": "עוצמת הדיליי וה־feedback. עם [SHIFT] = זמן הדיליי."}, "reverb": {"k": "[REVERB]", "d": "עוצמת הריוורב. עם [SHIFT] = זמן הריוורב."}, "accent": {"k": "[ACCENT]", "d": "כשתוף נבחר: כתיבת אקסנט לתופים. כשהבס נבחר: b.ACC ואז b.SLd. החזקה + [TEMPO/VALUE] = עוצמת אקסנט."}, "s1": {"k": "[C (EXIT)]", "d": "צעד 1. במקלדת: C. עם [SHIFT]: יציאה מתפריט. בהדלקה = מצב סוללה בלבד (לאייפון Lightning)."}, "s2": {"k": "[C# (ENTER)]", "d": "צעד 2. במקלדת: C#. עם [SHIFT]: אישור בתפריט ובשמירה."}, "s3": {"k": "[D (SHUFFLE)]", "d": "צעד 3. במקלדת: D. עם [SHIFT]: שאפל לפטרן."}, "s4": {"k": "[D# (LAST)]", "d": "צעד 4. במקלדת: D#. עם [SHIFT]: אורך הפטרן (הצעד האחרון)."}, "s5": {"k": "[E (STEP 1-16)]", "d": "צעד 5. במקלדת: E. עם [SHIFT]: עמוד צעדים 1–16."}, "s6": {"k": "[F (STEP 17-32)]", "d": "צעד 6. במקלדת: F. עם [SHIFT]: עמוד צעדים 17–32 (אם האורך 16 ומטה, הופך ל־32 ומעתיק)."}, "s7": {"k": "[F# (FILL TRG)]", "d": "צעד 7. במקלדת: F#. עם [SHIFT]: מפעיל פיל בסוף הפטרן."}, "s8": {"k": "[G (FILL PTN)]", "d": "צעד 8. במקלדת: G. עם [SHIFT]: בוחר פטרן פיל (לכל בנק)."}, "s9": {"k": "[G# (RANDOM RHYTHM)]", "d": "צעד 9. במקלדת: G#. עם [SHIFT]: תופים אקראיים."}, "s10": {"k": "[A (RANDOM BASS)]", "d": "צעד 10. במקלדת: A. עם [SHIFT]: בס אקראי. [PATTERN] + הכפתור = אוברדרייב."}, "s11": {"k": "[A# (PTN CLEAR ALL)]", "d": "צעד 11. במקלדת: A#. עם [SHIFT]: מוחק את כל הפטרן. [PATTERN] + הכפתור = צורת גל בס."}, "s12": {"k": "[B (PTN CLEAR INST)]", "d": "צעד 12. במקלדת: B. עם [SHIFT]: מוחק את הכלי הנבחר. [PATTERN] + הכפתור = סייד־צ׳יין."}, "s13": {"k": "[C (DELAY)]", "d": "צעד 13. במקלדת: C. עם [SHIFT]: שליחה לדיליי לכל כלי (d.Snd)."}, "s14": {"k": "[OCT- (REVERB)]", "d": "צעד 14. במקלדת: OCT-. עם [SHIFT]: שליחה לריוורב לכל כלי (r.Snd). [PATTERN] + הכפתור = החזרת תופים לשמור."}, "s15": {"k": "[OCT+ (MENU)]", "d": "צעד 15. במקלדת: OCT+. עם [SHIFT]: התפריט. [PATTERN] + הכפתור = החזרת בס לשמור."}, "s16": {"k": "[SLIDE (WRITE)]", "d": "צעד 16. במקלדת: SLIDE. עם [SHIFT]: שמירה. [PATTERN] + הכפתור = החזרת הפטרן לשמור. בהדלקה = איפוס מפעל."}};
+function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+var ik=document.getElementById('info-k'), id_=document.getElementById('info-d'), cur=null;
+function pick(g){
+  var d=INFO[g.getAttribute('data-id')]; if(!d) return;
+  if(cur) cur.classList.remove('sel'); cur=g; g.classList.add('sel');
+  ik.innerHTML='<bdi class="kc" dir="ltr"><span class="k">'+esc(d.k)+'</span></bdi>';
+  id_.textContent=d.d;
+}
+var ctls=document.querySelectorAll('#t8svg .ctl');
+for(var i=0;i<ctls.length;i++){(function(g){
+  g.addEventListener('click',function(){pick(g)});
+  g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(g)}});
+})(ctls[i])}
+// checklist
+var KEY='t8guide-v1';var st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+var recs=document.querySelectorAll('.recipe');
+for(var r=0;r<recs.length;r++){var rid=recs[r].getAttribute('data-r');var lis=recs[r].querySelectorAll('ol.check>li');
+  for(var j=0;j<lis.length;j++){(function(li,k){if(st[k])li.classList.add('done');
+    li.addEventListener('click',function(e){if(e.target.closest('a'))return;li.classList.toggle('done');st[k]=li.classList.contains('done');
+      try{localStorage.setItem(KEY,JSON.stringify(st))}catch(_){}})})(lis[j],rid+'-'+j)}}
+// toc highlight
+var links=document.querySelectorAll('nav.toc a'), map={};
+for(var a=0;a<links.length;a++) map[links[a].getAttribute('data-t')]=links[a];
+var bar=document.querySelector('nav.toc .in');
+function setCur(id){for(var k in map) map[k].classList.toggle('cur',k===id);
+  var l=map[id]; if(l){var bl=bar.getBoundingClientRect(), ll=l.getBoundingClientRect();
+    if(ll.left<bl.left||ll.right>bl.right) bar.scrollBy({left:(ll.left+ll.width/2)-(bl.left+bl.width/2),behavior:'smooth'})}}
+var secs=document.querySelectorAll('main section'), last=null;
+function onScroll(){var y=90, best=secs[0];
+  for(var s=0;s<secs.length;s++){if(secs[s].getBoundingClientRect().top<=y) best=secs[s]}
+  if(best&&best.id!==last){last=best.id;setCur(last)}
+  document.getElementById('top').classList.toggle('show',window.scrollY>600)}
+window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+document.getElementById('top').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+})();
+</script>
+</body>
+</html>

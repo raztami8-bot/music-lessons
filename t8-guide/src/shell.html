@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#120d1f">
+<meta name="format-detection" content="telephone=no">
+<title>T-8 · המדריך של רז</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --ink:#120d1f; --panel:#1a1430; --raise:#241c40; --line:#33284f;
+  --fg:#f1ebff; --dim:#9c91bd; --deep:#5cc8ff; --acid:#ff4fa3; --heat:#ffb02e; --rec:#ff5a4f;
+  --f-display:"Karantina","Assistant",system-ui,sans-serif;
+  --f-body:"Assistant",system-ui,-apple-system,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:18px;line-height:1.6;
+  -webkit-tap-highlight-color:transparent;overflow-x:hidden}
+a{color:var(--deep)}
+.wrap{max-width:900px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left))}
+header.hero{padding:calc(28px + env(safe-area-inset-top)) 0 18px;text-align:center}
+.hero .kicker{font-family:var(--f-num);font-size:13px;color:var(--dim);letter-spacing:2px}
+.hero h1{font-family:var(--f-display);font-size:clamp(56px,13vw,104px);line-height:.95;margin:6px 0;
+  background:linear-gradient(90deg,var(--acid),var(--deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 auto;max-width:34em;color:var(--dim)}
+.hero .back{display:inline-block;margin-top:10px;font-size:15px}
+nav.toc{position:sticky;top:0;z-index:20;background:rgba(18,13,31,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+nav.toc .in{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none;max-width:900px;margin:0 auto;overscroll-behavior-x:contain}
+nav.toc .in::-webkit-scrollbar{display:none}
+nav.toc a{flex:0 0 auto;min-height:46px;display:flex;align-items:center;padding:0 16px;border-radius:23px;background:var(--panel);
+  border:1px solid var(--line);color:var(--fg);text-decoration:none;font-weight:600;font-size:16px;white-space:nowrap}
+nav.toc a.cur{background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px 20px 14px;margin:18px 0}
+.card h2{font-family:var(--f-display);font-size:40px;line-height:1.05;margin:0 0 8px;font-weight:700}
+.sn{font-family:var(--f-num);font-size:15px;color:var(--acid);vertical-align:middle;margin-inline-end:6px;
+  border:1px solid var(--acid);border-radius:8px;padding:1px 6px}
+.card h3{font-size:20px;margin:22px 0 6px;color:var(--deep)}
+.lead{font-size:19px;color:var(--fg);margin-top:0}
+.small{font-size:15px;color:var(--dim)}
+.k{display:inline-block;font-family:var(--f-num);font-size:.78em;line-height:1.35;padding:1px 7px;margin:1px 0;border-radius:6px;
+  background:var(--raise);border:1px solid #4a3d70;color:#fff;white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+.kc{unicode-bidi:isolate;direction:ltr;display:inline-block;max-width:100%}
+.plus{color:var(--heat);font-family:var(--f-num);font-size:.85em;margin:0 3px}
+ol.steps,ol.check{padding:0;margin:8px 0;list-style:none;counter-reset:s}
+ol.steps>li,ol.check>li{counter-increment:s;position:relative;padding:8px 46px 8px 4px;margin:4px 0;border-radius:12px}
+ol.steps>li::before{content:counter(s);position:absolute;right:4px;top:8px;width:30px;height:30px;border-radius:50%;
+  background:var(--raise);border:1px solid var(--line);color:var(--heat);font-family:var(--f-num);font-size:15px;display:flex;align-items:center;justify-content:center}
+ol.check>li{cursor:pointer;min-height:48px;background:rgba(36,28,64,.5);border:1px solid transparent;user-select:none;-webkit-user-select:none}
+ol.check>li::before{content:counter(s);position:absolute;right:6px;top:9px;width:30px;height:30px;border-radius:9px;border:2px solid var(--line);
+  color:var(--dim);font-family:var(--f-num);font-size:14px;display:flex;align-items:center;justify-content:center}
+ol.check>li.done{opacity:.6;border-color:var(--line)}
+ol.check>li.done::before{content:"✓";background:var(--acid);border-color:var(--acid);color:var(--ink);font-size:18px}
+ul.dots{padding-inline-start:22px;margin:8px 0}
+ul.dots li{margin:6px 0}
+ul.dots li::marker{color:var(--acid)}
+.note{background:rgba(92,200,255,.08);border:1px solid rgba(92,200,255,.35);border-radius:14px;padding:10px 14px;margin:12px 0;font-size:17px}
+.note.warn{background:rgba(255,176,46,.08);border-color:rgba(255,176,46,.45)}
+.tv{display:inline-block;font-size:13px;font-weight:700;color:var(--ink);background:var(--heat);border-radius:6px;padding:0 7px;line-height:1.6;white-space:nowrap}
+.tbl{overflow-x:auto;margin:10px 0;border-radius:12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{padding:9px 10px;text-align:right;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--raise);color:var(--dim);font-weight:600;font-size:14px}
+tr:last-child td{border-bottom:0}
+.cheat tr.grp td{background:var(--raise);color:var(--heat);font-weight:700;font-size:15px}
+.cheat td:first-child{width:52%}
+/* grid */
+.grid{display:flex;align-items:center;gap:8px;margin:6px 0}
+.gl{font-family:var(--f-num);font-size:12px;color:var(--dim);width:44px;flex:0 0 44px;text-align:left}
+.cells{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;flex:1;min-width:0}
+.c{position:relative;aspect-ratio:1/1.15;border-radius:4px;background:#2a2148;border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:center;min-width:0}
+.c.beat{border-color:#5a4c84}
+.c em{font-style:normal;font-family:var(--f-num);font-size:9px;color:var(--dim);line-height:1.4}
+.g-pink .c.on{background:var(--acid);border-color:var(--acid)}
+.g-cyan .c.on{background:var(--deep);border-color:var(--deep)}
+.g-amber .c.on{background:var(--heat);border-color:var(--heat)}
+.c.on em{color:var(--ink)}
+.sub{position:absolute;top:3px;left:0;right:0;display:flex;justify-content:center;gap:2px}
+.sub i{width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:15px;color:var(--dim);margin:8px 0}
+.led{display:inline-block;width:14px;height:14px;border-radius:3px;background:#2a2148;border:1px solid var(--line);margin-inline-end:6px;vertical-align:-2px}
+.led.on{background:var(--acid)}.led.dim{background:rgba(255,79,163,.35)}
+.led.blink{background:var(--acid);animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:.15}}
+/* panel */
+.panelwrap{margin:10px -6px 0;border-radius:16px;background:#0c0916;border:1px solid var(--line);overflow:hidden}
+.panelscroll{direction:ltr;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#t8svg{direction:ltr;display:block;width:100%;min-width:640px;height:auto;user-select:none;-webkit-user-select:none}
+.body{fill:#3a3842;stroke:#55525e;stroke-width:2}
+.frame{fill:#33313b;stroke:#4a4754;stroke-width:1.5}
+.knob{fill:#1d1c22;stroke:#55525e;stroke-width:2}
+.ring{fill:none;stroke-width:4}
+.tick{stroke:#f1ebff;stroke-width:3;stroke-linecap:round}
+#t8svg text{direction:ltr;unicode-bidi:normal}
+.lbl{fill:#e8e4f0;font:600 13px "IBM Plex Mono",monospace;text-anchor:middle}
+.lbl.sm{font-size:11px}.lbl.xs{font-size:9.5px}
+.grpl{fill:#cfc8dc}
+.brand{fill:#f1ebff;font:700 30px "IBM Plex Mono",monospace}
+.btn{fill:#4a4854;stroke:#6d6a78;stroke-width:1.5}
+.btn.round{fill:#2a2930}
+.btn.kb{stroke:#f1ebff;stroke-width:2.5}
+.bt{fill:#fff;font:600 11.5px "IBM Plex Mono",monospace;text-anchor:middle;pointer-events:none}
+.play+.bt{fill:#58e07a;font-size:18px}.rec+.bt{fill:var(--rec);font-size:18px}
+.disp{fill:#1a0b0e;stroke:#55525e}
+.seg{fill:#ff3b3b;font:500 34px "IBM Plex Mono",monospace;text-anchor:middle;letter-spacing:3px}
+.jack{fill:#1a191e;stroke:#6d6a78;stroke-width:2}.jack-in{fill:#000}
+.led-g{fill:#3cdc6a}
+.step{fill:#d9d6df;stroke:#8e8a99}
+.stepled{fill:#9a96a5}
+.st{fill:#222;font:700 12px "IBM Plex Mono",monospace;text-anchor:middle;pointer-events:none}
+.num{fill:#8d86a3;font:500 10px "IBM Plex Mono",monospace;text-anchor:middle}
+.conn{stroke:#a39fb0;stroke-width:1.5}
+.hit{fill:transparent;cursor:pointer}
+.ctl{outline:none}
+.ctl.sel .knob,.ctl.sel .btn,.ctl.sel .step,.ctl.sel .jack,.ctl.sel .disp{stroke:var(--acid);stroke-width:4}
+.ctl.sel .stepled{fill:var(--acid)}
+.ctl:focus-visible .hit{stroke:var(--deep);stroke-width:2}
+.info{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;background:var(--raise);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;min-height:76px}
+.info-k .k{font-size:15px;background:var(--acid);border-color:var(--acid);color:var(--ink)}
+.info-d{flex:1 1 240px;font-size:17px}
+.hint{color:var(--dim);font-size:14px;margin:4px 0;text-align:center}
+@media (min-width:700px){.narrow-only{display:none}}
+@media (max-height:500px) and (orientation:landscape){#t8svg{min-width:0;max-width:150vh;margin:0 auto}}
+/* wire */
+.wire{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:12px 0}
+.wire .box{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-align:center;font-weight:700;font-family:var(--f-num);font-size:15px}
+.wire .box.t8{border-color:var(--acid);color:var(--acid)}
+.wire .box small{display:block;font-weight:500;font-size:11px;color:var(--dim)}
+.wire .arrow{color:var(--heat);font-size:22px}
+.recipe{border:1px solid var(--line);border-radius:16px;padding:6px 14px 12px;margin:14px 0;background:rgba(18,13,31,.45)}
+.recipe h3{margin-top:12px;color:var(--acid)}
+.meta{font-family:var(--f-num);font-size:13px;color:var(--heat);margin:0 0 6px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;font-size:15px}
+.menu-grid>div{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.menu-grid b{display:block;color:var(--deep);margin-bottom:4px}
+details{border:1px solid var(--line);border-radius:14px;margin:8px 0;background:var(--raise)}
+details summary{min-height:52px;display:flex;align-items:center;padding:6px 16px;cursor:pointer;font-weight:700;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";color:var(--acid);font-family:var(--f-num);font-size:20px;margin-inline-end:10px;width:14px}
+details[open] summary::before{content:"−"}
+details>p,details>ol{padding:0 16px;margin:4px 0 12px}
+details.danger{border-color:rgba(255,90,79,.5)}
+details.danger summary{color:var(--rec)}
+.src{font-size:16px}
+.top-btn{position:fixed;left:max(14px,env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;width:52px;height:52px;border-radius:50%;
+  background:var(--acid);color:var(--ink);border:0;font-size:22px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s}
+.top-btn.show{opacity:1;pointer-events:auto}
+@media (max-width:520px){body{font-size:17px}.card{padding:16px 14px 10px;border-radius:16px}.card h2{font-size:34px}
+  th,td{padding:8px 7px;font-size:15px}.gl{width:34px;flex-basis:34px;font-size:10px}.c em{font-size:7px}}
+@media (min-width:1100px){.wrap{max-width:960px}}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+<div class="kicker" dir="ltr">ROLAND · AIRA COMPACT · T-8</div>
+<h1>מדריך T-8</h1>
+<p>מכונת תופים קטנה עם בס בסגנון 303. מדריך פשוט, לפי ספר ההפעלה הרשמי (גרסה 1.02).</p>
+<a class="back" href="../">→ לכל השיעורים</a>
+</header>
+<nav class="toc" aria-label="תוכן"><div class="in">%%NAV%%</div></nav>
+<main class="wrap">
+%%CONTENT%%
+</main>
+<button class="top-btn" id="top" aria-label="למעלה">↑</button>
+<script>
+(function(){
+var INFO=%%INFO%%;
+function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+var ik=document.getElementById('info-k'), id_=document.getElementById('info-d'), cur=null;
+function pick(g){
+  var d=INFO[g.getAttribute('data-id')]; if(!d) return;
+  if(cur) cur.classList.remove('sel'); cur=g; g.classList.add('sel');
+  ik.innerHTML='<bdi class="kc" dir="ltr"><span class="k">'+esc(d.k)+'</span></bdi>';
+  id_.textContent=d.d;
+}
+var ctls=document.querySelectorAll('#t8svg .ctl');
+for(var i=0;i<ctls.length;i++){(function(g){
+  g.addEventListener('click',function(){pick(g)});
+  g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(g)}});
+})(ctls[i])}
+// checklist
+var KEY='t8guide-v1';var st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+var recs=document.querySelectorAll('.recipe');
+for(var r=0;r<recs.length;r++){var rid=recs[r].getAttribute('data-r');var lis=recs[r].querySelectorAll('ol.check>li');
+  for(var j=0;j<lis.length;j++){(function(li,k){if(st[k])li.classList.add('done');
+    li.addEventListener('click',function(e){if(e.target.closest('a'))return;li.classList.toggle('done');st[k]=li.classList.contains('done');
+      try{localStorage.setItem(KEY,JSON.stringify(st))}catch(_){}})})(lis[j],rid+'-'+j)}}
+// toc highlight
+var links=document.querySelectorAll('nav.toc a'), map={};
+for(var a=0;a<links.length;a++) map[links[a].getAttribute('data-t')]=links[a];
+var bar=document.querySelector('nav.toc .in');
+function setCur(id){for(var k in map) map[k].classList.toggle('cur',k===id);
+  var l=map[id]; if(l){var bl=bar.getBoundingClientRect(), ll=l.getBoundingClientRect();
+    if(ll.left<bl.left||ll.right>bl.right) bar.scrollBy({left:(ll.left+ll.width/2)-(bl.left+bl.width/2),behavior:'smooth'})}}
+var secs=document.querySelectorAll('main section'), last=null;
+function onScroll(){var y=90, best=secs[0];
+  for(var s=0;s<secs.length;s++){if(secs[s].getBoundingClientRect().top<=y) best=secs[s]}
+  if(best&&best.id!==last){last=best.id;setCur(last)}
+  document.getElementById('top').classList.toggle('show',window.scrollY>600)}
+window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+document.getElementById('top').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+})();
+</script>
+</body>
+</html>
