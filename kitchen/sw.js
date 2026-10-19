@@ -2,7 +2,7 @@
    אם index.html השתנה, הדף הפתוח מקבל הודעה ומציע לטעון מחדש. לבאמפ את CACHE בכל העלאה.
    גם הגופנים נשמרים במטמון, כדי שהדף ייראה אותו דבר בלי רשת.
    הבאה מהרשת עוקפת את מטמון הדפדפן (GitHub Pages שומר 10 דקות), כדי שעדכון יגיע מיד. */
-var CACHE="kitchen-app-4"; // המספר כאן = "גרסה N" בכותרת של index.html
+var CACHE="kitchen-app-5"; // המספר כאן = "גרסה N" בכותרת של index.html
 var FILES=["./","index.html","manifest.webmanifest","icon-180.png","icon-512.png"];
 var FONT_HOSTS=["fonts.googleapis.com","fonts.gstatic.com"];
 self.addEventListener("install",function(e){ e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(FILES.map(function(f){ return new Request(f,{cache:"reload"}); })); })); self.skipWaiting(); });
