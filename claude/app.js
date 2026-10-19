@@ -67,7 +67,7 @@
     box.parentNode.insertBefore(bar,box.nextSibling);
     function paint(){
       btns.forEach(function(b,i){ b.classList.toggle("done",i<done); b.classList.toggle("next",i===done); });
-      cnt.textContent = done===keys.length ? keys.length+" מתוך "+keys.length+", עכשיו FUNC" : done+" מתוך "+keys.length;
+      cnt.textContent = done===keys.length ? keys.length+" מתוך "+keys.length+", "+(box.dataset.end||"עכשיו FUNC") : done+" מתוך "+keys.length;
     }
     rb.addEventListener("click",function(){ done=0; paint(); });
     paint();

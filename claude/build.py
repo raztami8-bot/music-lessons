@@ -9,6 +9,7 @@ LESSONS = {
     1: ("ג׳אם אסיד ראשון", "תופים, בס חומצי וסיבובים חיים בקצב 128"),
     2: ("צלילה לעומק הבס", "מתנדים, מסנן, מעטפת, תנועה מחזורית ותרגילים"),
     3: ("הקלידים של הבס", "16 הקלידים, אוקטבה, סולמות לאסיד והעברת ריף"),
+    4: ("ג׳אם אסיד עם הטי־8", "תופים ובס בקופסה אחת, הדגשות, שאיבה מהקיק וסיבובים חיים"),
 }
 
 # Photos: (lesson, kind, anchor) -> images + legend. Legend order matches the numbers drawn on each photo.
@@ -91,7 +92,7 @@ def page(n):
     html = (SRC / f"l{n}.html").read_text(encoding="utf8")
     # topnav from the artifact version is replaced by the toolbar
     html = re.sub(r'<nav class="topnav".*?</nav>\s*', "", html, count=1, flags=re.S)
-    for k in (1, 2, 3):
+    for k in LESSONS:
         html = html.replace(f"URL_L{k}", f"lesson-{k}.html")
     for (ln, kind, anchor, imgs, legend, cap) in PHOTOS:
         if ln != n:
