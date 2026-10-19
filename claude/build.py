@@ -1,6 +1,6 @@
 """Build the v2 lesson pages from the content files in src/.
 Run: python3 build.py   (from the v2 folder)"""
-import re, pathlib
+import re, pathlib, os
 
 HERE = pathlib.Path(__file__).parent
 SRC = HERE / "src"
@@ -260,8 +260,36 @@ def tool_page(key):
     (HERE / f"{key}.html").write_text(out, encoding="utf8")
 
 
+def intro_preview():
+    """Build only the approved first-section preview, without rebuilding other lessons."""
+    content = (SRC / "l4-intro.html").read_text(encoding="utf8")
+    count = len(re.findall(r'<article class="card intro-card"', content))
+    if not count or "{{INTRO_COUNT}}" not in content:
+        raise ValueError("The intro preview must contain lesson cards and a count placeholder")
+    content = content.replace("{{INTRO_COUNT}}", str(count))
+    target = HERE / "lesson-4-preview.html"
+    lock = HERE / ".intro-preview.lock"
+    fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    temp = target.with_suffix(".html.tmp")
+    try:
+        with temp.open("w", encoding="utf8", newline="\n") as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, target)
+    finally:
+        os.close(fd)
+        lock.unlink()
+        if temp.exists():
+            temp.unlink()
+    return count
+
+
 if __name__ == "__main__":
     import sys
+    if sys.argv[1:] == ["--intro-preview"]:
+        print("Built one intro preview with", intro_preview(), "cards")
+        sys.exit(0)
     sys.path.insert(0, str(SRC))
     import t8map
     t8map.build()

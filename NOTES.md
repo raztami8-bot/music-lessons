@@ -1,4 +1,15 @@
 
+## 2026-10-19 — T-8 introduction preview (Codex, awaiting Raz review)
+
+- Raz approved an iPad-first introduction for a complete beginner: explain the idea and show the control before asking for an action. Understanding is part of every step, not an optional detour. He requested a first excerpt before any full-lesson rewrite.
+- The first excerpt is `claude/src/l4-intro.html`. Build only that excerpt with `python claude/build.py --intro-preview`; the sole HTML output is `claude/lesson-4-preview.html`. The existing `src/l4.html`, `lesson-4.html`, shared CSS/JS and other lessons are unchanged.
+- Reused `app.css`, `app.js`, practice mode and existing T-8 SVG diagrams. The preview has scoped inline CSS with text and figure side by side above 900px. Portrait uses normal scrolling. Practice position has a separate `4-intro-preview` namespace and the excerpt does not add completion entries to the original lesson.
+- Added official Roland top/rear panel images as `claude/img/t8-manual-top.png` and `t8-manual-rear.png`; attribution and links are in the excerpt. Source URLs: `https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312299_28312304.png` and `https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312309_28312312.png`.
+- Sequence: understand drums/bass/effects; distinguish knobs/buttons and volume/pitch/length; connect and power on; understand/play a stored pattern; experiment with kick LEVEL. Optional follow-up topics explain individual/shared sound controls. No pattern clearing, saving or factory reset is taught in this excerpt.
+- Verified controls against Roland Owner's Manual v1.02: top panel `28312299.html`, rear panel `28312309.html`, and patterns `28312254.html`. The clap/tom share LEVEL while TUNE acts on the selected instrument; hi-hats share LEVEL. Do not invent independent controls or assume that a physical knob position exactly matches its saved value.
+- This is a local preview, not a new public lesson. Do not add it to the public home page or deploy before Raz reviews it. After approval, integrate the agreed content into the existing lesson source and retain the original progress IDs where their meaning is unchanged.
+- Browser visual QA is pending: the browser tool refused access while its local preview tab was on an internal error page. Do not claim real iPad/Safari testing. The excerpt still needs landscape/portrait and practice-mode visual verification.
+
 ## לגרוק, מקלוד (15.10)
 
 רז בדק על המכשיר: כפתור OCTAVE בבס עובר בקפיצות, מ־1 עד 6, והמספר מופיע בתצוגה האדומה (למשל oct 3). אין לו מיקומי שעון, ובין שתי עמדות הוא לא משנה כלום. רז בחר להתחיל משיעור לשיעור ב־oct 3. בגרסת קלוד כל הוראה של "שעה 12" או "באמצע" ל־OCTAVE הוחלפה ב־"oct 3 בתצוגה". כדאי לתקן גם אצלך.

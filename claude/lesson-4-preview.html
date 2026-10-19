@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f3ed">
+<title>היכרות עם הטי־8 · מתחילים מאפס · קטע ראשון</title>
+<link rel="stylesheet" href="app.css">
+<style>
+/* Preview-specific styles: the original lessons and shared styles stay intact. */
+:root{--bg:#f5f3ed;--surface:#fff;--fg:#23332f;--muted:#52655e;--line:#dce3dc;--accent:#31695b;--accent-soft:#eaf2ec;--learn-soft:#eef3f8;--f-body:Arial,"Segoe UI",sans-serif;--f-display:Arial,"Segoe UI",sans-serif;--f-mono:Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;font-size:18px;line-height:1.7}
+button,a,summary{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #b27a17;outline-offset:4px}
+kbd{direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block;font:700 .83em var(--f-mono);color:#293c36;background:#edf1ed;border:1px solid #d7e0d8;border-radius:5px;padding:1px 5px}
+.wrap{max-width:1180px;padding-top:28px}
+.intro-toolbar{position:sticky;top:0;z-index:20;background:#f5f3edf5;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.intro-toolbar .in{max-width:1180px;margin:auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.intro-brand{font-size:1rem;font-weight:700;margin-inline-end:auto}
+.intro-toolbar button{border:1px solid var(--line);border-radius:12px;min-height:48px;padding:8px 18px;background:white;color:var(--fg);font:700 .95rem var(--f-body);cursor:pointer}
+.intro-toolbar #playmode{background:var(--accent);color:white;border-color:var(--accent)}
+.intro-hero{padding:20px 4px 26px;max-width:850px;display:grid;gap:12px}
+.intro-hero h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.3;font-weight:700}
+.intro-eyebrow{color:var(--accent);font-size:.9rem;font-weight:700}
+.intro-hero p{margin:0}
+.intro-path{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:.9rem;color:var(--muted);margin-top:5px}
+.intro-path span{border:1px solid var(--line);background:#fff;padding:5px 12px;border-radius:999px}
+.lesson-step{margin:24px 0 42px;display:flex;flex-direction:column;gap:14px;scroll-margin-top:100px}
+.intro-card{padding:24px;gap:16px;border-radius:18px;box-shadow:0 5px 24px #22332d04}
+.intro-card .card-head{align-items:center;gap:10px;border-bottom:1px solid var(--line);padding-bottom:15px}
+.intro-card .card-head h3{font-size:1.3rem;font-weight:700;flex:1;line-height:1.4}
+.intro-card .num{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:1rem;flex:none}
+.intro-card .cardplay{font-size:.8rem;min-height:44px;margin:0;padding:4px 10px}
+.intro-card p{margin:0}
+.concept{padding:16px 18px;background:var(--learn-soft);border-radius:12px;display:grid;gap:9px}
+.concept h4,.step-label{font-size:.86rem;font-weight:700;color:#3c5c76;margin:0;letter-spacing:0}
+.concept dl{margin:0;display:grid;gap:4px}
+.concept dt{font-weight:700}.concept dd{margin:0 0 7px}
+.intro-card .steps{margin:0;gap:12px}
+.intro-card .steps>li{margin:0;font-size:1rem;line-height:1.7}
+.intro-card .steps>li::before{background:#eaf2ec;color:var(--accent)}
+.intro-card .ok{background:#eaf3ec;color:#254c35;font-size:1rem;line-height:1.65}
+.question{padding-inline-start:13px;border-inline-start:3px solid #c49a49;color:#5f5235;font-size:.98rem}
+.trouble{border-top:1px solid var(--line);padding-top:10px;font-size:.95rem}
+.trouble summary{cursor:pointer;min-height:44px;display:list-item;padding:7px 0;font-weight:700}
+.trouble p{padding:8px 0}.trouble ul{padding-inline-start:24px}
+figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;flex-direction:column;align-items:stretch;background:#fff;gap:15px}
+.intro-figure .imgs{display:grid;gap:16px;flex:none}
+.intro-figure img{width:100%;max-width:100%;height:auto;background:white;border-radius:8px}
+.intro-figure figcaption{display:grid;gap:12px;flex:none;font-size:.97rem;line-height:1.65;color:var(--muted)}
+.intro-figure figcaption b{color:var(--fg)}
+.intro-figure .image-tip{font-size:.82rem;color:#617369;padding-top:8px;border-top:1px solid var(--line)}
+.figure-note{font-size:.83rem;color:#68766f}
+.sound-list{padding:0;list-style:none;display:grid;gap:10px;margin:8px 0}.sound-list li{border-bottom:1px solid var(--line);padding-bottom:10px}
+.intro-end{padding:22px 24px;background:var(--accent-soft);border-radius:18px;display:grid;gap:10px;margin-bottom:24px}
+.intro-end h2{font-size:1.25rem}.intro-end p{margin:0}
+.intro-sources{font-size:.86rem;color:var(--muted);padding:10px 4px 25px;line-height:1.8}
+.intro-sources a{color:var(--accent)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.pm{background:var(--bg)}.pm-where b{font-weight:700}.pm-in{max-width:1180px;font-size:18px;padding-top:18px}
+.pm-in .intro-card{font-size:18px}.pm-nav.next{background:var(--accent);border-color:var(--accent);color:white}
+.pm-count{font-family:var(--f-body)}
+@media(min-width:900px){
+ .lesson-step,.pm-in{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,1fr);gap:20px;align-items:start}
+ .lesson-step>.intro-card,.pm-in>.intro-card{grid-column:1;grid-row:1}
+ .lesson-step>.intro-figure,.pm-in>.intro-figure{grid-column:2;grid-row:1;position:sticky;top:100px}
+ .pm-in>.intro-figure{top:18px;max-height:none}
+ .pm-in figure.photo img{max-height:none;width:100%;margin:0}
+}
+@media(max-width:899px){.lesson-step>.intro-figure{order:-1}.lesson-step>.intro-card{order:0}.intro-hero{padding-top:10px}.intro-card{padding:20px}.intro-toolbar .in{padding:10px 16px;gap:8px}.intro-toolbar #wake{font-size:.8rem;padding:8px 10px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body data-lesson="4-intro-preview">
+<header class="intro-toolbar">
+ <div class="in">
+  <span class="intro-brand">היכרות עם הטי־8</span>
+  <button type="button" id="playmode">ללימוד צעד־צעד ←</button>
+  <button type="button" id="wake">☀ מסך דלוק</button>
+ </div>
+</header>
+<main class="wrap">
+ <header class="intro-hero">
+  <span class="intro-eyebrow">מתחילים מאפס · קטע ראשון לבדיקה</span>
+  <h1>מכירים. מבינים. ואז מנגנים.</h1>
+  <p>מניחים את הטי־8 ליד האייפד ומתקדמים בנחת. בכל צעד נבין רעיון, נמצא אותו על המכשיר ורק אז ננסה ונקשיב.</p>
+  <div class="intro-path" aria-label="מסלול הקטע הראשון"><span>מה יש במכשיר</span>←<span>איך נוגעים</span>←<span>צליל ראשון</span>←<span>שינוי צליל</span></div>
+  <p class="figure-note">בקטע הזה 5 כרטיסים. כפתור ״ללימוד צעד־צעד״ מציג אחד בכל פעם. הסברים נשארים מולך גם בזמן הניסוי.</p>
+ </header>
+
+ <section class="stage lesson-step" id="intro-1">
+  <span class="stage-tag sr-only">מכירים את המכשיר</span>
+  <figure class="photo intro-figure">
+   <div class="imgs"><img src="img/t8-manual-top.png" width="2235" height="1320" alt="איור רשמי של הטי־8: תופים באזורים 3 עד 6, בס באזור 7 ואפקטים באזור 8"></div>
+   <figcaption>
+    <p><b>מסתכלים, בלי ללחוץ עדיין.</b> המספרים הכחולים מופיעים באיור בלבד.</p>
+    <p><b>3–6: תופים</b> · <b>7: בס</b> · <b>8: אפקטים</b><br>המסך ולחצני ההפעלה נמצאים משמאל, באזור 2.</p>
+    <p class="image-tip">אפשר לגעת באיור כדי להגדיל. נגיעה נוספת סוגרת.</p>
+    <p class="figure-note">איור מתוך מדריך הבעלים של רולנד.</p>
+   </figcaption>
+  </figure>
+  <article class="card intro-card">
+   <div class="card-head"><span class="num">1</span><h3>מה בעצם יש כאן?</h3></div>
+   <div class="concept">
+    <h4>קודם מבינים</h4>
+    <p>הטי־8 יכול לנגן ליווי של תופים ובס. אתה בוחר מה ינוגן וגם מעצב איך זה יישמע.</p>
+    <dl>
+     <dt>תופים — המכות של הקצב</dt><dd>למשל מכה נמוכה, מחיאת כפיים או צליל מתכתי קצר.</dd>
+     <dt>בס — תווים נמוכים</dt><dd>אפשר לנגן תווים בגבהים שונים ולשנות את האופי שלהם: עמום, בהיר או מצפצף.</dd>
+     <dt>אפקטים — תוספות לצליל</dt><dd>למשל הד שחוזר אחרי הצליל, או הדהוד שמזכיר חדר גדול.</dd>
+    </dl>
+   </div>
+   <h4 class="step-label">עכשיו מוצאים</h4>
+   <p>השווה בין האיור למכשיר. מצא את אזורי התופים, את אזור הבס הרחב ואת האפקטים בקצה הימני. מספיק לזהות את האזורים.</p>
+   <div class="ok"><b>הבנת את הרעיון אם:</b> אתה יודע להצביע על המקום שמייצר את התופים ועל המקום שמייצר את הבס.</div>
+  </article>
+ </section>
+
+ <section class="stage lesson-step" id="intro-2">
+  <span class="stage-tag sr-only">מבינים איך נוגעים</span>
+  <figure class="photo intro-figure">
+   <div class="imgs"><img src="img/l4-03.svg" width="1000" height="606" alt="תרשים עזר עם סימון התצוגה, הכפתור המסתובב ולחצני ההפעלה"></div>
+   <figcaption>
+    <p><b>שני סוגים של פעולה</b></p>
+    <p>⁧<b>2:</b> הכפתור הגדול <kbd>TEMPO/VALUE</kbd> — מסובבים.<br><b>5:</b> הלחצן עם המשולש הירוק — לוחצים ומשחררים.⁩</p>
+    <p>⁧גם חלק מהלחצנים עגולים: <kbd>DECAY</kbd> של תוף הקיק הוא לחצן. הצורה לבדה לא מספיקה; בשיעור תמיד נכתוב אם ללחוץ או לסובב.⁩</p>
+    <p class="image-tip">תרשים עזר מצויר, לא צילום. גע להגדלה.</p>
+   </figcaption>
+  </figure>
+  <article class="card intro-card">
+   <div class="card-head"><span class="num">2</span><h3>לסובב, ללחוץ ולהקשיב</h3></div>
+   <div class="concept">
+    <h4>קודם מבינים</h4>
+    <p><b>כפתור מסתובב</b> משנה ערך בהדרגה. <b>לחצן</b> מפעיל פעולה או בוחר מצב. לפעמים צריך להחזיק לחצן בזמן פעולה אחרת; נציין זאת במפורש כשנגיע לזה.</p>
+    <p>כשמשנים צליל, כדאי להבחין בין:</p>
+    <dl>
+     <dt>עוצמה</dt><dd>חלש או חזק.</dd>
+     <dt>גובה</dt><dd>צליל נמוך ועמוק או גבוה ודק.</dd>
+     <dt>אורך</dt><dd>מכה קצרה או צליל שממשיך לדעוך.</dd>
+    </dl>
+   </div>
+   <h4 class="step-label">עכשיו מוצאים</h4>
+   <p>מצא על המכשיר את הכפתור הגדול שמתחת למסך ואת הלחצן עם המשולש הירוק. בשלב הזה רק מצביעים עליהם.</p>
+   <div class="ok"><b>הבנת אם:</b> ברור לך על איזה מהם לוחצים ואיזה מהם מסובבים.</div>
+  </article>
+ </section>
+
+ <section class="stage lesson-step" id="intro-3">
+  <span class="stage-tag sr-only">מחברים ומדליקים</span>
+  <figure class="photo intro-figure">
+   <div class="imgs">
+    <img src="img/t8-manual-rear.png" width="2225" height="429" alt="גב המכשיר: A מתג הפעלה, B חיבור USB לטעינה, C חיבורי MIDI">
+    <img src="img/l4-01.svg" width="1000" height="606" alt="חלקו העליון של המכשיר: 1 נורית טעינה, 2 יציאת אוזניות, 3 כפתור עוצמה">
+   </div>
+   <figcaption>
+    <p>⁧<b>בגב המכשיר:</b> <kbd>A</kbd> הוא מתג <kbd>POWER</kbd>; <kbd>B</kbd> הוא חיבור <kbd>USB-C</kbd> לטעינה.⁩</p>
+    <p>⁧<b>בחלק העליון:</b> <b>2</b> הוא <kbd>MIX OUT</kbd>, השקע ליד סמל האוזניות. <b>3</b> הוא <kbd>VOLUME</kbd>, העוצמה הכללית.⁩</p>
+    <p class="image-tip">למעלה איור רשמי של הגב; למטה תרשים עזר של הלוח. גע להגדלה.</p>
+   </figcaption>
+  </figure>
+  <article class="card intro-card">
+   <div class="card-head"><span class="num">3</span><h3>מכינים דרך לצליל</h3></div>
+   <div class="concept">
+    <h4>קודם מבינים</h4>
+    <p>⁧הצליל של התופים והבס יוצא יחד משקע <kbd>MIX OUT</kbd>. כפתור <kbd>VOLUME</kbd> קובע את העוצמה של הכל יחד.⁩</p>
+    <p>יש במכשיר סוללה נטענת. אפשר להשתמש בו כשהוא טעון או בזמן טעינה. האייפד משמש כאן לקריאת השיעור; הצליל יגיע מהטי־8 לאוזניות.</p>
+   </div>
+   <h4 class="step-label">עכשיו עושים</h4>
+   <ol class="steps">
+    <li><div>⁧אם נדרשת טעינה, חבר כבל <kbd>USB-C</kbd> לשקע שבגב ולמטען. נורית <kbd>CHARGE</kbd> כתומה בזמן טעינה וירוקה כשהטעינה הושלמה.⁩</div></li>
+    <li><div>⁧סובב בעדינות את <kbd>VOLUME</kbd> עד הסוף שמאלה, לעוצמה הנמוכה ביותר.⁩</div></li>
+    <li><div>⁧חבר אוזניות עם תקע קטן של 3.5 מ״מ אל <kbd>MIX OUT</kbd>, ליד סמל האוזניות. שקעי <kbd>SYNC</kbd> ו־<kbd>MIDI</kbd> אינם מיועדים לאוזניות.⁩</div></li>
+    <li><div>⁧העבר את מתג <kbd>POWER</kbd> שבגב אל <kbd>ON</kbd>. המסך נדלק.⁩</div></li>
+   </ol>
+   <div class="ok"><b>הצלחת אם:</b> המסך דולק והאוזניות מחוברות. העוצמה עדיין נמוכה; נעלה אותה בהדרגה בצעד הבא.</div>
+   <details class="trouble"><summary>המסך נשאר כבוי?</summary><p>⁧בדוק את חיבור הטעינה ואת מצב מתג <kbd>POWER</kbd>. נורית טעינה כתומה מעידה שמתבצעת טעינה; אם היא לא נדלקת, בדוק גם את הכבל והמטען.⁩</p></details>
+  </article>
+ </section>
+
+ <section class="stage lesson-step" id="intro-4">
+  <span class="stage-tag sr-only">שומעים ומבינים תבנית</span>
+  <figure class="photo intro-figure">
+   <div class="imgs"><img src="img/l4-02.svg" width="1000" height="606" alt="תרשים עזר: 3 מסמן את לחצן המשולש הירוק שמשמש לנגינה ולעצירה"></div>
+   <figcaption>
+    <p><b>3: המשולש הירוק</b><br>לחיצה מתחילה נגינה. לחיצה נוספת עוצרת.</p>
+    <p><b>מה מחפשים באוזן?</b><br>מכה שחוזרת, תווים נמוכים וקישוטים גבוהים. נסה לעקוב בכל פעם אחרי שכבה אחת.</p>
+    <p class="image-tip">תרשים עזר. גע להגדלה.</p>
+   </figcaption>
+  </figure>
+  <article class="card intro-card">
+   <div class="card-head"><span class="num">4</span><h3>הצליל הראשון: קטע שחוזר</h3></div>
+   <div class="concept">
+    <h4>קודם מבינים</h4>
+    <p><b>תבנית</b> היא הוראות לנגינת קטע קצר: אילו תופים ותווים יישמעו ומתי. המכשיר חוזר על הקטע בלולאה, עד שעוצרים.</p>
+    <p>ההוראות והצליל הם שני דברים שאפשר לשנות. בהמשך נכתוב את ההוראות בעצמנו; עכשיו נקשיב לתבנית קיימת ונכיר את הצליל שלה.</p>
+   </div>
+   <h4 class="step-label">עכשיו עושים</h4>
+   <ol class="steps">
+    <li><div>לחץ ושחרר את הלחצן עם המשולש הירוק.</div></li>
+    <li><div>⁧סובב את <kbd>VOLUME</kbd> מעט ימינה, לאט, עד שנעים לשמוע.⁩</div></li>
+    <li><div>הקשב לכמה חזרות. מצא באוזן מכה נמוכה שחוזרת — זו בדרך כלל תוף הקיק, תוף הבס של המקצב.</div></li>
+    <li><div>לחץ שוב על המשולש כדי לעצור.</div></li>
+   </ol>
+   <div class="ok"><b>הצלחת אם:</b> התחלת נגינה, זיהית משהו שחוזר והצלחת לעצור.</div>
+   <details class="trouble"><summary>המסך דולק אבל אין מוזיקה?</summary><p>⁧בדוק שהאוזניות ב־<kbd>MIX OUT</kbd> וש־<kbd>VOLUME</kbd> אינו סגור. ייתכן שהתבנית ריקה: עצור, לחץ <kbd>PATTERN</kbd> ובחר בשורה התחתונה לחצן שדולק חלש — סימן שיש בתבנית תוכן. לחץ שוב על המשולש. אם אין לחצן כזה, עצור כאן; נדרשת בדיקה של התבניות במכשיר.⁩</p></details>
+  </article>
+ </section>
+
+ <section class="stage lesson-step" id="intro-5">
+  <span class="stage-tag sr-only">ניסוי ראשון בצליל של כלי אחד</span>
+  <figure class="photo intro-figure">
+   <div class="imgs"><img src="img/l4-05.svg" width="1000" height="606" alt="אזור תוף הקיק: 2 מסמן LEVEL לעוצמת הקיק בלבד; 3 הוא TUNE ו-4 הוא לחצן DECAY"></div>
+   <figcaption>
+    <p>⁧<b>הניסוי היום: מספר 2</b><br><kbd>LEVEL</kbd> באזור <kbd>BASS DRUM</kbd> משנה את עוצמת תוף הקיק בלבד.⁩</p>
+    <p>⁧<b>למה יש כמה כפתורי LEVEL?</b><br>כל אחד שייך לאזור שלו. <kbd>VOLUME</kbd>, לעומת זאת, נמצא ליד האוזניות ושולט בכל המוזיקה יחד.⁩</p>
+    <p class="image-tip">תרשים עזר. גע להגדלה.</p>
+   </figcaption>
+  </figure>
+  <article class="card intro-card">
+   <div class="card-head"><span class="num">5</span><h3>אפשר לשנות כל צליל בנפרד?</h3></div>
+   <div class="concept">
+    <h4>קודם מבינים</h4>
+    <p><b>כן, אבל חלק מהשליטה משותף.</b> לקיק, לסנר ולבס יש כפתורים משלהם. הקלאפ והטום חולקים כפתור עוצמה; גם שני צלילי ההיי־האט חולקים כפתור עוצמה.</p>
+    <p>⁧נתחיל ב־<b>עוצמה</b>: <kbd>LEVEL</kbd> של הקיק משנה רק את המכה הנמוכה. המקצב עצמו ממשיך באותם זמנים.⁩</p>
+   </div>
+   <h4 class="step-label">טריק ראשון: למצוא כלי בתוך המוזיקה</h4>
+   <ol class="steps">
+    <li><div>לחץ על המשולש כדי לנגן. השתמש בתבנית שבה שמעת מכה נמוכה בצעד הקודם.</div></li>
+    <li><div>⁧מצא את <kbd>LEVEL</kbd> של <kbd>BASS DRUM</kbd> בתרשים. הסתכל היכן הסימון שלו נמצא עכשיו, כדי שתוכל להחזיר אותו.⁩</div></li>
+    <li><div>סובב אותו מעט שמאלה. הקשב למכה הנמוכה: האם היא נחלשת בזמן ששאר המוזיקה ממשיכה?</div></li>
+    <li><div>החזר בעדינות לכיוון שבו היה, לפי האוזן, ועצור עם המשולש. הערך המקורי עשוי להיות שונה ממיקום הכפתור, ולכן ההחזרה אינה שחזור מדויק.</div></li>
+   </ol>
+   <div class="ok"><b>הצלחת אם:</b> שמעת כלי אחד נחלש וחוזר, בלי לשנות את מהירות המוזיקה.</div>
+   <p class="question"><b>רגע להבין:</b> מה השתנה — מתי התוף מכה, או כמה חזק שומעים אותו?</p>
+   <details class="trouble"><summary>לא שמעתי הבדל</summary><p>⁧ייתכן שאין קיק בתבנית הזאת, או שהוא מושתק. עצור ובחר תבנית אחרת דרך <kbd>PATTERN</kbd>, כפי שמוסבר בכרטיס הקודם. אין צורך לסובב את כל הכפתורים כדי לחפש את הבעיה.⁩</p></details>
+   <details class="trouble"><summary>מסקרן אותי: אילו עוד שינויים וטריקים נלמד?</summary>
+    <ul class="sound-list">
+     <li>⁧<b>קיק וסנר:</b> גובה דרך <kbd>TUNE</kbd>; לחצן <kbd>DECAY</kbd> מעביר את אותו כפתור לשליטה באורך. כך משווים מכה קצרה לצליל ארוך.⁩</li>
+     <li>⁧<b>קלאפ וטום:</b> <kbd>TUNE</kbd> משותף, אבל משנה את הגובה של הכלי שבוחרים בלחצן שלו. נלמד לבחור לפני הסיבוב.⁩</li>
+     <li>⁧<b>בס:</b> <kbd>CUTOFF</kbd> משנה בהירות, <kbd>RESO</kbd> מדגיש אזור בצליל, ו־<kbd>DECAY</kbd> משנה אורך. נקשיב לכל שינוי בנפרד.⁩</li>
+     <li><b>משחקי הקשבה:</b> להוציא כלי ולהחזיר אותו, להשוות לפני ואחרי, ולגלות איך שינוי קטן משפיע על התחושה של הקטע.</li>
+    </ul>
+    <p>אלה נושאי ההמשך. לכל אחד יהיה הסבר, סימון על המכשיר וניסוי משלו.</p>
+   </details>
+  </article>
+ </section>
+
+ <aside class="intro-end">
+  <span class="intro-eyebrow">כאן מסתיים הקטע הראשון</span>
+  <h2>כבר יש לך בסיס להבין את ההמשך.</h2>
+  <p>הכרת את חלקי המכשיר, הבנת תבנית חוזרת ובדקת את ההבדל בין עוצמה כללית לעוצמה של כלי אחד.</p>
+  <p>ההמשך יעסוק בתופים ובבס, צליל אחרי צליל, עם הסבר לפני כל ניסוי. כרגע מוצגת רק הדוגמה הזו לבדיקת נוחות הלימוד.</p>
+ </aside>
+ <footer class="intro-sources">
+  <p>⁧האיורים ומידע ההפעלה מבוססים על מדריך הבעלים הרשמי של <kbd>Roland T-8</kbd>, גרסה 1.02:
+   <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312299.html" target="_blank" rel="noopener">הלוח והצלילים</a> ·
+   <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312309.html" target="_blank" rel="noopener">גב המכשיר</a> ·
+   <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312254.html" target="_blank" rel="noopener">תבניות ונגינה</a>. האיורים הרשמיים שייכים לרולנד; תרשימי העזר הם מהשיעור הקיים.⁩</p>
+  <p>זו דוגמה מקומית לבדיקת הקטע הראשון. <a href="lesson-4.html">לשיעור ההיכרות הקיים</a></p>
+ </footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
