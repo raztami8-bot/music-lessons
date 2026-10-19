@@ -4,7 +4,7 @@
 
 | גרסה | תיקייה | מי עובד עליה |
 | --- | --- | --- |
-| קטע היכרות עם הטי־8 למתחילים מאפס, מותאם לאייפד | `codex/` | קודקס |
+| שיעור מלא לטי־8 למתחילים מאפס, מותאם לאייפד | `codex/` | קודקס |
 | גרסת גרוק | `lessons/` | גרוק |
 | גרסת קלוד (שיעורים 1 עד 3 לוולקות, 4 ו־5 לטי־8) | `claude/` | קלוד |
 | טבעת חומצה: בס אסיד על טבעת של 16 צעדים (אפליקציה נפרדת) | `acid/` | קלוד בנה, גרוק שדרג את המנוע |
@@ -49,4 +49,4 @@
 
 ## Codex introduction
 
-Edit `codex/src/t8-intro.html`, then run `python codex/build.py`. It builds only `codex/index.html`. Shared lesson CSS/JS and existing diagrams are reused from `claude/` without editing that directory. Publish only the first excerpt until Raz approves continuing the lesson.
+Edit `codex/src/t8-intro.html`, then run `python codex/build.py`. It builds `codex/index.html` and the Codex diagrams declared in `codex/src/figures.json`. The six chapter HTML fragments in `codex/src/` are included in order. See `codex/PROJECT.md`. Shared lesson CSS/JS and existing diagrams are reused from `claude/` without editing that directory. Raz approved the full lesson on 2026-10-19; its public URL remains `codex/`.

@@ -1,0 +1,15 @@
+{
+  "pattern": ["pattern", "s1", "s2", "s3", "s4", "play"],
+  "length": ["bd", "bass", "shift", "s4", "tempo", "s1"],
+  "drum-steps": ["bd", "sd", "clap", "tom", "ch", "oh"],
+  "bass-steps": ["bass", "kybd", "tempo", "accent"],
+  "snare": ["sd", "sdlvl", "sdtune", "sddec"],
+  "clap-tom": ["clap", "tom", "tclvl", "tctune"],
+  "hats": ["ch", "oh", "hhlvl", "hhdec"],
+  "bass-tone": ["bass", "blvl", "bpitch", "bdec", "cutoff", "reso", "envmod"],
+  "send": ["shift", "s13", "s14", "tempo", "s1", "bass", "clap"],
+  "mute": ["shift", "bd", "bass", "clap"],
+  "roll": ["ch", "s15", "tempo", "display"],
+  "save": ["shift", "s16", "tempo", "s2", "s1"],
+  "wave": ["pattern", "s11", "tempo", "s1"]
+}

@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>הטי־8 מאפס · קודקס · קטע ראשון</title>
+<title>הטי־8 מאפס · השיעור המלא של קודקס</title>
 <link rel="stylesheet" href="../claude/app.css">
 <style>
-/* Preview-specific styles: the original lessons and shared styles stay intact. */
+/* Codex lesson styles: the original lessons and shared styles stay intact. */
 :root{--bg:#f5f3ed;--surface:#fff;--fg:#23332f;--muted:#52655e;--line:#dce3dc;--accent:#31695b;--accent-soft:#eaf2ec;--learn-soft:#eef3f8;--f-body:Arial,"Segoe UI",sans-serif;--f-display:Arial,"Segoe UI",sans-serif;--f-mono:Consolas,monospace}
 *{box-sizing:border-box}
 body{margin:0;font-size:18px;line-height:1.7}
@@ -73,6 +73,20 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
 }
 @media(max-width:899px){.lesson-step>.intro-figure{order:-1}.lesson-step>.intro-card{order:0}.intro-hero{padding-top:10px}.intro-card{padding:20px}.intro-toolbar .in{padding:10px 16px;gap:8px}.intro-toolbar #wake{font-size:.8rem;padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.chapter-menu{border:1px solid var(--line);background:white;border-radius:18px;padding:24px;margin:10px 0 35px;scroll-margin-top:140px}
+.chapter-menu h2{font-size:1.3rem}.chapter-menu p{margin:12px 0}.chapter-menu a,.chapter-heading a,.intro-card a{color:var(--accent)}
+.chapter-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.chapter-links a{display:grid;gap:4px;min-height:76px;padding:14px;border:1px solid var(--line);border-radius:12px;text-decoration:none;background:var(--accent-soft)}
+.chapter-links span{color:var(--muted);font-size:.87rem}.chapter-heading{padding:24px 4px 0;scroll-margin-top:140px}.chapter-heading h2{font-size:1.6rem;margin:6px 0}.chapter-heading p{max-width:800px;color:var(--muted)}
+.beat-example{margin:12px 0}.beat-example>b{font-size:.95rem}.beat-strip{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;margin-top:7px}
+.beat-strip span{font:700 .75rem Arial,sans-serif;border:1px solid var(--line);border-radius:4px;text-align:center;min-height:32px;display:grid;place-items:center;background:#f3f4f2}
+.beat-strip .on{background:#31695b;color:white;border-color:#31695b}.beat-strip span:nth-child(4n+1){border-inline-start:2px solid #23332f}
+.listen-note{background:#fff7e5;border-inline-start:3px solid #ba842b;padding:12px 16px;border-radius:8px;font-size:.95rem}
+.diagram-reminder summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:700}.diagram-reminder img{margin:12px 0}.diagram-reminder p{font-size:.85rem}
+.wave-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wave-pair>div{padding:10px;background:var(--accent-soft);border-radius:10px}.wave-pair svg{display:block;width:100%;height:auto;direction:ltr}
+.quick-map{display:grid;gap:10px}.quick-map>div{padding:12px;border:1px solid var(--line);border-radius:10px}.quick-map dt{font-weight:700}.quick-map dd{margin:5px 0 0}
+@media(max-width:600px){.chapter-links{grid-template-columns:1fr}.chapter-menu{padding:18px}.intro-toolbar .in{gap:7px}.intro-toolbar button{padding:8px 12px}.intro-brand{flex-basis:100%}.beat-strip{gap:1px}.beat-strip span{font-size:.68rem}}
 </style>
 </head>
 <body data-lesson="codex-t8-intro">
@@ -81,17 +95,33 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
   <span class="intro-brand">הטי־8 מאפס · קודקס</span>
   <a class="intro-home" href="../">לכל השיעורים</a>
   <button type="button" id="playmode">ללימוד צעד־צעד ←</button>
+  <a class="intro-home" href="#chapters">לפרקים</a>
   <button type="button" id="wake">☀ מסך דלוק</button>
  </div>
 </header>
 <main class="wrap">
  <header class="intro-hero">
-  <span class="intro-eyebrow">קודקס · מתחילים מאפס · קטע ראשון לבדיקה</span>
+  <span class="intro-eyebrow">קודקס · שיעור מלא למתחיל מאפס</span>
   <h1>מכירים. מבינים. ואז מנגנים.</h1>
   <p>מניחים את הטי־8 ליד האייפד ומתקדמים בנחת. בכל צעד נבין רעיון, נמצא אותו על המכשיר ורק אז ננסה ונקשיב.</p>
-  <div class="intro-path" aria-label="מסלול הקטע הראשון"><span>מה יש במכשיר</span>←<span>איך נוגעים</span>←<span>צליל ראשון</span>←<span>שינוי צליל</span>←<span>החלפת צליל</span></div>
-  <p class="figure-note">בקטע הזה {{INTRO_COUNT}} כרטיסים. כפתור ״ללימוד צעד־צעד״ מציג אחד בכל פעם. הסברים נשארים מולך גם בזמן הניסוי.</p>
+  <div class="intro-path" aria-label="מסלול הפתיחה"><span>מה יש במכשיר</span>←<span>איך נוגעים</span>←<span>צליל ראשון</span>←<span>שינוי צליל</span>←<span>החלפת צליל</span></div>
+  <p class="figure-note">בשיעור {{INTRO_COUNT}} כרטיסים קצרים, מחולקים לפרקים. כפתור ״ללימוד צעד־צעד״ מציג אחד בכל פעם. הסברים נשארים מולך גם בזמן הניסוי.</p>
  </header>
+
+ <nav class="chapter-menu" id="chapters" aria-label="פרקי השיעור">
+  <h2>לומדים בקצב שלך</h2>
+  <p>אפשר לעצור אחרי כל פרק. ״ללימוד צעד־צעד״ חוזר למקום האחרון באותו דפדפן. עצירת השיעור אינה שומרת את המוזיקה במכשיר — <a href="#intro-31">שמירת התבנית מוסברת כאן</a>.</p>
+  <div class="chapter-links">
+   <a href="#intro-1"><b>א · מכירים</b><span>המכשיר, חיבור והקשבה ראשונה</span></a>
+   <a href="#practice"><b>ב · בונים בסיס</b><span>מקצב קטן לניסויי הצליל</span></a>
+   <a href="#drums"><b>ג · מעצבים תופים</b><span>כל כלי בנפרד ומה ניתן להחליף</span></a>
+   <a href="#bass"><b>ד · מעצבים בס</b><span>גובה, אורך, בהירות ושתי צורות גל</span></a>
+   <a href="#effects"><b>ה · מוסיפים מרחב</b><span>הד והדהוד, במידה שמתאימה לך</span></a>
+   <a href="#tricks"><b>ו · משחקים במוזיקה</b><span>השקטות, חזרות, הפתעות וגלישות</span></a>
+   <a href="#finish"><b>ז · שומרים וחוזרים</b><span>שמירה, סיום ועזרה כשלא שומעים</span></a>
+  </div>
+  <p class="figure-note">בכל כרטיס: מבינים → מזהים באיור → מנסים → מקשיבים. ברוחב האייפד האיור נשאר לצד ההסבר; לאורך הוא מופיע לפניו.</p>
+ </nav>
 
  <section class="stage lesson-step" id="intro-1">
   <span class="stage-tag sr-only">מכירים את המכשיר</span>
@@ -246,7 +276,7 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
      <li>⁧<b>בס:</b> <kbd>CUTOFF</kbd> משנה בהירות, <kbd>RESO</kbd> מדגיש אזור בצליל, ו־<kbd>DECAY</kbd> משנה אורך. נקשיב לכל שינוי בנפרד.⁩</li>
      <li><b>משחקי הקשבה:</b> להוציא כלי ולהחזיר אותו, להשוות לפני ואחרי, ולגלות איך שינוי קטן משפיע על התחושה של הקטע.</li>
     </ul>
-    <p>אלה נושאי ההמשך. לכל אחד יהיה הסבר, סימון על המכשיר וניסוי משלו.</p>
+    <p>בהמשך השיעור נמצא אותם אחד־אחד, עם סימון על המכשיר וניסוי משלהם.</p>
    </details>
   </article>
  </section>
@@ -256,7 +286,7 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
   <figure class="photo intro-figure">
    <div class="imgs"><img src="img/t8-manual-top.png" width="2235" height="1320" alt="הלוח של הטי־8: אזור 5 מכיל את לחצני הקלאפ והטום; SHIFT משמאל ולחצן OCT+ בשורה התחתונה"></div>
    <figcaption>
-    <p><b>כאן מחליפים את הקלאפ עצמו</b><br>באזור 5 נמצאים הקלאפ והטום. החלפת הצליל נעשית בתפריט; הלחצן הפיזי נשאר אותו לחצן.</p>
+    <p><b>מפת הכלים תלווה אותנו בהמשך</b><br>באזור 5 נמצאים הקלאפ והטום. החלפת הצליל נעשית בתפריט; הלחצן הפיזי נשאר אותו לחצן.</p>
     <p>⁧<b>לכניסה לתפריט:</b> מצא את <kbd>SHIFT</kbd> משמאל ואת <kbd>OCT+</kbd> בשורה התחתונה. מעליו כתוב <kbd>MENU</kbd>.⁩</p>
     <p>⁧<b>לבחירה:</b> מסובבים את <kbd>TEMPO/VALUE</kbd>. <kbd>ENTER</kbd> ו־<kbd>EXIT</kbd> כתובים מעל שני הלחצנים השמאליים בשורה התחתונה.⁩</p>
     <p class="image-tip">איור רשמי. גע להגדלה כדי לקרוא את הכיתוב על הלחצנים.</p>
@@ -277,26 +307,23 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
     <div><dt>טום — תוף נוסף</dt><dd>אפשר לבחור בין שני צלילי טום נמוך.</dd></div>
     <div><dt>בס — הכלי שמנגן תווים נמוכים</dt><dd>הוא נפרד מתוף הקיק. אפשר לבחור צורת גל שן־מסור או מרובעת — שתי נקודות מוצא לאופי הצליל — ואז לעצב אותה עם הכפתורים.</dd></div>
    </dl>
-   <h4 class="step-label">עכשיו מנסים: מחיאת כף הופכת לטום</h4>
-   <p>השתמש בתבנית שבה אתה שומע מחיאת כף. ההחלפה תשנה את הצליל שלה, בלי להזיז את המכות במקצב.</p>
-   <ol class="steps">
-    <li><div>⁧נגן בעוצמה נוחה. החזק <kbd>SHIFT</kbd>, לחץ על <kbd>OCT+ (MENU)</kbd> ושחרר את שניהם. נכנסת לתפריט.⁩</div></li>
-    <li><div>⁧סובב את <kbd>TEMPO/VALUE</kbd> עד שמופיע <kbd>CLAP</kbd>. לחץ על הלחצן שמתחת לכיתוב <kbd>ENTER</kbd>.⁩</div></li>
-    <li><div>⁧הסתכל מה הערך המקורי ורשום אותו לפני השינוי: <kbd>CP</kbd> הוא מחיאת כף, <kbd>hnt</kbd> טום עם רעש, ו־<kbd>htON</kbd> טום גבוה.⁩</div></li>
-    <li><div>⁧סובב לאט את <kbd>TEMPO/VALUE</kbd> כדי לעבור בין האפשרויות. הקשב לאותם רגעים במקצב: עכשיו נשמע בהם כלי אחר.⁩</div></li>
-    <li><div>⁧החזר לערך שרשמת. לחץ על הלחצן שמתחת ל־<kbd>EXIT</kbd> פעמיים: פעם לרשימת התפריט ופעם לחזרה למסך הנגינה. עצור עם המשולש.⁩</div></li>
-   </ol>
-   <div class="ok"><b>הצלחת אם:</b> שמעת מחיאת כף וטום מתחלפים באותם מקומות במקצב. החלפת את צליל הבסיס של הקלאפ, והקיק והבס נשארו כלים נפרדים.</div>
-   <details class="trouble"><summary>הערך משתנה אבל לא שומעים הבדל?</summary><p>ייתכן שבתבנית הזאת אין מכות בערוץ הקלאפ, או שהוא מושתק או חלש. החזר לערך המקורי וצא מהתפריט. אין צורך למחוק תבנית או לשמור על אחרת; נלמד בהמשך לבנות דוגמה משלנו.</p></details>
-   <p class="question"><b>רגע להבין:</b> החלפת את מה שמנגן באותו מקום, או שינית את המקום שבו הוא מנגן?</p>
+   <h4 class="step-label">עכשיו מסתכלים ומבינים</h4>
+   <p>מצא במפה כלי עם צליל בסיס קבוע, וכלי שאפשר להחליף בו את צליל הבסיס. זו המפה שתלווה אותנו בהמשך. עדיין אין צורך להיכנס לתפריט.</p>
+   <div class="ok"><b>הבנת אם:</b> ברור לך שקיק ובס הם כלים שונים, וששינוי גובה או אורך אינו החלפה של סוג התוף.</div>
   </article>
  </section>
 
+ {{CHAPTER_PRACTICE}}
+ {{CHAPTER_DRUMS}}
+ {{CHAPTER_BASS}}
+ {{CHAPTER_EFFECTS}}
+ {{CHAPTER_TRICKS}}
+ {{CHAPTER_FINISH}}
  <aside class="intro-end">
-  <span class="intro-eyebrow">כאן מסתיים הקטע הראשון</span>
-  <h2>כבר יש לך בסיס להבין את ההמשך.</h2>
-  <p>הכרת את חלקי המכשיר, הבנת תבנית חוזרת והפרדת בין שלושה דברים: עוצמה, עיצוב של צליל קיים והחלפת צליל הבסיס.</p>
-  <p>ההמשך יעסוק בתופים ובבס, צליל אחרי צליל, עם הסבר לפני כל ניסוי. כרגע מוצגת רק הדוגמה הזו לבדיקת נוחות הלימוד.</p>
+  <h2>עכשיו אפשר לנגן מתוך הבנה.</h2>
+  <p>בחר כלי אחד וניסוי אחד שאהבת. חזור אליהם עד שאתה מזהה באוזן מה משתנה, ורק אז צרף עוד שינוי.</p>
+  <p>אין צורך לזכור את כל השמות. מפת הכלים, הפרקים והאיורים נשארים כאן בשביל החזרה הבאה.</p>
+  <a href="#chapters">חזרה לפרקי השיעור</a>
  </aside>
  <footer class="intro-sources">
   <p>⁧האיורים ומידע ההפעלה מבוססים על מדריך הבעלים הרשמי של <kbd>Roland T-8</kbd>, גרסה 1.02:
@@ -304,7 +331,8 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
    <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312309.html" target="_blank" rel="noopener">גב המכשיר</a> ·
    <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312254.html" target="_blank" rel="noopener">תבניות ונגינה</a>. האיורים הרשמיים שייכים לרולנד; תרשימי העזר הם מהשיעור הקיים.⁩</p>
   <p>⁧על החלפת צלילים: <a href="https://support.roland.com/hc/en-us/articles/6145882578715-T-8-Can-I-change-the-sound-for-each-part" target="_blank" rel="noopener">טבלת הצלילים הרשמית</a> · <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312322.html" target="_blank" rel="noopener">התפריט והאפשרויות</a>.⁩</p>
-  <p>זה קטע הפתיחה של קודקס, לבדיקת נוחות הלימוד. <a href="../claude/lesson-4.html">לשיעור ההיכרות הקיים</a></p>
+  <p>הרחבות מהמדריך הרשמי: <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312384.html" target="_blank" rel="noopener">צעדי תופים ומשחקי קצב</a> · <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312362.html" target="_blank" rel="noopener">תווי בס וגלישות</a> · <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312336.html" target="_blank" rel="noopener">הד והדהוד</a> · <a href="https://support.roland.com/hc/en-us/articles/5836921702811-T-8-Volume-appears-to-decrease-when-increasing-the-RESO-knob-value" target="_blank" rel="noopener">תהודה והנמוכים של הבס</a>.</p>
+  <p>זה שיעור ההיכרות המלא של קודקס, שנבנה ללימוד הדרגתי על המכשיר. <a href="../claude/lesson-4.html">לשיעור ההיכרות הקיים</a></p>
  </footer>
 </main>
 <script src="../claude/app.js"></script>

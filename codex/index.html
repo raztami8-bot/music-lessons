@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>הטי־8 מאפס · קודקס · קטע ראשון</title>
+<title>הטי־8 מאפס · השיעור המלא של קודקס</title>
 <link rel="stylesheet" href="../claude/app.css">
 <style>
-/* Preview-specific styles: the original lessons and shared styles stay intact. */
+/* Codex lesson styles: the original lessons and shared styles stay intact. */
 :root{--bg:#f5f3ed;--surface:#fff;--fg:#23332f;--muted:#52655e;--line:#dce3dc;--accent:#31695b;--accent-soft:#eaf2ec;--learn-soft:#eef3f8;--f-body:Arial,"Segoe UI",sans-serif;--f-display:Arial,"Segoe UI",sans-serif;--f-mono:Consolas,monospace}
 *{box-sizing:border-box}
 body{margin:0;font-size:18px;line-height:1.7}
@@ -73,6 +73,20 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
 }
 @media(max-width:899px){.lesson-step>.intro-figure{order:-1}.lesson-step>.intro-card{order:0}.intro-hero{padding-top:10px}.intro-card{padding:20px}.intro-toolbar .in{padding:10px 16px;gap:8px}.intro-toolbar #wake{font-size:.8rem;padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.chapter-menu{border:1px solid var(--line);background:white;border-radius:18px;padding:24px;margin:10px 0 35px;scroll-margin-top:140px}
+.chapter-menu h2{font-size:1.3rem}.chapter-menu p{margin:12px 0}.chapter-menu a,.chapter-heading a,.intro-card a{color:var(--accent)}
+.chapter-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.chapter-links a{display:grid;gap:4px;min-height:76px;padding:14px;border:1px solid var(--line);border-radius:12px;text-decoration:none;background:var(--accent-soft)}
+.chapter-links span{color:var(--muted);font-size:.87rem}.chapter-heading{padding:24px 4px 0;scroll-margin-top:140px}.chapter-heading h2{font-size:1.6rem;margin:6px 0}.chapter-heading p{max-width:800px;color:var(--muted)}
+.beat-example{margin:12px 0}.beat-example>b{font-size:.95rem}.beat-strip{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;margin-top:7px}
+.beat-strip span{font:700 .75rem Arial,sans-serif;border:1px solid var(--line);border-radius:4px;text-align:center;min-height:32px;display:grid;place-items:center;background:#f3f4f2}
+.beat-strip .on{background:#31695b;color:white;border-color:#31695b}.beat-strip span:nth-child(4n+1){border-inline-start:2px solid #23332f}
+.listen-note{background:#fff7e5;border-inline-start:3px solid #ba842b;padding:12px 16px;border-radius:8px;font-size:.95rem}
+.diagram-reminder summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:700}.diagram-reminder img{margin:12px 0}.diagram-reminder p{font-size:.85rem}
+.wave-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wave-pair>div{padding:10px;background:var(--accent-soft);border-radius:10px}.wave-pair svg{display:block;width:100%;height:auto;direction:ltr}
+.quick-map{display:grid;gap:10px}.quick-map>div{padding:12px;border:1px solid var(--line);border-radius:10px}.quick-map dt{font-weight:700}.quick-map dd{margin:5px 0 0}
+@media(max-width:600px){.chapter-links{grid-template-columns:1fr}.chapter-menu{padding:18px}.intro-toolbar .in{gap:7px}.intro-toolbar button{padding:8px 12px}.intro-brand{flex-basis:100%}.beat-strip{gap:1px}.beat-strip span{font-size:.68rem}}
 </style>
 </head>
 <body data-lesson="codex-t8-intro">
@@ -81,17 +95,33 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
   <span class="intro-brand">הטי־8 מאפס · קודקס</span>
   <a class="intro-home" href="../">לכל השיעורים</a>
   <button type="button" id="playmode">ללימוד צעד־צעד ←</button>
+  <a class="intro-home" href="#chapters">לפרקים</a>
   <button type="button" id="wake">☀ מסך דלוק</button>
  </div>
 </header>
 <main class="wrap">
  <header class="intro-hero">
-  <span class="intro-eyebrow">קודקס · מתחילים מאפס · קטע ראשון לבדיקה</span>
+  <span class="intro-eyebrow">קודקס · שיעור מלא למתחיל מאפס</span>
   <h1>מכירים. מבינים. ואז מנגנים.</h1>
   <p>מניחים את הטי־8 ליד האייפד ומתקדמים בנחת. בכל צעד נבין רעיון, נמצא אותו על המכשיר ורק אז ננסה ונקשיב.</p>
-  <div class="intro-path" aria-label="מסלול הקטע הראשון"><span>מה יש במכשיר</span>←<span>איך נוגעים</span>←<span>צליל ראשון</span>←<span>שינוי צליל</span>←<span>החלפת צליל</span></div>
-  <p class="figure-note">בקטע הזה 6 כרטיסים. כפתור ״ללימוד צעד־צעד״ מציג אחד בכל פעם. הסברים נשארים מולך גם בזמן הניסוי.</p>
+  <div class="intro-path" aria-label="מסלול הפתיחה"><span>מה יש במכשיר</span>←<span>איך נוגעים</span>←<span>צליל ראשון</span>←<span>שינוי צליל</span>←<span>החלפת צליל</span></div>
+  <p class="figure-note">בשיעור 32 כרטיסים קצרים, מחולקים לפרקים. כפתור ״ללימוד צעד־צעד״ מציג אחד בכל פעם. הסברים נשארים מולך גם בזמן הניסוי.</p>
  </header>
+
+ <nav class="chapter-menu" id="chapters" aria-label="פרקי השיעור">
+  <h2>לומדים בקצב שלך</h2>
+  <p>אפשר לעצור אחרי כל פרק. ״ללימוד צעד־צעד״ חוזר למקום האחרון באותו דפדפן. עצירת השיעור אינה שומרת את המוזיקה במכשיר — <a href="#intro-31">שמירת התבנית מוסברת כאן</a>.</p>
+  <div class="chapter-links">
+   <a href="#intro-1"><b>א · מכירים</b><span>המכשיר, חיבור והקשבה ראשונה</span></a>
+   <a href="#practice"><b>ב · בונים בסיס</b><span>מקצב קטן לניסויי הצליל</span></a>
+   <a href="#drums"><b>ג · מעצבים תופים</b><span>כל כלי בנפרד ומה ניתן להחליף</span></a>
+   <a href="#bass"><b>ד · מעצבים בס</b><span>גובה, אורך, בהירות ושתי צורות גל</span></a>
+   <a href="#effects"><b>ה · מוסיפים מרחב</b><span>הד והדהוד, במידה שמתאימה לך</span></a>
+   <a href="#tricks"><b>ו · משחקים במוזיקה</b><span>השקטות, חזרות, הפתעות וגלישות</span></a>
+   <a href="#finish"><b>ז · שומרים וחוזרים</b><span>שמירה, סיום ועזרה כשלא שומעים</span></a>
+  </div>
+  <p class="figure-note">בכל כרטיס: מבינים → מזהים באיור → מנסים → מקשיבים. ברוחב האייפד האיור נשאר לצד ההסבר; לאורך הוא מופיע לפניו.</p>
+ </nav>
 
  <section class="stage lesson-step" id="intro-1">
   <span class="stage-tag sr-only">מכירים את המכשיר</span>
@@ -246,7 +276,7 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
      <li>⁧<b>בס:</b> <kbd>CUTOFF</kbd> משנה בהירות, <kbd>RESO</kbd> מדגיש אזור בצליל, ו־<kbd>DECAY</kbd> משנה אורך. נקשיב לכל שינוי בנפרד.⁩</li>
      <li><b>משחקי הקשבה:</b> להוציא כלי ולהחזיר אותו, להשוות לפני ואחרי, ולגלות איך שינוי קטן משפיע על התחושה של הקטע.</li>
     </ul>
-    <p>אלה נושאי ההמשך. לכל אחד יהיה הסבר, סימון על המכשיר וניסוי משלו.</p>
+    <p>בהמשך השיעור נמצא אותם אחד־אחד, עם סימון על המכשיר וניסוי משלהם.</p>
    </details>
   </article>
  </section>
@@ -256,7 +286,7 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
   <figure class="photo intro-figure">
    <div class="imgs"><img src="img/t8-manual-top.png" width="2235" height="1320" alt="הלוח של הטי־8: אזור 5 מכיל את לחצני הקלאפ והטום; SHIFT משמאל ולחצן OCT+ בשורה התחתונה"></div>
    <figcaption>
-    <p><b>כאן מחליפים את הקלאפ עצמו</b><br>באזור 5 נמצאים הקלאפ והטום. החלפת הצליל נעשית בתפריט; הלחצן הפיזי נשאר אותו לחצן.</p>
+    <p><b>מפת הכלים תלווה אותנו בהמשך</b><br>באזור 5 נמצאים הקלאפ והטום. החלפת הצליל נעשית בתפריט; הלחצן הפיזי נשאר אותו לחצן.</p>
     <p>⁧<b>לכניסה לתפריט:</b> מצא את <kbd>SHIFT</kbd> משמאל ואת <kbd>OCT+</kbd> בשורה התחתונה. מעליו כתוב <kbd>MENU</kbd>.⁩</p>
     <p>⁧<b>לבחירה:</b> מסובבים את <kbd>TEMPO/VALUE</kbd>. <kbd>ENTER</kbd> ו־<kbd>EXIT</kbd> כתובים מעל שני הלחצנים השמאליים בשורה התחתונה.⁩</p>
     <p class="image-tip">איור רשמי. גע להגדלה כדי לקרוא את הכיתוב על הלחצנים.</p>
@@ -277,26 +307,473 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
     <div><dt>טום — תוף נוסף</dt><dd>אפשר לבחור בין שני צלילי טום נמוך.</dd></div>
     <div><dt>בס — הכלי שמנגן תווים נמוכים</dt><dd>הוא נפרד מתוף הקיק. אפשר לבחור צורת גל שן־מסור או מרובעת — שתי נקודות מוצא לאופי הצליל — ואז לעצב אותה עם הכפתורים.</dd></div>
    </dl>
-   <h4 class="step-label">עכשיו מנסים: מחיאת כף הופכת לטום</h4>
-   <p>השתמש בתבנית שבה אתה שומע מחיאת כף. ההחלפה תשנה את הצליל שלה, בלי להזיז את המכות במקצב.</p>
-   <ol class="steps">
-    <li><div>⁧נגן בעוצמה נוחה. החזק <kbd>SHIFT</kbd>, לחץ על <kbd>OCT+ (MENU)</kbd> ושחרר את שניהם. נכנסת לתפריט.⁩</div></li>
-    <li><div>⁧סובב את <kbd>TEMPO/VALUE</kbd> עד שמופיע <kbd>CLAP</kbd>. לחץ על הלחצן שמתחת לכיתוב <kbd>ENTER</kbd>.⁩</div></li>
-    <li><div>⁧הסתכל מה הערך המקורי ורשום אותו לפני השינוי: <kbd>CP</kbd> הוא מחיאת כף, <kbd>hnt</kbd> טום עם רעש, ו־<kbd>htON</kbd> טום גבוה.⁩</div></li>
-    <li><div>⁧סובב לאט את <kbd>TEMPO/VALUE</kbd> כדי לעבור בין האפשרויות. הקשב לאותם רגעים במקצב: עכשיו נשמע בהם כלי אחר.⁩</div></li>
-    <li><div>⁧החזר לערך שרשמת. לחץ על הלחצן שמתחת ל־<kbd>EXIT</kbd> פעמיים: פעם לרשימת התפריט ופעם לחזרה למסך הנגינה. עצור עם המשולש.⁩</div></li>
-   </ol>
-   <div class="ok"><b>הצלחת אם:</b> שמעת מחיאת כף וטום מתחלפים באותם מקומות במקצב. החלפת את צליל הבסיס של הקלאפ, והקיק והבס נשארו כלים נפרדים.</div>
-   <details class="trouble"><summary>הערך משתנה אבל לא שומעים הבדל?</summary><p>ייתכן שבתבנית הזאת אין מכות בערוץ הקלאפ, או שהוא מושתק או חלש. החזר לערך המקורי וצא מהתפריט. אין צורך למחוק תבנית או לשמור על אחרת; נלמד בהמשך לבנות דוגמה משלנו.</p></details>
-   <p class="question"><b>רגע להבין:</b> החלפת את מה שמנגן באותו מקום, או שינית את המקום שבו הוא מנגן?</p>
+   <h4 class="step-label">עכשיו מסתכלים ומבינים</h4>
+   <p>מצא במפה כלי עם צליל בסיס קבוע, וכלי שאפשר להחליף בו את צליל הבסיס. זו המפה שתלווה אותנו בהמשך. עדיין אין צורך להיכנס לתפריט.</p>
+   <div class="ok"><b>הבנת אם:</b> ברור לך שקיק ובס הם כלים שונים, וששינוי גובה או אורך אינו החלפה של סוג התוף.</div>
   </article>
  </section>
 
+ <header class="chapter-heading" id="practice"><span class="intro-eyebrow">פרק בשיעור</span><h2>ב · מקצב קטן משלך</h2><p>בפרק הזה בונים דוגמה במקום ריק. התופים והבס ינגנו שוב ושוב בזמן שנלמד לעצב אותם. אין צורך למחוק שום תבנית.</p></header>
+
+<section class="stage lesson-step" id="intro-7">
+ <span class="stage-tag sr-only">בונים בסיס · בוחרים תבנית</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/pattern.svg" width="1000" height="606" loading="lazy" alt="1 הוא PATTERN; 2–5 מסמנים את ארבעת הלחצנים השמאליים המשמשים לבחירת בנק כשמחזיקים אותו. 6 הוא נגינה ועצירה."></div>
+  <figcaption><p>⁧1 הוא <kbd>PATTERN</kbd>; 2–5 מסמנים את ארבעת הלחצנים השמאליים המשמשים לבחירת בנק כשמחזיקים אותו. 6 הוא נגינה ועצירה.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">7</span><h3>מקום פנוי למקצב שלך</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧כדי לשמוע כל כלי, נבנה מקצב קטן במקום פנוי. <b>בנק</b> הוא קבוצה של תבניות. מספר הבנק ומספר התבנית הם הכתובת של העבודה שלך.⁩</p><p>⁧לחצני השורה התחתונה משנים תפקיד לפי המצב. כש־<kbd>PATTERN</kbd> דולק הם בוחרים תבניות; אחר כך הם יציינו מתי תוף מכה.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧עצור נגינה עם המשולש. אם <kbd>REC</kbd> דולק, לחץ עליו לכיבוי ההקלטה.⁩</div></li><li><div>⁧לחץ <kbd>PATTERN</kbd>. חפש בשורה התחתונה לחצן כבוי: במצב הזה הוא מציין מקום ללא תבנית. לחצן דולק חלש כבר מכיל תוכן.⁩</div></li><li><div>⁧אם אין מקום פנוי בבנק: החזק <kbd>PATTERN</kbd> ולחץ על אחד מארבעת הלחצנים השמאליים כדי לבחור בנק אחר. שחרר ובדוק שוב.⁩</div></li><li><div>רשום את הבנק ואת מספר הלחצן הפנוי שבחרת, ולחץ עליו. המספור הוא משמאל לימין. מכאן נמשיך רק במקום שהיה ריק.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> בחרת מקום שהיה ריק וכתבת לעצמך איך למצוא אותו. עדיין אין מה לשמוע.</div>
+  <details class="trouble"><summary>כל המקומות תפוסים, או שאני לא בטוח?</summary><p>אל תמחק כדי להתקדם. אפשר לעיין בפרקי עיצוב הצליל ולנסות בעדינות על תבנית קיימת, אבל דלג על בניית המקצב ועל שמירה עד שתזהה מקום פנוי.</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-8">
+ <span class="stage-tag sr-only">בונים בסיס · זמן וקצב</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/length.svg" width="1000" height="606" loading="lazy" alt="1 קיק, 2 בס, 3 SHIFT, 4 הלחצן של LAST, 5 TEMPO/VALUE, 6 EXIT. שורת המספרים בתרשים נספרת משמאל לימין."></div>
+  <figcaption><p>⁧1 קיק, 2 בס, 3 <kbd>SHIFT</kbd>, 4 הלחצן של <kbd>LAST</kbd>, 5 <kbd>TEMPO/VALUE</kbd>, 6 <kbd>EXIT</kbd>. שורת המספרים בתרשים נספרת משמאל לימין.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">8</span><h3>מה זה צעד, ומתי מגיעה המכה?</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧תחשוב על שורה של משבצות שהמכשיר עובר עליהן שוב ושוב. כל משבצת היא <b>צעד</b>: אם יש בה מכה, שומעים אותה כשהתור שלה מגיע.⁩</p><p>בניסוי נשתמש ב־16 צעדים. כל קבוצה של ארבעה צעדים היא פעמה אחת; ארבע פעמות יוצרות את הסיבוב שלנו. האיור הירוק מראה את תחילת כל פעמה.</p><p>מהירות הסיבוב נקבעת לפי הקצב. 90 הוא קצב מוצע לתרגול רגוע, לא הגדרה שחייבים להישאר בה.</p></div>
+  <div class="beat-example"><b>תחילת כל פעמה — המשבצות הירוקות</b><div class="beat-strip" dir="ltr"><span class="on">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="on">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="on">9</span><span class="">10</span><span class="">11</span><span class="">12</span><span class="on">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div>
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧בחר <kbd>BASS DRUM</kbd>. החזק <kbd>SHIFT</kbd>, לחץ על הלחצן שמסומן <kbd>LAST</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד 16, ולחץ <kbd>EXIT</kbd>.⁩</div></li><li><div>⁧בחר <kbd>BASS</kbd> וחזור על אותה פעולה כדי שגם שורת הבס תהיה באורך 16. אנחנו עושים זאת רק בתבנית הריקה שבחרת.⁩</div></li><li><div>⁧לחץ <kbd>BASS DRUM</kbd>. כדי לראות את העמוד הראשון, החזק <kbd>SHIFT</kbd>, לחץ <kbd>STEP 1-16</kbd> ושחרר.⁩</div></li><li><div>⁧כשאתה מחוץ לתפריט, סובב <kbd>TEMPO/VALUE</kbd> לקצב נוח; אפשר להתחיל ב־90. הקצב משותף לכל התבניות ונשמר במכשיר.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> אתה יודע להצביע על צעדים 1, 5, 9 ו־13 ועל ארבע הקבוצות שביניהם.</div>
+
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-9">
+ <span class="stage-tag sr-only">בונים בסיס · מכניסים מכות</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/drum-steps.svg" width="1000" height="606" loading="lazy" alt="1 בוחר קיק (BASS DRUM), 2 בוחר סנר (SNARE DRUM). אחר כך השורה התחתונה מציגה את המכות של הכלי שנבחר."></div>
+  <figcaption><p>⁧1 בוחר קיק (<kbd>BASS DRUM</kbd>), 2 בוחר סנר (<kbd>SNARE DRUM</kbd>). אחר כך השורה התחתונה מציגה את המכות של הכלי שנבחר.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">9</span><h3>קיק וסנר: השלד של המקצב</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>קיק</b> הוא המכה הנמוכה. <b>סנר</b> הוא המכה החדה שמרגישים לעיתים כמו תשובה לקיק.⁩</p><p>כאן עורכים צעדים: לחיצה על צעד כבוי מוסיפה מכה; לחיצה על צעד דולק מסירה אותה. אין צורך להפעיל הקלטה. המספרים בתרשים הם משמאל לימין.</p></div>
+  <div class="beat-example"><b>קיק</b><div class="beat-strip" dir="ltr"><span class="on">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="on">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="on">9</span><span class="">10</span><span class="">11</span><span class="">12</span><span class="on">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div><div class="beat-example"><b>סנר</b><div class="beat-strip" dir="ltr"><span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="on">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="">9</span><span class="">10</span><span class="">11</span><span class="">12</span><span class="on">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div>
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שאתה בתבנית הריקה מהכרטיס הקודם, וש־<kbd>REC</kbd> אינו דולק. לחץ <kbd>BASS DRUM</kbd> כדי לבחור את הקיק.⁩</div></li><li><div>לחץ פעם אחת על צעדים 1, 5, 9 ו־13. אלה ארבע המכות הירוקות בתרשים.</div></li><li><div>⁧לחץ <kbd>SNARE DRUM</kbd>. כעת לחץ על צעדים 5 ו־13. החלפת את הכלי הנערך; מכות הקיק נשארות.⁩</div></li><li><div>לחץ על המשולש והקשב. אם הכנסת מכה במקום אחר, בחר שוב את הכלי שלה ולחץ על אותו צעד דולק כדי להסיר רק אותה.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> ארבע מכות נמוכות בכל סיבוב, ושתי מכות סנר שמצטרפות אליהן.</div>
+
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-10">
+ <span class="stage-tag sr-only">בונים בסיס · נותנים לכל כלי מקום</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/drum-steps.svg" width="1000" height="606" loading="lazy" alt="3 קלאפ (HAND CLAP), 4 טום (TOM), 5 היי־האט סגור (CLOSED HIHAT), 6 היי־האט פתוח (OPEN HIHAT)."></div>
+  <figcaption><p>⁧3 קלאפ (<kbd>HAND CLAP</kbd>), 4 טום (<kbd>TOM</kbd>), 5 היי־האט סגור (<kbd>CLOSED HIHAT</kbd>), 6 היי־האט פתוח (<kbd>OPEN HIHAT</kbd>).⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">10</span><h3>מוסיפים צבע: קלאפ, טום ומצילות</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>קלאפ</b> מזכיר מחיאת כף; <b>טום</b> הוא תוף נוסף עם גוף וצליל מעוגל. <b>היי־האט</b> הוא זוג מצילות קטנות: הסגור קצר, והפתוח נוטה להמשיך לצלצל.⁩</p><p>נוסיף מעט מכל אחד כדי שיהיה צליל לשמוע בזמן הלימוד. זו דוגמה להקשבה; בהמשך תחליט מה אתה אוהב להשאיר. הוסף כלי אחד והקשב לפני הבא.</p></div>
+  <div class="beat-example"><b>היי־האט סגור</b><div class="beat-strip" dir="ltr"><span class="">1</span><span class="">2</span><span class="on">3</span><span class="">4</span><span class="">5</span><span class="">6</span><span class="on">7</span><span class="">8</span><span class="">9</span><span class="">10</span><span class="on">11</span><span class="">12</span><span class="">13</span><span class="">14</span><span class="on">15</span><span class="">16</span></div></div><div class="beat-example"><b>היי־האט פתוח</b><div class="beat-strip" dir="ltr"><span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="">5</span><span class="">6</span><span class="">7</span><span class="on">8</span><span class="">9</span><span class="">10</span><span class="">11</span><span class="">12</span><span class="">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div><div class="beat-example"><b>קלאפ</b><div class="beat-strip" dir="ltr"><span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="">9</span><span class="">10</span><span class="">11</span><span class="">12</span><span class="on">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div><div class="beat-example"><b>טום</b><div class="beat-strip" dir="ltr"><span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="">9</span><span class="">10</span><span class="">11</span><span class="on">12</span><span class="">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div>
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧לחץ <kbd>CLOSED HIHAT</kbd>, ואז הוסף מכות בצעדים 3, 7, 11 ו־15.⁩</div></li><li><div>⁧לחץ <kbd>OPEN HIHAT</kbd>, ואז הוסף מכה בצעד 8.⁩</div></li><li><div>⁧לחץ <kbd>HAND CLAP</kbd>, ואז הוסף מכה בצעד 13.⁩</div></li><li><div>⁧לחץ <kbd>TOM</kbd>, ואז הוסף מכה בצעד 12. נגן והקשב לסיבוב: הטום מופיע מעט לפני המכה שעל צעד 13.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> לכל כלי יש רגע שבו אפשר לזהות אותו. לא צריך לזכור את כל השמות מיד.</div>
+
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-11">
+ <span class="stage-tag sr-only">בונים בסיס · בס מול תוף הבס</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/bass-steps.svg" width="1000" height="606" loading="lazy" alt="1 הוא BASS, כלי הבס; 2 הוא KYBD, מצב המקלדת; 3 משנה ערכים; 4 הוא ACCENT. עכשיו משתמשים ב־1 ובשורת הצעדים."></div>
+  <figcaption><p>⁧1 הוא <kbd>BASS</kbd>, כלי הבס; 2 הוא <kbd>KYBD</kbd>, מצב המקלדת; 3 משנה ערכים; 4 הוא <kbd>ACCENT</kbd>. עכשיו משתמשים ב־1 ובשורת הצעדים.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">11</span><h3>מצרפים תו בס פשוט</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>הקיק הוא תוף. הבס הוא כלי שמנגן תווים. כשהם נשמעים יחד הם נותנים בסיס נמוך למוזיקה, אבל הם שתי שכבות נפרדות.</p><p>⁧נכניס אותו תו בכמה מקומות. כך אפשר לשמוע בבירור מה עושים כפתורי הצליל, בלי ללמוד מנגינה באותו זמן. <kbd>C2</kbd> הוא שם של תו נמוך.⁩</p></div>
+  <div class="beat-example"><b>תווי הבס</b><div class="beat-strip" dir="ltr"><span class="on">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="on">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="on">9</span><span class="">10</span><span class="">11</span><span class="">12</span><span class="on">13</span><span class="">14</span><span class="">15</span><span class="">16</span></div></div>
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧עצור. לחץ <kbd>BASS</kbd> כדי לעבור לעריכת הבס. ודא ש־<kbd>KYBD</kbd> ו־<kbd>REC</kbd> אינם דולקים; אם אחד מהם דולק, לחץ עליו לכיבוי המצב.⁩</div></li><li><div>⁧בשורת הצעדים הוסף תווים ב־1, 5, 9 ו־13. צעד חדש בתבנית ריקה מקבל כברירת מחדל <kbd>C2</kbd>.⁩</div></li><li><div>⁧נגן. העלה בעדינות את <kbd>LEVEL</kbd> שבאזור <kbd>BASS</kbd> אם הבס חלש מדי. כפתור זה שייך לבס, ולא לקיק.⁩</div></li><li><div>⁧אם אין בס, פתח מעט את <kbd>CUTOFF</kbd> באזור הבס. הסבר מלא לכפתור הזה מופיע בפרק הבס. עצור אחרי שהבחנת בשתי השכבות הנמוכות.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> מכת הקיק קצרה יותר, ולצידה נשמע תו בס. עכשיו יש לך בסיס לניסויי הצליל.</div>
+  <details class="trouble"><summary>אני רוצה לעצור כאן ולהמשיך בפעם אחרת</summary><p>אפשר לעצור כאן. כדי לשמור את המקצב שבנית לפני כיבוי המכשיר, עבור לכרטיס 31 ופעל לפי הוראות השמירה של התבנית שלך. האתר זוכר את מקום הקריאה בלבד.</p></details>
+ </article>
+</section>
+
+ <header class="chapter-heading" id="drums"><span class="intro-eyebrow">פרק בשיעור</span><h2>ג · מעצבים כל תוף בנפרד</h2><p>נגן את המקצב שבנית בעוצמה נוחה. בכל כרטיס משנים דבר אחד, מקשיבים ומחזירים. התרגילים הנוספים בתוך הכרטיסים הם רשות; אפשר לחזור אליהם אחר כך.</p></header>
+
+<section class="stage lesson-step" id="intro-12">
+ <span class="stage-tag sr-only">מעצבים תופים · לומדים את הדרך</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="1 SHIFT, 2 OCT+ (MENU), 3 TEMPO/VALUE, 4 ENTER, 5 EXIT. לא צריך לשנן: חזור לתרשים בכל פעם."></div>
+  <figcaption><p>⁧1 <kbd>SHIFT</kbd>, 2 <kbd>OCT+ (MENU)</kbd>, 3 <kbd>TEMPO/VALUE</kbd>, 4 <kbd>ENTER</kbd>, 5 <kbd>EXIT</kbd>. לא צריך לשנן: חזור לתרשים בכל פעם.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">12</span><h3>התפריט: לבחור, להיכנס, לשנות ולצאת</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧התפריט מאפשר לבחור בדיוק איזה דבר משנים. <b>שם ההגדרה</b> אומר מה משנים; <b>המספר</b> אומר מה הערך שלו. קודם בוחרים כלי, אחר כך הגדרה.⁩</p><p>⁧<kbd>tUnE</kbd> פירושו גובה הצליל; <kbd>dECY</kbd> פירושו אורך הדעיכה; <kbd>GAIn</kbd> הוא הגברת הכלי שנבחר. אותיות המסך נראות מעט שונות מאותיות רגילות.⁩</p><p>כשפותחים תפריט, הכפתור הגדול משנה בחירה או ערך. כשחוזרים למסך הרגיל הוא שוב משנה את קצב הנגינה.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>BASS DRUM</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>tUnE</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>בניסוי הזה רק הסתכל על הערך, בלי לסובב. לחץ על המשולש אם תרצה לשמוע את המקצב בזמן שאתה רואה את ההגדרה.</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> ⁧ראית קודם את השם <kbd>tUnE</kbd>, אחר כך מספר, וחזרת למסך הרגיל.⁩</div>
+  <p>מכאן נשתמש באותה דרך לכלי אחר או להגדרה אחרת. כשכתוב ״רשום ערך״, הכוונה למספר שמופיע במסך המכשיר, לא למיקום הכפתור.</p>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-13">
+ <span class="stage-tag sr-only">מעצבים תופים · הקיק</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="../claude/img/l4-05.svg" width="1000" height="606" loading="lazy" alt="1 בוחר קיק; 2 LEVEL לעוצמה; 3 TUNE; 4 הוא לחצן DECAY. לחצן זה משנה את תפקיד הכפתור שב־3. בתרגיל נשתמש בתפריט כדי לדעת בדיוק מה משנים."></div>
+  <figcaption><p>⁧1 בוחר קיק; 2 <kbd>LEVEL</kbd> לעוצמה; 3 <kbd>TUNE</kbd>; 4 הוא לחצן <kbd>DECAY</kbd>. לחצן זה משנה את תפקיד הכפתור שב־3. בתרגיל נשתמש בתפריט כדי לדעת בדיוק מה משנים.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">13</span><h3>קיק: עמוק או גבוה, קצר או ארוך</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>גובה משנה את התחושה של המכה: נמוך נוטה להישמע עמוק יותר, גבוה נוטה להיות דק יותר. אורך קובע כמה זמן נשאר הצליל אחרי תחילת המכה.</p><p>⁧<b>לקיק יש צליל בסיס קבוע.</b> לא בוחרים קיק אחר מתוך ספרייה; מעצבים את הקיק שיש. עוצמה, גובה, אורך וחוזק ההתחלה הם דברים שונים.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>BASS DRUM</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>tUnE</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>⁧נגן. סובב <kbd>TEMPO/VALUE</kbd> מעט לכל צד. הקשב לגובה של המכה, בזמן שהקצב נשאר קבוע.⁩</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li><li><div>⁧כעת חזור לאותה דרך, אך בחר <kbd>dECY</kbd>. רשום את ערכו, השווה ערך מעט נמוך לערך מעט גבוה, החזר לערך ההתחלה וצא עם <kbd>EXIT</kbd> פעמיים.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> בגובה משתנה האופי הנמוך או הגבוה; באורך משתנה הזנב שאחרי המכה.</div>
+  <details class="trouble"><summary>טריק נוסף: המכה בתחילת הקיק</summary><p>⁧ההגדרה <kbd>AtK</kbd> קובעת את חוזק תחילת המכה. בחר קיק, פתח את התפריט כפי שלמדת, בחר <kbd>AtK</kbd> ולחץ <kbd>ENTER</kbd>. רשום ערך, שנה מעט והקשב לתחילת כל מכה. החזר לערך המקורי וצא עם <kbd>EXIT</kbd> פעמיים.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-14">
+ <span class="stage-tag sr-only">מעצבים תופים · הסנר</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/snare.svg" width="1000" height="606" loading="lazy" alt="1 בוחר סנר; 2 LEVEL; 3 TUNE; 4 לחצן DECAY. גם כאן נשתמש בתפריט לגובה ולאורך."></div>
+  <figcaption><p>⁧1 בוחר סנר; 2 <kbd>LEVEL</kbd>; 3 <kbd>TUNE</kbd>; 4 לחצן <kbd>DECAY</kbd>. גם כאן נשתמש בתפריט לגובה ולאורך.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">14</span><h3>סנר: גוף התוף והרשרוש</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>בסנר שומעים גם גוף של מכה וגם רשרוש. אפשר לשנות את הגובה ואת משך הצליל, ויש גם שליטה בכמות הרשרוש.</p><p>⁧<b>צליל הבסיס קבוע.</b> שינוי הרשרוש יכול לשנות מאוד את התחושה, גם בלי להחליף את התוף. תחילה נלמד את הגוף, ואחר כך נוסיף או נגרע רשרוש.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>SNARE DRUM</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>tUnE</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>נגן. שנה מעט את הערך והקשב לסנר שמופיע פעמיים בכל סיבוב.</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li><li><div>⁧באותה דרך בחר <kbd>dECY</kbd>. רשום ערך, נסה דעיכה קצרה וארוכה, החזר וצא.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> מכת הסנר יכולה להיות גבוהה או נמוכה יותר, ולהיגמר מהר או להימשך.</div>
+  <details class="trouble"><summary>ניסוי צבע: יבש יותר או מרשרש יותר</summary><p>⁧בחר סנר ופתח בתפריט <kbd>SnPy</kbd>. זהו חוזק רשרוש הסנר. רשום את הערך, שנה מעט תוך כדי נגינה והקשב למה שמתווסף אחרי תחילת המכה. החזר לערך שרשמת וצא עם <kbd>EXIT</kbd> פעמיים.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-15">
+ <span class="stage-tag sr-only">מעצבים תופים · הקלאפ</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/clap-tom.svg" width="1000" height="606" loading="lazy" alt="1 בוחר HAND CLAP; 2 בוחר TOM; 3 LEVEL משותף לשניהם; 4 TUNE משנה את הכלי שבחרת."></div>
+  <figcaption><p>⁧1 בוחר <kbd>HAND CLAP</kbd>; 2 בוחר <kbd>TOM</kbd>; 3 <kbd>LEVEL</kbd> משותף לשניהם; 4 <kbd>TUNE</kbd> משנה את הכלי שבחרת.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">15</span><h3>קלאפ: מחיאת כף יכולה להפוך לטום</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧כאן באמת אפשר <b>להחליף את צליל הבסיס</b> שעל אותו לחצן. <kbd>CP</kbd> הוא מחיאת כף; <kbd>hnt</kbd> הוא טום עם רעש; <kbd>htON</kbd> הוא טום גבוה.⁩</p><p>אחרי ההחלפה המקצב נשאר באותם מקומות. בדוגמה שלנו, הצליל החדש יופיע בצעד 13 — בדיוק במקום מחיאת הכף.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>HAND CLAP</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>CLAP</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>⁧נגן. סובב <kbd>TEMPO/VALUE</kbd> לאט בין <kbd>CP</kbd>, <kbd>hnt</kbd> ו־<kbd>htON</kbd>. הקשב לכמה חזרות של כל אחד.⁩</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> אותו מקום במקצב מקבל כלי בעל אופי אחר.</div>
+  <details class="trouble"><summary>איך מעצבים את הצליל שנבחר?</summary><p>⁧כשאתה מחוץ לתפריט, בחר <kbd>HAND CLAP</kbd> וסובב מעט את <kbd>TUNE</kbd> שבאזור הקלאפ והטום כדי לשנות גובה. כדי לשנות אורך, בחר קלאפ ופתח בתפריט <kbd>dECY</kbd>; רשום ערך, נסה שינוי קטן והחזר. כשמסובבים כפתור פיזי, מיקומו לא בהכרח תואם לערך שהיה שמור קודם.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-16">
+ <span class="stage-tag sr-only">מעצבים תופים · הטום</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/clap-tom.svg" width="1000" height="606" loading="lazy" alt="2 בוחר את הטום. אחרי הבחירה, 4 (TUNE) שייך לטום. 3 (LEVEL) עדיין משפיע גם על הקלאפ."></div>
+  <figcaption><p>⁧2 בוחר את הטום. אחרי הבחירה, 4 (<kbd>TUNE</kbd>) שייך לטום. 3 (<kbd>LEVEL</kbd>) עדיין משפיע גם על הקלאפ.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">16</span><h3>טום: בוחרים גוף אחר לתוף</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧הטום נשמע כמו תוף עם גוף מעוגל. במכשיר יש שתי נקודות מוצא לטום הנמוך: <kbd>tON1</kbd> ו־<kbd>tON2</kbd>. השמות מציינים שני צלילים, ולא שני מקומות במקצב.⁩</p><p>אפשר להחליף את הבסיס, ואז לעצב גובה ואורך. נסה קודם את ההחלפה לבדה, כדי לדעת מה שמעת.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>TOM</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>tON</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>⁧נגן והשווה <kbd>tON1</kbd> מול <kbd>tON2</kbd>. בדוגמה שלנו הטום נשמע בצעד 12, מעט לפני הקיק והסנר הבאים.⁩</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> זיהית את אותו תפקיד במקצב עם שני גוונים שונים.</div>
+  <details class="trouble"><summary>גובה, אורך וצבע של הטום</summary><p>⁧בחר <kbd>TOM</kbd>. הכפתור המשותף <kbd>TUNE</kbd> משנה כעת את גובה הטום; <kbd>dECY</kbd> בתפריט משנה את אורכו. ההגדרה <kbd>CoIr</kbd> (צבע) משנה את כמות הרעש בטום. לכל ניסיון: פתח הגדרה אחת, רשום את הערך, שנה מעט, החזר וצא. ההגדרה צבע נוגעת גם לצלילי הטום החלופיים שנבחרים במקום הקלאפ.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-17">
+ <span class="stage-tag sr-only">מעצבים תופים · היי־האט סגור</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/hats.svg" width="1000" height="606" loading="lazy" alt="1 CLOSED HIHAT; 2 OPEN HIHAT; 3 LEVEL משותף; 4 כפתור DECAY. בתרגיל נכוון אורך של כלי נבחר דרך התפריט."></div>
+  <figcaption><p>⁧1 <kbd>CLOSED HIHAT</kbd>; 2 <kbd>OPEN HIHAT</kbd>; 3 <kbd>LEVEL</kbd> משותף; 4 כפתור <kbd>DECAY</kbd>. בתרגיל נכוון אורך של כלי נבחר דרך התפריט.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">17</span><h3>היי־האט סגור: קצר וחד או מעט מתמשך</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>ההיי־האט הסגור נותן את צליל ה״ציק״ הקצר שבין המכות. בדוגמה שלנו הוא חוזר בצעדים 3, 7, 11 ו־15.</p><p>⁧<b>אין לו רשימת צלילי בסיס להחלפה.</b> כן אפשר לשנות גובה ואורך. נתחיל באורך כדי לשמוע איך נוצר מרווח גדול או קטן בין הצלילים.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>CLOSED HIHAT</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>dECY</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>נגן והורד מעט את הערך, ואז העלה מעט. הקשב אם כל ״ציק״ מסתיים מהר או נשאר לזמן ארוך יותר.</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> המקצב זהה, אבל התחושה יכולה להיות הדוקה יותר או מרווחת פחות.</div>
+  <details class="trouble"><summary>אפשר גם לשנות את הגובה?</summary><p>⁧כן. בחר <kbd>CLOSED HIHAT</kbd>, פתח <kbd>tUnE</kbd> בתפריט, רשום את הערך ונסה שינוי קטן לשני הכיוונים. זה עיצוב של אותו היי־האט, לא בחירה בהיי־האט מסוג אחר. החזר את הערך וצא.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-18">
+ <span class="stage-tag sr-only">מעצבים תופים · היי־האט פתוח</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/hats.svg" width="1000" height="606" loading="lazy" alt="2 הוא OPEN HIHAT, הכלי הפתוח. 1 הוא הסגור. יש להם לחצני בחירה שונים, למרות כפתור העוצמה המשותף."></div>
+  <figcaption><p>⁧2 הוא <kbd>OPEN HIHAT</kbd>, הכלי הפתוח. 1 הוא הסגור. יש להם לחצני בחירה שונים, למרות כפתור העוצמה המשותף.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">18</span><h3>היי־האט פתוח: כמה זמן נשאר הצלצול?</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>הפתוח נותן צלצול ארוך יותר. הוא יכול להוסיף אוויר ותנועה בין המכות. בדוגמה שלנו יש לו מקום בצעד 8.</p><p>⁧<b>גם כאן צליל הבסיס קבוע.</b> שליטה באורך משנה כמה הוא ממלא את המרווח; שינוי גובה משנה את האופי המתכתי.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>OPEN HIHAT</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>dECY</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>נגן והשווה אורך קצר לארוך בשינויים קטנים. חפש את הצלצול שמופיע אחרי ההיי־האט הסגור שבצעד 7.</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> שמעת את הזנב של המצילה משתנה, בלי להזיז את המכה.</div>
+  <details class="trouble"><summary>עוד דרך לשנות את האופי</summary><p>⁧בחר <kbd>OPEN HIHAT</kbd> ונסה שינוי קטן ב־<kbd>tUnE</kbd> בתפריט, עם רישום והחזרת הערך. אם כפתור העוצמה של ההיי־האטים חלש מאוד, שני הכלים עלולים להיות קשים לשמיעה; הכרטיס הבא מראה איך לאזן אותם בנפרד.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-19">
+ <span class="stage-tag sr-only">מעצבים תופים · עוצמה לכל כלי</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="1 SHIFT, 2 OCT+ (MENU), 3 TEMPO/VALUE, 4 ENTER, 5 EXIT. לא צריך לשנן: חזור לתרשים בכל פעם."></div>
+  <figcaption><p>⁧1 <kbd>SHIFT</kbd>, 2 <kbd>OCT+ (MENU)</kbd>, 3 <kbd>TEMPO/VALUE</kbd>, 4 <kbd>ENTER</kbd>, 5 <kbd>EXIT</kbd>. לא צריך לשנן: חזור לתרשים בכל פעם.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p><details class="diagram-reminder"><summary>תזכורת: איפה התפריט, האישור והיציאה?</summary><img src="../claude/img/l4-10.svg" width="1000" height="606" loading="lazy" alt="מפת התפריט: SHIFT, MENU, הכפתור המסתובב, ENTER ו־EXIT"><p>⁧1 <kbd>SHIFT</kbd> · 2 <kbd>MENU</kbd> · 3 הכפתור המסתובב · 4 <kbd>ENTER</kbd> · 5 <kbd>EXIT</kbd>.⁩</p></details></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">19</span><h3>שני כלים עם כפתור משותף — איך מאזנים בנפרד?</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<kbd>LEVEL</kbd> של הקלאפ והטום משותף לשניהם. גם שני ההיי־האטים חולקים <kbd>LEVEL</kbd>. לכן סיבוב כפתור כזה יכול לשנות שני צלילים ביחד.⁩</p><p>⁧בתפריט יש <kbd>GAIn</kbd> — הגברה של <b>הכלי שנבחר</b>. כך אפשר לאזן כלי אחד גם כשכפתור העוצמה הפיזי משותף. זה שינוי עוצמה, לא החלפת סוג הצליל.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧ודא שלחצן <kbd>REC</kbd> אינו דולק. לחץ על <kbd>HAND CLAP</kbd> כדי לבחור את הכלי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT+ (MENU)</kbd> ושחרר. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>GAIn</kbd>, ואז לחץ <kbd>ENTER</kbd>.⁩</div></li><li><div>רשום את הערך שמופיע. זה ערך ההתחלה של הניסוי, כדי שתוכל לחזור אליו.</div></li><li><div>נגן. הפחת מעט את הערך והקשב למחיאת הכף שבצעד 13. הטום שבצעד 12 ממשיך בעוצמה שלו.</div></li><li><div>⁧החזר לערך שרשמת. לחץ <kbd>EXIT</kbd> פעמיים כדי לחזור למסך הנגינה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> הקלאפ נחלש בנפרד מהטום. אפשר לבצע את אותו ניסוי עם אחד ההיי־האטים.</div>
+  <details class="trouble"><summary>טריק באוזניות: כלי מעט ימינה או שמאלה</summary><p>⁧ההגדרה <kbd>PAn</kbd> ממקמת כלי בין ימין לשמאל. בחר כלי, פתח אותה בתפריט ורשום את הערך. נסה שינוי קטן, ואז החזר. <kbd>C0</kbd> הוא האמצע. כשמאזינים בחיבור מונו, ההבדל בין הצדדים עשוי שלא להישמע.⁩</p></details>
+ </article>
+</section>
+
+ <header class="chapter-heading" id="bass"><span class="intro-eyebrow">פרק בשיעור</span><h2>ד · צובעים את הבס</h2><p>הבס נשאר באותו מקצב בזמן שמכירים את הכפתורים. עצור אחרי כל ניסוי קטן ותן לאוזן זמן לזהות את ההבדל.</p></header>
+
+<section class="stage lesson-step" id="intro-20">
+ <span class="stage-tag sr-only">מעצבים בס · גובה ואורך</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/bass-tone.svg" width="1000" height="606" loading="lazy" alt="1 BASS; 2 LEVEL; 3 PITCH; 4 DECAY; 5 CUTOFF; 6 RESO; 7 ENV MOD. אלה כפתורי כלי הבס, בנפרד מתוף הקיק."></div>
+  <figcaption><p>⁧1 <kbd>BASS</kbd>; 2 <kbd>LEVEL</kbd>; 3 <kbd>PITCH</kbd>; 4 <kbd>DECAY</kbd>; 5 <kbd>CUTOFF</kbd>; 6 <kbd>RESO</kbd>; 7 <kbd>ENV MOD</kbd>. אלה כפתורי כלי הבס, בנפרד מתוף הקיק.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">20</span><h3>בס: גובה התווים ואורך הצליל</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧המקצב שלנו מנגן תווי בס קצרים שחוזרים. <kbd>PITCH</kbd> משנה את גובה הבס כולו; הוא אינו בוחר מנגינה אחרת. <kbd>DECAY</kbd> משנה כמה זמן כל צליל ממשיך לדעוך.⁩</p><p>מיקום הכפתור הפיזי לא תמיד תואם לערך ששמור בתבנית. לכן הזזה ראשונה יכולה ליצור קפיצה. סובב מעט, בעוצמה נוחה, והחזר לפי האוזן.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן את תבנית התרגול. מצא את <kbd>PITCH</kbd> באזור הבס והסתכל על הסימון שלו.⁩</div></li><li><div>סובב מעט לכל צד. הקשב לתווים הנמוכים, והחזר בערך לנקודת ההתחלה לפי האוזן.</div></li><li><div>⁧עכשיו מצא את <kbd>DECAY</kbd> של הבס. זה כפתור מסתובב, בשונה מלחצן הדעיכה של הקיק.⁩</div></li><li><div>סובב מעט שמאלה, הקשב, ואז מעט ימינה. בחר אורך שבו אתה שומע מרווח בין תו לתו.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> גובה משנה כמה נמוך או גבוה הבס; אורך משנה כמה מקום התו תופס בזמן.</div>
+  <details class="trouble"><summary>אני רוצה לנגן תווים ביד</summary><p>⁧עצור וודא ש־<kbd>REC</kbd> כבוי. לחץ <kbd>KYBD</kbd>: שורת הלחצנים נעשית מקלדת בס. נסה כמה לחצני תווים והקשב. <kbd>OCT−</kbd> ו־<kbd>OCT+</kbd> מזיזים את אזור הגובה באוקטבה. סיים בלחיצה על <kbd>KYBD</kbd> כדי לחזור. כאן מנגנים להיכרות, בלי להפעיל הקלטה.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-21">
+ <span class="stage-tag sr-only">מעצבים בס · המסנן</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/bass-tone.svg" width="1000" height="606" loading="lazy" alt="1 BASS; 2 LEVEL; 3 PITCH; 4 DECAY; 5 CUTOFF; 6 RESO; 7 ENV MOD. אלה כפתורי כלי הבס, בנפרד מתוף הקיק."></div>
+  <figcaption><p>⁧1 <kbd>BASS</kbd>; 2 <kbd>LEVEL</kbd>; 3 <kbd>PITCH</kbd>; 4 <kbd>DECAY</kbd>; 5 <kbd>CUTOFF</kbd>; 6 <kbd>RESO</kbd>; 7 <kbd>ENV MOD</kbd>. אלה כפתורי כלי הבס, בנפרד מתוף הקיק.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">21</span><h3>בס: לפתוח ולסגור את הבהירות</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<kbd>CUTOFF</kbd> משנה אילו חלקים גבוהים של הצליל עוברים. אפשר לחשוב על זה כמו פתיחה וסגירה של וילון: אותו תו נשאר, אבל הצליל נעשה עמום או בהיר.⁩</p><p>⁧זהו חלק מ<b>מסנן</b> — כלי שמשנה את הצבע של הצליל. הוא אינו כפתור עוצמה, אף שהשינוי עשוי להשפיע גם על כמה חזק הבס נשמע.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן. מצא את <kbd>CUTOFF</kbd> באזור הבס, מסומן 5 בתרשים.⁩</div></li><li><div>סגור אותו לאט קצת שמאלה. הקשב לבס שנעשה עמום.</div></li><li><div>פתח מעט ימינה והקשב לצליל הבהיר שחוזר. אין צורך להגיע לקצה.</div></li><li><div>מצא נקודה שאתה אוהב והקשב לכמה חזרות בלי לשנות דבר.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> התו והקצב נשארים, אבל צבע הבס משתנה.</div>
+  <details class="trouble"><summary>הבס כמעט נעלם כשסגרתי</summary><p>⁧זה יכול לקרות כשמסננים הרבה מהצליל. פתח מעט את <kbd>CUTOFF</kbd> לפני שאתה מעלה את העוצמה. אם אתה לא שומע בס בכלל, בדוק גם את <kbd>LEVEL</kbd> של הבס ואת ההשתקה שלו.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-22">
+ <span class="stage-tag sr-only">מעצבים בס · תהודה ותנועה</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/bass-tone.svg" width="1000" height="606" loading="lazy" alt="1 BASS; 2 LEVEL; 3 PITCH; 4 DECAY; 5 CUTOFF; 6 RESO; 7 ENV MOD. אלה כפתורי כלי הבס, בנפרד מתוף הקיק."></div>
+  <figcaption><p>⁧1 <kbd>BASS</kbd>; 2 <kbd>LEVEL</kbd>; 3 <kbd>PITCH</kbd>; 4 <kbd>DECAY</kbd>; 5 <kbd>CUTOFF</kbd>; 6 <kbd>RESO</kbd>; 7 <kbd>ENV MOD</kbd>. אלה כפתורי כלי הבס, בנפרד מתוף הקיק.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">22</span><h3>בס: הצפצוף והתנועה שבתוך כל תו</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<kbd>RESO</kbd> מדגיש אזור מסוים בצבע הצליל; קוראים לזה <b>תהודה</b>. הוא יכול ליצור אופי מצפצף יותר.⁩</p><p>⁧<kbd>ENV MOD</kbd> קובע כמה הצליל נפתח ונסגר בכל תו. התנועה הזו נקראת <b>מעטפת</b>. ננסה כל כפתור בנפרד כדי לשמוע מי עושה מה.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן בעוצמה נוחה, כש־<kbd>CUTOFF</kbd> פתוח חלקית והבס נשמע.⁩</div></li><li><div>⁧סובב מעט את <kbd>RESO</kbd> ימינה, והקשב. החזר מעט אם הצליל חד מדי. ככל שמעלים תהודה, חלק מהנמוכים עשוי להיחלש — זו אינה בהכרח תקלה.⁩</div></li><li><div>⁧כעת השאר את <kbd>RESO</kbd> במקום ונסה שינוי קטן ב־<kbd>ENV MOD</kbd>. הקשב לתחילת כל תו ולשינוי שאחריה.⁩</div></li><li><div>⁧השאר את <kbd>ENV MOD</kbd> במקום, והזז מעט את <kbd>CUTOFF</kbd>. מצא שילוב שבו התנועה נשמעת נעימה וברורה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> התהודה משנה את ההדגשה בצבע; המעטפת מוסיפה תנועה שחוזרת בכל תו.</div>
+  <p>אין ערך אחד ״נכון״. המטרה היא לזהות איזה כפתור שינה מה, לפני שעושים כמה שינויים יחד.</p>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-23">
+ <span class="stage-tag sr-only">מעצבים בס · צורת גל</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/wave.svg" width="1000" height="606" loading="lazy" alt="1 PATTERN, 2 צעד 11 (A#), 3 TEMPO/VALUE, 4 EXIT. כאן משתמשים ב־PATTERN עם צעד 11."></div>
+  <figcaption><p>⁧1 <kbd>PATTERN</kbd>, 2 צעד 11 (<kbd>A#</kbd>), 3 <kbd>TEMPO/VALUE</kbd>, 4 <kbd>EXIT</kbd>. כאן משתמשים ב־<kbd>PATTERN</kbd> עם צעד 11.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">23</span><h3>בס: מחליפים את נקודת המוצא של הצליל</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>צורת גל היא הצורה הבסיסית שממנה נוצר הצליל. במכשיר יש לבס שתי אפשרויות: שן־מסור ומרובעת. התרשימים מראים את ההבדל בצורה, לא את העוצמה.</p><p>אלה שני צלילי מוצא לאותו כלי בס. אחר כך אותם כפתורי מסנן ומעטפת יכולים לעצב כל אחד מהם.</p><p>⁧<b>מזהים לפני שלוחצים:</b> בקיצור הזה מחזיקים <kbd>PATTERN</kbd>. הצירוף <kbd>SHIFT</kbd> עם צעד 11 מיועד למחיקה, ולכן הוא אינו הצירוף שלנו.⁩</p></div>
+  <div class="wave-pair"><div><b>שן־מסור</b><svg viewBox="0 0 180 55" role="img" aria-label="שרטוט רעיוני של גל שן מסור"><path d="M5 45 L45 10 L45 45 L85 10 L85 45 L125 10 L125 45 L165 10 L165 45" fill="none" stroke="#31695b" stroke-width="3"/></svg></div><div><b>גל מרובע</b><svg viewBox="0 0 180 55" role="img" aria-label="שרטוט רעיוני של גל מרובע"><path d="M5 45 L5 10 L45 10 L45 45 L85 45 L85 10 L125 10 L125 45 L165 45" fill="none" stroke="#31695b" stroke-width="3"/></svg></div></div>
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן. החזק <kbd>PATTERN</kbd>, לחץ על צעד 11 ושחרר. נפתחת הגדרת צורת הגל של הבס.⁩</div></li><li><div>⁧רשום איזו אפשרות נבחרה. <kbd>Sqr</kbd> היא המרובעת; האפשרות השנייה היא שן־מסור.⁩</div></li><li><div>⁧סובב <kbd>TEMPO/VALUE</kbd> כדי לעבור בין שתיהן. השאר את יתר הכפתורים במקום והקשב לכמה תווים מכל סוג.⁩</div></li><li><div>⁧החזר לאפשרות שרשמת ולחץ <kbd>EXIT</kbd>. אם המסך עדיין מציג רשימת תפריט, לחץ <kbd>EXIT</kbd> שוב.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> אותם תווים נשמעים עם בסיס צליל אחר. כאן זו החלפת צורת גל, ולא רק שינוי גובה.</div>
+  <details class="trouble"><summary>ההבדל בין הגלים קטן</summary><p>⁧מסנן סגור מאוד יכול להסתיר את ההבדל. צא מההגדרה, פתח מעט <kbd>CUTOFF</kbd> וחזור להשוואה. אל תעלה את כל הכפתורים יחד.⁩</p></details>
+ </article>
+</section>
+
+ <header class="chapter-heading" id="effects"><span class="intro-eyebrow">פרק בשיעור</span><h2>ה · מוסיפים מרחב לצליל</h2><p>כבר יש לך מקצב וצלילים. עכשיו מוסיפים מעט הד או הדהוד, ומקשיבים למה שנשאר בין המכות.</p></header>
+
+<section class="stage lesson-step" id="intro-24">
+ <span class="stage-tag sr-only">מוסיפים מרחב · הד</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/send.svg" width="1000" height="606" loading="lazy" alt="1 SHIFT; 2 הלחצן של DELAY; 3 הלחצן של REVERB; 4 TEMPO/VALUE; 5 EXIT; 6 בוחר בס; 7 בוחר קלאפ. בתרשים השני: 1 כמות ההד, 2 כמות ההדהוד."></div>
+<img src="../claude/img/l4-08.svg" width="1000" height="606" loading="lazy" alt="כפתורי האפקטים: 1 DELAY לכמות ההד; 2 REVERB לכמות ההדהוד; 3 ACCENT">
+  <figcaption><p>⁧1 <kbd>SHIFT</kbd>; 2 הלחצן של <kbd>DELAY</kbd>; 3 הלחצן של <kbd>REVERB</kbd>; 4 <kbd>TEMPO/VALUE</kbd>; 5 <kbd>EXIT</kbd>; 6 בוחר בס; 7 בוחר קלאפ. בתרשים השני: 1 כמות ההד, 2 כמות ההדהוד.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">24</span><h3>הד: הצליל עונה לעצמו</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>הד</b> הוא חזרה על הצליל אחרי רגע. כדי לשמוע אותו צריך גם לשלוח אליו צליל של כלי, וגם לפתוח את כמות ההד הכללית.⁩</p><p>ננסה הד על הבס בלבד, בלי לשנות את השליחה של יתר הכלים. אם כבר יש להם הד, הוא יכול להישאר ברקע.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן. סובב בעדינות את <kbd>DELAY</kbd> הכללי לכמות נמוכה, והסתכל על מיקומו.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ על הלחצן שמתחת ל־<kbd>DELAY</kbd> בשורה התחתונה — צעד 13 — ושחרר. מופיע <kbd>d.Snd</kbd>.⁩</div></li><li><div>⁧לחץ <kbd>BASS</kbd>. רשום את ערך השליחה שלו, והעלה מעט עם <kbd>TEMPO/VALUE</kbd>; אם הוא אפס, אפשר לנסות 30 כנקודת התחלה לתרגיל.⁩</div></li><li><div>⁧לחץ <kbd>EXIT</kbd>. העלה מעט את כפתור <kbd>DELAY</kbd> הכללי עד שאתה מבחין בחזרות. שינוי גדול עלול למלא את המרווחים מהר.⁩</div></li><li><div>⁧לסיום ההשוואה: הנמך את <kbd>DELAY</kbd>, חזור להגדרת השליחה של הבס, החזר לערך שרשמת וצא עם <kbd>EXIT</kbd>.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> תו הבס מקבל חזרות אחריו; הזמנים שבהם מנוגנים תווי המקור נשארים.</div>
+  <details class="trouble"><summary>טריק: לשנות את המרווח בין החזרות</summary><p>⁧החזק <kbd>SHIFT</kbd> וסובב מעט את כפתור <kbd>DELAY</kbd> העליון. הוא משנה כעת את זמן ההד. כשסנכרון ההד לקצב פעיל, הבחירות הן חלוקות קצביות. רשום את הבחירה שמופיעה לפני שינוי והחזר אליה אחרי ההשוואה.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-25">
+ <span class="stage-tag sr-only">מוסיפים מרחב · הדהוד</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/send.svg" width="1000" height="606" loading="lazy" alt="1 SHIFT; 2 הלחצן של DELAY; 3 הלחצן של REVERB; 4 TEMPO/VALUE; 5 EXIT; 6 בוחר בס; 7 בוחר קלאפ. בתרשים השני: 2 הוא כפתור REVERB העליון."></div>
+<img src="../claude/img/l4-08.svg" width="1000" height="606" loading="lazy" alt="כפתורי האפקטים: 1 DELAY לכמות ההד; 2 REVERB לכמות ההדהוד; 3 ACCENT">
+  <figcaption><p>⁧1 <kbd>SHIFT</kbd>; 2 הלחצן של <kbd>DELAY</kbd>; 3 הלחצן של <kbd>REVERB</kbd>; 4 <kbd>TEMPO/VALUE</kbd>; 5 <kbd>EXIT</kbd>; 6 בוחר בס; 7 בוחר קלאפ. בתרשים השני: 2 הוא כפתור <kbd>REVERB</kbd> העליון.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">25</span><h3>הדהוד: קטן וקרוב או בתוך חלל</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>הדהוד</b> מדמה את התחושה שהצליל מתפזר בחלל. הוא נוטה ליצור זנב מפוזר, לעומת החזרות הנפרדות של ההד.⁩</p><p>ננסה מעט הדהוד על הקלאפ. גם כאן יש שליחה של כלי וכמות כללית. יותר אינו בהכרח נעים יותר; נסה מעט כדי שהמקצב יישאר ברור.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן וסובב את <kbd>REVERB</kbd> העליון לכמות נמוכה.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>OCT− (REVERB)</kbd> — צעד 14 — ושחרר. מופיע <kbd>r.Snd</kbd>.⁩</div></li><li><div>⁧לחץ <kbd>HAND CLAP</kbd>, רשום את הערך, והעלה מעט את השליחה עם <kbd>TEMPO/VALUE</kbd>. לחץ <kbd>EXIT</kbd>.⁩</div></li><li><div>⁧פתח בעדינות את <kbd>REVERB</kbd> העליון. הקשב למה שנשאר אחרי מחיאת הכף.⁩</div></li><li><div>בסוף הנמך את כמות ההדהוד, החזר את ערך שליחת הקלאפ שרשמת וצא. אם אהבת מעט הדהוד, אפשר לבחור בו במודע לקראת הג׳אם.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> מחיאת הכף מרגישה פחות יבשה, אבל עדיין אפשר לזהות את המכה עצמה.</div>
+  <details class="trouble"><summary>טריק: חלל עם זנב ארוך יותר</summary><p>⁧החזק <kbd>SHIFT</kbd> וסובב מעט את כפתור <kbd>REVERB</kbd> העליון. הפעולה משנה את זמן ההדהוד. הסתכל על הערך לפני השינוי, השווה והחזר. כדאי להתחיל בכמות הדהוד קטנה, כדי לשמוע בבירור את ההבדל בזמן.⁩</p></details>
+ </article>
+</section>
+
+ <header class="chapter-heading" id="tricks"><span class="intro-eyebrow">פרק בשיעור</span><h2>ו · טריקים שאפשר לשמוע מיד</h2><p>כל תרגיל כאן הוא משחק קטן בפני עצמו. נסה אחד, החזר את המצב, ורק אז עבור לבא. אפשר לדלג ולחזור לפי החשק.</p></header>
+
+<section class="stage lesson-step" id="intro-26">
+ <span class="stage-tag sr-only">משחקים · השתקה והחזרה</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/mute.svg" width="1000" height="606" loading="lazy" alt="1 SHIFT; 2 הקיק; 3 הבס; 4 הקלאפ. הצירוף הוא החזקת 1 ולחיצה על הכלי שרוצים להשתיק או להחזיר."></div>
+  <figcaption><p>⁧1 <kbd>SHIFT</kbd>; 2 הקיק; 3 הבס; 4 הקלאפ. הצירוף הוא החזקת 1 ולחיצה על הכלי שרוצים להשתיק או להחזיר.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">26</span><h3>להוציא כלי — ולהרגיש מה הוא נותן</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>השתקה</b> מפסיקה זמנית להשמיע כלי, בלי למחוק את המכות שלו. כשהוא חוזר, הוא ממשיך את אותו המקצב.⁩</p><p>זו דרך טובה לזהות מה כל כלי מוסיף. אפשר גם לבנות רגע של ציפייה: המוזיקה ממשיכה, אבל חסר לה משהו עד שמחזירים אותו.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן את תבנית התרגול, כשכל הכלים נשמעים ו־<kbd>REC</kbd> כבוי.⁩</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>BASS DRUM</kbd> ושחרר. הקיק משתתק; שאר המוזיקה ממשיכה.⁩</div></li><li><div>הקשב לסיבוב אחד. חזור על אותו צירוף כדי להחזיר את הקיק.</div></li><li><div>⁧נסה פעם אחת עם <kbd>BASS</kbd> במקום הקיק, ואז החזר גם אותו.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> שמעת מה נעלם בכל פעם, ואת תחושת החזרה של הכלי.</div>
+  <p>השתקה מתבטלת בכיבוי המכשיר. היא אינה מחיקה של התבנית. כפתור העוצמה והשתקה הם שני דברים נפרדים.</p>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-27">
+ <span class="stage-tag sr-only">משחקים · חזרות מהירות</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/roll.svg" width="1000" height="606" loading="lazy" alt="1 בוחר היי־האט סגור, 2 הוא צעד 15, 3 משנה ערכים, 4 התצוגה. בתרגיל הזה מחזיקים את לחצן הכלי ולוחצים על הצעד."></div>
+  <figcaption><p>1 בוחר היי־האט סגור, 2 הוא צעד 15, 3 משנה ערכים, 4 התצוגה. בתרגיל הזה מחזיקים את לחצן הכלי ולוחצים על הצעד.</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">27</span><h3>מכה כפולה במקום מכה אחת</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>אפשר לחלק צעד לכמה מכות קטנות. הוא עדיין תופס את אותו מקום בזמן, אבל בפנים שומעים חזרה מהירה. זו דרך פשוטה להוסיף קישוט.</p><p>⁧ננסה רק בסוף הסיבוב, בצעד 15 שבו כבר יש היי־האט סגור. <kbd>1_2</kbd> פירושו שתי מכות בתוך הצעד.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧נגן. החזק <kbd>CLOSED HIHAT</kbd> ולחץ פעם אחת על צעד 15. הסתכל על ההגדרה שמופיעה ורשום אותה.⁩</div></li><li><div>⁧השאר את <kbd>CLOSED HIHAT</kbd> לחוץ ולחץ שוב על צעד 15 עד שמופיע <kbd>1_2</kbd>. אז שחרר.⁩</div></li><li><div>הקשב לסוף הסיבוב. אותה משבצת נשמעת כעת עם מכה כפולה.</div></li><li><div>⁧כדי לחזור: החזק שוב את לחצן הכלי ולחץ על צעד 15 כדי לראות את המצב. המשך ללחוץ על הצעד כשהכלי מוחזק עד שמגיע הערך המקורי. <kbd>OFF</kbd> מבטל חלוקה.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> תוספת קצרה ומהירה בסוף הסיבוב, בלי לשנות את מהירות המקצב.</div>
+  <details class="trouble"><summary>רוצה לשמוע אפשרויות נוספות?</summary><p>⁧באותה דרך אפשר להשוות <kbd>1_3</kbd> ו־<kbd>1_4</kbd>. תן לכל בחירה כמה סיבובים לפני הבאה, ואז חזור למצב ההתחלה. שאר המקצב נשאר בסיס להשוואה.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-28">
+ <span class="stage-tag sr-only">משחקים · הסתברות</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/roll.svg" width="1000" height="606" loading="lazy" alt="1 בוחר היי־האט סגור; 2 צעד 15; 3 TEMPO/VALUE. הפעם מחזיקים את הצעד עצמו, ולא את לחצן הכלי."></div>
+  <figcaption><p>⁧1 בוחר היי־האט סגור; 2 צעד 15; 3 <kbd>TEMPO/VALUE</kbd>. הפעם מחזיקים את הצעד עצמו, ולא את לחצן הכלי.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">28</span><h3>מכה שמופיעה רק לפעמים</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>הסתברות</b> קובעת מה הסיכוי שמכה תנוגן כשהתור שלה מגיע. כך המקצב יכול להפתיע מעט, למרות שאותה תבנית חוזרת.⁩</p><p>⁧<kbd>P.100</kbd> אומר שהמכה אמורה להתנגן בכל פעם לפי הגדרת הצעד; <kbd>P.50</kbd> נותן לה סיכוי של חצי. זה לא אומר פעם כן ופעם לא: ההחלטה אקראית.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧לחץ <kbd>CLOSED HIHAT</kbd> כדי לבחור את הכלי. נגן.⁩</div></li><li><div>⁧החזק את צעד 15. כשהערך שמתחיל ב־<kbd>P.</kbd> מופיע, רשום אותו.⁩</div></li><li><div>⁧תוך כדי החזקת הצעד, סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>P.50</kbd> ושחרר.⁩</div></li><li><div>הקשב לכמה סיבובים. בסוף החזק שוב את הצעד והחזר לערך שרשמת.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> הקישוט מופיע בחלק מהחזרות. ייתכן שיופיע או ייעדר כמה פעמים ברצף, וזה תקין.</div>
+  <p>התרגיל נוגע למכה אחת. כדי לשמור בסיס יציב בזמן הלימוד, השאר את הקיק כפי שהוא.</p>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-29">
+ <span class="stage-tag sr-only">משחקים · גלישה</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/bass-steps.svg" width="1000" height="606" loading="lazy" alt="1 BASS; 2 KYBD; 3 TEMPO/VALUE; 4 ACCENT. בתרגיל נשארים בעריכת צעדים, עם KYBD ו־REC כבויים."></div>
+  <figcaption><p>⁧1 <kbd>BASS</kbd>; 2 <kbd>KYBD</kbd>; 3 <kbd>TEMPO/VALUE</kbd>; 4 <kbd>ACCENT</kbd>. בתרגיל נשארים בעריכת צעדים, עם <kbd>KYBD</kbd> ו־<kbd>REC</kbd> כבויים.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">29</span><h3>הבס מחליק מתו לתו</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧<b>גלישה</b> מחברת מעבר בין שני גבהים של בס. כדי לשמוע אותה בבירור צריך שני תווים שונים סמוכים.⁩</p><p>⁧נוסיף לצורך הניסוי תו בצעד 2, ליד התו שבצעד 1. <kbd>C2</kbd> ו־<kbd>G2</kbd> הם שני גבהים שונים. ההוספה נעשית רק בתבנית התרגול שלנו, שבה צעד 2 עדיין ריק.⁩</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>⁧עצור ובחר <kbd>BASS</kbd>. אם צעד 2 ריק, לחץ עליו פעם אחת כדי להוסיף תו. אם כבר יש בו תו משלך, דלג על הניסוי כדי לא לשנות אותו.⁩</div></li><li><div>⁧החזק את צעד 2. סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>n.G2</kbd> ושחרר. צעד 1 נשאר <kbd>C2</kbd>.⁩</div></li><li><div>⁧החזק את צעד 1. לחץ <kbd>ACCENT</kbd> פעם אחת כדי לראות הדגשה, ופעם נוספת כדי לראות גלישה. המסך מציג <kbd>S.OFF</kbd> או <kbd>S.On</kbd>. רשום את המצב.⁩</div></li><li><div>⁧כשצעד 1 עדיין מוחזק, סובב <kbd>TEMPO/VALUE</kbd> אל <kbd>S.On</kbd> ושחרר. נגן והקשב למעבר בתחילת הסיבוב.⁩</div></li><li><div>⁧בסיום עצור. החזר את הגלישה של צעד 1 למצב שרשמת באותה דרך. בחר <kbd>BASS</kbd> ולחץ על צעד 2 הדולק כדי להסיר את התו שהוספת לניסוי.⁩</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> התנועה בתחילת הסיבוב מרגישה מחוברת יותר. אפשר להשוות עם גלישה כבויה ופעילה.</div>
+  <details class="trouble"><summary>לא שמעתי הבדל ברור</summary><p>⁧בדוק שבתצוגה של צעד 2 אכן מופיע <kbd>n.G2</kbd>, ושצעד 1 מוגדר לגלישה פעילה. פתח מעט <kbd>CUTOFF</kbd> והקשב רק לבס. אין צורך להוסיף עוד תווים כדי לבדוק.⁩</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-30">
+ <span class="stage-tag sr-only">משחקים · מחברים את מה שלמדנו</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/bass-tone.svg" width="1000" height="606" loading="lazy" alt="5 הוא CUTOFF לבהירות הבס. לצירוף ההשתקה משתמשים ב־SHIFT ובלחצן הכלי, כפי שניסינו בכרטיס 26."></div>
+  <figcaption><p>⁧5 הוא <kbd>CUTOFF</kbd> לבהירות הבס. לצירוף ההשתקה משתמשים ב־<kbd>SHIFT</kbd> ובלחצן הכלי, כפי שניסינו בכרטיס 26.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">30</span><h3>ג׳אם קטן: לשנות מעט ולתת לזה לעבוד</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>עכשיו כבר יש לך הרבה אפשרויות. דווקא שינוי אחד בכל פעם עוזר להרגיש מה המוזיקה צריכה.</p><p>אפשר ליצור שלושה רגעים: בסיס, שינוי, חזרה. אין צורך למהר או לזכור סדר ארוך.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>נגן כמה סיבובים בלי לגעת. מצא את תחילת הסיבוב באוזן.</div></li><li><div>⁧השתק את הקיק לסיבוב אחד עם <kbd>SHIFT</kbd> ו־<kbd>BASS DRUM</kbd>. באותה דרך החזר אותו.⁩</div></li><li><div>⁧פתח מעט את <kbd>CUTOFF</kbd> של הבס לאורך סיבוב, ואז סגור מעט. תן למוזיקה להישאר כך לפני שינוי נוסף.⁩</div></li><li><div>הוסף רק קישוט אחד שאהבת: מכה כפולה, מעט הד או החלפת הקלאפ. אחר כך חזור לבסיס.</div></li><li><div>עצור עם המשולש. בחר שינוי אחד שהיית רוצה לשמור, והמשך לפרק השמירה.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> אתה יודע להסביר במילים פשוטות מה עשית ולזהות את ההשפעה שלו באוזן.</div>
+  <p>אם הכול נעשה עמוס, הפחת קודם את ההד וההדהוד, והחזר רק כלי אחד בכל פעם. גם להשאיר מרווח הוא בחירה מוזיקלית.</p>
+ </article>
+</section>
+
+ <header class="chapter-heading" id="finish"><span class="intro-eyebrow">פרק בשיעור</span><h2>ז · שומרים ויודעים לחזור</h2><p>לפני כיבוי המכשיר, מחליטים אם לשמור את התבנית. אין חובה לסיים את כל השיעור בישיבה אחת.</p></header>
+
+<section class="stage lesson-step" id="intro-31">
+ <span class="stage-tag sr-only">שומרים וחוזרים · שמירה</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="img/save.svg" width="1000" height="606" loading="lazy" alt="1 SHIFT, 2 SLIDE (WRITE), 3 TEMPO/VALUE, 4 ENTER, 5 EXIT. השמירה נעשית במכשיר, לא באייפד."></div>
+  <figcaption><p>⁧1 <kbd>SHIFT</kbd>, 2 <kbd>SLIDE (WRITE)</kbd>, 3 <kbd>TEMPO/VALUE</kbd>, 4 <kbd>ENTER</kbd>, 5 <kbd>EXIT</kbd>. השמירה נעשית במכשיר, לא באייפד.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">31</span><h3>שומרים את מה שבנית — במודע</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>⁧עד עכשיו שינינו את מה שמתנגן. <b>שמירה</b> כותבת את התבנית כדי שתישאר גם אחרי כיבוי. בחירה ב־<kbd>Ptn</kbd> שומרת את התבנית הנוכחית; <kbd>ALL</kbd> שומרת את כולן.⁩</p><p>בתרגיל שומרים רק במקום שהיה ריק ובו בנית את המקצב. השמירה מחליפה את הגרסה השמורה של המקום הנוכחי, ולכן קודם בודקים שזה המקום שהתכוונת אליו.</p><p>אפשר להגיע לכרטיס הזה גם באמצע השיעור, לפני הפסקה. מקום הקריאה באתר נשמר בנפרד ואינו שומר צלילים במכשיר.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>עצור את הנגינה. ודא שאתה עדיין במקום התרגול שרשמת בכרטיס 7. אם עברת לתבנית אחרת או שאינך בטוח, אל תשמור עד שתזהה אותה.</div></li><li><div>⁧החזק <kbd>SHIFT</kbd>, לחץ <kbd>SLIDE (WRITE)</kbd> ושחרר.⁩</div></li><li><div>⁧סובב <kbd>TEMPO/VALUE</kbd> עד <kbd>Ptn</kbd>. זו בחירת השמירה של התבנית הנוכחית.⁩</div></li><li><div>⁧אם זו התבנית שאתה רוצה לשמור, לחץ <kbd>ENTER</kbd>. אם התחרטת לפני האישור, לחץ <kbd>EXIT</kbd>.⁩</div></li><li><div>רשום לעצמך את הבנק ומספר התבנית, וגם שינוי צליל שאהבת. כך תדע מה לפתוח בפעם הבאה.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> ביצעת שמירה של התבנית שהתכוונת אליה, ויש לך את הכתובת שלה לחזרה.</div>
+  <details class="trouble"><summary>מה קורה אם מכבים בלי לשמור?</summary><p>שינויים בתבניות שלא נשמרו חוזרים למצב השמור האחרון אחרי כיבוי. הקצב הוא הגדרה כללית שנשמרת במכשיר, והשתקות זמניות מתבטלות בכיבוי. לכן אין להניח שכיבוי מחזיר כל דבר בדיוק למצב שבו התחלת.</p></details>
+ </article>
+</section>
+
+<section class="stage lesson-step" id="intro-32">
+ <span class="stage-tag sr-only">שומרים וחוזרים · חזרה ועזרה</span>
+ <figure class="photo intro-figure">
+  <div class="imgs"><img src="../claude/img/l4-01.svg" width="1000" height="606" loading="lazy" alt="1 נורית הטעינה; 2 MIX OUT לאוזניות; 3 VOLUME לעוצמה הכללית. אם כל המכשיר שקט, מתחילים מכאן."></div>
+  <figcaption><p>⁧1 נורית הטעינה; 2 <kbd>MIX OUT</kbd> לאוזניות; 3 <kbd>VOLUME</kbd> לעוצמה הכללית. אם כל המכשיר שקט, מתחילים מכאן.⁩</p><p class="image-tip">תרשים עזר: האזורים המודגשים הם של הצעד הזה. גע באיור להגדלה.</p></figcaption>
+ </figure>
+ <article class="card intro-card">
+  <div class="card-head"><span class="num">32</span><h3>חוזרים בנחת: מפת עזרה קצרה</h3></div>
+  <div class="concept"><h4>קודם מבינים</h4><p>אתה לא צריך לזכור את כל התפריטים. מספיק לדעת איזה דבר אתה מנסה לשנות, ואז למצוא את הכרטיס המתאים.</p><p>בפעם הבאה אפשר להתחיל מהמקצב ששמרת ולבחור כלי אחד בלבד. הכפתור ״מכאן״ בכרטיס מתחיל את מצב הלימוד מאותו מקום.</p></div>
+
+  <h4 class="step-label">עכשיו מנסים, פעולה אחת בכל פעם</h4>
+  <ol class="steps"><li><div>פתח את הפרק שמעניין אותך דרך ״לפרקים״ בראש העמוד.</div></li><li><div>לפני ניסיון, קרא את ״קודם מבינים״ ומצא את הכפתור בתמונה.</div></li><li><div>נסה שינוי אחד. אמור לעצמך מה השתנה: עוצמה, גובה, אורך, צבע או סוג הצליל.</div></li><li><div>אם נעים לך — המשך. אם לא ברור מה קרה — חזור לערך שרשמת וקרא את העזרה של אותו כרטיס.</div></li></ol>
+  <div class="ok"><b>מה מחפשים באוזן או בעין:</b> אתה יכול לבחור מה לחקור, בלי להזיז כמה כפתורים באקראי.</div>
+  <details class="trouble"><summary>כל המכשיר שקט</summary><p>⁧בדוק שהמסך דולק, שהאוזניות ב־<kbd>MIX OUT</kbd>, וש־<kbd>VOLUME</kbd> אינו סגור. בדוק שהמשולש מפעיל נגינה ושיש מכות בתבנית. אם נבחר מקום ריק, שתיקה היא מצב צפוי עד שמכניסים אליו מכות ותווים.⁩</p></details><details class="trouble"><summary>רק כלי אחד שקט</summary><p>⁧בדוק שיש לו מכות או תווים בצעדים, שכפתור <kbd>LEVEL</kbd> הרלוונטי אינו נמוך מדי ושהוא אינו מושתק. לבס בדוק גם <kbd>CUTOFF</kbd>. אם המכות מופיעות רק לפעמים, חזור לכרטיס ההסתברות. בכל פעם בדוק גורם אחד.⁩</p></details><details class="trouble"><summary>הלחצנים התחתונים לא עושים את מה שציפיתי</summary><p>⁧בדוק את המצב לפני לחיצה: עם <kbd>PATTERN</kbd> הם בוחרים תבניות; עם <kbd>KYBD</kbd> הם מקלדת בס; אחרי בחירת כלי הם צעדי המקצב; בתוך תפריט <kbd>ENTER</kbd> ו־<kbd>EXIT</kbd> מאשרים ויוצאים. צא מהתפריט ובחר את הכלי לפני המשך עריכת צעדים.⁩</p></details><details class="trouble"><summary>איך מחזירים תבנית למצב השמור?</summary><p>⁧רק אם החלטת לוותר על כל השינויים שלא שמרת בתבנית הנוכחית: עצור, פתח <kbd>SHIFT</kbd> עם <kbd>OCT+ (MENU)</kbd>, בחר <kbd>rLod</kbd> ולחץ <kbd>ENTER</kbd>. הפעולה מחזירה את התבנית למצב השמור האחרון. אל תשתמש בה כדי לחפש צליל חסר; קודם בדוק את הסעיפים מעל.⁩</p></details>
+ </article>
+</section>
+
  <aside class="intro-end">
-  <span class="intro-eyebrow">כאן מסתיים הקטע הראשון</span>
-  <h2>כבר יש לך בסיס להבין את ההמשך.</h2>
-  <p>הכרת את חלקי המכשיר, הבנת תבנית חוזרת והפרדת בין שלושה דברים: עוצמה, עיצוב של צליל קיים והחלפת צליל הבסיס.</p>
-  <p>ההמשך יעסוק בתופים ובבס, צליל אחרי צליל, עם הסבר לפני כל ניסוי. כרגע מוצגת רק הדוגמה הזו לבדיקת נוחות הלימוד.</p>
+  <h2>עכשיו אפשר לנגן מתוך הבנה.</h2>
+  <p>בחר כלי אחד וניסוי אחד שאהבת. חזור אליהם עד שאתה מזהה באוזן מה משתנה, ורק אז צרף עוד שינוי.</p>
+  <p>אין צורך לזכור את כל השמות. מפת הכלים, הפרקים והאיורים נשארים כאן בשביל החזרה הבאה.</p>
+  <a href="#chapters">חזרה לפרקי השיעור</a>
  </aside>
  <footer class="intro-sources">
   <p>⁧האיורים ומידע ההפעלה מבוססים על מדריך הבעלים הרשמי של <kbd>Roland T-8</kbd>, גרסה 1.02:
@@ -304,7 +781,8 @@ figure.photo.intro-figure{margin:0;padding:18px;border-radius:18px;display:flex;
    <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312309.html" target="_blank" rel="noopener">גב המכשיר</a> ·
    <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312254.html" target="_blank" rel="noopener">תבניות ונגינה</a>. האיורים הרשמיים שייכים לרולנד; תרשימי העזר הם מהשיעור הקיים.⁩</p>
   <p>⁧על החלפת צלילים: <a href="https://support.roland.com/hc/en-us/articles/6145882578715-T-8-Can-I-change-the-sound-for-each-part" target="_blank" rel="noopener">טבלת הצלילים הרשמית</a> · <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312322.html" target="_blank" rel="noopener">התפריט והאפשרויות</a>.⁩</p>
-  <p>זה קטע הפתיחה של קודקס, לבדיקת נוחות הלימוד. <a href="../claude/lesson-4.html">לשיעור ההיכרות הקיים</a></p>
+  <p>הרחבות מהמדריך הרשמי: <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312384.html" target="_blank" rel="noopener">צעדי תופים ומשחקי קצב</a> · <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312362.html" target="_blank" rel="noopener">תווי בס וגלישות</a> · <a href="https://static.roland.com/manuals/T-8_manual_v102/eng/28312336.html" target="_blank" rel="noopener">הד והדהוד</a> · <a href="https://support.roland.com/hc/en-us/articles/5836921702811-T-8-Volume-appears-to-decrease-when-increasing-the-RESO-knob-value" target="_blank" rel="noopener">תהודה והנמוכים של הבס</a>.</p>
+  <p>זה שיעור ההיכרות המלא של קודקס, שנבנה ללימוד הדרגתי על המכשיר. <a href="../claude/lesson-4.html">לשיעור ההיכרות הקיים</a></p>
  </footer>
 </main>
 <script src="../claude/app.js"></script>

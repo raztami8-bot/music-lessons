@@ -1,3 +1,13 @@
+## 2026-10-19 — Full Codex beginner lesson approved
+
+- Raz approved expanding the reviewed excerpt into the full iPad lesson at the existing Codex URL, keeping explanation and diagrams before actions. Publication is within that approved continuation.
+- The lesson now has chapters for orientation, a deliberately empty practice pattern, all drum parts, bass shaping, effects, playful experiments and saving/help. The first five cards and practice namespace remain stable; card 6 is the sound-selection map, with the hands-on clap replacement moved into the drum chapter.
+- Every exercise names the mode, control, audible outcome and restoration path. Physical knob positions are not claimed to restore saved values. Drum tuning/decay uses explicit menu items, avoiding assumptions about the current DECAY button mode. Shared LEVEL and independent GAIn are taught separately.
+- Source content: shell plus six HTML fragments in `codex/src/`; diagram spec `figures.json`; task map and review checklist in `codex/PROJECT.md`. The existing Claude renderer is imported without running its build and writes only into a temporary Codex staging directory. No dependency or neighboring model files changed.
+- Musical values (90 tempo, send 30 and the illustrated beat) are proposed exercises, not measurements of Raz's device. All hardware operations were checked against the official v1.02 pattern, rhythm, bass, menu, panel and effects instructions; replacement choices were cross-checked with Roland's support table. Sources are linked in the lesson.
+- Save is explicitly Ptn for the previously empty practice slot. No factory reset or blanket clear is taught. Waveform shortcut names PATTERN explicitly because SHIFT with that same step would clear a pattern. Reload help explicitly says it discards unsaved changes.
+- Validation and public browser verification: in progress.
+
 ## 2026-10-19 — Codex T-8 introduction, first excerpt
 
 - Raz requested a separate Codex entry in the same public site as Claude and Grok. Publish the prepared first excerpt under `codex/`, with a home-page card and author filter. Full-lesson expansion still awaits feedback.
