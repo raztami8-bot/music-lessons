@@ -212,6 +212,15 @@ p{margin:0}
 .sheet-in{max-width:560px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:calc(14px + env(safe-area-inset-top,0px)) 0}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sheet-head b{font-family:var(--font-display);font-weight:600;font-size:1.3rem;line-height:1.25;text-wrap:balance}
+.when{display:flex;flex-direction:column;gap:8px}
+.when-l{font-weight:700}
+.chip.when-c{gap:6px}
+.chip.when-c::before{display:none}
+.chip.when-c small{color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
+.chip.when-c[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:var(--surface)}
+.chip.when-c[aria-pressed="true"] small{color:var(--surface);opacity:.85}
+#edTime{align-self:flex-start;height:44px;min-width:9em;padding:0 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 1.1rem var(--font-body);font-variant-numeric:tabular-nums}
+.tn b small{font-weight:400;color:var(--muted);font-variant-numeric:tabular-nums;margin-inline-start:6px}
 .x{flex:0 0 auto;width:44px;height:44px;border:0;border-radius:12px;background:var(--surface);color:var(--muted);display:grid;place-items:center;box-shadow:var(--shadow)}
 html.sheet-open,html.sheet-open body{overflow:hidden}
 #edText{width:100%;min-height:84px;resize:none;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:500 1.05rem/1.4 var(--font-body);padding:10px 12px}
@@ -252,7 +261,7 @@ nav.tabs svg{width:26px;height:26px}
 <body>
 <div class="app">
   <header class="hello">
-    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 5</span></div>
+    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 6</span></div>
     <span class="status" id="status">המטבח פתוח</span>
     <div class="meals" role="group" aria-label="ארוחות היום">
       <button class="meal" id="m0" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>בוקר</button>
@@ -338,6 +347,7 @@ nav.tabs svg{width:26px;height:26px}
 <div class="sheet" id="ed" hidden role="dialog" aria-modal="true" aria-labelledby="edTitle">
   <div class="sheet-in">
     <div class="sheet-head"><b id="edTitle">מה אכלת?</b><button type="button" class="x" id="edX" aria-label="סגירה"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
+    <div class="when"><span class="when-l" id="edWhenL">מתי אכלת?</span><div class="chips" id="edWhen"></div><input type="time" id="edTime" aria-label="שעת הארוחה" hidden></div>
     <textarea id="edText" rows="3" enterkeyhint="done" placeholder="למשל: מרק דלעת עם אורז ועוף" aria-label="מה אכלת"></textarea>
     <div id="edOut" aria-live="polite"></div>
     <div class="ed-actions"><button type="button" class="btn" id="edSave">שמירה</button><button type="button" class="btn ghost" id="edSkip">לא עכשיו</button></div>
@@ -771,7 +781,8 @@ function noteLine(k,i){
   if(!n)return '<button class="add" data-edit="'+k+':'+i+'">+ מה אכלת '+MEALS_B[i]+'?</button>';
   const j=checkNote(k,i), names=j?j.foods.map(f=>f.name):[];
   const txt=names.length?names.slice(0,4).join(', ')+(names.length>4?' ועוד '+(names.length-4):''):n.t;
-  return '<button class="tn" data-edit="'+k+':'+i+'"><b>'+MEALS[i]+'</b><span class="tn-s">'+esc(txt)+'</span>'+(j?'<i class="vp v-'+j.v+'">'+VL[j.v]+'</i>':'<i></i>')+'</button>';
+  const tm=dayOf(k)[i];
+  return '<button class="tn" data-edit="'+k+':'+i+'"><b>'+MEALS[i]+(tm&&tm!=='?'?'<small>'+tm+'</small>':'')+'</b><span class="tn-s">'+esc(txt)+'</span>'+(j?'<i class="vp v-'+j.v+'">'+VL[j.v]+'</i>':'<i></i>')+'</button>';
 }
 function notesFor(k){
   const v=dayOf(k), lines=[], adds=[];
@@ -790,9 +801,12 @@ function openEditor(k,i,src){
   if(edit&&(edit.k!==k||edit.i!==i)&&edText.value.trim())commitEditor();
   const n=noteOf(k,i), d=new Date(k+'T12:00');
   edit={k,i,src,choices:Object.assign({},(n&&n.c)||{})};
+  const cur=dayOf(k)[i], now=new Date();
+  // just marked a moment ago = "now"; any other known time = its own time; unknown = pick one
+  edit.when=(k===dkey(now)&&cur&&cur!=='?'&&Math.abs(mins(hhmm(now))-mins(cur))<=2)?0:'other';
   edText.value=n?n.t:'';
   document.getElementById('edTitle').textContent='מה אכלת בארוחת '+MEALS[i]+(k===dkey(new Date())?'':', יום '+DAYN[d.getDay()]+' '+d.getDate()+'.'+(d.getMonth()+1))+'?';
-  renderEdOut();
+  renderWhen(); renderEdOut();
   if(ed.hidden){lastY=window.scrollY;ed.hidden=false;root.classList.add('sheet-open')}
   ed.scrollTop=0;
   if(!n)edText.focus(); // new entry: keyboard straight away
@@ -834,6 +848,37 @@ edText.addEventListener('input',renderEdOut);
 // "סיום" on the keyboard only closes the keyboard, so the result is seen before saving
 edText.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();edText.blur()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&edit){closeEditor();afterEdit()}});
+/* ---------- when did I eat: the meal time is the eating time, not the tap time ---------- */
+const AGO=[[0,'עכשיו'],[30,'לפני חצי שעה'],[60,'לפני שעה'],[120,'לפני שעתיים']];
+const mins=t=>{const m=/^(\d\d):(\d\d)$/.exec(t||'');return m?(+m[1])*60+(+m[2]):-1};
+const edWhen=document.getElementById('edWhen'), edTime=document.getElementById('edTime');
+function renderWhen(){
+  if(!edit)return;
+  const cur=dayOf(edit.k)[edit.i], now=new Date(), today=edit.k===dkey(now); let h='';
+  if(today)AGO.forEach(([m,l])=>{
+    const d=new Date(now.getTime()-m*60000); if(dkey(d)!==edit.k)return; // not before midnight
+    h+='<button type="button" class="chip when-c" data-ago="'+m+'" aria-pressed="'+(edit.when===m)+'">'+l+(m?'<small>'+hhmm(d)+'</small>':'')+'</button>';
+  });
+  const other=edit.when==='other';
+  h+='<button type="button" class="chip when-c" data-ago="other" aria-pressed="'+other+'">'+(today?'שעה אחרת':'בחירת שעה')+(other&&cur&&cur!=='?'?'<small>'+cur+'</small>':'')+'</button>';
+  edWhen.innerHTML=h;
+  edTime.hidden=!other;
+  if(other&&document.activeElement!==edTime)edTime.value=cur&&cur!=='?'?cur:'';
+}
+function setWhen(t){if(!edit||mins(t)<0)return;setMeal(edit.k,edit.i,true,t);renderWhen();renderEdOut()}
+edWhen.addEventListener('click',e=>{
+  const b=e.target.closest('[data-ago]'); if(!b||!edit)return;
+  if(b.dataset.ago==='other'){
+    edit.when='other'; renderWhen();
+    if(!edTime.value)edTime.value=hhmm(new Date());
+    try{edTime.focus();if(edTime.showPicker)edTime.showPicker()}catch(err){}
+    return;
+  }
+  edit.when=+b.dataset.ago; setWhen(hhmm(new Date(Date.now()-edit.when*60000)));
+});
+edTime.addEventListener('change',()=>setWhen(edTime.value));
+edTime.addEventListener('blur',()=>setWhen(edTime.value));
+
 edOut.addEventListener('click',e=>{
   if(!edit)return;
   const x=e.target.closest('[data-unpick]'); if(x){delete edit.choices[x.dataset.unpick];renderEdOut();return}
@@ -1101,6 +1146,7 @@ showTab((location.hash||'').slice(1)||store.get('tab')||'search');
 function refresh(){updateHeader();if(edit)return;renderMeals();if(!document.getElementById('p-track').hidden)renderTrack()}
 setInterval(refresh,30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+window.addEventListener('pageshow',refresh); window.addEventListener('focus',refresh);
 
 /* ---------- offline + updates ---------- */
 if("serviceWorker" in navigator){
