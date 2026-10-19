@@ -194,6 +194,41 @@ p{margin:0}
 .bk-msg{font-size:.92rem;color:var(--ink);min-height:1.3em}
 .vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 
+/* meal check */
+.tnotes{display:flex;flex-direction:column;gap:6px}
+.tnotes:empty{display:none}
+.tn{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 12px;text-align:start}
+.tn b{font-weight:700}
+.tn-s{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.vp{font-style:normal;font-weight:700;font-size:.8rem;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.vp.v-good{background:color-mix(in srgb,var(--r5) 16%,var(--surface));color:var(--r5)}
+.vp.v-close{background:color-mix(in srgb,var(--r3) 30%,var(--surface));color:var(--ink)}
+.vp.v-off{background:color-mix(in srgb,var(--r2) 16%,var(--surface));color:var(--r2)}
+.tn-add{display:flex;flex-wrap:wrap;gap:6px}
+.add{border:1.5px dashed var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-weight:600;font-size:.92rem;color:var(--cobalt)}
+.ed{background:var(--surface);border:1.5px solid var(--cobalt);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.ed-head b{font-family:var(--font-display);font-weight:600;font-size:1.08rem}
+#edText{width:100%;min-height:64px;resize:vertical;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:500 1.05rem/1.4 var(--font-body);padding:10px 12px}
+#edText:focus{outline:none;border-color:var(--cobalt)}
+#edOut{display:flex;flex-direction:column;gap:10px}
+.choose{display:flex;flex-direction:column;gap:6px}
+.choose>span{font-size:.92rem;color:var(--muted)}
+.choose>span b{color:var(--ink)}
+.chip.opt[aria-pressed="true"]{border-color:var(--c);box-shadow:inset 0 0 0 1.5px var(--c);background:color-mix(in srgb,var(--c) 14%,var(--surface))}
+.chip.unk{border-style:dashed;color:var(--muted)}
+.verdict{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;border-radius:14px;padding:10px 12px;background:color-mix(in srgb,var(--c) 13%,var(--surface))}
+.verdict.v-good{--c:var(--r5);--on:var(--r5-on)}
+.verdict.v-close{--c:var(--r3);--on:var(--r3-on)}
+.verdict.v-off{--c:var(--r2);--on:var(--r2-on)}
+.verdict b{font-family:var(--font-display);font-weight:600;font-size:1.05rem}
+.verdict p{font-size:.95rem}
+.ed-actions{display:flex;gap:8px}
+.day-notes{display:flex;flex-direction:column;gap:6px;padding:0 12px 10px}
+.day-notes:empty,[data-slot]:empty{display:none}
+[data-slot]{padding:0 12px 12px}
+.dot.on.v-close{background:var(--r3);border-color:var(--r3)}
+.dot.on.v-off{background:var(--r2);border-color:var(--r2)}
+
 /* bottom nav */
 nav.tabs{position:fixed;inset:auto 0 0 0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(6px + env(safe-area-inset-bottom,0px))}
 nav.tabs button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--muted);font-weight:600;font-size:.85rem}
@@ -209,7 +244,7 @@ nav.tabs svg{width:26px;height:26px}
 <body>
 <div class="app">
   <header class="hello">
-    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 3</span></div>
+    <div class="hello-top"><h1 id="greet">שלום</h1><span class="ver" title="מספר הגרסה">גרסה 4</span></div>
     <span class="status" id="status">המטבח פתוח</span>
     <div class="meals" role="group" aria-label="ארוחות היום">
       <button class="meal" id="m0" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>בוקר</button>
@@ -217,6 +252,13 @@ nav.tabs svg{width:26px;height:26px}
       <button class="meal" id="m2" aria-pressed="false"><span class="tick"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ערב</button>
     </div>
     <p class="meals-note" id="mealsNote"></p>
+    <div class="tnotes" id="todayNotes"></div>
+    <div id="headSlot"><div class="ed" id="ed" hidden>
+      <div class="ed-head"><b id="edTitle">מה אכלת?</b></div>
+      <textarea id="edText" rows="2" enterkeyhint="done" placeholder="למשל: מרק דלעת עם אורז ועוף" aria-label="מה אכלת"></textarea>
+      <div id="edOut" aria-live="polite"></div>
+      <div class="ed-actions"><button type="button" class="btn" id="edSave">שמירה</button><button type="button" class="btn ghost" id="edSkip">לא עכשיו</button></div>
+    </div></div>
     <div class="teas"><div class="teas-head"><b>חליטה לאורך היום</b><span>גם במקום מים</span></div><div class="teas-row" id="teaRow"></div></div>
   </header>
 
@@ -242,7 +284,7 @@ nav.tabs svg{width:26px;height:26px}
   <section class="panel" id="p-track" hidden>
     <div id="feedback"></div>
     <h2 class="section-title">14 הימים האחרונים</h2>
-    <p class="hint" style="padding-top:0">נוגעים ביום כדי לתקן סימון.</p>
+    <p class="hint" style="padding-top:0">נוגעים ביום כדי לתקן סימון או לרשום מה אכלת. ירוק: נאכלה. צהוב: קרוב לתפריט. אדום: לא לפי התפריט.</p>
     <div class="days" id="days"></div>
     <div class="rule" style="margin-top:12px">
       <h3>גיבוי</h3>
@@ -524,6 +566,138 @@ const store = {
   set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 };
 
+/* ---------- meal check: rule-based, words from the lists only ---------- */
+// A word too general to judge alone opens a choice. "!" = an option that is not in the lists.
+const GENERIC = `
+אורז=אורז עגול לבן/אורז יסמין לבן/אורז בסמטי לבן/אורז אדום/אורז שחור/אורז פרא/אורז בסמטי מלא
+אורז בסמטי/בסמטי=אורז בסמטי לבן/אורז בסמטי מלא
+עוף=עוף עם עצם/גרונות עוף/חזה עוף
+הודו=הודו עם עצם/גרונות עוף
+בשר/בקר=בקר רזה/בשר בקר טחון/בקר שמן/בשר כבש
+לחם=לחם כוסמת/לחם כוסמין מחמצת/!לחם אחר
+שמן=שמן זית/שמן קוקוס/שמן שומשום/!שמן אחר
+פלפל=פלפל אדום/חריף/!פלפל ירוק או שחור
+בצל=בצל/בצל סגול מבושל/בצל סגול חי/בצל ירוק
+בצל סגול=בצל סגול מבושל/בצל סגול חי
+בצל מבושל=בצל/בצל סגול מבושל
+כוסמת=כוסמת ירוקה/אטריות כוסמת/לחם כוסמת/פנקייק כוסמת ירוקה
+שעועית=שעועית ירוקה/!שעועית יבשה
+אטריות/נודלס=אטריות אורז/אטריות שעועית שקופות/אטריות כוסמת/!פסטה או אטריות מחיטה
+מיץ=מיץ טרי/!מיץ קנוי
+תה=חליטה/!תה שחור או ירוק
+סלט=סלט ירקות/סלט מורכב
+אגוז/אגוזים=אגוז ברזיל/!אגוזים אחרים
+`;
+// Common foods that do not appear in the lists at all.
+const NOT_LISTED = 'חלב/גבינה/גבינות/קוטג׳/יוגורט/לבנה/חמאה/שמנת/פסטה/ספגטי/פיתה/פיתות/לחמניה/לחמניות/באגט/חיטה/עדשים/חומוס/פול/סלמון/טונה/אגוזי מלך/קשיו/לוז/בוטנים/דבש/שוקולד/עוגה/עוגיות/פיצה/המבורגר/נקניק/נקניקיות/קבב/שווארמה/פלאפל/תירס/קורנפלקס/במבה/ביסלי/קרקרים/פריכיות/מיונז/קטשופ/חרדל/סויה';
+// Words that carry no food: amounts, joiners, colors, "cooked", meal names.
+const STOP_WORDS = 'ו עם של גם וגם עוד קצת הרבה מעט כוס כוסות צלחת קערה מנה מנות חצי רבע כף כפות כפית כפיות פרוסה פרוסות חתיכה חתיכות יחידה יחידות אחד אחת שתי שני שתיים שניים שלוש שלושה ארבע ארבעה חמש גרם קילו ליטר בערך היה הייתה היו אכלתי שתיתי אכלנו ארוחה ארוחת בוקר צהריים ערב קטן קטנה קטנים גדול גדולה טרי טרייה טריים ביתי ביתית מבושל מבושלת מבושלים מבושלות חם חמה חמים קר קרה את על כמה יחד ביחד או משהו כל הכל ממש רק אחרי לפני בצד תוספת תוספות לבן לבנים ירוק ירוקה ירוקים אדום אדומה צהוב שחור מלא מלאה טעים טעימה אני לי זה זאת היום אתמול עכשיו בתוך יבש יבשה טחון טחונה קפוא קפואה אורגני עליו עליה איתו איתה לצד ליד שאריות כמו כרגיל';
+const STOP = new Set(STOP_WORDS.split(' ').map(norm));
+const NEG = new Set(['בלי','ללא'].map(norm)), VEGW = new Set(['ירק','ירקות'].map(norm));
+const TEAW = new Set(['חליטה','חליטת','חליטות','תה'].map(norm));
+const TEA_NEXT = {[norm('שומר')]:'זרעי שומר',[norm('כוסברה')]:'זרעי כוסברה',[norm('כוסבר')]:'זרעי כוסברה'};
+const VEG_EXTRA = new Set(['סלט ירקות','סלט מורכב','חביתת ירק','אוחיטשי','פסטו']);
+const PH = new Map(), FIRST = new Map(); let PHMAX = 1;
+function phAdd(k,v){PH.set(k,v);PHMAX=Math.max(PHMAX,k.split(' ').length)}
+ITEMS.forEach(it=>it.keys.forEach(k=>{
+  if(!k)return;
+  const e=PH.get(k); if(e)e.names.includes(it.name)||e.names.push(it.name); else phAdd(k,{kind:'items',names:[it.name]});
+  const w=k.split(' '); if(w.length>1){const f=FIRST.get(w[0])||[]; f.includes(it.name)||f.push(it.name); FIRST.set(w[0],f)}
+}));
+NOT_LISTED.split('/').forEach(w=>{const k=norm(w); if(!PH.has(k))phAdd(k,{kind:'not',name:w})});
+GENERIC.trim().split('\n').forEach(l=>{const [ws,os]=l.split('='); const opts=os.split('/'); ws.split('/').forEach(w=>phAdd(norm(w),{kind:'gen',opts}))});
+const PREF=['וכש','ומה','ושה','וה','וב','ול','ומ','וש','וכ','מה','שה','בה','לה','כש','שב','ו','ה','ב','ל','מ','ש','כ'];
+function strips(w){const o=[];for(const p of PREF)if(w.startsWith(p)&&w.length-p.length>=2)o.push(w.slice(p.length));return o}
+function plurals(w){const o=[];if(w.length>4&&w.endsWith('ים'))o.push(w.slice(0,-2));if(w.length>4&&w.endsWith('ות')){const b=w.slice(0,-2);o.push(b+'ה',b+'ת',b)}return o}
+function forms(w){const a=[w,...plurals(w)];for(const x of strips(w))a.push(x,...plurals(x));return [...new Set(a)]}
+// the written word without the prefix that was dropped to reach form f ("ועוף" -> "עוף")
+function bare(t,f){
+  if(f===t.n||plurals(t.n).includes(f))return t.o;
+  for(const p of PREF)if(t.n.startsWith(p)){const r=t.n.slice(p.length);if(r===f||plurals(r).includes(f))return t.o.slice(p.length)}
+  return t.o;
+}
+// describing words that may narrow a name ("אורז לבן"), unlike joiners such as "עם"
+const DESC = new Set('לבן לבנים ירוק ירוקה ירוקים אדום אדומה צהוב שחור מלא מלאה טרי טרייה טריים קפוא קפואה מבושל מבושלת יבש יבשה טחון טחונה'.split(' ').map(norm));
+function food(n){
+  if(n[0]==='!')return {name:n.slice(1),r:'0',veg:false};
+  const its=ITEMS.filter(it=>it.name===n); if(!its.length)return {name:n,r:'0',veg:false};
+  const best=its.slice().sort((a,b)=>ORDER[a.r]-ORDER[b.r])[0];
+  return {name:n,r:best.r,veg:its.some(x=>x.cat==='veg')||VEG_EXTRA.has(n)};
+}
+function tokens(text){
+  return String(text||'').split(/[\s,.;:!?()\/+&\-־–]+/).map(o=>({o,n:norm(o)})).filter(t=>t.n&&!/^\d+([.,]\d+)?$/.test(t.n));
+}
+function lookup(w){for(const f of forms(w)){const e=PH.get(f);if(e)return {e,key:f}}return null}
+function analyze(text,choices){
+  const T=tokens(text), units=[]; let i=0, neg=false;
+  while(i<T.length){
+    const t=T[i]; let hit=null, len=1;
+    if(NEG.has(t.n)||strips(t.n).some(x=>NEG.has(x))){neg=true;i++;continue}
+    // an infusion named by its herb: "חליטת שומר", "תה נענע"
+    if(forms(t.n).some(f=>TEAW.has(f))&&T[i+1]){
+      const nx=T[i+1], tn=forms(nx.n).find(f=>TEA_NEXT[f]), lbl=bare(t,forms(t.n).find(f=>TEAW.has(f)))+' '+nx.o;
+      if(tn)hit={e:{kind:'items',names:[TEA_NEXT[tn]]},key:tn,o:lbl};
+      else{const lk=lookup(nx.n); if(lk&&lk.e.kind==='items'&&lk.e.names.some(n=>ITEMS.some(it=>it.name===n&&(it.cat==='spice'||it.cat==='rule'))))hit={e:lk.e,key:lk.key,o:lbl}}
+      if(hit)len=2;
+    }
+    // 1) a longer name written in full: "עוף עם עצם", "שמן זית"
+    for(let L=Math.min(PHMAX,T.length-i);L>=2&&!hit;L--){
+      const rest=T.slice(i+1,i+L).map(x=>x.n).join(' ');
+      for(const f of forms(t.n)){const e=PH.get(f+' '+rest);if(e){hit={e,key:f+' '+rest,o:[bare(t,f),...T.slice(i+1,i+L).map(x=>x.o)].join(' ')};len=L;break}}
+    }
+    // 2) a longer name given by its first word and a later word: "אורז יסמין"
+    for(let L=Math.min(4,T.length-i);L>=2&&!hit;L--){
+      const more=T.slice(i+1,i+L).map(x=>x.n); if(more.some(w=>STOP.has(w)&&!DESC.has(w)))continue;
+      for(const f of forms(t.n)){
+        const names=[...new Set(ITEMS.filter(it=>it.keys.some(k=>{const w=k.split(' ');if(w[0]!==f)return false;let p=1;for(const m of more){p=w.indexOf(m,p);if(p<0)return false;p++}return true})).map(it=>it.name))];
+        if(names.length){hit={e:{kind:'items',names},key:[f,...more].join(' '),o:[bare(t,f),...T.slice(i+1,i+L).map(x=>x.o)].join(' ')};len=L;break}
+      }
+    }
+    // 3) one word
+    if(!hit){
+      const F=forms(t.n), lk=lookup(t.n);
+      if(lk)hit={e:lk.e,key:lk.key,o:bare(t,lk.key)};
+      else if(F.some(f=>STOP.has(f))){i++;continue}
+      else if(F.some(f=>VEGW.has(f)))hit={e:{kind:'veg'},key:'ירקות',o:bare(t,F.find(f=>VEGW.has(f)))};
+      else for(const f of F){const n=FIRST.get(f);if(n){hit={e:{kind:'items',names:n},key:f,o:bare(t,f)};break}}
+    }
+    i+=len;
+    if(neg){neg=false;continue} // "בלי סוכר": the next food is left out
+    units.push(hit?resolve(hit,choices):{kind:'unknown',o:t.o});
+  }
+  return units;
+}
+function resolve(h,choices){
+  const e=h.e;
+  if(e.kind==='not')return {kind:'food',f:{name:e.name,r:'0',veg:false},o:h.o};
+  if(e.kind==='veg')return {kind:'food',f:{name:'ירקות',r:'i',veg:true,vague:true},o:h.o};
+  const opts=[...new Map((e.kind==='gen'?e.opts:e.names).map(food).map(f=>[f.name,f])).values()];
+  if(opts.length===1)return {kind:'food',f:opts[0],o:h.o};
+  if(opts.every(x=>x.r===opts[0].r))return {kind:'food',f:{name:h.o,r:opts[0].r,veg:opts.every(x=>x.veg)},o:h.o};
+  const pick=opts.find(x=>x.name===(choices||{})[h.key]);
+  return pick?{kind:'food',f:pick,o:h.o,key:h.key,opts}:{kind:'choose',o:h.o,key:h.key,opts};
+}
+const VL={good:'לפי התפריט',close:'קרוב לתפריט',off:'לא לפי התפריט'}, VG={good:'✓',close:'~',off:'!'};
+function judge(units,time){
+  if(!units.length)return null;
+  const foods=[...new Map(units.filter(u=>u.kind==='food').map(u=>[u.f.name,u.f])).values()];
+  const bad=foods.filter(f=>/[2x0]/.test(f.r)), ask=foods.filter(f=>f.r==='q'), some3=foods.filter(f=>f.r==='3');
+  const pend=units.filter(u=>u.kind==='choose'), unk=units.filter(u=>u.kind==='unknown');
+  const veg=foods.some(f=>f.veg), vague=foods.some(f=>f.vague), late=!!time&&time!=='?'&&time>='20:00';
+  const L=[];
+  if(bad.length)L.push('עדיף לא: '+bad.map(f=>f.name).join(', ')+'.');
+  if(pend.length)L.push('לבחור למעלה: '+[...new Set(pend.map(u=>u.o))].join(', ')+'.');
+  if(!veg)L.push('לא זיהיתי ירק. ההנחיה: שליש עד חצי צלחת ירק מבושל.');
+  else if(vague)L.push('כדאי לפרט אילו ירקות, כדי לבדוק אותם.');
+  if(unk.length)L.push('לא זיהיתי: '+[...new Set(unk.map(u=>u.o))].join(', ')+'. אם זה מזון, הוא לא ברשימות.');
+  if(ask.length)L.push('לברר עם אור: '+ask.map(f=>f.name).join(', ')+'.');
+  if(late)L.push('נרשם אחרי 20:00.');
+  const v=bad.length?'off':(pend.length||unk.length||ask.length||!veg||vague||late)?'close':'good';
+  if(v==='good'){L.unshift('כל מה שזיהיתי מתאים להנחיות, ויש ירק.');if(some3.length)L.push('מדי פעם, לגיוון: '+some3.map(f=>f.name).join(', ')+'.')}
+  return {v,lines:L,foods,bad};
+}
+function verdictHTML(j){return '<div class="verdict v-'+j.v+'"><span class="disc sm" aria-hidden="true">'+VG[j.v]+'</span><div><b>'+VL[j.v]+'</b>'+j.lines.map(l=>'<p>'+esc(l)+'</p>').join('')+'</div></div>'}
+
 /* ---------- header: greeting, kitchen clock, meals ---------- */
 function updateHeader(){
   const d=new Date(), h=d.getHours(), mins=h*60+d.getMinutes(), close=20*60;
@@ -562,24 +736,106 @@ function loadLog(){
 const dayOf=k=>LOG[k]||[null,null,null];
 function setMeal(k,i,on,time){const d=dayOf(k).slice();d[i]=on?time:null;if(d.every(x=>!x))delete LOG[k];else LOG[k]=d;saveLog()}
 // "?" = marked later for a past day, so the time is unknown
-function toggleMeal(k,i){setMeal(k,i,!dayOf(k)[i],k===dkey(new Date())?hhmm(new Date()):'?');renderMeals();renderTrack()}
+function toggleMeal(k,i,src){
+  const on=!dayOf(k)[i];
+  setMeal(k,i,on,k===dkey(new Date())?hhmm(new Date()):'?');
+  if(on)openEditor(k,i,src); else if(edit&&edit.k===k&&edit.i===i)closeEditor();
+  renderMeals();renderTrack();
+}
+
+/* ---------- what I ate: one note per meal, kept on this phone ---------- */
+const NOTES_KEY='kitchen-notes-v1', MEALS_B=['בבוקר','בצהריים','בערב'];
+let NOTES={}, edit=null;
+function loadNotes(){try{NOTES=JSON.parse(store.get(NOTES_KEY)||'{}')||{}}catch(e){NOTES={}}}
+function saveNotes(){store.set(NOTES_KEY,JSON.stringify(NOTES))}
+const noteOf=(k,i)=>(NOTES[k]&&NOTES[k][i])||null;
+function setNote(k,i,t,c){
+  if(!t){if(NOTES[k]){delete NOTES[k][i];if(!Object.keys(NOTES[k]).length)delete NOTES[k]}}
+  else (NOTES[k]=NOTES[k]||{})[i]={t,c};
+  saveNotes();
+}
+function checkNote(k,i){const n=noteOf(k,i);return n?judge(analyze(n.t,n.c||{}),dayOf(k)[i]):null}
+function noteLine(k,i){
+  const n=noteOf(k,i);
+  if(!n)return '<button class="add" data-edit="'+k+':'+i+'">+ מה אכלת '+MEALS_B[i]+'?</button>';
+  const j=checkNote(k,i), names=j?j.foods.map(f=>f.name):[];
+  const txt=names.length?names.slice(0,4).join(', ')+(names.length>4?' ועוד '+(names.length-4):''):n.t;
+  return '<button class="tn" data-edit="'+k+':'+i+'"><b>'+MEALS[i]+'</b><span class="tn-s">'+esc(txt)+'</span>'+(j?'<i class="vp v-'+j.v+'">'+VL[j.v]+'</i>':'<i></i>')+'</button>';
+}
+function notesFor(k){
+  const v=dayOf(k), lines=[], adds=[];
+  [0,1,2].forEach(i=>{if(!v[i]||(edit&&edit.k===k&&edit.i===i))return;(noteOf(k,i)?lines:adds).push(noteLine(k,i))});
+  return lines.join('')+(adds.length?'<div class="tn-add">'+adds.join('')+'</div>':'');
+}
+const ed=document.getElementById('ed'), edText=document.getElementById('edText'), edOut=document.getElementById('edOut'), headSlot=document.getElementById('headSlot');
+function commitEditor(){
+  if(!edit)return;
+  const t=edText.value.trim(), keep=new Set(analyze(t,edit.choices).filter(u=>u.opts).map(u=>u.key)), c={};
+  for(const key in edit.choices)if(keep.has(key))c[key]=edit.choices[key];
+  setNote(edit.k,edit.i,t,c);
+}
+function openEditor(k,i,src){
+  if(edit&&(edit.k!==k||edit.i!==i)&&edText.value.trim())commitEditor();
+  const n=noteOf(k,i), d=new Date(k+'T12:00');
+  edit={k,i,src,choices:Object.assign({},(n&&n.c)||{})};
+  edText.value=n?n.t:'';
+  document.getElementById('edTitle').textContent='מה אכלת בארוחת '+MEALS[i]+(k===dkey(new Date())?'':', יום '+DAYN[d.getDay()]+' '+d.getDate()+'.'+(d.getMonth()+1))+'?';
+  renderEdOut();placeEditor();
+}
+function closeEditor(){edit=null;placeEditor()}
+function parkEditor(){if(ed.parentNode!==headSlot)headSlot.appendChild(ed)}
+function placeEditor(){
+  const slot=!edit?null:edit.src==='track'?document.querySelector('#days [data-slot="'+edit.k+'"]'):headSlot;
+  if(!slot){parkEditor();ed.hidden=true;return}
+  if(ed.parentNode!==slot)slot.appendChild(ed);
+  ed.hidden=false;
+}
+function renderEdOut(){
+  if(!edit)return;
+  const units=analyze(edText.value,edit.choices), j=judge(units,dayOf(edit.k)[edit.i]);
+  const plain=units.filter(u=>!u.opts), seen=new Set(); let h='';
+  if(plain.length)h+='<div class="chips">'+plain.map(u=>u.kind==='unknown'?'<span class="chip r-0 unk">'+esc(u.o)+'</span>':'<span class="chip r-'+u.f.r+'">'+esc(u.f.name)+'</span>').join('')+'</div>';
+  units.filter(u=>u.opts).forEach(u=>{
+    if(seen.has(u.key))return; seen.add(u.key);
+    const shown=u.f?u.opts.filter(o=>o.name===u.f.name):u.opts; // once picked, show only the pick
+    h+='<div class="choose"><span><b>'+esc(u.o)+'</b> - מה בדיוק?</span><div class="chips">'+shown.map(o=>'<button type="button" class="chip opt r-'+o.r+'" data-key="'+esc(u.key)+'" data-name="'+esc(o.name)+'" aria-pressed="'+(!!u.f)+'">'+esc(o.name)+'</button>').join('')+(u.f?'<button type="button" class="more" data-unpick="'+esc(u.key)+'">שינוי</button>':'')+'</div></div>';
+  });
+  h+=j?verdictHTML(j):'<p class="hint">כותבים בערך מה היה בצלחת, והבדיקה מול ההנחיות מופיעה כאן.</p>';
+  edOut.innerHTML=h;
+}
+function saveEditor(){commitEditor();edText.blur();closeEditor();renderMeals();if(!document.getElementById('p-track').hidden)renderTrack()}
+edText.addEventListener('input',renderEdOut);
+edText.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();saveEditor()}});
+edOut.addEventListener('click',e=>{
+  if(!edit)return;
+  const x=e.target.closest('[data-unpick]'); if(x){delete edit.choices[x.dataset.unpick];renderEdOut();return}
+  const b=e.target.closest('.opt'); if(b&&b.getAttribute('aria-pressed')!=='true'){edit.choices[b.dataset.key]=b.dataset.name;renderEdOut()}
+});
+document.getElementById('edSave').addEventListener('click',saveEditor);
+document.getElementById('edSkip').addEventListener('click',()=>{edText.blur();closeEditor();renderMeals();if(!document.getElementById('p-track').hidden)renderTrack()});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-edit]'); if(!b)return;
+  const [k,i]=b.dataset.edit.split(':'); openEditor(k,+i,b.closest('#days')?'track':'head');
+  renderMeals(); if(b.closest('#days'))renderDays();
+});
 function renderMeals(){
   const m=dayOf(dkey(new Date()));
   m.forEach((t,i)=>document.getElementById('m'+i).setAttribute('aria-pressed',t?'true':'false'));
   const n=m.filter(Boolean).length;
   document.getElementById('mealsNote').textContent = n===3?'שלוש ארוחות מבושלות היום. יפה מאוד.':n?'סימנת '+n+' מתוך 3 ארוחות היום.':'מסמנים כל ארוחה מבושלת שאכלת היום.';
+  document.getElementById('todayNotes').innerHTML=notesFor(dkey(new Date()));
 }
-[0,1,2].forEach(i=>document.getElementById('m'+i).addEventListener('click',()=>toggleMeal(dkey(new Date()),i)));
+[0,1,2].forEach(i=>document.getElementById('m'+i).addEventListener('click',()=>toggleMeal(dkey(new Date()),i,'head')));
 
 /* ---------- tracking: weekly feedback + last 14 days ---------- */
 function stats(from){ // 7 days, starting "from" days ago and going back; today is never counted
-  const st=store.get(START_KEY), now=new Date(), s={days:0,full:0,empty:0,late:0,miss:[0,0,0]};
+  const st=store.get(START_KEY), now=new Date(), s={days:0,full:0,empty:0,late:0,miss:[0,0,0],checked:0,good:0,badc:{}};
   for(let n=from;n<from+7;n++){
     const k=dkey(addDays(now,-n)); if(st&&k<st)continue;
     s.days++; const v=dayOf(k), c=v.filter(Boolean).length;
     if(c===3)s.full++;
     if(!c){s.empty++;continue}
-    v.forEach((t,i)=>{if(!t)s.miss[i]++;else if(t!=='?'&&t>='20:00')s.late++});
+    v.forEach((t,i)=>{if(!t){s.miss[i]++;return}if(t!=='?'&&t>='20:00')s.late++;const j=checkNote(k,i);if(j){s.checked++;if(j.v==='good')s.good++;j.bad.forEach(f=>{s.badc[f.name]=(s.badc[f.name]||0)+1})}});
   }
   return s;
 }
@@ -590,10 +846,17 @@ function renderFeedback(){
   if(filled){ if(!mx)L.push('בימים שסימנת לא דילגת על אף ארוחה. יפה מאוד.'); else {const i=s.miss.indexOf(mx);L.push('הכי מדולגת: ארוחת '+MEALS[i]+' ('+(mx===1?'פעם אחת':mx+' פעמים')+').')} }
   if(s.empty)L.push((s.empty===1?'יום אחד':s.empty+' ימים')+' בלי שום סימון. אם אכלת ושכחת לסמן, אפשר לתקן למטה.');
   if(s.late)L.push((s.late===1?'ארוחה אחת סומנה':s.late+' ארוחות סומנו')+' אחרי 20:00.');
+  if(s.checked){
+    const a='רשמת מה אכלת '+(s.checked===1?'בארוחה אחת':'ב-'+s.checked+' ארוחות')+'. ';
+    L.push(a+(s.good===s.checked?(s.checked===1?'היא הייתה':'כולן היו')+' לפי התפריט.':s.good?(s.good===1?'אחת מהן הייתה':s.good+' מהן היו')+' לפי התפריט.':'אף אחת מהן לא הייתה לפי התפריט.'));
+    const top=Object.entries(s.badc).sort((a,b)=>b[1]-a[1])[0];
+    if(top&&top[1]>1)L.push('הכי חוזר ממה שעדיף לא: '+top[0]+' ('+top[1]+' פעמים).');
+  }
   if(p.days>=3){const a=s.full/s.days,b=p.full/p.days;L.push(a>b+.01?'יותר ימים מלאים מהשבוע שלפני.':a<b-.01?'פחות ימים מלאים מהשבוע שלפני.':'בדיוק כמו השבוע שלפני.')}
   el.innerHTML='<div class="fb"><h2>המשוב השבועי</h2><div class="fb-big">'+s.full+'<span>/'+s.days+'</span></div><p>'+(s.days<7?'ימים עם שלוש ארוחות, מאז שהתחלת':'ימים עם שלוש ארוחות בשבוע האחרון')+'</p>'+(L.length?'<ul>'+L.map(x=>'<li>'+x+'</li>').join('')+'</ul>':'')+'</div>';
 }
 function renderDays(){
+  parkEditor();
   const st=store.get(START_KEY), now=new Date(), today=dkey(now); let h='';
   for(let n=0;n<14;n++){
     const d=addDays(now,-n), k=dkey(d); if(st&&k<st)break;
@@ -601,15 +864,16 @@ function renderDays(){
     const stat=isT?'היום':c===3?'3/3':c?c+'/3':'לא מולא';
     h+='<div class="day'+(isT?' today':'')+(c===3?' full':'')+(!c&&!isT?' empty':'')+'">'+
       '<button class="day-row" data-day="'+k+'" aria-expanded="'+open+'"><span class="dname">יום '+DAYN[d.getDay()]+'<small>'+d.getDate()+'.'+(d.getMonth()+1)+'</small></span>'+
-      '<span class="dots" aria-hidden="true">'+v.map(t=>'<i class="dot'+(t?' on':'')+'"></i>').join('')+'</span><span class="dstat">'+stat+'</span></button>'+
-      (open?'<div class="day-edit">'+MEALS.map((m,i)=>'<button class="meal col" data-k="'+k+'" data-i="'+i+'" aria-pressed="'+(v[i]?'true':'false')+'">'+TICK+m+(v[i]&&v[i]!=='?'?'<small>'+v[i]+'</small>':'')+'</button>').join('')+'</div>':'')+
+      '<span class="dots" aria-hidden="true">'+v.map((t,i)=>{const j=t&&checkNote(k,i);return '<i class="dot'+(t?' on':'')+(j?' v-'+j.v:'')+'"></i>'}).join('')+'</span><span class="dstat">'+stat+'</span></button>'+
+      (open?'<div class="day-edit">'+MEALS.map((m,i)=>'<button class="meal col" data-k="'+k+'" data-i="'+i+'" aria-pressed="'+(v[i]?'true':'false')+'">'+TICK+m+(v[i]&&v[i]!=='?'?'<small>'+v[i]+'</small>':'')+'</button>').join('')+'</div><div class="day-notes">'+notesFor(k)+'</div><div data-slot="'+k+'"></div>':'')+
       '</div>';
   }
   document.getElementById('days').innerHTML=h;
+  placeEditor();
 }
 function renderTrack(){renderFeedback();renderDays()}
 document.getElementById('days').addEventListener('click',e=>{
-  const m=e.target.closest('.meal[data-k]'); if(m){toggleMeal(m.dataset.k,+m.dataset.i);return}
+  const m=e.target.closest('.meal[data-k]'); if(m){toggleMeal(m.dataset.k,+m.dataset.i,'track');return}
   const r=e.target.closest('.day-row'); if(r){openDay=openDay===r.dataset.day?null:r.dataset.day;renderDays()}
 });
 
@@ -617,7 +881,7 @@ document.getElementById('days').addEventListener('click',e=>{
 function bkMsg(t){document.getElementById('bkMsg').textContent=t}
 document.getElementById('bkSave').addEventListener('click',async()=>{
   const name='המטבח-גיבוי-'+dkey(new Date())+'.json';
-  const text=JSON.stringify({app:'kitchen',v:1,saved:new Date().toISOString(),start:store.get(START_KEY),log:LOG});
+  const text=JSON.stringify({app:'kitchen',v:1,saved:new Date().toISOString(),start:store.get(START_KEY),log:LOG,notes:NOTES});
   let file=null; try{file=new File([text],name,{type:'application/json'})}catch(e){}
   try{ if(file&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});bkMsg('הגיבוי נשמר.');return} }
   catch(e){ if(e&&e.name==='AbortError')return }
@@ -636,6 +900,11 @@ document.getElementById('bkFile').addEventListener('change',e=>{
         const cur=dayOf(k), inc=lg[k], merged=[0,1,2].map(i=>cur[i]||(typeof inc[i]==='string'&&inc[i]?inc[i]:null));
         if(merged.some(Boolean)){LOG[k]=merged;n++}
       }
+      const nt=j.notes; if(nt&&typeof nt==='object')for(const k in nt){
+        if(!/^\d{4}-\d\d-\d\d$/.test(k)||!nt[k]||typeof nt[k]!=='object')continue;
+        for(const i of ['0','1','2']){const x=nt[k][i];if(x&&typeof x.t==='string'&&x.t&&!noteOf(k,i))(NOTES[k]=NOTES[k]||{})[i]={t:x.t,c:(x.c&&typeof x.c==='object')?x.c:{}}}
+      }
+      saveNotes();
       const keys=Object.keys(LOG).sort(); if(keys[0]&&keys[0]<(store.get(START_KEY)||'9999'))store.set(START_KEY,keys[0]);
       saveLog(); renderMeals(); renderTrack(); bkMsg('שוחזרו '+n+' ימים מהגיבוי.');
     }catch(err){bkMsg('הקובץ הזה לא נראה כמו גיבוי של המטבח.')}
@@ -801,9 +1070,9 @@ function showTab(t){
 document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){showTab(b.dataset.tab);window.scrollTo({top:0})}});
 
 /* ---------- start ---------- */
-loadLog(); updateHeader(); renderMeals(); render(); renderPlate();
+loadLog(); loadNotes(); updateHeader(); renderMeals(); render(); renderPlate();
 showTab((location.hash||'').slice(1)||store.get('tab')||'search');
-function refresh(){updateHeader();renderMeals();if(!document.getElementById('p-track').hidden)renderTrack()}
+function refresh(){updateHeader();if(edit)return;renderMeals();if(!document.getElementById('p-track').hidden)renderTrack()}
 setInterval(refresh,30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 
