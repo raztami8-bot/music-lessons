@@ -8,7 +8,7 @@
 - Sources: https://support.roland.com/hc/en-us/articles/6145882578715-T-8-Can-I-change-the-sound-for-each-part and https://static.roland.com/manuals/T-8_manual_v102/eng/28312322.html . Existing panel/pattern instructions were checked against the same v1.02 manual.
 - Official Roland diagrams: `codex/img/t8-manual-top.png` and `t8-manual-rear.png`, sourced from https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312299_28312304.png and https://static.roland.com/manuals/T-8_manual_v102/eng/images/28312309_28312312.png . Attribution is visible on the page.
 - No pattern clearing or saving is taught. Return menu choices to their recorded initial values. A physical knob position may differ from a saved value, so returning the knob is not an exact restoration.
-- Public-page browser check at 1024x768 loaded all images and opened practice mode. It exposed an inherited 46vh figure cap: the caption bottom was 534px while its frame ended at 437px. A preview-only selector now removes that cap; portrait/navigation verification follows. This is browser viewport verification, not real iPad/Safari testing.
+- Public-page verification passed with 1024x768 landscape and 768x1024 portrait viewport settings: images load, no horizontal overflow, home-page Codex filter and link work, all six practice cards advance, image enlargement closes, and Finish restores the page. An inherited 46vh figure cap was found and removed with a preview-only selector; the caption now stays inside its frame. This is browser viewport verification, not real iPad/Safari testing. GitHub Pages reported the published content commit dd45892 as built.
 
 ## לגרוק, מקלוד (15.10)
 
