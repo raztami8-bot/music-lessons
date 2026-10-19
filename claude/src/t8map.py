@@ -269,6 +269,19 @@ FIGS = {
     "l4-08": (GROUPS["fx"], ["delay", "reverb", "accent"]),
     "l4-09": (["pattern", "shift", "s11", "s16"], ["pattern", "s16", "shift", "s11"]),
     "l4-10": (["shift", "s15", "s1", "s2", "tempo", "display"], ["shift", "s15", "tempo", "s2", "s1"]),
+    # lesson 6
+    "l6-01": (["pattern", "s14", "s15", "s16"], ["pattern", "s14", "s15", "s16"]),
+    "l6-02": (["ch", "display"], ["ch", "s4", "tempo", "accent"]),
+    "l6-03": (["display"], ["sd", "s16", "accent"]),
+    "l6-04": (["tempo"], ["shift", "s6", "s5", "s4"]),
+    "l6-05": ([], ["shift", "pattern", "s13"]),
+    "l6-06": ([], ["shift", "s8", "s7", "s1"]),
+    "l6-07": (["pattern", "s14", "s15"], ["shift", "s9", "s10"]),
+    # lesson 7
+    "l7-01": (["display", "tempo"], ["pattern", "s10", "bass", "bd"]),
+    "l7-02": (["display"], ["bass", "kybd", "tempo"]),
+    "l7-03": ([], ["shift", "s13", "s14", "delay", "reverb"]),
+    "l7-04": (["display", "tempo"], ["pattern", "s12", "accent", "bass"]),
 }
 
 AREA = {"jacks_": "volume", "common_": "display", "drums_": "bd", "bass_": "bass", "fx_": "delay", "steps_": "s1"}
