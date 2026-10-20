@@ -30,7 +30,73 @@ function addNotes(){
     if(ta.value) box.hidden=false;
     head.insertBefore(b, head.querySelector(".cardplay")||head.querySelector(".donebtn"));
     c.appendChild(box); paint();
+    if(document.body.dataset.lesson) addAsk(c,head);
   });
+}
+
+/* ---------- "ask about this card": opens an AI chat with the whole card already written in ---------- */
+var ASK="ml2:ask";
+var AIS=[["claude","Claude","https://claude.ai/new?q="],["chatgpt","ChatGPT","https://chatgpt.com/?q="],["grok","Grok","https://grok.com/?q="]];
+var DEVICE={"1":"Korg Volca Beats ו־Korg Volca Bass","2":"Korg Volca Bass","3":"Korg Volca Bass","4":"Roland T-8","5":"Roland T-8","6":"Roland T-8","7":"Roland T-8"};
+function clean(node){
+  var c=node.cloneNode(true);
+  [].forEach.call(c.querySelectorAll(".seg"),function(g){ var l=(g.getAttribute("aria-label")||"").replace(/^בתצוגה:\s*/,""); g.replaceWith("‹"+l+"›"); });
+  [].forEach.call(c.querySelectorAll(".a > i, button, .t8-map, svg, img, figure, .knob-svg"),function(x){ x.remove(); });
+  return c.textContent.replace(/\s+/g," ").trim();
+}
+function cardText(card){
+  var out=[];
+  function walk(node){
+    [].forEach.call(node.children,function(ch){
+      if(ch.matches(".card-head,.note-box,.ask-box,.timer,.drill,figure,.t8-map,script,.combo,button") || ch.hidden) return;
+      if(ch.matches(".state")){ var parts=[].map.call(ch.children,clean).filter(Boolean); out.push(parts.shift()+" "+parts.join(", ")); return; }
+      if(ch.matches(".learn-tag")){ out.push(clean(ch)+":"); return; }
+      if(ch.matches("ol,ul")){ var i=+(ch.getAttribute("start")||1); [].forEach.call(ch.children,function(li){ var t=clean(li); if(t) out.push((ch.tagName==="OL"?(i++)+". ":"- ")+t); }); return; }
+      if(ch.matches(".tbl-box")||ch.tagName==="TABLE"){ [].forEach.call(ch.querySelectorAll("tr"),function(tr){ out.push([].map.call(tr.children,clean).join(" | ")); }); return; }
+      if(ch.matches(".grid-box")){ var q=ch.querySelector("[data-rows]"); if(q){ try{ JSON.parse(q.dataset.rows).forEach(function(r){ out.push(r[0]+": צעדים "+r[1].join(", ")); }); }catch(e){} }
+        q=ch.querySelector("[data-keys]"); if(q) out.push("תווים בצעדים: "+q.dataset.keys); return; }
+      if(ch.tagName==="DETAILS"){ var sm=ch.querySelector("summary"), a=ch.cloneNode(true); if(a.querySelector("summary")) a.querySelector("summary").remove(); out.push("שאלה: "+(sm?clean(sm):"")+" תשובה: "+clean(a)); return; }
+      if(ch.matches(".target")){ out.push("מה אמור להופיע בתצוגה: "+clean(ch)); return; }
+      if(ch.tagName==="DIV" && ch.querySelector(":scope > p, :scope > ol, :scope > ul, :scope > div, :scope > table, :scope > details, :scope > .learn-tag")){ walk(ch); return; }
+      var t=clean(ch); if(t) out.push(t);
+    });
+  }
+  walk(card);
+  var txt=out.join("\n"); return txt.length>1800 ? txt.slice(0,1800)+"…" : txt;
+}
+function askPrompt(card){
+  var L=document.body.dataset.lesson||"", n=card.querySelector(".card-head .num"), h=card.querySelector(".card-head h3");
+  var h1=document.querySelector(".wrap h1"), note=((get(NOTES,{})[card.dataset.id]||{}).text||"").trim();
+  var p=["אני לומד לנגן על "+(DEVICE[L]||"המכשיר שלי")+", משיעורים באתר שלי. אני רוצה לדבר על כרטיס אחד מהשיעור.","",
+    "שיעור "+L+(h1?": "+h1.textContent.trim():""),
+    "כרטיס "+(n?n.textContent.trim()+" · ":"")+(h?h.textContent.trim():""),"",cardText(card)];
+  if(note) p.push("","ההערה שלי לכרטיס: "+note);
+  p.push("","בבקשה לענות בעברית פשוטה, בלי מילים באנגלית חוץ משמות של כפתורים. קודם להסביר במשפט או שניים מה הכרטיס הזה עושה ולמה זה שימושי, ואחר כך לשאול אותי איפה בדיוק נתקעתי. אם משהו בכרטיס לא מתאים למכשיר לפי הידע שלך, להגיד את זה ולא לנחש.");
+  return p.join("\n");
+}
+function addAsk(card,head){
+  var b=document.createElement("button"); b.type="button"; b.className="notebtn askbtn"; b.textContent="💬 שאל";
+  var box=document.createElement("div"); box.className="ask-box"; box.hidden=true;
+  var last=null; try{ last=localStorage.getItem(ASK); }catch(e){}
+  var order=AIS.slice().sort(function(a,c){ return (c[0]===last)-(a[0]===last); });
+  box.innerHTML='<b>שיחה על הכרטיס הזה</b><small>נפתח חלון חדש, וכל מה שכתוב בכרטיס, כולל ההערה שלך, כבר כתוב שם. באפליקציה אפשר לעבור לשיחה קולית.</small><div class="ask-row">'+
+    order.map(function(a){ return '<a class="btn ask-ai'+(a[0]===last?" last":"")+'" data-ai="'+a[0]+'" target="_blank" rel="noopener" href="'+a[2]+'">'+a[1]+'</a>'; }).join("")+
+    '<button type="button" class="btn ask-copy">העתק את השאלה</button></div><small class="ask-msg" aria-live="polite">אם נפתחה האפליקציה בלי השאלה: חזור לכאן, לחץ ״העתק את השאלה״, והדבק שם.</small><textarea class="nb-out ask-out" rows="6" readonly hidden></textarea>';
+  [].forEach.call(box.querySelectorAll(".ask-ai"),function(a){
+    a.addEventListener("click",function(){
+      var ai=AIS.filter(function(x){ return x[0]===a.dataset.ai; })[0];
+      a.href=ai[2]+encodeURIComponent(askPrompt(card));
+      try{ localStorage.setItem(ASK,ai[0]); }catch(e){}
+    });
+  });
+  box.querySelector(".ask-copy").addEventListener("click",function(){
+    var txt=askPrompt(card), out=box.querySelector(".ask-out"), m=box.querySelector(".ask-msg");
+    function fallback(){ out.hidden=false; out.value=txt; out.focus(); out.select(); m.textContent="סמן את כל הטקסט בתיבה והעתק."; }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function(){ m.textContent="הועתק. עכשיו פתח את הבינה המלאכותית והדבק."; },fallback); else fallback();
+  });
+  b.addEventListener("click",function(){ box.hidden=!box.hidden; });
+  head.insertBefore(b, head.querySelector(".notebtn")||head.querySelector(".cardplay")||head.querySelector(".donebtn"));
+  card.appendChild(box);
 }
 
 /* ---------- glossary ---------- */

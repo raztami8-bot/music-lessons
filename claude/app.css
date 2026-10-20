@@ -322,3 +322,12 @@ kbd.t8k:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .t8-pop-h{display:flex;align-items:center;justify-content:space-between}
 .t8-x{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--fg);font-size:1rem;cursor:pointer}
 @media (min-width:820px){.t8-pop{align-items:center}.t8-pop .t8-map.big svg{width:100%}}
+
+/* ask about this card (extras.js) */
+.ask-box{grid-column:1/-1;display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:10px}
+.ask-box small{color:var(--muted)}
+.ask-row{display:flex;flex-wrap:wrap;gap:8px}
+.ask-row .btn{text-decoration:none}
+.ask-row .ask-ai.last{outline:2px solid var(--accent);outline-offset:2px}
+.note-box[hidden],.ask-box[hidden],.combo[hidden]{display:none}
+ol.steps[start="2"]{counter-reset:s 1}ol.steps[start="3"]{counter-reset:s 2}ol.steps[start="4"]{counter-reset:s 3}ol.steps[start="5"]{counter-reset:s 4}ol.steps[start="6"]{counter-reset:s 5}ol.steps[start="7"]{counter-reset:s 6}ol.steps[start="8"]{counter-reset:s 7}ol.steps[start="9"]{counter-reset:s 8}
