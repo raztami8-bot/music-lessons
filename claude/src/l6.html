@@ -2,478 +2,568 @@
 
 <header style="display:flex;flex-direction:column;gap:10px">
   <h1>גרוב חי: הטריקים של הקצב</h1>
-  <p class="lede">הג׳אם משיעור 5 עובד. עכשיו נלמד לגרום לו לחיות: מכות שמופיעות רק לפעמים, עוצמה שונה לכל מכה, גלגולים, מילוי, ״גמגום״, תבניות באורכים שונים, ואקראיות שאפשר לבטל בלחיצה. כל כרטיס הוא טריק אחד, ובכל אחד: <b>עושים</b>, <b>שומעים</b>, <b>מבינים</b>, ומתי להשתמש בו בג׳אם.</p>
-  <div class="meta"><span><b>זמן:</b> כ־45 דקות</span><span><b>מכשיר:</b> הטי־8 <span class="label">T-8</span></span><span><b>דורש:</b> שיעור 5</span></div>
+  <p class="lede">שבע מנות קצרות, מנה אחת ביום. בכל מנה טריק אחד או שניים על הג׳אם משיעור 5, ואז נגינה של חמש דקות ותרגול ידיים. אחרי שבוע הטריקים כבר בידיים, לא רק בראש.</p>
+  <div class="meta"><span><b>זמן:</b> 10 עד 15 דקות למנה</span><span><b>מכשיר:</b> הטי־8 <span class="label">T-8</span></span><span><b>דורש:</b> שיעור 5</span></div>
 </header>
 
-<nav class="toc" aria-label="תוכן">
-  <b>תוכן השיעור</b>
+<article class="card howto">
+  <h3>איך לקרוא כל כרטיס</h3>
   <ol>
-    <li><a href="#s0">נקודת התחלה ורשת ביטחון</a></li>
-    <li><a href="#s1">לופ שמשתנה לבד</a></li>
-    <li><a href="#s2">מכות חזקות וחלשות</a></li>
+    <li><b>מתחילים כש:</b> השורה הצהובה. לפני שנוגעים, מוודאים שהמכשיר במצב הזה.</li>
+    <li><b>הצירוף:</b> כל הלחיצות לפי הסדר. מה שבמסגרת המקווקווה עושים <b>כל עוד מחזיקים</b> את הראשון.</li>
+    <li>הסימנים: <span class="a a-hold"><i>✋</i>החזק</span> לוחצים ולא עוזבים. <span class="a a-tap"><i>👆</i>לחץ</span> לחיצה קצרה ועוזבים. <span class="a a-turn"><i>⟳</i>סובב</span> מסובבים כפתור. <span class="a a-rel"><i>🖐</i>שחרר</span> עוזבים הכל.</li>
+    <li>התצוגה מצוירת כמו על המכשיר: <span class="seg"><span class="g">8.8.8.8.</span><span class="v">P.50</span></span>. האותיות בנויות מקווים, ולכן חלקן נראות ״חתוכות״. זה בסדר.</li>
+  </ol>
+  <p class="info">בכל שלב, <kbd>PATTERN</kbd> + לחצן <kbd>16</kbd> מחזיר את כל התבנית למה ששמרת. אפשר לנסות הכל בלי פחד.</p>
+  <a class="btn" id="mana-next" href="#s1" hidden></a>
+</article>
+
+<nav class="toc" aria-label="תוכן">
+  <b>שבע המנות</b>
+  <ol>
+    <li><a href="#s1">רשת ביטחון ומכות שמופיעות לפעמים</a></li>
+    <li><a href="#s2">חזק וחלש</a></li>
     <li><a href="#s3">גלגולים</a></li>
     <li><a href="#s4">משחקי אורך</a></li>
-    <li><a href="#s5">טריקים להופעה</a></li>
-    <li><a href="#s6">תרגיל: חמש דקות של ג׳אם</a></li>
-    <li><a href="#s7">שמירה, דף עזר ותקלות</a></li>
+    <li><a href="#s5">גמגום, הזזה ואקראי</a></li>
+    <li><a href="#s6">מילוי ותיפוף ביד</a></li>
+    <li><a href="#s7">ג׳אם של חמש דקות</a></li>
+    <li><a href="#ref">דף עזר ותקלות</a></li>
   </ol>
 </nav>
 
-<!-- ===================== 0 ===================== -->
-<section class="stage" id="s0">
-  <span class="stage-tag">לפני הכל</span>
-  <h2>נקודת התחלה ורשת ביטחון</h2>
+<!-- ===================== mana 1 ===================== -->
+<section class="stage" id="s1" data-mana="1" data-min="10" data-title="רשת ביטחון וסיכוי" data-goal="בסוף המנה: לחזור למצב השמור בלחיצה, ולתת למכות לנגן רק לפעמים.">
+  <span class="stage-tag">מנה 1</span>
+  <h2>רשת ביטחון ומכות שמופיעות לפעמים</h2>
 
   <article class="card">
-    <h3>מאיפה מתחילים</h3>
+    <div class="card-head"><span class="num">1.0</span><h3>נקודת התחלה</h3><span class="label">לכל המנות</span></div>
     <ol class="steps">
-      <li><div>לחץ <kbd>PATTERN</kbd> ואז לחצן <kbd>16</kbd>: הג׳אם ששמרת בסוף שיעור 5.</div></li>
-      <li><div>לחץ <kbd>BASS DRUM</kbd> כדי לצאת מבחירת התבניות, ולחץ <kbd>▶</kbd>.</div></li>
+      <li><div>[[tap:PATTERN]] ואז [[tap:16]]: הג׳אם ששמרת בסוף שיעור 5.</div></li>
+      <li><div>[[tap:BASS DRUM]] כדי לצאת מבחירת התבניות, ו־[[tap:▶]].</div></li>
     </ol>
     <div class="grid-box"><div class="seq" data-rows='[["קיק",[1,5,9,13]],["קלאפ",[5,13]],["סגור",[1,2,5,6,9,10,13,14]],["פתוח",[3,7,11,15]]]'></div></div>
-    <p class="legend">אלה התופים שאמורים להתנגן. הבס: קו הלה משיעור 5, עם גלישות והדגשות.</p>
-    <p class="info">לא שמרת את הג׳אם? בנה את התופים מהלוח הזה כמו בשיעור 5, שלב 2. לבס מספיקים צעדים 3, 7, 11 ו־15. השיעור עובד גם ככה.</p>
+    <p class="info">לא שמרת? בנה את התופים מהלוח כמו בשיעור 5, שלב 2. לבס מספיקים צעדים 3, 7, 11, 15.</p>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">0.1</span><h3>שחזור בלחיצה</h3><span class="label">PATTERN + 14 · 15 · 16</span></div>
+    <div class="card-head"><span class="num">1.1</span><h3>שחזור בלחיצה</h3><span class="label">PATTERN + 14 · 15 · 16</span></div>
+    [[state:play||תבנית 16]]
+    [[combo:איך מחזירים רק את התופים למצב השמור?|hold:PATTERN,tap:14]]
+    [[combo-:איך מחזירים רק את הבס למצב השמור?|hold:PATTERN,tap:15]]
+    [[combo-:איך מחזירים את כל התבנית למצב השמור?|hold:PATTERN,tap:16]]
     <ol class="steps">
-      <li><div>מחק את הקיק בכוונה: לחץ <kbd>BASS DRUM</kbd>, ואז כבה את צעד <kbd>1</kbd>.</div></li>
-      <li><div>החזק <kbd>PATTERN</kbd> ולחץ על לחצן <kbd>14</kbd>. שחרר.</div></li>
+      <li><div>מקלקלים בכוונה: [[tap:BASS DRUM]], ואז [[tap:1]]. הקיק הראשון נעלם.</div></li>
+      <li><div>[[hold:PATTERN]], ותוך כדי [[tap:14]]. [[rel]].</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> צעד 1 של הקיק חזר.</div>
+    <div class="ok"><b>הצלחת אם:</b> הקיק הראשון חזר.</div>
     <div class="tbl-box"><table>
-      <thead><tr><th><kbd>PATTERN</kbd> +</th><th>מה חוזר למצב השמור</th></tr></thead>
-      <tbody>
-        <tr><td>לחצן 14</td><td>רק התופים</td></tr>
-        <tr><td>לחצן 15</td><td>רק הבס</td></tr>
-        <tr><td>לחצן 16</td><td>כל התבנית</td></tr>
-      </tbody>
+      <thead><tr><th>מחזיקים <kbd>PATTERN</kbd> ולוחצים</th><th>מה חוזר</th></tr></thead>
+      <tbody><tr><td>14</td><td>רק התופים</td></tr><tr><td>15</td><td>רק הבס</td></tr><tr><td>16</td><td>כל התבנית</td></tr></tbody>
     </table></div>
-    <p class="warn">השחזור מוחק כל מה ששינית מאז השמירה האחרונה. זה בדיוק מה שאנחנו רוצים כאן, אבל אל תשתמש בו אחרי שבנית משהו שאתה רוצה לשמור.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>זו רשת הביטחון של כל השיעור. בכל כרטיס משנים משהו, שומעים, ובסוף מחזירים. כך כל טריק נשמע על אותו ג׳אם מוכר, וההבדל ברור.</p>
-      <p class="acid"><b>לאסיד:</b> בהופעה זה הטריק הכי חשוב: אפשר להשתגע לגמרי, ובלחיצה אחת לחזור לגרוב.</p>
+    <p class="warn">השחזור מוחק כל מה ששינית מאז השמירה האחרונה.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>זו רשת הביטחון: מנסים טריק, שומעים, ומחזירים. <span class="acid"><b>לאסיד:</b> בהופעה אפשר להשתגע, ובלחיצה אחת לחזור לגרוב.</span></p>
     </div>
   </article>
-</section>
-
-<!-- ===================== 1 ===================== -->
-<section class="stage" id="s1">
-  <span class="stage-tag">שלב 1 · סיכוי</span>
-  <h2>לופ שמשתנה לבד</h2>
 
   <article class="card">
-    <div class="card-head"><span class="num">1.1</span><h3>מכה שמופיעה רק לפעמים</h3><span class="label">החזקת צעד + TEMPO/VALUE</span></div>
+    <div class="card-head"><span class="num">1.2</span><h3>מכה שמופיעה רק לפעמים</h3><span class="label">החזקת צעד</span></div>
+    [[state:play|CLOSED HIHAT|כל 16 הצעדים דולקים]]
+    [[combo:איך נותנים למכה בצעד 4 סיכוי של חצי? (ההיי־האט כבר נבחר)|hold:4,turn:TEMPO/VALUE,look:P.50|ההיי־האט הסגור נבחר]]
     <ol class="steps">
-      <li><div>לחץ <kbd>CLOSED HIHAT</kbd>, והדלק את כל הצעדים הכבויים כך שכל 16 דולקים.</div></li>
-      <li><div>החזק את לחצן צעד <kbd>4</kbd>. בתצוגה <b>P.100</b>.</div></li>
-      <li><div>בלי לשחרר, סובב <kbd>TEMPO/VALUE</kbd> עד <b>P.50</b>. שחרר.</div></li>
-      <li><div>עשה אותו דבר בצעדים <kbd>8</kbd>, <kbd>12</kbd> ו־<kbd>16</kbd>.</div></li>
+      <li><div>[[tap:CLOSED HIHAT]]. לחץ על כל לחצן צעד כבוי עד שכל 16 דולקים.</div></li>
+      <li><div>[[hold:4]]. בתצוגה [[seg:P.100]].</div></li>
+      <li><div>בלי לעזוב, [[turn:TEMPO/VALUE]] שמאלה עד [[seg:P.50]]. [[rel]].</div></li>
+      <li><div>אותו דבר בצעדים 8, 12 ו־16.</div></li>
       <li><div>הקשב לשמונה סיבובים.</div></li>
     </ol>
     <div class="grid-box"><div class="seq" data-rows='[["תמיד",[1,2,3,5,6,7,9,10,11,13,14,15]],["P.50",[4,8,12,16]]]'></div></div>
-    <div class="ok"><b>הצלחת אם:</b> ההיי־האט נשמע קצת אחרת בכל סיבוב, למרות שלא נגעת בכלום.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>סיכוי</b> קובע כמה פעמים מתוך מאה הצעד ינגן. P.100 תמיד, P.0 אף פעם, ו־P.50 בערך בחצי מהסיבובים. ההחלטה אקראית בכל פעם, ולכן לפעמים המכה תופיע כמה פעמים ברצף, ולפעמים תיעלם כמה פעמים ברצף.</p>
-      <p class="acid"><b>לאסיד:</b> לופ שחוזר בדיוק אותו דבר מתחיל לשעמם אחרי דקה. כמה מכות ב־P.50 גורמות לו להישמע כאילו מישהו מנגן אותו.</p>
+    <div class="ok"><b>הצלחת אם:</b> ההיי־האט נשמע קצת אחרת בכל סיבוב, בלי שנגעת.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>סיכוי</b>: כמה פעמים מתוך מאה הצעד ינגן. P.100 תמיד, P.50 בערך חצי, אקראית.</p>
     </div>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">1.2</span><h3>כפתור אחד לכל הסיכויים</h3><span class="label">PATTERN + TEMPO/VALUE</span></div>
+    <div class="card-head"><span class="num">1.3</span><h3>כפתור אחד לכל הסיכויים</h3><span class="label">PATTERN + TEMPO/VALUE</span></div>
+    [[state:play||ארבעה צעדים ב־P.50 מ־1.2]]
+    [[combo:איך מגבירים או מחלישים את כל הסיכויים יחד?|hold:PATTERN,turn:TEMPO/VALUE]]
     <ol class="steps">
-      <li><div>הגרוב מ־1.1 מנגן.</div></li>
-      <li><div>החזק <kbd>PATTERN</kbd> וסובב לאט את <kbd>TEMPO/VALUE</kbd> שמאלה, ואז ימינה.</div></li>
-      <li><div>שחרר, והשאר באמצע.</div></li>
+      <li><div>[[hold:PATTERN]], ובלי לעזוב [[turn:TEMPO/VALUE]] לאט שמאלה, ואז ימינה. הקשב.</div></li>
+      <li><div>השאר באמצע, ו־[[rel]].</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> כשסובבת, ארבע המכות ב־P.50 הופיעו פחות או יותר. שאר ההיי־האטים לא השתנו.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>זה <b>סיכוי כללי</b> לכל התבנית. לפי המדריך, הוא משפיע רק על צעדים שכבר יש להם סיכוי משלהם. צעד ב־P.100 לא מושפע ממנו.</p>
-      <p class="acid"><b>לאסיד:</b> הגדר סיכוי על כמה מכות מראש, ובזמן הנגינה הכפתור הזה הוא ״כמה פרוע״. יד אחת על CUTOFF, יד שנייה כאן.</p>
+    <div class="ok"><b>הצלחת אם:</b> ארבע המכות הופיעו פחות או יותר. שאר ההיי־האטים לא השתנו.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>סיכוי כללי</b> משפיע רק על צעדים שיש להם סיכוי משלהם. <span class="acid"><b>לאסיד:</b> יד אחת על CUTOFF, יד שנייה ״כמה פרוע״.</span></p>
     </div>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">1.3</span><h3>קיק רפאים</h3><span class="label">BASS DRUM · P.30</span></div>
+    <div class="card-head"><span class="num">1.4</span><h3>קיק רפאים</h3><span class="label">P.30</span></div>
+    [[state:play]]
+    [[combo:איך מוסיפים קיק בצעד 16 שמנגן רק לפעמים?|tap:BASS DRUM,tap:16,hold:16,turn:TEMPO/VALUE,look:P.30]]
     <ol class="steps">
-      <li><div>לחץ <kbd>BASS DRUM</kbd>, והדלק את צעד <kbd>16</kbd>.</div></li>
-      <li><div>החזק את צעד <kbd>16</kbd> וסובב עד <b>P.30</b>.</div></li>
-      <li><div>הקשב, ואז החזר הכל: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</div></li>
+      <li><div>[[tap:BASS DRUM]], ואז [[tap:16]]. הצעד נדלק.</div></li>
+      <li><div>[[hold:16]] ו־[[turn:TEMPO/VALUE]] עד [[seg:P.30]]. [[rel]].</div></li>
+      <li><div>הקשב, ואז החזר את התופים: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</div></li>
     </ol>
-    <div class="grid-box"><div class="seq" data-rows='[["קיק",[1,5,9,13]],["P.30",[16]]]'></div></div>
-    <div class="ok"><b>הצלחת אם:</b> מדי פעם, לפני תחילת הלופ, נשמע קיק נוסף ש״דוחף״ קדימה.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>מכה בצעד האחרון מובילה את האוזן אל הצעד הראשון. בסיכוי נמוך היא הפתעה קטנה, לא חלק מהקבוע.</p>
-      <p class="acid"><b>לאסיד:</b> טריק מוכר בטכנו: הקיק הקבוע לא זז, ורק התוספות מתחלפות.</p>
-    </div>
+    <div class="ok"><b>הצלחת אם:</b> מדי פעם, לפני תחילת הלופ, קיק נוסף ״דוחף״ קדימה.</div>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">1.5</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div>תן סיכוי P.50 לארבעה היי־האטים, כמו ב־1.2.</div></li>
+      <li><div>נגן חמש דקות. יד אחת על <kbd>CUTOFF</kbd>, והשנייה מחזיקה <kbd>PATTERN</kbd> ומסובבת.</div></li>
+      <li><div>בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>16</kbd>.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="1"></div>
+    <p class="end">זהו, המנה נגמרה. ✕ סוגר את מצב הנגינה. מחר: מנה 2.</p>
   </article>
 </section>
 
-<!-- ===================== 2 ===================== -->
-<section class="stage" id="s2">
-  <span class="stage-tag">שלב 2 · דינמיקה</span>
-  <h2>מכות חזקות וחלשות</h2>
+<!-- ===================== mana 2 ===================== -->
+<section class="stage" id="s2" data-mana="2" data-min="10" data-title="חזק וחלש" data-goal="בסוף המנה: מכות חזקות וחלשות באותו כלי, הדגשה לכל התופים, ושאפל.">
+  <span class="stage-tag">מנה 2</span>
+  <h2>חזק וחלש</h2>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">2.0</span><h3>חזרה בדקה</h3><span class="label">ממנה 1</span></div>
+    <p class="legend">נסה לענות לפני שפותחים.</p>
+    <details><summary>איך מחזירים רק את התופים למצב השמור?</summary><p>מחזיקים <kbd>PATTERN</kbd> ולוחצים לחצן 14.</p></details>
+    <details><summary>איך נותנים לצעד סיכוי?</summary><p>בוחרים את הכלי, מחזיקים את לחצן הצעד, ומסובבים <kbd>TEMPO/VALUE</kbd>.</p></details>
+    <details><summary>מה עושה P.100?</summary><p>הצעד מנגן תמיד. זה המצב הרגיל.</p></details>
+  </article>
 
   <article class="card">
     <div class="card-head"><span class="num">2.1</span><h3>עוצמה לכל מכה</h3><span class="label">החזקת צעד + ACCENT</span></div>
+    [[state:play|CLOSED HIHAT|כל 16 הצעדים דולקים]]
+    [[combo:איך מחלישים את המכה בצעד 2? (ההיי־האט כבר נבחר)|hold:2,tap:ACCENT,turn:TEMPO/VALUE,look:v.4|ההיי־האט הסגור נבחר]]
     <ol class="steps">
-      <li><div>לחץ <kbd>CLOSED HIHAT</kbd>, והדלק את כל 16 הצעדים.</div></li>
-      <li><div>החזק את צעד <kbd>2</kbd>. בתצוגה P.100. בלי לשחרר, לחץ <kbd>ACCENT</kbd>. בתצוגה עכשיו <b>v.</b> ומספר.</div></li>
-      <li><div>סובב <kbd>TEMPO/VALUE</kbd> עד <b>v.4</b>. שחרר.</div></li>
-      <li><div>עשה אותו דבר בכל הצעדים הזוגיים: 4, 6, 8, 10, 12, 14, 16.</div></li>
+      <li><div>[[hold:2]]. בתצוגה [[seg:P.100]].</div></li>
+      <li><div>בלי לעזוב, [[tap:ACCENT]]. בתצוגה עכשיו מספר שמתחיל ב־v, למשל [[seg:v.10]].</div></li>
+      <li><div>עדיין מחזיק, [[turn:TEMPO/VALUE]] עד [[seg:v.4]]. [[rel]].</div></li>
+      <li><div>אותו דבר בכל הצעדים הזוגיים: 4, 6, 8, 10, 12, 14, 16.</div></li>
     </ol>
     <div class="grid-box"><div class="seq" data-rows='[["חזק",[1,3,5,7,9,11,13,15]],["v.4",[2,4,6,8,10,12,14,16]]]'></div></div>
-    <div class="ok"><b>הצלחת אם:</b> ההיי־האט ״מדבר״: חזק־חלש, חזק־חלש, במקום קיר אחיד של טיקים.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>עוצמה לכל מכה</b>, מ־v.0 עד v.10. כך מכה עדינה ומכה חזקה של אותו כלי יכולות לשבת באותה תבנית, כמו מתופף אמיתי שלא מכה תמיד באותו כוח.</p>
-      <p class="acid"><b>לאסיד:</b> היי־האט ״נושם״ בחזק־חלש הוא אחד ההבדלים הכי גדולים בין ביט מכונה לביט שמרגיש חי.</p>
+    <div class="ok"><b>הצלחת אם:</b> ההיי־האט ״מדבר״: חזק־חלש, חזק־חלש.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>עוצמה לכל מכה</b>, מ־v.0 עד v.10. <span class="acid"><b>לאסיד:</b> זה ההבדל בין מכונה לבין ביט שמרגיש חי.</span></p>
     </div>
   </article>
 
   <article class="card">
     <div class="card-head"><span class="num">2.2</span><h3>הדגשה לכל התופים</h3><span class="label">ACCENT</span></div>
+    [[state:play|CLOSED HIHAT|כל כלי תופים מתאים]]
+    [[combo:איך מדגישים את הפעמה הראשונה והשלישית בכל התופים? (תוף כבר נבחר)|tap:ACCENT,tap:1,tap:9|תוף כלשהו נבחר]]
+    [[combo-:איך משנים את עוצמת ההדגשה של התופים?|hold:ACCENT,turn:TEMPO/VALUE|תוף כלשהו נבחר]]
     <ol class="steps">
-      <li><div>כשכלי תופים כלשהו נבחר, לחץ <kbd>ACCENT</kbd>. הוא נדלק.</div></li>
-      <li><div>הדלק את צעדים <kbd>1</kbd> ו־<kbd>9</kbd>.</div></li>
-      <li><div>עוצמת ההדגשה: החזק <kbd>ACCENT</kbd> וסובב <kbd>TEMPO/VALUE</kbd>.</div></li>
-      <li><div>לחץ על לחצן כלי כדי לצאת.</div></li>
+      <li><div>[[tap:ACCENT]]. הוא נדלק.</div></li>
+      <li><div>[[tap:1]] ו־[[tap:9]].</div></li>
+      <li><div>עוצמת ההדגשה: [[hold:ACCENT]] ו־[[turn:TEMPO/VALUE]]. [[rel]].</div></li>
+      <li><div>לצאת: [[tap:CLOSED HIHAT]].</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> הפעמה הראשונה והשלישית בולטות יותר, בכל התופים יחד.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>ההבדל מ־2.1: עוצמה לכל מכה היא לכלי אחד ולצעד אחד. ההדגשה של התופים חלה על <b>כל</b> התופים שמנגנים באותו צעד. בשיעור 5 השתמשנו ב־<kbd>ACCENT</kbd> לבס, וזו ההדגשה של התופים, נפרדת ממנה.</p>
-      <p class="acid"><b>לאסיד:</b> הדגשה על 1 ו־9 נותנת לתיבה ״חצאים״. מרגישים את המבנה גם בלי לספור.</p>
+    <div class="ok"><b>הצלחת אם:</b> הפעמה הראשונה והשלישית בולטות, בכל התופים יחד.</div>
+    <p class="info">המדריך לא אומר איך יוצאים ממצב ההדגשה. לחיצה על לחצן כלי היא הניחוש שלי. אם זה לא עבד, ספר לי מה כן.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>ההבדל מ־2.1: עוצמה לכל מכה היא לכלי אחד בצעד אחד. ההדגשה חלה על <b>כל</b> התופים באותו צעד.</p>
     </div>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">2.3</span><h3>שאפל</h3><span class="label">SHIFT + D (SHUFFLE)</span></div>
+    <div class="card-head"><span class="num">2.3</span><h3>שאפל</h3><span class="label">SHIFT + 3</span></div>
+    [[state:play]]
+    [[combo:איך מוסיפים שאפל?|hold:SHIFT,tap:3,rel,turn:TEMPO/VALUE,tap:1]]
     <ol class="steps">
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ על לחצן <kbd>3</kbd>, שכתוב עליו SHUFFLE. שחרר.</div></li>
-      <li><div>סובב <kbd>TEMPO/VALUE</kbd> לאט ימינה, צעד אחד בכל פעם, והקשב להיי־האטים.</div></li>
-      <li><div>מצא ערך שבו הגרוב ״מתנדנד״ אבל עדיין ישר. לחץ <kbd>C (EXIT)</kbd>.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:3]], שכתוב עליו SHUFFLE. [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] לאט ימינה, קליק אחרי קליק, והקשב להיי־האטים.</div></li>
+      <li><div>כשהגרוב ״מתנדנד״ אבל עדיין ישר: [[tap:1]], שכתוב עליו EXIT.</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> ההיי־האטים נשמעים פחות רובוטיים, כאילו ״מקפצים״.</div>
-    <p class="info">המדריך לא מפרט את טווח הערכים. התחל בקטן: מעט שאפל הולך רחוק.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>שאפל</b> מאחר מעט כל צעד שני. הפעמות עצמן נשארות במקום, ורק המכות שביניהן זזות. זה ההבדל בין צעידה לבין ריקוד.</p>
-      <p class="acid"><b>לאסיד:</b> הרבה אסיד האוס מנוגן עם שאפל קטן. בלעדיו זה טכנו, איתו זה האוס.</p>
+    <div class="ok"><b>הצלחת אם:</b> ההיי־האטים ״מקפצים״ ופחות רובוטיים.</div>
+    <p class="info">רשום את הערך שהיה לפני, ובסוף החזר אליו. המדריך לא מפרט את הטווח, אז התחל בקטן.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>שאפל</b> מאחר מעט כל צעד שני. <span class="acid"><b>לאסיד:</b> בלי שאפל זה טכנו, עם קצת שאפל זה האוס.</span></p>
     </div>
-    <p class="info">בסוף השלב: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd> מחזיר את התופים. את השאפל החזר ידנית לערך שהיה, כי לא ברור מהמדריך אם השחזור מחזיר גם אותו.</p>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">2.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div>היי־האט חזק־חלש כמו ב־2.1, ושאפל קטן.</div></li>
+      <li><div>נגן חמש דקות. באמצע, הוסף ובטל הדגשה בצעדים 1 ו־9, ושמע את ההבדל.</div></li>
+      <li><div>בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>, והחזר את השאפל.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="2"></div>
+    <p class="end">המנה נגמרה. מחר: מנה 3, גלגולים.</p>
   </article>
 </section>
 
-<!-- ===================== 3 ===================== -->
-<section class="stage" id="s3">
-  <span class="stage-tag">שלב 3 · גלגולים</span>
-  <h2>כמה מכות בצעד אחד</h2>
+<!-- ===================== mana 3 ===================== -->
+<section class="stage" id="s3" data-mana="3" data-min="10" data-title="גלגולים" data-goal="בסוף המנה: כמה מכות בצעד אחד, מכה כפולה, וגלגול שמופיע לפעמים.">
+  <span class="stage-tag">מנה 3</span>
+  <h2>גלגולים</h2>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">3.0</span><h3>חזרה בדקה</h3></div>
+    <details><summary>איך מחלישים מכה אחת?</summary><p>מחזיקים את הצעד, לוחצים <kbd>ACCENT</kbd>, ומסובבים עד v נמוך.</p></details>
+    <details><summary>על מה חלה ההדגשה של התופים?</summary><p>על כל התופים שמנגנים באותו צעד.</p></details>
+    <details><summary>איך מגבירים את כל הסיכויים יחד? (ממנה 1)</summary><p>מחזיקים <kbd>PATTERN</kbd> ומסובבים <kbd>TEMPO/VALUE</kbd>.</p></details>
+  </article>
 
   <article class="card">
     <div class="card-head"><span class="num">3.1</span><h3>גלגול סנר</h3><span class="label">החזקת כלי + צעד</span></div>
+    [[state:play|SNARE DRUM|צעד 16 דולק]]
+    [[combo:איך הופכים את הסנר בצעד 16 לגלגול של ארבע מכות?|hold:SNARE DRUM,tap:16,tap:16,tap:16,tap:16,look:1_4]]
     <ol class="steps">
-      <li><div>לחץ <kbd>SNARE DRUM</kbd>, והדלק את צעד <kbd>16</kbd>.</div></li>
-      <li><div><b>החזק</b> את <kbd>SNARE DRUM</kbd>, ולחץ פעם אחת על צעד <kbd>16</kbd>. בתצוגה <b>OFF</b>: עוד אין חלוקה.</div></li>
-      <li><div>עדיין מחזיק את <kbd>SNARE DRUM</kbd>, לחץ שוב על צעד 16. כל לחיצה מתקדמת: <b>1_2</b>, <b>1_3</b>, <b>1_4</b>, <b>FLAN</b>, ושוב OFF.</div></li>
-      <li><div>עצור על <b>1_4</b> ושחרר. הקשב.</div></li>
-      <li><div>נסה גם 1_2 ו־1_3, כמה סיבובים לכל אחד.</div></li>
+      <li><div>[[tap:SNARE DRUM]], ואז [[tap:16]] כדי להדליק את הצעד.</div></li>
+      <li><div>[[hold:SNARE DRUM]]. כל עוד מחזיק, לחץ על לחצן 16 שוב ושוב והסתכל בתצוגה:</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> בסוף כל תיבה נשמע ״טררר״ קצר שמוביל לפעמה הבאה.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>תת־צעד</b> מחלק צעד אחד לכמה מכות מהירות, בלי לשנות את הקצב. 1_2 הן שתי מכות בצעד, 1_3 שלוש, 1_4 ארבע. הצעד עדיין תופס בדיוק אותו מקום בזמן.</p>
-      <p class="acid"><b>לאסיד:</b> גלגול סנר בצעד האחרון הוא דרך קלאסית לבנות מתח לפני מעבר.</p>
+    <div class="tbl-box"><table>
+      <thead><tr><th>לחיצה</th><th>בתצוגה</th><th>מה שומעים</th></tr></thead>
+      <tbody>
+        <tr><td>ראשונה</td><td>[[seg:OFF]]</td><td>רק מראה את המצב, לא משנה</td></tr>
+        <tr><td>שנייה</td><td>[[seg:1_2]]</td><td>שתי מכות בצעד</td></tr>
+        <tr><td>שלישית</td><td>[[seg:1_3]]</td><td>שלוש</td></tr>
+        <tr><td>רביעית</td><td>[[seg:1_4]]</td><td>ארבע, גלגול</td></tr>
+        <tr><td>חמישית</td><td>[[seg:FLAN]]</td><td>מכה כפולה, בכרטיס הבא</td></tr>
+      </tbody>
+    </table></div>
+    <ol class="steps" start="3">
+      <li><div>עצור על [[seg:1_4]] ו־[[rel]].</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בסוף כל תיבה נשמע ״טררר״ שמוביל לפעמה הבאה.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>תת־צעד</b> מחלק צעד לכמה מכות מהירות, בלי לשנות את הקצב. <span class="acid"><b>לאסיד:</b> גלגול בצעד האחרון בונה מתח לפני מעבר.</span></p>
     </div>
   </article>
 
   <article class="card">
     <div class="card-head"><span class="num">3.2</span><h3>קלאפ כפול</h3><span class="label">FLAN</span></div>
+    [[state:play|HAND CLAP|קלאפ בצעדים 5 ו־13]]
+    [[combo:איך הופכים את הקלאפ בצעד 13 למכה כפולה?|hold:HAND CLAP,tap:13,tap:13,tap:13,tap:13,tap:13,look:FLAN]]
     <ol class="steps">
-      <li><div>החזק <kbd>HAND CLAP</kbd> ולחץ על צעד <kbd>13</kbd> עד שבתצוגה <b>FLAN</b>. שחרר.</div></li>
-      <li><div>השווה בין הקלאפ בצעד 5 לבין זה שבצעד 13.</div></li>
+      <li><div>[[hold:HAND CLAP]], ולחץ על לחצן 13 עד שבתצוגה [[seg:FLAN]]. [[rel]].</div></li>
+      <li><div>השווה את הקלאפ בצעד 5 לזה שבצעד 13.</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> הקלאפ בצעד 13 נשמע ״עבה״ יותר, כמו שתי ידיים שמוחאות כמעט ביחד.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>פלאם</b> הוא מונח של מתופפים: שתי מכות צמודות מאוד, כמעט אחת. המדריך לא מפרט מה המרווח ביניהן, אז תסמוך על האוזן.</p>
-      <p class="acid"><b>לאסיד:</b> הקלאפ השני בתיבה שונה קצת מהראשון. הגרוב נשמע פחות ״מועתק״.</p>
-    </div>
+    <div class="ok"><b>הצלחת אם:</b> הקלאפ בצעד 13 ״עבה״, כמו שתי ידיים כמעט ביחד.</div>
+    <div class="learn"><span class="learn-tag">להבין</span><p><b>פלאם</b>: שתי מכות צמודות מאוד.</p></div>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">3.3</span><h3>גלגול שמופיע לפעמים</h3><span class="label">החזקת כלי + צעד + ACCENT</span></div>
+    <div class="card-head"><span class="num">3.3</span><h3>גלגול שמופיע לפעמים</h3><span class="label">+ ACCENT</span></div>
+    [[state:play|SNARE DRUM|גלגול בצעד 16 מ־3.1]]
+    [[combo:איך נותנים לגלגול בצעד 16 סיכוי?|hold:SNARE DRUM,tap:16,tap:ACCENT,turn:TEMPO/VALUE,look:P.40]]
     <ol class="steps">
-      <li><div>החזק <kbd>SNARE DRUM</kbd> ולחץ פעם אחת על צעד <kbd>16</kbd>. בתצוגה המצב, למשל 1_4.</div></li>
-      <li><div>עדיין מחזיק את הכלי, לחץ <kbd>ACCENT</kbd>. בתצוגה <b>P.</b> ומספר: הסיכוי של הגלגול.</div></li>
-      <li><div>סובב עד <b>P.40</b>. שחרר.</div></li>
+      <li><div>[[hold:SNARE DRUM]] ו־[[tap:16]] <b>פעם אחת</b>. בתצוגה [[seg:1_4]]: רק מראה.</div></li>
+      <li><div>עדיין מחזיק, [[tap:ACCENT]]. בתצוגה מספר שמתחיל ב־P.</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:P.40]]. [[rel]].</div></li>
       <li><div>בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> בחלק מהתיבות שומעים גלגול, ובחלק רק מכה אחת.</div>
-    <p class="warn">ב־3.1 ראית שכל לחיצה נוספת על הצעד מקדמת את ההגדרה. כאן לוחצים על צעד 16 רק פעם אחת, כדי לראות את המצב בלי לשנות אותו.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>לפי המדריך, לגלגול יש סיכוי משלו, נפרד מהסיכוי של הצעד. הצעד יכול לנגן תמיד, ורק החלוקה שלו מופיעה לפעמים.</p>
-    </div>
+    <div class="ok"><b>הצלחת אם:</b> בחלק מהתיבות גלגול, ובחלק מכה אחת.</div>
+    <p class="warn">לחיצה שנייה על 16 כבר משנה את הגלגול. כאן לוחצים פעם אחת בלבד.</p>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">3.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div>גלגול בצעד 16 עם סיכוי, וקלאפ כפול בצעד 13.</div></li>
+      <li><div>נגן חמש דקות. בכל כמה תיבות שנה את הגלגול: 1_2, 1_3, 1_4.</div></li>
+      <li><div>בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="3"></div>
+    <p class="end">המנה נגמרה. מחר: מנה 4, משחקי אורך.</p>
   </article>
 </section>
 
-<!-- ===================== 4 ===================== -->
-<section class="stage" id="s4">
-  <span class="stage-tag">שלב 4 · אורכים</span>
+<!-- ===================== mana 4 ===================== -->
+<section class="stage" id="s4" data-mana="4" data-min="12" data-title="משחקי אורך" data-goal="בסוף המנה: תיבה שנייה שונה, בס שנודד מעל הקיק, ומשולשים.">
+  <span class="stage-tag">מנה 4</span>
   <h2>משחקי אורך</h2>
 
-  <article class="card">
-    <div class="card-head"><span class="num">4.1</span><h3>תיבה שנייה שונה</h3><span class="label">SHIFT + F (STEP 17-32)</span></div>
-    <ol class="steps">
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ על לחצן <kbd>6</kbd>, שכתוב עליו STEP 17-32. שחרר.</div></li>
-      <li><div>עכשיו התבנית באורך 32, והחצי השני הוא העתק של הראשון. לחצני הצעדים מראים את החצי השני: לחצן 1 הוא צעד 17.</div></li>
-      <li><div>לחץ <kbd>BASS DRUM</kbd>, והדלק את לחצנים <kbd>15</kbd> ו־<kbd>16</kbd> (צעדים 31 ו־32).</div></li>
-      <li><div>חזרה לחצי הראשון: <kbd>SHIFT</kbd> + לחצן <kbd>5</kbd> (STEP 1-16).</div></li>
-    </ol>
-    <div class="ok"><b>הצלחת אם:</b> כל תיבה שנייה נגמרת בשלושה קיקים מהירים, והראשונה נשארה רגילה.</div>
-    <p class="info">שים לב לבס: לפי המדריך, האורך של התופים והבס נקבע בנפרד. אם הבס עכשיו ״בורח״ מהתופים, זה בדיוק הנושא של הכרטיס הבא.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>לפי המדריך, אם התבנית הייתה 16 צעדים או פחות והחצי השני ריק, המכשיר מאריך ל־32 <b>ומעתיק</b> את צעדים 1 עד 16. זה הקיצור הכי מהיר לבנות ״שאלה ותשובה״: תיבה אחת זהה, השנייה עם שינוי קטן.</p>
-      <p class="acid"><b>לאסיד:</b> מוזיקה ריקודית בנויה בזוגות של תיבות. שינוי קטן בתיבה השנייה נותן ללופ ״משפט״.</p>
-    </div>
-    <p class="info">בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>16</kbd> מחזיר הכל, כולל האורך.</p>
+  <article class="card recap">
+    <div class="card-head"><span class="num">4.0</span><h3>חזרה בדקה</h3></div>
+    <details><summary>איך עושים גלגול?</summary><p>מחזיקים את לחצן הכלי, ולוחצים על הצעד שוב ושוב עד 1_4.</p></details>
+    <details><summary>מה זה FLAN?</summary><p>מכה כפולה, צמודה מאוד.</p></details>
+    <details><summary>איך מוסיפים שאפל? (ממנה 2)</summary><p>מחזיקים <kbd>SHIFT</kbd>, לוחצים 3, משחררים, מסובבים, ולוחצים 1.</p></details>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">4.2</span><h3>בס של 12 צעדים</h3><span class="label">BASS · SHIFT + D# (LAST)</span></div>
+    <div class="card-head"><span class="num">4.1</span><h3>תיבה שנייה שונה</h3><span class="label">SHIFT + 6</span></div>
+    [[state:play||תבנית של 16 צעדים]]
+    [[combo:איך עוברים לצעדים 17 עד 32?|hold:SHIFT,tap:6]]
+    [[combo-:איך חוזרים לצעדים 1 עד 16?|hold:SHIFT,tap:5]]
     <ol class="steps">
-      <li><div>לחץ <kbd>BASS</kbd>.</div></li>
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ על לחצן <kbd>4</kbd>, שכתוב עליו LAST. שחרר.</div></li>
-      <li><div>סובב <kbd>TEMPO/VALUE</kbd> עד <b>12</b>. לחץ <kbd>C (EXIT)</kbd>.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:6]], שכתוב עליו STEP 17-32. [[rel]].</div></li>
+      <li><div>התבנית עכשיו 32 צעדים, והחצי השני הועתק מהראשון. הלחצנים מראים את החצי השני: לחצן 1 הוא צעד 17.</div></li>
+      <li><div>[[tap:BASS DRUM]], ואז [[tap:15]] ו־[[tap:16]] (צעדים 31 ו־32).</div></li>
+      <li><div>חזרה לחצי הראשון: [[hold:SHIFT]] ו־[[tap:5]].</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כל תיבה שנייה נגמרת בשלושה קיקים מהירים.</div>
+    <p class="info">אם הבס פתאום ״בורח״, זה בגלל אורך שונה. זה הנושא של הכרטיס הבא. בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>16</kbd>.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.2</span><h3>בס של 12 צעדים</h3><span class="label">SHIFT + 4</span></div>
+    [[state:play]]
+    [[combo:איך מקצרים את הבס ל־12 צעדים?|tap:BASS,hold:SHIFT,tap:4,rel,turn:TEMPO/VALUE,look:12,tap:1]]
+    <ol class="steps">
+      <li><div>[[tap:BASS]]. חשוב: הבס נבחר, אחרת יתקצרו התופים.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:4]], שכתוב עליו LAST. [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:12]], ואז [[tap:1]].</div></li>
       <li><div>הקשב לשלוש תיבות לפחות.</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> קו הבס ״נודד״ ביחס לקיק, ואחרי שלוש תיבות של תופים נפגש איתו שוב בהתחלה.</div>
-    <p class="warn">אם התקצרו דווקא התופים, הכלי שנבחר היה תוף. חזור: <kbd>PATTERN</kbd> + לחצן <kbd>16</kbd>, בחר <kbd>BASS</kbd>, ונסה שוב.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>זה <b>פולימטר</b>, כמו בתרגיל ג בשיעור 2: 12 צעדים של בס מול 16 של תופים. הם נפגשים כל 48 צעדים, שלוש תיבות.</p>
-      <p>בתפריט יש הגדרה של סנכרון בין התופים לבס. <b>OFF</b>: כל אחד רץ באורך שלו. <b>ALwy</b>: כשהתופים חוזרים להתחלה, גם הבס חוזר, אז אין נדידה. <b>OnCE</b>: הם מתחילים יחד רק כשמחליפים תבנית.</p>
-      <p class="acid"><b>לאסיד:</b> קו שנודד הוא דרך לקבל ״שלושה קווים״ מקו אחד. הרבה טראקים של אסיד נשענים על זה.</p>
+    <div class="ok"><b>הצלחת אם:</b> הבס ״נודד״ ביחס לקיק, ואחרי שלוש תיבות נפגש איתו שוב.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>פולימטר</b>: 12 מול 16, נפגשים כל שלוש תיבות. בס ותופים באורכים שונים הם ״שלושה קווים מקו אחד״.</p>
     </div>
-    <p class="info">בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>15</kbd> מחזיר את הבס.</p>
+    <p class="info">בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>15</kbd>.</p>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">4.3</span><h3>משולשים</h3><span class="label">תפריט · r.SCL · b.TRi</span></div>
+    <div class="card-head"><span class="num">4.3</span><h3>משולשים</h3><span class="label">תפריט</span></div>
+    [[state:play]]
+    [[combo:איך הופכים את התופים למשולשים?|hold:SHIFT,tap:15,rel,turn:TEMPO/VALUE,look:r.SCL,tap:2,turn:TEMPO/VALUE,look:16-3,tap:1,tap:1]]
+    [[combo-:איך נכנסים לתפריט?|hold:SHIFT,tap:15]]
     <ol class="steps">
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ לחצן <kbd>15</kbd> (MENU).</div></li>
-      <li><div>סובב <kbd>TEMPO/VALUE</kbd> עד הפריט של סולם הצעדים של התופים, <b>r.SCL</b>. לחץ <kbd>C# (ENTER)</kbd>.</div></li>
-      <li><div>סובב לערך <b>16-3</b>. לחץ <kbd>C (EXIT)</kbd> והקשב.</div></li>
-      <li><div>חזור לאותו פריט והחזר ל־<b>16</b>. <kbd>C (EXIT)</kbd> פעמיים.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:15]], שכתוב עליו MENU. [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:r.SCL]], ו־[[tap:2]] (ENTER).</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:16-3]]. [[tap:1]] (EXIT) פעמיים, והקשב.</div></li>
+      <li><div>חזור לאותו פריט, והחזר ל־[[seg:16]].</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> אותה תבנית נשמעה פתאום ״מתגלגלת״, בקצב של שלוש במקום ארבע, וחזרה לרגיל.</div>
+    <div class="ok"><b>הצלחת אם:</b> התופים נשמעו ״מתגלגלים״, שלוש במקום ארבע, וחזרו לרגיל.</div>
     <div class="tbl-box"><table>
-      <thead><tr><th>ערך</th><th>כל צעד הוא</th></tr></thead>
-      <tbody>
-        <tr><td>16</td><td>שש־עשרית, הרגיל</td></tr>
-        <tr><td>32</td><td>שלושים־ושתיים־ית, פי שניים מהר</td></tr>
-        <tr><td>8-3</td><td>שמינית במשולש</td></tr>
-        <tr><td>16-3</td><td>שש־עשרית במשולש</td></tr>
-      </tbody>
+      <thead><tr><th>בתצוגה</th><th>כל צעד</th></tr></thead>
+      <tbody><tr><td>[[seg:16]]</td><td>רגיל</td></tr><tr><td>[[seg:32]]</td><td>פי שניים מהר</td></tr><tr><td>[[seg:8-3]]</td><td>משולש איטי</td></tr><tr><td>[[seg:16-3]]</td><td>משולש מהיר</td></tr></tbody>
     </table></div>
-    <p class="info">לבס יש פריט נפרד, <b>b.TRi</b>: On או OFF. האותיות בתצוגה הן קירוב של שעון דיגיטלי, אז הקיצור יכול להיראות מעט שונה.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>משולשים</b> מחלקים את הפעמה לשלושה במקום לארבעה. התחושה ״מתגלגלת״, כמו דהירה.</p>
-      <p class="acid"><b>לאסיד:</b> בס במשולשים מעל תופים רגילים יוצר מתח חזק. נסה בהזדמנות גם את b.TRi.</p>
-    </div>
+    <div class="learn"><span class="learn-tag">להבין</span><p><b>משולשים</b>: הפעמה מתחלקת לשלוש. לבס יש פריט נפרד, [[seg:b.TRi]].</p></div>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">4.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div>בס של 12 צעדים, כמו ב־4.2.</div></li>
+      <li><div>נגן חמש דקות עם <kbd>CUTOFF</kbd>, ותקשיב איך הבס והקיק נפרדים ונפגשים.</div></li>
+      <li><div>בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>16</kbd>.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="4"></div>
+    <p class="end">המנה נגמרה. מחר: מנה 5, טריקים להופעה.</p>
   </article>
 </section>
 
-<!-- ===================== 5 ===================== -->
-<section class="stage" id="s5">
-  <span class="stage-tag">שלב 5 · הופעה</span>
-  <h2>טריקים להופעה</h2>
+<!-- ===================== mana 5 ===================== -->
+<section class="stage" id="s5" data-mana="5" data-min="12" data-title="גמגום, הזזה ואקראי" data-goal="בסוף המנה: לתקוע את התופים על צעד, להזיז כלי בזמן, ולהגריל ולחזור.">
+  <span class="stage-tag">מנה 5</span>
+  <h2>גמגום, הזזה ואקראי</h2>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">5.0</span><h3>חזרה בדקה</h3></div>
+    <details><summary>איך עוברים לצעדים 17 עד 32?</summary><p>מחזיקים <kbd>SHIFT</kbd> ולוחצים 6.</p></details>
+    <details><summary>מה חייב להיות נבחר כשמקצרים את הבס?</summary><p><kbd>BASS</kbd>. אחרת מתקצרים התופים.</p></details>
+    <details><summary>איך נכנסים לתפריט ויוצאים?</summary><p>מחזיקים <kbd>SHIFT</kbd> ולוחצים 15. יוצאים בלחצן 1, EXIT.</p></details>
+  </article>
 
   <article class="card">
     <div class="card-head"><span class="num">5.1</span><h3>גמגום</h3><span class="label">SHIFT + PATTERN</span></div>
+    [[state:play]]
+    [[combo:איך תוקעים את התופים על צעד 13?|hold:SHIFT,tap:PATTERN,rel,tap:13]]
+    [[combo-:איך יוצאים מהגמגום?|tap:PATTERN]]
     <ol class="steps">
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ <kbd>PATTERN</kbd>. <kbd>PATTERN</kbd> מהבהב.</div></li>
-      <li><div>לחץ על לחצן צעד <kbd>13</kbd>. התופים חוזרים על הצעד הזה שוב ושוב.</div></li>
-      <li><div>נסה שני צעדים יחד: <kbd>13</kbd> ו־<kbd>15</kbd>.</div></li>
-      <li><div>לחץ <kbd>PATTERN</kbd> כדי לצאת.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:PATTERN]]. [[rel]]. <kbd>PATTERN</kbd> מהבהב.</div></li>
+      <li><div>[[tap:13]]. התופים חוזרים על הצעד הזה שוב ושוב, והבס ממשיך.</div></li>
+      <li><div>נסה שני צעדים יחד: 13 ו־15.</div></li>
+      <li><div>לצאת: [[tap:PATTERN]].</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> התופים ״נתקעו״ על צעד אחד, הבס המשיך לנגן, וביציאה הכל חזר לקצב.</div>
-    <p class="info">המדריך כותב ״לוחצים על צעד״. אם הגמגום נעצר ברגע ששחררת את האצבע, זה אומר שצריך להחזיק את הלחצן. ספר לי מה ראית, ואעדכן את הכרטיס.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>לופ צעדים</b>: רק התופים נכנסים ללופ, והבס ממשיך. לכן זה נשמע כמו תקלה מכוונת, לא כמו עצירה.</p>
-      <p class="acid"><b>לאסיד:</b> גמגום של תיבה אחת לפני שהקיק חוזר הוא בנייה קלאסית.</p>
-    </div>
+    <div class="ok"><b>הצלחת אם:</b> התופים ״נתקעו״, הבס המשיך, וביציאה הכל חזר לקצב.</div>
+    <p class="info">אם הגמגום נעצר ברגע שעזבת את הלחצן, צריך להחזיק אותו. ספר לי מה ראית.</p>
+    <div class="learn"><span class="learn-tag">להבין</span><p><b>לופ צעדים</b>. <span class="acid"><b>לאסיד:</b> גמגום של תיבה לפני שהקיק חוזר הוא בנייה קלאסית.</span></p></div>
   </article>
 
   <article class="card">
     <div class="card-head"><span class="num">5.2</span><h3>להזיז כלי בזמן</h3><span class="label">החזקת כלי + TEMPO/VALUE</span></div>
+    [[state:play]]
+    [[combo:איך מזיזים את כל ההיי־האט הפתוח צעד אחד?|hold:OPEN HIHAT,turn:TEMPO/VALUE]]
     <ol class="steps">
-      <li><div>החזק <kbd>OPEN HIHAT</kbd>, וסובב <kbd>TEMPO/VALUE</kbd> קליק אחד ימינה. שחרר.</div></li>
-      <li><div>הקשב: ההיי־האט הפתוח זז צעד אחד.</div></li>
-      <li><div>החזק שוב וסובב קליק אחד שמאלה כדי להחזיר.</div></li>
-      <li><div>נסה גם עם <kbd>HAND CLAP</kbd>: צעד אחד אחורה.</div></li>
+      <li><div>[[hold:OPEN HIHAT]], ו־[[turn:TEMPO/VALUE]] קליק אחד ימינה. [[rel]].</div></li>
+      <li><div>הקשב, ואז החזר: אותה החזקה, קליק אחד שמאלה.</div></li>
+      <li><div>נסה גם עם <kbd>HAND CLAP</kbd>.</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> כל המכות של הכלי זזו יחד, והגרוב קיבל תחושה אחרת.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>המדריך קורא לזה הזזת התבנית של הכלי קדימה ואחורה. התבנית נשארת אותה תבנית, רק המיקום שלה בתיבה משתנה.</p>
-      <p class="acid"><b>לאסיד:</b> דרך מהירה לגלות גרוב חדש בלי לתכנת. גם עובד על הבס: אותו קו, מתחיל ממקום אחר.</p>
-    </div>
+    <div class="ok"><b>הצלחת אם:</b> כל המכות של הכלי זזו יחד.</div>
     <p class="info">בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</p>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">5.3</span><h3>מכינים מילוי</h3><span class="label">תפריט · COPY</span></div>
+    <div class="card-head"><span class="num">5.3</span><h3>אקראי, וחזרה</h3><span class="label">SHIFT + 9 · SHIFT + 10</span></div>
+    [[state:play]]
+    [[combo:איך מגרילים תופים חדשים?|hold:SHIFT,tap:9]]
+    [[combo:איך מגרילים בס חדש?|hold:SHIFT,tap:10]]
     <ol class="steps">
-      <li><div>העתק את הג׳אם לתבנית 15: <kbd>SHIFT</kbd> + לחצן <kbd>15</kbd> (MENU), סובב עד <b>COPY</b>, <kbd>C# (ENTER)</kbd>.</div></li>
-      <li><div>סובב עד <b>15</b> ולחץ <kbd>C# (ENTER)</kbd>.</div></li>
-      <li><div>עבור לתבנית 15: <kbd>PATTERN</kbd> ואז לחצן <kbd>15</kbd>. לחץ <kbd>SNARE DRUM</kbd>.</div></li>
-      <li><div>הדלק סנר בצעדים <kbd>13</kbd> <kbd>14</kbd> <kbd>15</kbd> <kbd>16</kbd>, ותן לצעד 16 גלגול של 1_4, כמו ב־3.1.</div></li>
-      <li><div>לחץ <kbd>BASS DRUM</kbd> וכבה את הקיק בצעד <kbd>13</kbd>.</div></li>
-      <li><div>חזור לתבנית 16: <kbd>PATTERN</kbd> ואז לחצן <kbd>16</kbd>.</div></li>
-    </ol>
-    <div class="grid-box"><div class="seq" data-rows='[["קיק",[1,5,9]],["סנר",[13,14,15,16]],["קלאפ",[5,13]],["סגור",[1,2,5,6,9,10,13,14]]]'></div></div>
-    <div class="ok"><b>הצלחת אם:</b> בתבנית 15 שמעת את הג׳אם, עם ריצת סנר בסוף. עכשיו נבחרה שוב 16.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p><b>מילוי</b> הוא תבנית שמנגנת פעם אחת, כמעבר. בטי־8 המילוי הוא פשוט תבנית אחרת מאותו בנק, ולכן בונים אותו כמו כל תבנית.</p>
-    </div>
-  </article>
-
-  <article class="card">
-    <div class="card-head"><span class="num">5.4</span><h3>מנגנים את המילוי</h3><span class="label">SHIFT + G · SHIFT + F#</span></div>
-    <ol class="steps">
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ לחצן <kbd>8</kbd> (FILL PTN). שחרר.</div></li>
-      <li><div>לחץ על לחצן <kbd>15</kbd>: המילוי של הבנק הזה יהיה תבנית 15. לחץ <kbd>C (EXIT)</kbd>.</div></li>
-      <li><div>נגן את תבנית 16. באמצע תיבה, החזק <kbd>SHIFT</kbd> ולחץ לחצן <kbd>7</kbd> (FILL TRG).</div></li>
-    </ol>
-    <div class="ok"><b>הצלחת אם:</b> בסוף התיבה נכנסה ריצת הסנר, ואחריה הג׳אם המשיך.</div>
-    <p class="info">המדריך אומר שהמילוי נכנס בסוף התבנית, ולא מפרט מה קורה אחריו. אם הנגינה נשארה על תבנית 15, חזור ידנית ל־16 וספר לי.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>את תבנית המילוי בוחרים פעם אחת לכל בנק. אחר כך, בהופעה, מספיקה לחיצה אחת בכל פעם שרוצים מעבר.</p>
-      <p class="acid"><b>לאסיד:</b> מילוי כל 8 או 16 תיבות מסמן לרוקדים ״עכשיו משהו משתנה״.</p>
-    </div>
-  </article>
-
-  <article class="card">
-    <div class="card-head"><span class="num">5.5</span><h3>אקראי, וחזרה</h3><span class="label">SHIFT + G# · SHIFT + A</span></div>
-    <ol class="steps">
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ לחצן <kbd>9</kbd> (RANDOM RHYTHM). תופים חדשים לגמרי.</div></li>
-      <li><div>עוד פעם, ועוד פעם. כל לחיצה מגרילה תופים אחרים.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:9]]. תופים חדשים לגמרי. עוד פעם, ועוד.</div></li>
       <li><div>חזרה: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</div></li>
-      <li><div>עכשיו בס: <kbd>SHIFT</kbd> + לחצן <kbd>10</kbd> (RANDOM BASS). שנה CUTOFF ו־RESO והקשב.</div></li>
+      <li><div>בס: [[hold:SHIFT]] ו־[[tap:10]]. שחק ב־<kbd>CUTOFF</kbd> ו־<kbd>RESO</kbd>.</div></li>
       <li><div>חזרה: <kbd>PATTERN</kbd> + לחצן <kbd>15</kbd>.</div></li>
     </ol>
-    <div class="ok"><b>הצלחת אם:</b> שמעת לפחות שלוש גרסאות אקראיות, וחזרת לג׳אם שלך.</div>
-    <p class="info">שמעת משהו טוב באקראי? אל תשחזר. העתק אותו לתבנית ריקה עם <b>COPY</b>, כמו ב־5.3, ושמור.</p>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>אקראי הוא מחולל רעיונות, לא תוצאה סופית. הרבה פעמים מה שאוהבים זה חלק אחד ממנו: מכה אחת של קיק, או שלושה תווים של בס.</p>
-      <p class="acid"><b>לאסיד:</b> בס אקראי עם CUTOFF נמוך ו־RESO גבוה כמעט תמיד נשמע ״חומצי״. נסה כמה ובחר.</p>
-    </div>
+    <div class="ok"><b>הצלחת אם:</b> שמעת שלוש גרסאות אקראיות, וחזרת לג׳אם שלך.</div>
+    <p class="info">שמעת משהו טוב? אל תשחזר. העתק אותו לתבנית ריקה, כמו במנה 6, ושמור.</p>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">5.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div>נגן חמש דקות. כל דקה, טריק אחד: גמגום של תיבה, הזזת הקלאפ, בס אקראי ושחזור.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="5"></div>
+    <p class="end">המנה נגמרה. מחר: מנה 6, מילוי.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 6 ===================== -->
+<section class="stage" id="s6" data-mana="6" data-min="15" data-title="מילוי ותיפוף ביד" data-goal="בסוף המנה: תבנית מילוי שנכנסת בלחיצה, ותיפוף ביד שנשאר בלופ.">
+  <span class="stage-tag">מנה 6</span>
+  <h2>מילוי ותיפוף ביד</h2>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">6.0</span><h3>חזרה בדקה</h3></div>
+    <details><summary>איך יוצאים מהגמגום?</summary><p>לוחצים <kbd>PATTERN</kbd>.</p></details>
+    <details><summary>איך מחזירים את הבס אחרי בס אקראי?</summary><p>מחזיקים <kbd>PATTERN</kbd> ולוחצים 15.</p></details>
+    <details><summary>איך מחלישים מכה אחת? (ממנה 2)</summary><p>מחזיקים את הצעד, <kbd>ACCENT</kbd>, ומסובבים.</p></details>
   </article>
 
   <article class="card">
-    <div class="card-head"><span class="num">5.6</span><h3>לתופף ביד</h3><span class="label">● · ▶ · לחצן כלי</span></div>
+    <div class="card-head"><span class="num">6.1</span><h3>מכינים מילוי</h3><span class="label">COPY</span></div>
+    [[state:stop||תבנית 16]]
+    [[combo:איך מעתיקים את התבנית הנוכחית לתבנית 15?|hold:SHIFT,tap:15,rel,turn:TEMPO/VALUE,look:COPY,tap:2,turn:TEMPO/VALUE,look:15,tap:2]]
     <ol class="steps">
-      <li><div>לחץ <kbd>●</kbd>. הוא נדלק.</div></li>
-      <li><div>אם לא מנגן, לחץ <kbd>▶</kbd>. ההקלטה מתחילה.</div></li>
-      <li><div>תופף בקצב על <kbd>OPEN HIHAT</kbd>: כל לחיצה נכנסת לצעד שמתנגן ברגע הזה.</div></li>
-      <li><div>לחץ <kbd>●</kbd> כדי להפסיק להקליט.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:15]] (MENU). [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:COPY]], ו־[[tap:2]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:15]], ו־[[tap:2]]. התבנית הועתקה.</div></li>
+      <li><div>עבור לתבנית 15: [[tap:PATTERN]] ו־[[tap:15]]. ואז [[tap:SNARE DRUM]].</div></li>
+      <li><div>הדלק סנר ב־13, 14, 15, 16, וגלגול 1_4 בצעד 16, כמו במנה 3.</div></li>
+      <li><div>[[tap:BASS DRUM]] וכבה את הקיק בצעד 13.</div></li>
+      <li><div>חזור לתבנית 16: [[tap:PATTERN]] ו־[[tap:16]].</div></li>
+    </ol>
+    <div class="grid-box"><div class="seq" data-rows='[["קיק",[1,5,9]],["סנר",[13,14,15,16]],["קלאפ",[5,13]],["סגור",[1,2,5,6,9,10,13,14]]]'></div></div>
+    <p class="legend">תבנית 15, המילוי.</p>
+    <div class="ok"><b>הצלחת אם:</b> בתבנית 15 שמעת ריצת סנר בסוף, ועכשיו שוב נבחרה 16.</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">6.2</span><h3>מנגנים את המילוי</h3><span class="label">SHIFT + 8 · SHIFT + 7</span></div>
+    [[state:play||תבנית 16]]
+    [[combo:איך בוחרים את תבנית 15 כמילוי של הבנק?|hold:SHIFT,tap:8,rel,tap:15,tap:1]]
+    [[combo:איך מפעילים את המילוי בהופעה?|hold:SHIFT,tap:7]]
+    <ol class="steps">
+      <li><div>פעם אחת לבנק: [[hold:SHIFT]] ו־[[tap:8]] (FILL PTN). [[rel]]. [[tap:15]], ו־[[tap:1]].</div></li>
+      <li><div><b>מתי:</b> באמצע תיבה. [[hold:SHIFT]] ו־[[tap:7]] (FILL TRG).</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בסוף התיבה נכנסה ריצת הסנר, ואחריה הג׳אם המשיך.</div>
+    <p class="info">אם אחרי המילוי הנגינה נשארה על 15, חזור ידנית ל־16 וספר לי.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">6.3</span><h3>לתופף ביד</h3><span class="label">● · לחצן כלי</span></div>
+    [[state:play]]
+    [[combo:איך מקליטים היי־האט פתוח בתיפוף?|tap:●,tap:OPEN HIHAT,tap:OPEN HIHAT,tap:●]]
+    <ol class="steps">
+      <li><div>[[tap:●]]. הוא נדלק, וההקלטה רצה.</div></li>
+      <li><div>תופף בקצב על [[tap:OPEN HIHAT]]. כל לחיצה נכנסת לצעד שמתנגן באותו רגע.</div></li>
+      <li><div>[[tap:●]] כדי להפסיק.</div></li>
       <li><div>בסוף: <kbd>PATTERN</kbd> + לחצן <kbd>14</kbd>.</div></li>
     </ol>
     <div class="ok"><b>הצלחת אם:</b> מה שתופפת נשאר בלופ, מסודר על הצעדים.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>ההקלטה נכנסת <b>לצעדים</b>, לא כהקלטת שמע. לכן גם תיפוף לא מדויק יוצא מסודר בקצב. בבס זה עובד אותו דבר עם <kbd>BASS</kbd>, אבל כל התווים יוצאים C2.</p>
-      <p class="acid"><b>לאסיד:</b> לפעמים הרגש של היד מוצא גרוב שלא היית מתכנת בצעדים.</p>
-    </div>
+    <p class="info">אם לא מנגן, צריך גם <kbd>▶</kbd> אחרי ה־●.</p>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">6.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div>נגן חמש דקות. כל 8 תיבות, מילוי.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="6"></div>
+    <p class="end">המנה נגמרה. מחר: המנה האחרונה, ג׳אם של חמש דקות עם הכל.</p>
   </article>
 </section>
 
-<!-- ===================== 6 ===================== -->
-<section class="stage" id="s6">
-  <span class="stage-tag">שלב 6 · תרגיל</span>
-  <h2>חמש דקות של ג׳אם</h2>
+<!-- ===================== mana 7 ===================== -->
+<section class="stage" id="s7" data-mana="7" data-min="15" data-title="ג׳אם של חמש דקות" data-goal="בסוף המנה: כל הטריקים בסדר אחד, ושמירה של מה שאוהבים.">
+  <span class="stage-tag">מנה 7</span>
+  <h2>ג׳אם של חמש דקות</h2>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">7.0</span><h3>חזרה בדקה</h3></div>
+    <details><summary>איך מפעילים מילוי?</summary><p>מחזיקים <kbd>SHIFT</kbd> ולוחצים 7.</p></details>
+    <details><summary>איך מקצרים את הבס? (ממנה 4)</summary><p>בוחרים <kbd>BASS</kbd>, מחזיקים <kbd>SHIFT</kbd>, לוחצים 4, משחררים, מסובבים, ולוחצים 1.</p></details>
+    <details><summary>איך עושים גלגול? (ממנה 3)</summary><p>מחזיקים את לחצן הכלי, ולוחצים על הצעד שוב ושוב.</p></details>
+  </article>
 
   <article class="card">
-    <p>הכנה: תבנית 16 משוחזרת, והמילוי מ־5.3 מוכן. סיכוי P.50 על ארבעה היי־האטים, כמו ב־1.1. כל שורה נמשכת בערך 8 תיבות, ולא חייבים לדייק.</p>
+    <div class="card-head"><span class="num">7.1</span><h3>הג׳אם</h3><span class="label">כל הטריקים</span></div>
+    [[state:play||תבנית 16, מילוי מוכן, ארבעה היי־האטים ב־P.50]]
     <div class="tbl-box"><table>
-      <thead><tr><th></th><th>מה עושים</th><th>טריק</th></tr></thead>
+      <thead><tr><th></th><th>בערך 8 תיבות לכל שורה</th><th>מנה</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td>רק קיק והיי־האטים. כל השאר מושתק</td><td>השתקה</td></tr>
-        <tr><td>2</td><td>הבס נכנס. CUTOFF נפתח לאט</td><td>שיעור 5</td></tr>
-        <tr><td>3</td><td>הסיכוי הכללי עולה, הגרוב נעשה פרוע</td><td>1.2</td></tr>
-        <tr><td>4</td><td>גמגום של תיבה אחת, ואז הקלאפ נכנס</td><td>5.1</td></tr>
-        <tr><td>5</td><td>מילוי, ומשם השיא: CUTOFF ו־RESO למעלה</td><td>5.4</td></tr>
-        <tr><td>6</td><td>בס אקראי לארבע תיבות, ואז שחזור הבס</td><td>5.5</td></tr>
-        <tr><td>7</td><td>הבס ל־12 צעדים, נודד מעל הקיק</td><td>4.2</td></tr>
-        <tr><td>8</td><td>פירוק: משתיקים כלי אחרי כלי עד שנשאר קיק</td><td>השתקה</td></tr>
+        <tr><td>1</td><td>רק קיק והיי־האטים. השאר מושתק: <kbd>SHIFT</kbd> + לחצן הכלי</td><td>5</td></tr>
+        <tr><td>2</td><td>הבס נכנס. <kbd>CUTOFF</kbd> נפתח לאט</td><td>שיעור 5</td></tr>
+        <tr><td>3</td><td>הסיכוי הכללי עולה</td><td>1</td></tr>
+        <tr><td>4</td><td>גמגום של תיבה, ואז הקלאפ נכנס</td><td>5</td></tr>
+        <tr><td>5</td><td>מילוי, ומשם השיא: <kbd>CUTOFF</kbd> ו־<kbd>RESO</kbd> למעלה</td><td>6</td></tr>
+        <tr><td>6</td><td>בס אקראי לארבע תיבות, ושחזור</td><td>5</td></tr>
+        <tr><td>7</td><td>בס של 12 צעדים</td><td>4</td></tr>
+        <tr><td>8</td><td>פירוק: משתיקים עד שנשאר קיק</td><td>5</td></tr>
       </tbody>
     </table></div>
-    <div class="ok"><b>הצלחת אם:</b> ניגנת חמש דקות בלי לעצור, והג׳אם נשמע כמו משהו שמתפתח ולא כמו לופ אחד.</div>
-    <div class="learn">
-      <span class="learn-tag">להבין</span>
-      <p>כל טריק לבד הוא קטן. מה שהופך אותם למוזיקה זה ה<b>סדר</b>: בנייה, שיא, הפתעה, פירוק.</p>
-      <p class="acid"><b>לאסיד:</b> הקלט את זה לטלפון. בעוד חודש תשווה.</p>
-    </div>
-    <h4>שלוש שאלות לעצמך</h4>
-    <ol class="qs">
-      <li>איזה טריק הכי שינה את התחושה? ואיזה כמעט לא הורגש?</li>
-      <li>איפה הרגשת שהג׳אם ״נתקע״? איזה טריק היה מציל את הרגע?</li>
-      <li>אילו שלושה טריקים תיקח לכל ג׳אם מעכשיו? רשום בהערה.</li>
+    <div class="timer" data-min="5"></div>
+    <div class="ok"><b>הצלחת אם:</b> חמש דקות בלי לעצור, והג׳אם נשמע כמו משהו שמתפתח.</div>
+    <div class="drill" data-mana="all"></div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">7.2</span><h3>לשמור מה שאוהבים</h3><span class="label">SHIFT + 16</span></div>
+    [[state:stop]]
+    [[combo:איך שומרים את כל התבניות?|hold:SHIFT,tap:16,rel,turn:TEMPO/VALUE,look:ALL,tap:2]]
+    <ol class="steps">
+      <li><div>החלט מה להשאיר, למשל סיכוי, עוצמות וגלגול.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:16]] (WRITE). [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:ALL]], כדי לשמור גם את המילוי. [[tap:2]].</div></li>
     </ol>
+    <div class="ok"><b>הצלחת אם:</b> אחרי כיבוי והדלקה, הכל נשאר.</div>
+    <p class="warn">מעכשיו השחזור מחזיר לגרסה החדשה.</p>
   </article>
 </section>
 
-<!-- ===================== 7 ===================== -->
-<section class="stage" id="s7">
-  <span class="stage-tag">שלב 7 · סיום</span>
-  <h2>שמירה, דף עזר ותקלות</h2>
+<!-- ===================== reference ===================== -->
+<section class="stage" id="ref">
+  <span class="stage-tag">לעיון</span>
+  <h2>דף עזר ותקלות</h2>
 
   <article class="card">
-    <div class="card-head"><span class="num">7.1</span><h3>לשמור מה שאוהבים</h3><span class="label">SHIFT + SLIDE (WRITE)</span></div>
-    <ol class="steps">
-      <li><div>החלט מה להשאיר. למשל: סיכוי על ההיי־האטים, עוצמה חזק־חלש וגלגול בצעד 16.</div></li>
-      <li><div>החזק <kbd>SHIFT</kbd> ולחץ לחצן <kbd>16</kbd> (WRITE).</div></li>
-      <li><div>סובב עד <b>ALL</b>, כדי לשמור גם את תבנית המילוי 15. לחץ <kbd>C# (ENTER)</kbd>.</div></li>
-    </ol>
-    <div class="ok"><b>הצלחת אם:</b> אחרי כיבוי והדלקה, תבנית 16 מנגנת עם הטריקים, והמילוי עובד.</div>
-    <p class="warn">מרגע השמירה, השחזור (<kbd>PATTERN</kbd> + 14, 15 או 16) מחזיר לגרסה החדשה.</p>
-  </article>
-
-  <article class="card">
-    <h3>דף עזר</h3>
+    <h3>כל הצירופים מהשיעור</h3>
     <div class="tbl-box"><table>
-      <thead><tr><th>טריק</th><th>איך</th></tr></thead>
+      <thead><tr><th>טריק</th><th>צירוף</th><th>מנה</th></tr></thead>
       <tbody>
-        <tr><td>סיכוי לצעד</td><td>החזקת צעד + <kbd>TEMPO/VALUE</kbd></td></tr>
-        <tr><td>סיכוי כללי</td><td><kbd>PATTERN</kbd> + <kbd>TEMPO/VALUE</kbd></td></tr>
-        <tr><td>עוצמה לכל מכה</td><td>החזקת צעד, <kbd>ACCENT</kbd>, <kbd>TEMPO/VALUE</kbd></td></tr>
-        <tr><td>הדגשת תופים</td><td><kbd>ACCENT</kbd> כשתוף נבחר, ואז צעדים</td></tr>
-        <tr><td>שאפל</td><td><kbd>SHIFT</kbd> + לחצן 3</td></tr>
-        <tr><td>גלגול</td><td>החזקת כלי + צעד, שוב ושוב</td></tr>
-        <tr><td>סיכוי לגלגול</td><td>החזקת כלי + צעד, <kbd>ACCENT</kbd></td></tr>
-        <tr><td>32 צעדים</td><td><kbd>SHIFT</kbd> + לחצן 6. חזרה: לחצן 5</td></tr>
-        <tr><td>אורך תבנית</td><td><kbd>SHIFT</kbd> + לחצן 4</td></tr>
-        <tr><td>גמגום</td><td><kbd>SHIFT</kbd> + <kbd>PATTERN</kbd>, צעד, <kbd>PATTERN</kbd></td></tr>
-        <tr><td>הזזת כלי</td><td>החזקת כלי + <kbd>TEMPO/VALUE</kbd></td></tr>
-        <tr><td>בחירת מילוי</td><td><kbd>SHIFT</kbd> + לחצן 8, תבנית</td></tr>
-        <tr><td>הפעלת מילוי</td><td><kbd>SHIFT</kbd> + לחצן 7</td></tr>
-        <tr><td>תופים / בס אקראיים</td><td><kbd>SHIFT</kbd> + לחצן 9 / לחצן 10</td></tr>
-        <tr><td>שחזור תופים / בס / הכל</td><td><kbd>PATTERN</kbd> + לחצן 14 / 15 / 16</td></tr>
-        <tr><td>תיפוף ביד</td><td><kbd>●</kbd>, <kbd>▶</kbd>, לחצני כלים</td></tr>
+        <tr><td>שחזור תופים / בס / הכל</td><td>[[hold:PATTERN]] + [[tap:14]] / 15 / 16</td><td>1</td></tr>
+        <tr><td>סיכוי לצעד</td><td>[[hold:4]] + [[turn:TEMPO/VALUE]]</td><td>1</td></tr>
+        <tr><td>סיכוי כללי</td><td>[[hold:PATTERN]] + [[turn:TEMPO/VALUE]]</td><td>1</td></tr>
+        <tr><td>עוצמה לכל מכה</td><td>[[hold:2]] + [[tap:ACCENT]] + [[turn:TEMPO/VALUE]]</td><td>2</td></tr>
+        <tr><td>הדגשת תופים</td><td>[[tap:ACCENT]], ואז צעדים</td><td>2</td></tr>
+        <tr><td>שאפל</td><td>[[hold:SHIFT]] + [[tap:3]], [[turn:TEMPO/VALUE]]</td><td>2</td></tr>
+        <tr><td>גלגול</td><td>[[hold:SNARE DRUM]] + צעד, שוב ושוב</td><td>3</td></tr>
+        <tr><td>32 צעדים</td><td>[[hold:SHIFT]] + [[tap:6]]. חזרה: 5</td><td>4</td></tr>
+        <tr><td>אורך</td><td>[[hold:SHIFT]] + [[tap:4]], [[turn:TEMPO/VALUE]]</td><td>4</td></tr>
+        <tr><td>גמגום</td><td>[[hold:SHIFT]] + [[tap:PATTERN]], צעד. יציאה: <kbd>PATTERN</kbd></td><td>5</td></tr>
+        <tr><td>הזזת כלי</td><td>[[hold:OPEN HIHAT]] + [[turn:TEMPO/VALUE]]</td><td>5</td></tr>
+        <tr><td>תופים / בס אקראיים</td><td>[[hold:SHIFT]] + [[tap:9]] / 10</td><td>5</td></tr>
+        <tr><td>בחירת מילוי</td><td>[[hold:SHIFT]] + [[tap:8]], תבנית, [[tap:1]]</td><td>6</td></tr>
+        <tr><td>הפעלת מילוי</td><td>[[hold:SHIFT]] + [[tap:7]]</td><td>6</td></tr>
+        <tr><td>השתקה</td><td>[[hold:SHIFT]] + לחצן הכלי</td><td>7</td></tr>
+        <tr><td>שמירה</td><td>[[hold:SHIFT]] + [[tap:16]], [[seg:ALL]], [[tap:2]]</td><td>7</td></tr>
       </tbody>
     </table></div>
   </article>
@@ -483,11 +573,12 @@
     <div class="tbl-box"><table>
       <thead><tr><th>מה קורה</th><th>מה לבדוק</th></tr></thead>
       <tbody>
-        <tr><td><b>הסיכוי הכללי לא משנה כלום</b></td><td>הוא משפיע רק על צעדים שיש להם סיכוי משלהם, פחות מ־P.100.</td></tr>
-        <tr><td><b>הלחצנים בוחרים תבניות</b></td><td><kbd>PATTERN</kbd> דולק, או מהבהב בגמגום. לחץ עליו.</td></tr>
-        <tr><td><b>הגלגול משתנה כשרק רציתי לבדוק</b></td><td>כל לחיצה נוספת על הצעד, כשהכלי מוחזק, מקדמת את ההגדרה. לחיצה ראשונה רק מראה.</td></tr>
-        <tr><td><b>המילוי לא נכנס</b></td><td>נבחרה תבנית מילוי בבנק הזה (5.4)? יש בה משהו?</td></tr>
-        <tr><td><b>הבס בורח מהתופים</b></td><td>אורך שונה (4.1, 4.2). <kbd>PATTERN</kbd> + לחצן 15.</td></tr>
+        <tr><td><b>הסיכוי הכללי לא משנה כלום</b></td><td>הוא משפיע רק על צעדים שיש להם סיכוי משלהם.</td></tr>
+        <tr><td><b>הלחצנים בוחרים תבניות</b></td><td><kbd>PATTERN</kbd> דולק או מהבהב. לחץ עליו.</td></tr>
+        <tr><td><b>הגלגול השתנה כשרציתי רק לבדוק</b></td><td>הלחיצה הראשונה רק מראה. כל לחיצה נוספת משנה.</td></tr>
+        <tr><td><b>המילוי לא נכנס</b></td><td>נבחרה תבנית מילוי בבנק הזה? יש בה משהו?</td></tr>
+        <tr><td><b>הבס בורח מהתופים</b></td><td>אורך שונה. <kbd>PATTERN</kbd> + לחצן 15.</td></tr>
+        <tr><td><b>התצוגה מראה מילה מוזרה</b></td><td>תפריט או הגדרה. לחצן 1, EXIT.</td></tr>
         <tr><td><b>הכל השתבש</b></td><td><kbd>PATTERN</kbd> + לחצן 16.</td></tr>
       </tbody>
     </table></div>
@@ -495,7 +586,7 @@
 
   <article class="card">
     <h3>מקורות</h3>
-    <p class="legend"><a href="https://static.roland.com/manuals/T-8_manual_v102/eng/index.html">מדריך הבעלים הרשמי של רולנד, גרסה 1.02</a>: הסיקוונסר של התופים (סיכוי, עוצמה, תתי־צעדים, סיכוי כללי, לופ צעדים, הקלטה חיה), בחירת תבניות ושמירה, והתפריט והקיצורים (שאפל, אורך, 32 צעדים, מילוי, אקראי, שחזור, העתקה, סנכרון תבניות, סולם צעדים). שלושה דברים שלא מפורטים במדריך מסומנים בכרטיסים: טווח השאפל (2.3), החזקה מול לחיצה בגמגום (5.1), ומה קורה אחרי המילוי (5.4). ההצעות המוזיקליות, כמו P.50 ו־v.4, הן נקודות התחלה שלי, לא הוראות של היצרן.</p>
+    <p class="legend"><a href="https://static.roland.com/manuals/T-8_manual_v102/eng/index.html">מדריך הבעלים הרשמי של רולנד, גרסה 1.02</a>: הסיקוונסר של התופים, בחירת תבניות ושמירה, התפריט והקיצורים. התצוגה מצוירת בגופן של תצוגת שבעה מקטעים, כמו על המכשיר. ייתכנו הבדלים קטנים בצורת אות. מה שהמדריך לא מפרט מסומן בכרטיסים: טווח השאפל, היציאה ממצב ההדגשה, החזקה מול לחיצה בגמגום, ומה קורה אחרי המילוי. הערכים המוזיקליים, כמו P.50 ו־v.4, הם נקודות התחלה שלי.</p>
   </article>
 
   <div class="endnav"><a href="URL_L5">→ לשיעור 5</a><a href="URL_L7">לשיעור 7 ←</a></div>

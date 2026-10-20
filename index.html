@@ -12,68 +12,95 @@
 <link rel="apple-touch-icon" href="claude/icon-180.png">
 <title>המוזיקה של רז · כל השיעורים והכלים</title>
 <!--
-  This is the site's home page: one list of everything on the site.
-  Adding something new? Add one <a class="item"> in the right section, with:
-    data-type = lesson | guide | tool      data-who = claude | grok | codex | raz (space separated if several)
-  and the same badges inside it. Keep the one-line description short and say what it is for.
+  Raz's home page: everything on the site, organised by DEVICE first, then by what you want to do.
+    T-8:     מתחילים · מנגנים · טריקים · לעיון
+    Volcas:  lessons 1-3, two versions side by side
+    Tools:   by topic
+    Helpers: notebook, glossary
+  Adding something? Put one card (<a class="item"> or <div class="item">) in the right device and group, with
+    data-who = claude | grok | codex | raz   (space separated if several)
+  and the same .who badges inside it. Keep the one-line description short and say what it is for.
+  Search covers every lesson page listed in PAGES (in the script below): it reads the headings and card titles live,
+  so new cards in an existing page are found automatically. A NEW page must be added to PAGES.
   No service worker here on purpose: the page always loads fresh, so updates show up at once.
 -->
 <style>
 :root{--bg:#f4f1ea;--card:#fff;--ink:#1d2433;--muted:#5b6475;--line:#e2dccf;--gold:#f2b705;
-  --claude:#b07800;--claude-bg:#fff3d1;--grok:#2563a8;--grok-bg:#e3eefb;--raz:#2f7a4f;--raz-bg:#e3f3e9}
+  --claude:#b07800;--claude-bg:#fff3d1;--grok:#2563a8;--grok-bg:#e3eefb;--codex:#684594;--codex-bg:#ece7f8;--raz:#2f7a4f;--raz-bg:#e3f3e9}
 @media (prefers-color-scheme:dark){:root{--bg:#121824;--card:#1b2232;--ink:#e8ecf4;--muted:#9aa4b8;--line:#2c3549;
-  --claude:#f2c94c;--claude-bg:#2e2a17;--grok:#7fb3f0;--grok-bg:#17263a;--raz:#6fcf97;--raz-bg:#173326}}
+  --claude:#f2c94c;--claude-bg:#2e2a17;--grok:#7fb3f0;--grok-bg:#17263a;--codex:#c3a6f0;--codex-bg:#2a2140;--raz:#6fcf97;--raz-bg:#173326}}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-padding-top:70px}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:120px}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Assistant,Heebo,-apple-system,"Segoe UI","Arial Hebrew",Arial,sans-serif;font-size:17px;line-height:1.55}
 .wrap{max-width:860px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left))}
-header.top{background:#1d2433;color:#fff;border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:6px}
+header.top{background:#1d2433;color:#fff;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:6px}
 header.top .k{color:var(--gold);font-weight:700;font-size:.9rem}
-header.top h1{margin:0;font-size:1.9rem;line-height:1.15}
+header.top h1{margin:0;font-size:1.8rem;line-height:1.15}
 header.top p{margin:0;color:#c9cfdb}
 .toprow{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .refresh{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid #3a4560;background:#26304a;color:#fff;font:inherit;font-size:.9rem;cursor:pointer}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:14px 2px 0;color:var(--muted);font-size:.9rem;align-items:center}
-.who{display:inline-block;font-size:.78rem;font-weight:700;padding:.1em .6em;border-radius:999px;white-space:nowrap}
-.who.claude{background:var(--claude-bg);color:var(--claude)}
-.who.grok{background:var(--grok-bg);color:var(--grok)}
-.who.codex{background:#ece7f8;color:#684594}
-.who.raz{background:var(--raz-bg);color:var(--raz)}
-.kind{display:inline-block;font-size:.78rem;padding:.05em .55em;border-radius:6px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
-.new{display:inline-block;font-size:.78rem;font-weight:700;padding:.05em .55em;border-radius:6px;background:var(--ink);color:var(--bg);white-space:nowrap}
-.dev{display:inline-block;direction:ltr;unicode-bidi:isolate;font-size:.78rem;padding:.05em .5em;border-radius:6px;background:var(--line);color:var(--ink);white-space:nowrap}
-nav.filters{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-  margin:14px -16px 0;padding:10px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
-nav.filters::-webkit-scrollbar{display:none}
-.f{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:.95rem;font-weight:600;cursor:pointer}
-.f[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.start{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:14px}
-.start h2{margin:0 0 8px;font-size:1.15rem}
-.start ol{margin:0;padding-inline-start:1.3em;display:flex;flex-direction:column;gap:6px}
-.start a{color:inherit;font-weight:700}
-section.grp{margin-top:26px}
-section.grp>h2{font-size:1.3rem;margin:0 0 4px}
-section.grp>p.sub{margin:0 0 12px;color:var(--muted)}
-h3.sub{font-size:1rem;color:var(--muted);margin:16px 0 8px}
+
+/* sticky bar: search + device jump */
+.bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 94%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  margin:12px -16px 0;padding:10px 16px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0;min-height:48px;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;padding:0 14px}
+.search input:focus{outline:none;border-color:var(--claude)}
+.search button{min-width:48px;min-height:48px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.jump{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.jump::-webkit-scrollbar{display:none}
+.jump a{flex:0 0 auto;min-height:40px;display:flex;align-items:center;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-weight:700;font-size:.95rem}
+
+/* search results */
+.results{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.results[hidden]{display:none}
+.res{display:flex;flex-direction:column;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;text-decoration:none;color:inherit}
+.res b{font-size:1.02rem}
+.res small{color:var(--muted)}
+.res mark{background:var(--claude-bg);color:inherit;border-radius:3px}
+.rinfo{color:var(--muted);font-size:.92rem}
+
+/* quick grab */
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.quick a{min-height:44px;display:inline-flex;align-items:center;gap:6px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem}
+.qh{margin:14px 2px 0;font-size:.95rem;color:var(--muted);font-weight:700}
+
+/* devices and groups */
+section.dev{margin-top:28px}
+section.dev>h2{font-size:1.45rem;margin:0;display:flex;align-items:center;gap:10px}
+section.dev>h2 .lbl{direction:ltr;unicode-bidi:isolate;font-size:.8rem;font-weight:700;background:var(--ink);color:var(--bg);border-radius:6px;padding:.1em .5em}
+section.dev>p.sub{margin:4px 0 0;color:var(--muted)}
+.grp{margin-top:16px}
+.grp>h3{font-size:1.05rem;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.grp>h3 .step{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:.85rem}
+.grp>p.hint{margin:-4px 0 8px;color:var(--muted);font-size:.92rem}
 .list{display:grid;gap:10px}
 @media (min-width:700px){.list.two{grid-template-columns:1fr 1fr}}
 a.item,div.item{display:flex;flex-direction:column;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-decoration:none;color:inherit}
 a.item:active{background:var(--claude-bg)}
 .item .t{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.item b.name{font-size:1.12rem}
-.item .num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);font-weight:700;font-size:.9rem;flex:none;align-self:center}
+.item b.name{font-size:1.1rem}
 .item p{margin:0;color:var(--muted);font-size:.95rem}
-.item .tags{display:flex;flex-wrap:wrap;gap:6px}
+.item .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.who{display:inline-block;font-size:.78rem;font-weight:700;padding:.1em .6em;border-radius:999px;white-space:nowrap}
+.who.claude{background:var(--claude-bg);color:var(--claude)}
+.who.grok{background:var(--grok-bg);color:var(--grok)}
+.who.codex{background:var(--codex-bg);color:var(--codex)}
+.who.raz{background:var(--raz-bg);color:var(--raz)}
+.kind{display:inline-block;font-size:.78rem;padding:.05em .55em;border-radius:6px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.new{display:inline-block;font-size:.78rem;font-weight:700;padding:.05em .55em;border-radius:6px;background:var(--ink);color:var(--bg);white-space:nowrap}
+.code{display:inline-block;direction:ltr;unicode-bidi:isolate;font-size:.78rem;padding:.05em .5em;border-radius:6px;background:var(--line);color:var(--ink);white-space:nowrap}
 .pair{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .pair a{flex:1 1 140px;min-height:46px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;text-decoration:none;font-weight:700;border:1px solid var(--line)}
 .pair a.claude{background:var(--claude-bg);color:var(--claude)}
 .pair a.grok{background:var(--grok-bg);color:var(--grok)}
 .note{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--muted);font-size:.95rem}
 .note b{color:var(--ink)}
-.install{margin-top:30px}
-.install ol{margin:6px 0 0;padding-inline-start:1.3em}
+.note ol{margin:6px 0 0;padding-inline-start:1.3em}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin:12px 2px 0;color:var(--muted);font-size:.9rem;align-items:center}
+.legend button{border:0;cursor:pointer;font:inherit}
+.legend button[aria-pressed="true"]{outline:2px solid currentColor;outline-offset:1px}
 [hidden]{display:none!important}
-.empty{color:var(--muted);padding:8px 2px}
 </style>
 </head>
 <body>
@@ -82,235 +109,330 @@ a.item:active{background:var(--claude-bg)}
 <header class="top">
   <div class="toprow"><span class="k">לרז</span><button class="refresh" id="refresh" type="button">↻ רענון</button></div>
   <h1>המוזיקה של רז</h1>
-  <p>כל השיעורים, המדריכים והכלים, במקום אחד. כל דבר מסומן במי שבנה אותו.</p>
+  <p>כל השיעורים, המדריכים והכלים, לפי מכשיר. מחפשים משהו תוך כדי נגינה? כתבו למעלה.</p>
 </header>
 
-<div class="legend">
-  <span>מי בנה:</span>
-  <span class="who claude">קלוד</span>
-  <span class="who grok">גרוק</span>
-  <span class="who codex">קודקס</span>
-  <span class="who raz">רז</span>
+<div class="bar">
+  <form class="search" role="search" id="sform">
+    <input id="q" type="search" placeholder="חיפוש: גלגול, שאפל, שמירה, סנכרון…" autocomplete="off" enterkeyhint="search" aria-label="חיפוש בכל השיעורים">
+    <button type="button" id="qx" aria-label="ניקוי" hidden>✕</button>
+  </form>
+  <nav class="jump" aria-label="מכשירים">
+    <a href="#t8">הטי־8</a><a href="#volca">הוולקות</a><a href="#tools">כלים במסך</a><a href="#help">עזרים</a>
+  </nav>
 </div>
 
-<nav class="filters" aria-label="סינון">
-  <button class="f" type="button" data-f="all" aria-pressed="true">הכל</button>
-  <button class="f" type="button" data-f="lesson">שיעורים ומדריכים</button>
-  <button class="f" type="button" data-f="tool">כלים לנגן במסך</button>
-  <button class="f" type="button" data-f="claude">של קלוד</button>
-  <button class="f" type="button" data-f="grok">של גרוק</button>
-  <button class="f" type="button" data-f="codex">של קודקס</button>
-</nav>
+<div class="results" id="results" hidden></div>
 
-<div class="start" data-always>
-  <h2>מאיפה להתחיל</h2>
-  <ol>
-    <li><b>הוולקות</b> (התופים והבס של קורג): <a href="#volca">שיעורים 1 עד 3</a>. יש שתי גרסאות, בחר אחת.</li>
-    <li><b>הטי־8</b>: <a href="codex/">השיעור של קודקס — מתחילים מאפס</a>. לשיעורים הקיימים: קודם <a href="claude/lesson-4.html">שיעור 4, היכרות</a>, אחר כך <a href="claude/lesson-5.html">שיעור 5, ג׳אם</a>, ואז הטריקים: <a href="claude/lesson-6.html">שיעור 6, קצב</a> ו־<a href="claude/lesson-7.html">שיעור 7, צליל</a>. <a href="t8-guide/">המדריך של גרוק</a> לעיון.</li>
-    <li><b>לנגן באייפד בלי מכשיר</b>: <a href="#tools">הכלים</a> למטה.</li>
-  </ol>
+<div id="home">
+
+<p class="qh">שליפה מהירה, תוך כדי נגינה</p>
+<div class="quick">
+  <a href="claude/lesson-6.html#ref">✋ כל הצירופים של הקצב</a>
+  <a href="claude/lesson-7.html#s7">☰ פריטי התפריט</a>
+  <a href="claude/lesson-4.html#s0">▦ מפת הלוח, לגעת ולהבין</a>
+  <a href="t8-guide/#cheat">⌘ דף הקיצורים של גרוק</a>
+  <a href="t8-guide/#trouble">⚠ כשמשהו לא עובד</a>
 </div>
 
-<!-- ============ lessons: volcas ============ -->
-<section class="grp" id="volca">
-  <h2>שיעורים: הוולקות</h2>
-  <p class="sub">אותם שלושה שיעורים, בשתי גרסאות. גרסת קלוד: צילומי המכשירים שלך, מעקב התקדמות ומצב נגינה. גרסת גרוק: דף רציף אחד לכל שיעור.</p>
-  <div class="list" id="grok">
-    <div class="item" data-type="lesson" data-who="claude grok">
-      <div class="t"><span class="num">1</span><b class="name">ג׳אם אסיד ראשון</b></div>
-      <p>בונים ביט בתופים, כותבים קו בס עם גלישות, מחברים בסנכרון ומנגנים בשתי ידיים. קצב 128.</p>
-      <div class="tags"><span class="kind">שיעור</span><span class="dev">Volca Beats</span><span class="dev">Volca Bass</span></div>
-      <div class="pair"><a class="claude" href="claude/lesson-1.html">גרסת קלוד</a><a class="grok" href="lessons/acid-lesson-1.html">גרסת גרוק</a></div>
+<div class="legend" id="legend">
+  <span>מי בנה, לחיצה מסננת:</span>
+  <button type="button" class="who claude" data-w="claude">קלוד</button>
+  <button type="button" class="who grok" data-w="grok">גרוק</button>
+  <button type="button" class="who codex" data-w="codex">קודקס</button>
+  <button type="button" class="who raz" data-w="raz">רז</button>
+</div>
+
+<!-- ======================= T-8 ======================= -->
+<section class="dev" id="t8">
+  <h2>הטי־8 <span class="lbl">T-8</span></h2>
+  <p class="sub">תופים ובס בקופסה אחת. לפי הסדר: מתחילים, מנגנים, טריקים. ולעיון בכל רגע.</p>
+
+  <div class="grp">
+    <h3><span class="step">1</span>מתחילים מאפס</h3>
+    <p class="hint">שתי דרכים להכיר את המכשיר. אחת מספיקה.</p>
+    <div class="list two">
+      <a class="item" href="codex/" data-who="codex">
+        <div class="t"><b class="name">הטי־8 מאפס</b></div>
+        <p>קודם מבינים ואז מנסים: מקצב משלך, עיצוב כל כלי, החלפת צלילים וטריקים ראשונים. איורים מהמדריך הרשמי.</p>
+        <div class="tags"><span class="who codex">קודקס</span><span class="kind">שיעור ארוך</span></div>
+      </a>
+      <a class="item" href="claude/lesson-4.html" data-who="claude">
+        <div class="t"><b class="name">היכרות עם הטי־8</b></div>
+        <p>הדלקה, מפה לחיצה של הלוח, לשמוע כל תוף ואת הבס, ומשחק ״מצא את הכפתור״.</p>
+        <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="kind">שיעור 4 בסדרה</span></div>
+      </a>
     </div>
-    <div class="item" data-type="lesson" data-who="claude grok">
-      <div class="t"><span class="num">2</span><b class="name">צלילה לעומק הבס</b></div>
-      <p>שלושת המתנדים, המסנן, המעטפת, תנועה מחזורית, ואיך יוצרים דגש בלי אקסנט.</p>
-      <div class="tags"><span class="kind">שיעור</span><span class="dev">Volca Bass</span></div>
-      <div class="pair"><a class="claude" href="claude/lesson-2.html">גרסת קלוד</a><a class="grok" href="lessons/acid-lesson-2.html">גרסת גרוק</a></div>
+  </div>
+
+  <div class="grp">
+    <h3><span class="step">2</span>מנגנים</h3>
+    <div class="list">
+      <a class="item" href="claude/lesson-5.html" data-who="claude">
+        <div class="t"><b class="name">ג׳אם אסיד ראשון</b></div>
+        <p>ביט, קו בס עם גלישות והדגשות, שאיבה מהקיק, הד, וסיבובים בשתי ידיים.</p>
+        <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="kind">שיעור 5 בסדרה</span></div>
+      </a>
     </div>
-    <div class="item" data-type="lesson" data-who="claude grok">
-      <div class="t"><span class="num">3</span><b class="name">הקלידים של הבס</b></div>
-      <p>16 הקלידים כפסנתר, אוקטבה, סולמות לאסיד, והעברת ריף לגובה אחר.</p>
-      <div class="tags"><span class="kind">שיעור</span><span class="dev">Volca Bass</span></div>
-      <div class="pair"><a class="claude" href="claude/lesson-3.html">גרסת קלוד</a><a class="grok" href="lessons/acid-lesson-3.html">גרסת גרוק</a></div>
+  </div>
+
+  <div class="grp">
+    <h3><span class="step">3</span>טריקים</h3>
+    <div class="list two">
+      <a class="item" href="claude/lesson-6.html" data-who="claude">
+        <div class="t"><b class="name">גרוב חי: הטריקים של הקצב</b><span class="new">שבע מנות קצרות</span></div>
+        <p>סיכוי, חזק וחלש, גלגולים, אורכים, גמגום, מילוי. מנה ביום, עם תרגול ידיים.</p>
+        <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="kind">שיעור 6 בסדרה</span></div>
+      </a>
+      <a class="item" href="claude/lesson-7.html" data-who="claude">
+        <div class="t"><b class="name">צליל: הטריקים של הסאונד</b></div>
+        <p>מה שמתחת לכפתורים: התפריט, החלפת כלים, עיוות, הזזת הבס בגובה, הד לקצב, שאיבה ושער.</p>
+        <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="kind">שיעור 7 בסדרה</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h3><span class="step">◎</span>לעיון</h3>
+    <div class="list">
+      <a class="item" href="t8-guide/" data-who="grok">
+        <div class="t"><b class="name">המדריך לטי־8</b></div>
+        <p>כל הפונקציות בדף אחד: פאנל לחיץ, סנכרון עם הוולקות, חיבור לאייפד, מתכונים ודף קיצורים.</p>
+        <div class="tags"><span class="who grok">גרוק</span><span class="kind">מדריך</span></div>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ============ lessons: T-8 ============ -->
-<section class="grp" id="claude">
-  <h2>שיעורים ומדריך: הטי־8</h2>
-  <p class="sub">שיעורי היכרות ונגינה למתחילים, ומדריך לעיון.</p>
-  <div class="list">
-    <a class="item" href="codex/" data-type="lesson" data-who="codex">
-      <div class="t"><b class="name">הטי־8 מאפס</b><span class="kind">שיעור מלא</span></div>
-      <p>קודם מבינים ואז מנסים: מקצב משלך, עיצוב כל כלי, החלפת צלילים וטריקים. איורים, פרקים ולימוד צעד־צעד באייפד.</p>
-      <div class="tags"><span class="who codex">קודקס</span><span class="kind">שיעור</span><span class="dev">T-8</span></div>
-    </a>
-    <a class="item" href="claude/lesson-4.html" data-type="lesson" data-who="claude">
-      <div class="t"><span class="num">4</span><b class="name">היכרות עם הטי־8</b></div>
-      <p>מאפס: הדלקה, מפה של הלוח, לשמוע כל תוף ואת הבס, ואיך הלחצנים עובדים. עם תרשים לחיץ ומשחק ״מצא את הכפתור״.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="dev">T-8</span></div>
-    </a>
-    <a class="item" href="claude/lesson-5.html" data-type="lesson" data-who="claude">
-      <div class="t"><span class="num">5</span><b class="name">ג׳אם אסיד עם הטי־8</b></div>
-      <p>אותו ג׳אם של שיעור 1 בקופסה אחת: ביט, קו בס עם גלישות והדגשות, שאיבה מהקיק, הד וסיבובים חיים.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="dev">T-8</span></div>
-    </a>
-    <a class="item" href="claude/lesson-6.html" data-type="lesson" data-who="claude">
-      <div class="t"><span class="num">6</span><b class="name">גרוב חי: הטריקים של הקצב</b><span class="new">חדש</span></div>
-      <p>סיכוי לכל מכה, עוצמה שונה לכל מכה, גלגולים, תבניות באורכים שונים, גמגום, מילוי, ואקראי שמתבטל בלחיצה.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="dev">T-8</span></div>
-    </a>
-    <a class="item" href="claude/lesson-7.html" data-type="lesson" data-who="claude">
-      <div class="t"><span class="num">7</span><b class="name">צליל: הטריקים של הסאונד</b><span class="new">חדש</span></div>
-      <p>מה שמתחת לכפתורים: התפריט, החלפת כלים, עיוות, הזזת הבס בגובה, הד שננעל לקצב, שאיבה ושער.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="kind">שיעור</span><span class="dev">T-8</span></div>
-    </a>
-    <a class="item" href="t8-guide/" data-type="lesson" data-who="grok">
-      <div class="t"><b class="name">המדריך לטי־8</b></div>
-      <p>מדריך אחד ארוך לעיון, לא לפי שיעורים: כל הפונקציות, סנכרון עם הוולקות, חיבור לאייפד, מתכונים ודף קיצורים.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">מדריך</span><span class="dev">T-8</span></div>
-    </a>
-  </div>
-  <h3 class="sub">כלי עזר לשיעורים של קלוד</h3>
-  <div class="list two">
-    <a class="item" href="claude/notebook.html" data-type="lesson" data-who="claude">
-      <div class="t"><b class="name">הפנקס שלי</b></div>
-      <p>כל ההערות שכתבת בכרטיסים, במקום אחד.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="kind">כלי עזר</span></div>
-    </a>
-    <a class="item" href="claude/glossary.html" data-type="lesson" data-who="claude">
-      <div class="t"><b class="name">מילון מושגים</b></div>
-      <p>כל המושגים מהשיעורים, עם חיפוש.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="kind">כלי עזר</span></div>
-    </a>
+<!-- ======================= Volcas ======================= -->
+<section class="dev" id="volca">
+  <h2>הוולקות <span class="lbl">Volca Beats · Volca Bass</span></h2>
+  <p class="sub">שלושה שיעורים, כל אחד בשתי גרסאות. של קלוד: צילומי המכשירים שלך, מעקב ומצב נגינה. של גרוק: דף רציף לכל שיעור.</p>
+  <div class="grp" id="grok">
+    <div class="list">
+      <div class="item" data-who="claude grok">
+        <div class="t"><b class="name">ג׳אם אסיד ראשון</b></div>
+        <p>ביט בתופים, קו בס עם גלישות, סנכרון בין שני המכשירים, ונגינה בשתי ידיים.</p>
+        <div class="tags"><span class="code">Volca Beats</span><span class="code">Volca Bass</span><span class="kind">שיעור 1</span></div>
+        <div class="pair"><a class="claude" href="claude/lesson-1.html">גרסת קלוד</a><a class="grok" href="lessons/acid-lesson-1.html">גרסת גרוק</a></div>
+      </div>
+      <div class="item" data-who="claude grok">
+        <div class="t"><b class="name">צלילה לעומק הבס</b></div>
+        <p>שלושת המתנדים, המסנן, המעטפת, תנועה מחזורית, ודגש בלי אקסנט.</p>
+        <div class="tags"><span class="code">Volca Bass</span><span class="kind">שיעור 2</span></div>
+        <div class="pair"><a class="claude" href="claude/lesson-2.html">גרסת קלוד</a><a class="grok" href="lessons/acid-lesson-2.html">גרסת גרוק</a></div>
+      </div>
+      <div class="item" data-who="claude grok">
+        <div class="t"><b class="name">הקלידים של הבס</b></div>
+        <p>16 הקלידים כפסנתר, אוקטבה, סולמות לאסיד, והעברת ריף לגובה אחר.</p>
+        <div class="tags"><span class="code">Volca Bass</span><span class="kind">שיעור 3</span></div>
+        <div class="pair"><a class="claude" href="claude/lesson-3.html">גרסת קלוד</a><a class="grok" href="lessons/acid-lesson-3.html">גרסת גרוק</a></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============ tools ============ -->
-<section class="grp" id="tools">
+<!-- ======================= Tools ======================= -->
+<section class="dev" id="tools">
   <h2>כלים לנגן במסך</h2>
-  <p class="sub">אפליקציות שעובדות באייפד או בטלפון, גם בלי המכשירים. כל אחת אפשר להוסיף למסך הבית בנפרד.</p>
+  <p class="sub">אפליקציות לאייפד או לטלפון, גם בלי המכשירים. כל אחת אפשר להוסיף למסך הבית.</p>
 
-  <h3 class="sub">בס אסיד</h3>
-  <div class="list two">
-    <a class="item" href="acid/" data-type="tool" data-who="claude grok">
-      <div class="t"><b class="name">טבעת חומצה</b></div>
-      <p>קו בס של 16 צעדים על טבעת. עולמות צליל, צורות גל מצוירות, הקלטה. קלוד בנה, גרוק שדרג את מנוע הצליל.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="acid-storm/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">סופת חומצה</b></div>
-      <p>גרסה של טבעת חומצה עם סיכוי, חזרות ואורך לכל צעד, ועולמות מוכנים. מציגה את הקו כרשימה להעתקה לטי־8 או לוולקה.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="fizz/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">תסיסה</b></div>
-      <p>מחולל קווי אסיד: לוחצים ״צור״, משנים קצת, ומעתיקים את התווים לוולקה בס או לטי־8.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
+  <div class="grp">
+    <h3>בס אסיד</h3>
+    <div class="list two">
+      <a class="item" href="acid/" data-who="claude grok">
+        <div class="t"><b class="name">טבעת חומצה</b></div>
+        <p>קו בס של 16 צעדים על טבעת, עולמות צליל, צורות גל מצוירות והקלטה. קלוד בנה, גרוק שדרג את המנוע.</p>
+        <div class="tags"><span class="who claude">קלוד</span><span class="who grok">גרוק</span></div>
+      </a>
+      <a class="item" href="acid-storm/" data-who="grok">
+        <div class="t"><b class="name">סופת חומצה</b></div>
+        <p>טבעת חומצה עם סיכוי, חזרות ואורך לכל צעד. מציגה את הקו כרשימה להעתקה לטי־8 או לוולקה.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+      <a class="item" href="fizz/" data-who="grok">
+        <div class="t"><b class="name">תסיסה</b></div>
+        <p>מחולל קווי אסיד: ״צור״, ״שנה קצת״, ומעתיקים את התווים לוולקה בס או לטי־8.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+    </div>
   </div>
 
-  <h3 class="sub">תופים</h3>
-  <div class="list two">
-    <a class="item" href="groove2/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">מכונת גרוב 2</b><span class="new">החדשה</span></div>
-      <p>מכונת תופים: עד 64 צעדים, ביטול וחזרה, ניקוי ואיפוס, צליל משודרג.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="groove/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">מכונת גרוב</b></div>
-      <p>הגרסה הראשונה של מכונת התופים.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
+  <div class="grp">
+    <h3>תופים</h3>
+    <div class="list two">
+      <a class="item" href="groove2/" data-who="grok">
+        <div class="t"><b class="name">מכונת גרוב 2</b><span class="new">החדשה</span></div>
+        <p>עד 64 צעדים, ביטול וחזרה, ניקוי ואיפוס, צליל משודרג.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+      <a class="item" href="groove/" data-who="grok">
+        <div class="t"><b class="name">מכונת גרוב</b></div>
+        <p>הגרסה הראשונה.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+    </div>
   </div>
 
-  <h3 class="sub">הופעה חיה</h3>
-  <div class="list two">
-    <a class="item" href="bama3/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">במה 3</b><span class="new">החדשה</span></div>
-      <p>בונים שיר מקטעים (פתיחה, בנייה, דרופ), עורכים בעצמך את התופים והבס, ומנגנים.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="bama2/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">במה 2</b></div>
-      <p>לוח הופעה: מחליפים קליפים של בס ותופים, ומשחקים באפקטים.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
+  <div class="grp">
+    <h3>הופעה חיה</h3>
+    <div class="list two">
+      <a class="item" href="bama3/" data-who="grok">
+        <div class="t"><b class="name">במה 3</b><span class="new">החדשה</span></div>
+        <p>בונים שיר מקטעים, עורכים את התופים והבס, ומנגנים.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+      <a class="item" href="bama2/" data-who="grok">
+        <div class="t"><b class="name">במה 2</b></div>
+        <p>מחליפים קליפים של בס ותופים, ומשחקים באפקטים.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+    </div>
   </div>
 
-  <h3 class="sub">צלילים ומגע</h3>
-  <div class="list two">
-    <a class="item" href="synth/" data-type="tool" data-who="claude raz">
-      <div class="t"><b class="name">מכונת אווירות</b></div>
-      <p>סינתיסייזר של משטחי צליל ואקורדים, עם הד, הדהוד ומשטח מגע.</p>
-      <div class="tags"><span class="who claude">קלוד</span><span class="who raz">רז</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="pendulum/" data-type="tool" data-who="raz">
-      <div class="t"><b class="name">מטוטלת</b></div>
-      <p>האפליקציה של רז: מנגנים ומזיזים את הצליל בהטיה של המכשיר.</p>
-      <div class="tags"><span class="who raz">רז</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="pendulum-touch/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">מטוטלת מגע</b></div>
-      <p>מטוטלת עם אפקטים במגע, במקום הטיה.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
-    <a class="item" href="orbit/" data-type="tool" data-who="grok">
-      <div class="t"><b class="name">כבידה</b></div>
-      <p>אצבע מנגנת צליל, זריקה משגרת כדור שמנגן בכל פגיעה בקיר.</p>
-      <div class="tags"><span class="who grok">גרוק</span><span class="kind">כלי</span></div>
-    </a>
-  </div>
-</section>
-
-<p class="empty" id="empty" hidden>אין כאן כלום בסינון הזה.</p>
-
-<section class="grp install" data-always>
-  <h2>לשמור בטלפון או באייפד</h2>
-  <div class="note">
-    <ol>
-      <li>פתח את העמוד הזה בספארי.</li>
-      <li>גע בכפתור השיתוף (ריבוע עם חץ למעלה).</li>
-      <li>בחר ״הוספה למסך הבית״.</li>
-    </ol>
-    <p style="margin:10px 0 0"><b>תמיד מעודכן:</b> העמוד הזה והשיעורים נטענים מחדש מהאינטרנט בכל פתיחה, כך שכל מה שנוסיף יופיע כאן לבד. לפעמים זה לוקח כמה דקות. רוצה לבדוק עכשיו? <b>↻ רענון</b> למעלה.</p>
-    <p style="margin:8px 0 0">הכלים עובדים גם בלי אינטרנט, ולכן הם שומרים עותק. כשיש עדכון, הוא מגיע אחרי פתיחה אחת או שתיים.</p>
+  <div class="grp">
+    <h3>צלילים ומגע</h3>
+    <div class="list two">
+      <a class="item" href="synth/" data-who="claude raz">
+        <div class="t"><b class="name">מכונת אווירות</b></div>
+        <p>משטחי צליל ואקורדים, עם הד, הדהוד ומשטח מגע.</p>
+        <div class="tags"><span class="who claude">קלוד</span><span class="who raz">רז</span></div>
+      </a>
+      <a class="item" href="pendulum/" data-who="raz">
+        <div class="t"><b class="name">מטוטלת</b></div>
+        <p>מנגנים ומזיזים את הצליל בהטיה של המכשיר.</p>
+        <div class="tags"><span class="who raz">רז</span></div>
+      </a>
+      <a class="item" href="pendulum-touch/" data-who="grok">
+        <div class="t"><b class="name">מטוטלת מגע</b></div>
+        <p>מטוטלת עם אפקטים במגע, במקום הטיה.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+      <a class="item" href="orbit/" data-who="grok">
+        <div class="t"><b class="name">כבידה</b></div>
+        <p>אצבע מנגנת צליל, זריקה משגרת כדור שמנגן בכל פגיעה בקיר.</p>
+        <div class="tags"><span class="who grok">גרוק</span></div>
+      </a>
+    </div>
   </div>
 </section>
 
+<!-- ======================= Helpers ======================= -->
+<section class="dev" id="help">
+  <h2>עזרים</h2>
+  <div class="grp">
+    <div class="list two">
+      <a class="item" href="claude/notebook.html" data-who="claude">
+        <div class="t"><b class="name">הפנקס שלי</b></div>
+        <p>כל ההערות שכתבת בכרטיסים של קלוד, במקום אחד. משם אפשר להעתיק ולהדביק לקלוד.</p>
+        <div class="tags"><span class="who claude">קלוד</span></div>
+      </a>
+      <a class="item" href="claude/glossary.html" data-who="claude">
+        <div class="t"><b class="name">מילון מושגים</b></div>
+        <p>כל המושגים מהשיעורים, עם חיפוש.</p>
+        <div class="tags"><span class="who claude">קלוד</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h3>לשמור בטלפון או באייפד</h3>
+    <div class="note">
+      <ol>
+        <li>פתח את העמוד הזה בספארי.</li>
+        <li>גע בכפתור השיתוף (ריבוע עם חץ למעלה).</li>
+        <li>בחר ״הוספה למסך הבית״.</li>
+      </ol>
+      <p style="margin:10px 0 0"><b>תמיד מעודכן:</b> העמוד והשיעורים נטענים מחדש בכל פתיחה, כך שכל מה שנוסיף מופיע לבד. לפעמים זה לוקח כמה דקות. רוצה לבדוק עכשיו? <b>↻ רענון</b> למעלה.</p>
+      <p style="margin:8px 0 0">הכלים עובדים גם בלי אינטרנט, ולכן שומרים עותק. עדכון שלהם מגיע אחרי פתיחה אחת או שתיים.</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- #home -->
 </div>
+
 <script>
 (function(){
-  // filters
-  var btns=[].slice.call(document.querySelectorAll(".f")), items=[].slice.call(document.querySelectorAll(".item"));
-  function apply(f){
-    btns.forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.f===f); });
-    var shown=0;
-    items.forEach(function(it){
-      var ok = f==="all" || it.dataset.type===f || (f==="lesson" && it.dataset.type==="guide") ||
-               (it.dataset.who||"").split(" ").indexOf(f)>-1;
-      it.hidden=!ok; if(ok) shown++;
+  "use strict";
+  /* ---------- who-built filter (tap a badge) ---------- */
+  var cur=null, items=[].slice.call(document.querySelectorAll("#home .item"));
+  [].forEach.call(document.querySelectorAll("#legend button"),function(b){
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click",function(){
+      cur = cur===b.dataset.w ? null : b.dataset.w;
+      [].forEach.call(document.querySelectorAll("#legend button"),function(x){ x.setAttribute("aria-pressed", x.dataset.w===cur); });
+      items.forEach(function(it){ it.hidden = !!cur && (it.dataset.who||"").split(" ").indexOf(cur)<0; });
+      [].forEach.call(document.querySelectorAll("#home .grp, #home section.dev"),function(g){
+        if(!g.querySelector(".item")) return;
+        g.hidden = !g.querySelector(".item:not([hidden])");
+      });
     });
-    [].forEach.call(document.querySelectorAll("section.grp:not([data-always]), h3.sub"),function(s){
-      var box = s.tagName==="H3" ? s.nextElementSibling : s;
-      var any = box.querySelectorAll(".item:not([hidden])").length>0;
-      s.hidden=!any;
-    });
-    document.querySelector(".start").hidden = f!=="all";
-    document.getElementById("empty").hidden = shown>0;
-    try{ sessionStorage.setItem("hub-f",f); }catch(e){}
-  }
-  btns.forEach(function(b){ b.addEventListener("click",function(){ apply(b.dataset.f); }); });
-  var saved=null; try{ saved=sessionStorage.getItem("hub-f"); }catch(e){}
-  if(saved && saved!=="all") apply(saved);
-
-  // refresh: saved to the home screen there is no pull-to-refresh
-  document.getElementById("refresh").addEventListener("click",function(){
-    location.replace(location.pathname+"?r="+Date.now()+location.hash);
   });
-  // coming back to the page after a while: load the latest version
+
+  /* ---------- search across every lesson page, read live ---------- */
+  var PAGES=[
+    ["claude/lesson-1.html","הוולקות","claude"],["claude/lesson-2.html","הוולקות","claude"],["claude/lesson-3.html","הוולקות","claude"],
+    ["claude/lesson-4.html","הטי־8","claude"],["claude/lesson-5.html","הטי־8","claude"],["claude/lesson-6.html","הטי־8","claude"],["claude/lesson-7.html","הטי־8","claude"],
+    ["codex/index.html","הטי־8","codex"],["t8-guide/index.html","הטי־8","grok"],
+    ["lessons/acid-lesson-1.html","הוולקות","grok"],["lessons/acid-lesson-2.html","הוולקות","grok"],["lessons/acid-lesson-3.html","הוולקות","grok"]
+  ];
+  var WHO={claude:"קלוד",grok:"גרוק",codex:"קודקס",raz:"רז"};
+  var index=null, loading=null;
+  function norm(s){ return (s||"").toLowerCase().replace(/[\u0591-\u05C7]/g,"").replace(/[׳'"״`]/g,"").replace(/[־\-–—]/g," ").replace(/\s+/g," ").trim(); }
+  function txt(el){ return el ? el.textContent.replace(/\s+/g," ").trim() : ""; }
+  function build(){
+    if(loading) return loading;
+    loading=Promise.all(PAGES.map(function(p){
+      return fetch(p[0],{cache:"no-store"}).then(function(r){ return r.ok?r.text():""; }).catch(function(){ return ""; }).then(function(html){
+        if(!html) return [];
+        var doc=new DOMParser().parseFromString(html,"text/html"), out=[], seen={};
+        var pageTitle=txt(doc.querySelector("h1"))||txt(doc.querySelector("title"));
+        function add(title,anchor,extra,body){
+          title=title.replace(/^\s*(✓\s*)?/,""); if(!title || seen[title+anchor]) return; seen[title+anchor]=1;
+          out.push({t:title, x:extra||"", u:p[0].replace(/index\.html$/,"")+(anchor?"#"+anchor:""), dev:p[1], who:p[2], page:pageTitle,
+            nt:norm(title), n:norm(title+" "+(extra||"")+" "+(body||""))});
+        }
+        add(pageTitle,"","");
+        [].forEach.call(doc.querySelectorAll("[id]"),function(el){
+          if(/^(playmode|wake|toc|main|chapters|mana-next|pm-.*|t8.*)$/.test(el.id)) return;
+          var h=el.querySelector(".card-head h3, :scope > h2, :scope > h3, :scope > header h2, h2, h3"); if(!h) return;
+          var isCard=el.matches("article, .card") || !el.querySelector("article, .card");
+          var num=isCard?el.querySelector(".card-head .num"):null;
+          var extra=isCard?[].map.call(el.querySelectorAll(".combo[data-q]"),function(c){ return c.dataset.q; }).join(" · "):"";
+          var body=isCard?(txt(el.querySelector(".label"))+" "+txt(el)).slice(0,900):"";
+          add((num?num.textContent.trim()+" · ":"")+txt(h), el.id, extra, body);
+        });
+        return out;
+      });
+    })).then(function(parts){ index=[].concat.apply([],parts); return index; });
+    return loading;
+  }
+  var q=document.getElementById("q"), qx=document.getElementById("qx"), res=document.getElementById("results"), home=document.getElementById("home");
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function hl(s,words){ var h=esc(s); words.forEach(function(w){ if(w.length<2) return; var i=norm(s).indexOf(w); if(i<0) return;
+      try{ h=h.replace(new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","i"),"<mark>$1</mark>"); }catch(e){} }); return h; }
+  function run(){
+    var v=norm(q.value); qx.hidden=!q.value;
+    if(!v){ res.hidden=true; home.hidden=false; return; }
+    res.hidden=false; home.hidden=true;
+    if(!index){ res.innerHTML='<p class="rinfo">טוען את כל השיעורים…</p>'; build().then(run); return; }
+    var words=v.split(" "), hits=index.filter(function(e){ return words.every(function(w){ return e.n.indexOf(w)>-1; }); });
+    hits.sort(function(a,b){ function sc(e){ return words.every(function(w){ return e.nt.indexOf(w)>-1; })?0:(norm(e.x).indexOf(words[0])>-1?1:2); } return sc(a)-sc(b); });
+    if(!hits.length){ res.innerHTML='<p class="rinfo">לא נמצא. נסה מילה אחרת, למשל ״גלגול״, ״שמירה״ או ״תפריט״.</p>'; return; }
+    res.innerHTML='<p class="rinfo">'+hits.length+' תוצאות</p>'+hits.slice(0,60).map(function(e){
+      return '<a class="res" href="'+esc(e.u)+'"><b>'+hl(e.t,words)+'</b>'+(e.x&&words.some(function(w){return norm(e.x).indexOf(w)>-1;})?'<small>'+hl(e.x,words)+'</small>':'')+
+        '<small>'+esc(e.dev)+' · '+esc(e.page)+' · <span class="who '+e.who+'">'+WHO[e.who]+'</span></small></a>';
+    }).join("");
+  }
+  var tm=null;
+  q.addEventListener("input",function(){ clearTimeout(tm); tm=setTimeout(run,120); });
+  q.addEventListener("focus",function(){ build(); },{once:true});
+  qx.addEventListener("click",function(){ q.value=""; run(); q.focus(); });
+  document.getElementById("sform").addEventListener("submit",function(e){ e.preventDefault(); q.blur(); });
+
+  /* ---------- refresh, and reload after a long break ---------- */
+  document.getElementById("refresh").addEventListener("click",function(){ location.replace(location.pathname+"?r="+Date.now()+location.hash); });
   var left=0;
   document.addEventListener("visibilitychange",function(){
     if(document.visibilityState==="hidden") left=Date.now();

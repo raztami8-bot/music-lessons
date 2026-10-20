@@ -299,12 +299,8 @@ def hitbox(id):
 
 def interactive():
     """One SVG for the tour: every control is a <g class="ctl" data-id>, with a big transparent hit area."""
-    s = [f'<svg viewBox="0 0 {W} {H}" direction="ltr" role="img" aria-label="תרשים הלוח של הטי־8">',
-         '<style>text{font-family:Assistant,Arial,sans-serif;text-anchor:middle;pointer-events:none}'
-         '.l{font-size:13px;font-weight:700;fill:#c9cdd6}.s{font-size:12px}.xs{font-size:10px}'
-         '.b{font-size:12px;font-weight:700;fill:#1d2433}.big{font-size:20px}'
-         '.n{font-size:13px;font-weight:700;fill:#9aa4b8}.h{font-size:15px;font-weight:700;fill:#e8ecf4}'
-         '.seg{font-family:"IBM Plex Mono",monospace;font-size:30px;font-weight:600;fill:#ff5a4f}</style>',
+    s = [f'<svg class="t8i" viewBox="0 0 {W} {H}" direction="ltr" role="img" aria-label="תרשים הלוח של הטי־8">',
+         '<style>.t8i text{font-family:Assistant,Arial,sans-serif;text-anchor:middle;pointer-events:none}.t8i .l{font-size:13px;font-weight:700;fill:#c9cdd6}.t8i .s{font-size:12px}.t8i .xs{font-size:10px}.t8i .b{font-size:12px;font-weight:700;fill:#1d2433}.t8i .big{font-size:20px}.t8i .n{font-size:13px;font-weight:700;fill:#9aa4b8}.t8i .h{font-size:15px;font-weight:700;fill:#e8ecf4}.t8i .seg{font-family:"IBM Plex Mono",monospace;font-size:30px;font-weight:600;fill:#ff5a4f}</style>',
          f'<rect x="3" y="3" width="{W - 6}" height="{H - 6}" rx="26" fill="#1f2128" stroke="#3a3d46" stroke-width="2"/>',
          '<text x="40" y="66" class="h" style="text-anchor:start;font-size:30px">T-8</text>']
     for key, x, w, lab in FRAMES:

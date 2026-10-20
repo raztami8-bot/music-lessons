@@ -55,13 +55,13 @@ PHOTOS = [
     (4, "card", "3.1", ["l4-09"], ["PATTERN|", "16|תבנית 16", "SHIFT|", "11|PTN CLEAR ALL"], T8CAP),
     (4, "card", "3.2", ["l4-05"], ["BASS DRUM|לחצן הכלי", "LEVEL|", "TUNE|", "DECAY|הלחצן העגול", "1|צעד 1"], T8CAP),
     (4, "card", "5.3", ["l4-10"], ["SHIFT|", "15|MENU", "TEMPO/VALUE|", "2|ENTER", "1|EXIT"], T8CAP),
-    (6, "card", "0.1", ["l6-01"], ["PATTERN|מחזיקים", "14|תופים", "15|בס", "16|הכל"], T8CAP),
-    (6, "card", "1.1", ["l6-02"], ["CLOSED HIHAT|", "4|מחזיקים את הצעד", "TEMPO/VALUE|סיכוי", "ACCENT|עוצמה, בשלב 2"], T8CAP),
+    (6, "card", "1.1", ["l6-01"], ["PATTERN|מחזיקים", "14|תופים", "15|בס", "16|הכל"], T8CAP),
+    (6, "card", "1.2", ["l6-02"], ["CLOSED HIHAT|", "4|מחזיקים את הצעד", "TEMPO/VALUE|סיכוי", "ACCENT|עוצמה, בשלב 2"], T8CAP),
     (6, "card", "3.1", ["l6-03"], ["SNARE DRUM|מחזיקים", "16|לוחצים", "ACCENT|סיכוי לגלגול, ב־3.3"], T8CAP),
     (6, "card", "4.1", ["l6-04"], ["SHIFT|", "6|STEP 17-32", "5|STEP 1-16", "4|LAST, ב־4.2"], T8CAP),
     (6, "card", "5.1", ["l6-05"], ["SHIFT|", "PATTERN|", "13|הצעד שבלופ"], T8CAP),
-    (6, "card", "5.4", ["l6-06"], ["SHIFT|", "8|FILL PTN", "7|FILL TRG", "1|EXIT"], T8CAP),
-    (6, "card", "5.5", ["l6-07"], ["SHIFT|", "9|תופים אקראיים", "10|בס אקראי"], T8CAP),
+    (6, "card", "6.2", ["l6-06"], ["SHIFT|", "8|FILL PTN", "7|FILL TRG", "1|EXIT"], T8CAP),
+    (6, "card", "5.3", ["l6-07"], ["SHIFT|", "9|תופים אקראיים", "10|בס אקראי"], T8CAP),
     (7, "card", "0.1", ["l4-10"], ["SHIFT|", "15|MENU", "TEMPO/VALUE|", "2|ENTER", "1|EXIT"], T8CAP),
     (7, "card", "2.1", ["l7-01"], ["PATTERN|מחזיקים", "10|עיוות", "BASS|", "BASS DRUM|ב־2.2"], T8CAP),
     (7, "card", "3.1", ["l7-02"], ["BASS|מחזיקים", "KYBD|מחזיקים", "TEMPO/VALUE|מסובבים"], T8CAP),
@@ -100,9 +100,9 @@ def figure(imgs, legend, cap):
 def split_cards(html, n):
     """Give numbered cards an id, and on cards with a theory block, split action and theory into two columns."""
     def fix(m):
-        body = m.group(1)
+        extra, body = m.group(1) or "", m.group(2)
         num = re.search(r'<span class="num">([^<]+)</span>', body)
-        attrs = ' class="card"'
+        attrs = f' class="card{extra}"'
         if num:
             attrs += f' data-id="l{n}:{num.group(1)}" id="l{n}-{num.group(1).replace(".", "-")}"'
         learn = re.search(r'<div class="learn">.*?</div>', body, re.S)
@@ -113,13 +113,64 @@ def split_cards(html, n):
             if head:
                 head_html = head.group(0)
                 rest = rest.replace(head_html, "", 1)
-            attrs = attrs.replace('class="card"', 'class="card split"')
+            attrs = attrs.replace(f'class="card{extra}"', f'class="card split{extra}"')
             body = f'{head_html}<div class="col-do">{rest}</div><div class="col-learn">{learn.group(0)}</div>'
         return f"<article{attrs}>{body}</article>"
-    return re.sub(r'<article class="card">(.*?)</article>', fix, html, flags=re.S)
+    return re.sub(r'<article class="card((?: [a-z-]+)*)">(.*?)</article>', fix, html, flags=re.S)
 
 
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
+KIT_LESSONS = (6,)  # lessons built with the kit: sessions, action marks, display drawings, hand practice
+KITJS = '<script src="kit.js"></script>\n'
+
+VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
+
+
+def _seg(text):
+    """Draw text on the 4-digit display, one cell per digit: a dim 8. behind, the character and its dot in front."""
+    cells = []
+    for ch in text:
+        if ch == "." and cells and not cells[-1][1]:
+            cells[-1][1] = "."
+        else:
+            cells.append(["" if ch == " " else ch, ""])
+    while len(cells) < 4:
+        cells.insert(0, ["", ""])
+    inner = "".join(f'<span class="c"><b>8.</b><i>{c}{d}</i></span>' for c, d in cells)
+    return f'<span class="seg" role="img" aria-label="בתצוגה: {text}">{inner}</span>'
+
+
+def macros(html):
+    """Shorthand used in kit lessons:
+    [[hold:X]] [[tap:X]] [[turn:X]] [[rel]] [[seg:TEXT]]  (X = button name or step number)
+    [[state:play|SNARE DRUM|free text]]  start state; first item play or stop, second the selected part
+    [[combo:question|seq]] and [[combo-:question|seq]] (hidden, practice only); [[combo:question|seq|state]]"""
+    def one(m):
+        body = m.group(1)
+        kind, _, rest = body.partition(":")
+        if kind == "rel":
+            return '<span class="a a-rel"><i>🖐</i>שחרר</span>'
+        if kind == "seg":
+            return _seg(rest)
+        if kind in VERBS:
+            ic, verb = VERBS[kind]
+            name = f"לחצן <kbd>{rest}</kbd>" if rest.isdigit() else f"<kbd>{rest}</kbd>"
+            return f'<span class="a a-{kind}"><i>{ic}</i>{verb} {name}</span>'
+        if kind == "state":
+            parts = rest.split("|")
+            items = ['<span>▶ מנגן</span>' if parts[0] == "play" else '<span>■ עצור</span>']
+            if len(parts) > 1 and parts[1]:
+                items.append(f'<span>נבחר <kbd>{parts[1]}</kbd></span>')
+            items += [f"<span>{x}</span>" for x in parts[2:] if x]
+            return '<div class="state"><b>מתחילים כש:</b>' + "".join(items) + "</div>"
+        if kind in ("combo", "combo-"):
+            parts = rest.split("|")
+            q, seq = parts[0], parts[1]
+            st = f' data-state="{parts[2]}"' if len(parts) > 2 else ""
+            hide = ' data-hide="1"' if kind == "combo-" else ""
+            return f'<div class="combo" data-q="{q}" data-seq="{seq}"{st}{hide}></div>'
+        raise ValueError("unknown macro: " + body)
+    return re.sub(r"\[\[((?:hold|tap|turn|rel|seg|state|combo-?)(?::[^\]]*)?)\]\]", one, html)
 
 
 def page(n):
@@ -140,6 +191,8 @@ def page(n):
             pat = re.compile(r'(<article class="card">\s*<div class="card-head"><span class="num">' + re.escape(anchor) + r'</span>)')
             assert pat.search(html), (n, anchor)
             html = pat.sub(lambda m: fig + m.group(1), html, count=1)
+    if n in KIT_LESSONS:
+        html = macros(html)
     html = split_cards(html, n)
     tabs = "".join(
         f'<a class="tb{" cur" if k == n else ""}" href="lesson-{k}.html"{" aria-current=page" if k == n else ""}>שיעור {k}</a>'
@@ -158,7 +211,7 @@ def page(n):
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>{title} · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css">{chr(10) + '<link rel="stylesheet" href="kit.css">' if n in KIT_LESSONS else ""}
 </head>
 <body data-lesson="{n}">
 <div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
@@ -167,7 +220,7 @@ def page(n):
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
-{T8JS if n in T8_LESSONS else ""}</body>
+{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}</body>
 </html>
 """
     (HERE / f"lesson-{n}.html").write_text(out, encoding="utf8")

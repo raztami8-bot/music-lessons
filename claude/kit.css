@@ -1,0 +1,80 @@
+/* Lesson kit for the T-8 lessons: start state, action marks, display drawings, sessions, hand practice.
+   Loaded only on lessons listed in KIT_LESSONS in build.py. Does not change app.css. */
+@font-face{font-family:"DSEG7";src:url("fonts/DSEG7Classic-Bold.woff2") format("woff2");font-display:swap}
+
+/* start state */
+.state{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:.92rem;background:var(--accent-soft);border-radius:10px;padding:8px 10px}
+.state>b{font-size:.85rem;color:var(--muted);font-weight:700}
+.state>span{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 10px}
+
+/* action marks */
+.a{display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;border-radius:999px;padding:1px 9px 1px 6px;font-weight:700;white-space:nowrap;border:2px solid var(--line);background:var(--surface);line-height:1.6;margin:1px 0}
+.a i{font-style:normal;font-size:1.05em;line-height:1;margin-inline-end:4px}
+.a kbd{white-space:nowrap}
+.a.a-hold{border-color:var(--accent);background:var(--accent-soft)}
+.a.a-tap{border-color:var(--fg)}
+.a.a-turn{border-color:var(--ok);background:var(--ok-soft)}
+.a.a-rel{border-style:dashed;color:var(--muted);font-weight:600}
+.a.a-look{border-color:transparent;background:transparent;padding:0}
+
+/* the device display */
+.seg{display:inline-flex;direction:ltr;unicode-bidi:isolate;vertical-align:middle;background:#0c0d10;border-radius:6px;
+  padding:.22em .4em;font-family:"DSEG7",ui-monospace,monospace;font-size:1.35rem;line-height:1;white-space:pre}
+.seg .c{position:relative;display:inline-block}
+.seg .c b{color:#3a1512;font-weight:inherit}
+.seg .c i{position:absolute;left:0;top:0;color:#ff5a4f;font-style:normal}
+.seg.big{font-size:1.8rem}
+.legend-seg{color:var(--muted);font-size:.85rem}
+
+/* the combination strip */
+.combo{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.combo>.ch{font-size:.85rem;color:var(--muted);font-weight:700}
+.combo .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.combo .to{color:var(--muted);font-weight:700}
+.combo .grp{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;border:2px dashed var(--accent);border-radius:14px;padding:4px 6px;position:relative}
+.combo .grp>small{flex-basis:100%;font-size:.75rem;color:var(--accent);font-weight:700}
+
+/* sessions */
+.mana-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.mana-head.done{border-color:var(--ok)}
+.mana-head .mh-t{display:flex;flex-direction:column;gap:2px;flex:1 1 220px}
+.mana-head .mh-t b{font-size:1.05rem}
+.mana-head .mh-t small{color:var(--muted)}
+.mana-head .btn{min-height:44px}
+.mana-head .mh-ok{color:var(--ok);font-weight:700}
+.toc li.mana-done>a::after{content:" ✓";color:var(--ok);font-weight:700}
+.howto{display:flex;flex-direction:column;gap:6px}
+.howto ol{margin:0;padding-inline-start:1.3em;display:flex;flex-direction:column;gap:4px}
+
+/* one-minute review */
+.recap details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface)}
+.recap details+details{margin-top:8px}
+.recap summary{cursor:pointer;font-weight:700;min-height:32px;display:flex;align-items:center;gap:8px}
+.recap summary::-webkit-details-marker{display:none}
+.recap summary::before{content:"؟";display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--fg);color:var(--surface);font-size:.85rem;flex:none}
+.recap details[open] summary::before{content:"✓";background:var(--ok)}
+.recap details p{margin:8px 0 2px}
+
+/* play now */
+.playnow .timer{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.playnow .timer .t{font-family:"DSEG7",ui-monospace,monospace;font-size:1.6rem;direction:ltr;background:#0c0d10;color:#ff5a4f;border-radius:6px;padding:.15em .5em}
+.playnow .end{border-top:1px dashed var(--line);padding-top:10px;color:var(--muted)}
+
+/* hand practice */
+.drill{display:flex;flex-direction:column;gap:10px;border:2px solid var(--line);border-radius:14px;padding:12px}
+.drill>h4{margin:0}
+.drill .dq{display:flex;flex-direction:column;gap:4px}
+.drill .dq small{color:var(--muted)}
+.drill .dq b{font-size:1.1rem}
+.drill .dsteps{display:flex;gap:6px;flex-wrap:wrap}
+.drill .dsteps span{width:28px;height:8px;border-radius:4px;background:var(--line)}
+.drill .dsteps span.done{background:var(--ok)}
+.drill .dsteps span.cur{background:var(--accent)}
+.drill .dfb{min-height:1.6em}
+.drill .dfb .combo{margin-top:8px}
+.drill .dbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.drill .dbar .sp{flex:1}
+.t8-map .ctl.held .hl{fill:rgba(242,201,76,.35);stroke:#f2c94c;stroke-width:6;stroke-dasharray:10 5}
+.t8-map .ctl.hint .hl{fill:rgba(111,207,151,.25);stroke:#6fcf97;stroke-width:5;animation:t8pulse 1s ease-in-out infinite}
+@keyframes t8pulse{50%{stroke-opacity:.2;fill-opacity:.05}}
+@media (prefers-reduced-motion:reduce){.t8-map .ctl.hint .hl{animation:none}}
