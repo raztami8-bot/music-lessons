@@ -6,7 +6,7 @@
    Combination syntax: "tap:X,hold:Y,rel,turn:TEMPO/VALUE,look:P.50" (X = a button name or a step number). */
 (function(){
 "use strict";
-var page=document.body.dataset.lesson; if(!page) return;
+var page=document.body.dataset.lesson||""; if(!page && !document.body.dataset.t8) return;
 var DONE="ml2:done", NOTES="ml2:notes", DRILL="ml2:drill";
 function get(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
 function set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }

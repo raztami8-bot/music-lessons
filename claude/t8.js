@@ -125,7 +125,7 @@ function openPop(ids,name){
   ptxt.innerHTML=h;
   setTimeout(function(){ pmap.reveal(ids[0]); },30);
 }
-if(document.body.dataset.lesson){
+if(document.body.dataset.lesson || document.body.dataset.t8){
   [].forEach.call(document.querySelectorAll(".wrap kbd"),function(k){
     if(k.closest(".t8-map")) return;
     var t=k.textContent.trim(), ids=T.alias[t];

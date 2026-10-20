@@ -327,6 +327,106 @@ def tool_page(key):
     (HERE / f"{key}.html").write_text(out, encoding="utf8")
 
 
+def map_page(t8map):
+    """map.html: everything you can do on the T-8, by goal and by button (data in src/tricks.py)."""
+    import tricks, html as H
+    total = 0
+    sections, chips = [], []
+    for gid, gname, gsub, items in tricks.GOALS:
+        chips.append(f'<a href="#g-{gid}">{gname}</a>')
+        rows = []
+        for tid, title, line, seq, cards, extra, also in items:
+            total += 1
+            ctl = []
+            for part in (seq.split(",") if seq else []):
+                verb, _, key = part.partition(":")
+                if verb not in ("hold", "tap", "turn"):
+                    continue
+                cid = "s" + key if key.isdigit() else (t8map.ALIAS.get(key) or [None])[0]
+                assert cid, ("unknown control", tid, key)
+                if cid not in ctl:
+                    ctl.append(cid)
+            for c in extra:
+                assert c in t8map.C, ("unknown control", tid, c)
+                if c not in ctl:
+                    ctl.append(c)
+            keys, links = [], []
+            for c in cards:
+                n, _, num = c.partition(":")
+                n = int(n)
+                assert n in LESSONS, c
+                if num.replace(".", "").isdigit():
+                    anchor = f"l{n}-" + num.replace(".", "-")
+                    keys.append(f"l{n}:{num}")
+                    label = f"שיעור {n} · {num}"
+                else:
+                    anchor, label = num, f"שיעור {n}"
+                src = (HERE / f"lesson-{n}.html").read_text(encoding="utf8")
+                assert f'id="{anchor}"' in src, ("missing card", tid, c)
+                links.append(f'<a class="go" href="lesson-{n}.html#{anchor}">ללמוד: {label}</a>')
+            for who, anchor in also:
+                if who == "grok":
+                    links.append(f'<a class="also" href="../t8-guide/#{anchor}"><span class="who grok">גרוק</span> במדריך</a>')
+                else:
+                    links.append(f'<a class="also" href="../codex/#{anchor}"><span class="who codex">קודקס</span> בשיעור</a>')
+            combo = f'<div class="combo" data-seq="{H.escape(seq)}" data-title="איך"></div>' if seq else ""
+            knobs = "" if seq else '<p class="knobs">' + " ".join(f"<kbd>{H.escape(t8map.C[c][5] or t8map.C[c][0])}</kbd>" for c in extra if t8map.C[c][5]) + "</p>"
+            rows.append(f'<div class="trick" id="t-{tid}" data-ctl="{" ".join(ctl)}" data-cards="{" ".join(keys)}">'
+                        f'<div class="tt"><span class="mark" aria-hidden="true"></span><b>{title}</b></div><p>{line}</p>{combo}{knobs}'
+                        f'<div class="links">{"".join(links)}</div></div>')
+        sections.append(f'<section class="goal" id="g-{gid}"><h2>{gname}</h2><p class="sub">{gsub}</p><div class="tricks">{"".join(rows)}</div></section>')
+    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">שיעור {k}</a>' for k in LESSONS if k >= 4)
+    out = f"""<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>מה אפשר לעשות בטי־8 · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="kit.css">
+<link rel="stylesheet" href="map.css">
+</head>
+<body data-t8="map">
+<div class="toolbar"><div class="in"><a class="tb" href="../index.html">⌂ הבית</a><a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:8px">
+  <h1>מה אפשר לעשות בטי־8</h1>
+  <p class="lede">כל מה שהמכשיר יודע, מכל השיעורים באתר, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו.</p>
+  <p class="progress-line" id="mp-prog"></p>
+</header>
+<div class="mviews" role="tablist">
+  <button type="button" class="mv" role="tab" id="mv-goal" aria-selected="true">לפי מה שרוצים</button>
+  <button type="button" class="mv" role="tab" id="mv-btn" aria-selected="false">לפי כפתור</button>
+</div>
+<div id="view-goal">
+  <nav class="gjump" aria-label="מטרות">{"".join(chips)}</nav>
+  {"".join(sections)}
+</div>
+<div id="view-btn" hidden>
+  <p class="lede">נוגעים בכפתור בתרשים, ורואים את כל מה שאפשר לעשות איתו.</p>
+  <div id="mp-map"></div>
+  <div id="mp-sel" class="t8-info" aria-live="polite"><b>גע בכפתור בתרשים</b><p>יופיעו כאן כל הדברים שהוא משתתף בהם.</p></div>
+  <div id="mp-list" class="tricks"></div>
+</div>
+<p class="legend">✓ = סימנת ״סיימתי״ בכרטיס שמלמד את זה. הסימונים נשמרים באייפד הזה.</p>
+</div>
+<script src="kit.js"></script>
+<script src="t8-data.js"></script>
+<script src="t8.js"></script>
+<script src="map.js"></script>
+</body>
+</html>
+"""
+    (HERE / "map.html").write_text(out, encoding="utf8")
+    return total
+
+
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, str(SRC))
@@ -336,4 +436,5 @@ if __name__ == "__main__":
     hub(totals)
     for k in TOOLS:
         tool_page(k)
+    print("map", map_page(t8map))
     print("built", totals)
