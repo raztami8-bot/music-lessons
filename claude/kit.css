@@ -78,3 +78,6 @@
 .t8-map .ctl.hint .hl{fill:rgba(111,207,151,.25);stroke:#6fcf97;stroke-width:5;animation:t8pulse 1s ease-in-out infinite}
 @keyframes t8pulse{50%{stroke-opacity:.2;fill-opacity:.05}}
 @media (prefers-reduced-motion:reduce){.t8-map .ctl.hint .hl{animation:none}}
+
+/* any step / any instrument in a combination (map.html) */
+.a kbd.any{border-style:dashed;font-family:var(--f-body);font-weight:700}

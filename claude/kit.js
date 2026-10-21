@@ -43,7 +43,9 @@ function chip(st){
   if(st.a==="rel") return '<span class="a a-rel"><i>🖐</i>שחרר</span>';
   if(st.a==="look") return '<span class="a a-look">'+seg(st.k)+'</span>';
   var v=VERB[st.a]; if(!v) return "";
-  var name=/^\d+$/.test(st.k)?'לחצן <kbd>'+esc(st.k)+'</kbd>':'<kbd>'+esc(st.k)+'</kbd>';
+  /* "@step:16" = any step, 16 is only the example (written under the strip on map.html) */
+  var ANY={step:"צעד",num:"מספר",bank:"1 עד 4",drum:"כלי",inst:"כלי"}, any=/^@(\w+):/.exec(st.k||"");
+  var name=any?'לחצן <kbd class="any">'+ANY[any[1]]+'</kbd>':/^\d+$/.test(st.k)?'לחצן <kbd>'+esc(st.k)+'</kbd>':'<kbd>'+esc(st.k)+'</kbd>';
   return '<span class="a a-'+st.a+'"><i>'+v[0]+'</i>'+v[1]+' '+name+(st.n>1?' <b>×'+st.n+'</b>':'')+'</span>';
 }
 function strip(seq){

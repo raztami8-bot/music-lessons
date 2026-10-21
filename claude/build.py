@@ -246,7 +246,7 @@ def page(n):
     html = re.sub(r'<nav class="topnav".*?</nav>\s*', "", html, count=1, flags=re.S)
     for k in LESSONS:
         html = html.replace(f"URL_L{k}", f"lesson-{k}.html")
-    html = srcs(xrefs(html, n))
+    html = srcs(xrefs(any_lines(html, n), n))
     if n in T8_LESSONS:
         import settings
         html = set_notes(html, n, settings)
@@ -461,6 +461,26 @@ def tool_page(key):
     (HERE / f"{key}.html").write_text(out, encoding="utf8")
 
 
+DRUMS = ["bd", "sd", "clap", "tom", "ch", "oh"]
+ANYCTL = {"step": [f"s{i}" for i in range(1, 17)], "num": [f"s{i}" for i in range(1, 17)], "bank": ["s1", "s2", "s3", "s4"],
+          "drum": DRUMS, "inst": DRUMS + ["bass"]}
+
+
+def any_lines(html, n):
+    """Lesson cards that practice on one example get a line saying what else it works on (tricks.CARD_ANY)."""
+    import tricks
+    for key, text in tricks.CARD_ANY.items():
+        ln, _, num = key.partition(":")
+        if int(ln) != n:
+            continue
+        m = re.search(r'<span class="num">' + re.escape(num) + r"</span>", html)
+        assert m, ("CARD_ANY points to a missing card", key)
+        at = html.find('<ol class="steps"', m.end())
+        assert at > 0 and at < html.find("</article>", m.end()), ("CARD_ANY card has no steps", key)
+        html = html[:at] + f'<p class="anyline"><i aria-hidden="true">🔁</i><span><b>עובד על:</b> {text}</span></p>\n    ' + html[at:]
+    return html
+
+
 def map_page(t8map):
     """map.html: everything you can do on the T-8, by goal and by button (data in src/tricks.py)."""
     import tricks, html as H
@@ -476,10 +496,16 @@ def map_page(t8map):
                 verb, _, key = part.partition(":")
                 if verb not in ("hold", "tap", "turn"):
                     continue
-                cid = "s" + key if key.isdigit() else (t8map.ALIAS.get(key) or [None])[0]
-                assert cid, ("unknown control", tid, key)
-                if cid not in ctl:
-                    ctl.append(cid)
+                if key.startswith("@"):  # works on any step / instrument: list it under every button it fits
+                    kind, _, ex = key[1:].partition(":")
+                    assert kind in ANYCTL and tid in tricks.ANY, ("@ token needs a line in tricks.ANY", tid, key)
+                    ids = ANYCTL[kind]
+                else:
+                    ids = ["s" + key] if key.isdigit() else (t8map.ALIAS.get(key) or [None])[:1]
+                assert ids and ids[0], ("unknown control", tid, key)
+                for cid in ids:
+                    if cid not in ctl:
+                        ctl.append(cid)
             for c in extra:
                 assert c in t8map.C, ("unknown control", tid, c)
                 if c not in ctl:
@@ -500,8 +526,9 @@ def map_page(t8map):
                 links.append(f'<a class="go" href="lesson-{n}.html#{anchor}">ללמוד: {lbl}</a>')
             combo = f'<div class="combo" data-seq="{H.escape(seq)}" data-title="איך"></div>' if seq else ""
             knobs = "" if seq else '<p class="knobs">' + " ".join(f"<kbd>{H.escape(t8map.C[c][5] or t8map.C[c][0])}</kbd>" for c in extra if t8map.C[c][5]) + "</p>"
+            anyl = f'<p class="anyline"><i aria-hidden="true">🔁</i><span><b>עובד על:</b> {tricks.ANY[tid]}</span></p>' if tid in tricks.ANY else ""
             rows.append(f'<div class="trick" id="t-{tid}" data-ctl="{" ".join(ctl)}" data-cards="{" ".join(keys)}">'
-                        f'<div class="tt"><span class="mark" aria-hidden="true"></span><b>{title}</b></div><p>{line}</p>{combo}{knobs}'
+                        f'<div class="tt"><span class="mark" aria-hidden="true"></span><b>{title}</b></div><p>{line}</p>{anyl}{combo}{knobs}'
                         f'<div class="links">{"".join(links)}</div></div>')
         sections.append(f'<section class="goal" id="g-{gid}"><h2>{gname}</h2><p class="sub">{gsub}</p><div class="tricks">{"".join(rows)}</div></section>')
     tabs = "".join(f'<a class="tb" href="lesson-{k}.html">{label(k, False)}</a>' for k in DEVICES["t8"][3])
@@ -528,6 +555,7 @@ def map_page(t8map):
 <header style="display:flex;flex-direction:column;gap:8px">
   <h1>מה אפשר לעשות בטי־8</h1>
   <p class="lede">כל מה שהמכשיר יודע, מכל שיעורי הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו.</p>
+  <p class="anyline"><i aria-hidden="true">🔁</i><span>כשכתוב <b>לחצן צעד</b> או <b>לחצן כלי</b>, זה עובד על כל צעד או כלי, והמספר הוא רק דוגמה. ״כל צעד״ כולל גם 17 עד 32: עוברים לחצי השני עם <kbd>SHIFT</kbd> + <kbd>6</kbd>, ושם לחצן 1 הוא צעד 17.</span></p>
   <p class="progress-line" id="mp-prog"></p>
 </header>
 <div class="mviews" role="tablist">

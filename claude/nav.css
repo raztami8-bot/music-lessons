@@ -80,3 +80,10 @@ details.src.no>p{background:var(--accent-soft)}
 .sr-top details.src[open]{flex-basis:100%}
 .legend details.src{margin:4px 0;font-size:.95em}
 .legend details.src>summary{white-space:normal}
+
+/* "works on any step / instrument" line: map.html tricks and lesson cards that practice on one example */
+.anyline{display:flex;gap:8px;align-items:flex-start;font-size:.92rem;line-height:1.5;background:color-mix(in srgb,var(--learn) 10%,var(--surface));
+  border:1px solid color-mix(in srgb,var(--learn) 30%,transparent);border-radius:10px;padding:7px 10px;margin:0}
+.anyline>i{font-style:normal;flex:none}
+.anyline b{color:var(--learn)}
+.seqv{display:inline-block;white-space:nowrap;unicode-bidi:isolate;font-weight:700}
