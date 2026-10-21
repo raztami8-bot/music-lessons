@@ -87,3 +87,23 @@ details.src.no>p{background:var(--accent-soft)}
 .anyline>i{font-style:normal;flex:none}
 .anyline b{color:var(--learn)}
 .seqv{display:inline-block;white-space:nowrap;unicode-bidi:isolate;font-weight:700}
+
+/* "לאסיד" inside a paragraph of a theory box: its own line, so the divider does not cut through the text */
+.learn span.acid{display:block;margin-top:8px}
+
+/* Phone: step grids, tables and the bass keyboard fit the screen instead of scrolling sideways (text was cut at the edge) */
+@media (max-width:600px){
+  .seq{min-width:0;gap:2px;font-size:.62rem;grid-template-columns:auto repeat(16,minmax(0,1fr))}
+  .seq .rh{font-size:.68rem;padding-inline-end:3px}
+  .seq .beatlbl{font-size:.66rem;white-space:nowrap}
+  .seq .cell{height:22px}
+  .tbl-box table{min-width:0}
+  .pads{grid-template-columns:repeat(8,minmax(0,1fr));min-width:0}
+  .pad{font-size:.62rem;min-width:0;overflow-wrap:anywhere}
+  .pads{gap:2px;padding:3px}
+  .tbl-box th{font-size:.7rem}
+  .tbl-box table{font-size:.8rem}
+  .tbl-box th,.tbl-box td{padding:5px 3px}
+  .tbl-box kbd{white-space:normal;overflow-wrap:anywhere;padding:0 3px}
+  .tbl-box .a{white-space:normal}
+}
