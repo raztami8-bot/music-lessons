@@ -107,3 +107,13 @@ details.src.no>p{background:var(--accent-soft)}
   .tbl-box kbd{white-space:normal;overflow-wrap:anywhere;padding:0 3px}
   .tbl-box .a{white-space:normal}
 }
+
+/* "↩ חזרה לבסיס" (src/base.py): closed by default, opens the exact presses back to the lesson's starting point */
+details.back{border:2px solid color-mix(in srgb,var(--learn) 45%,transparent);border-radius:12px;background:color-mix(in srgb,var(--learn) 7%,var(--surface))}
+details.back>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 12px;font-weight:700;color:var(--learn);min-height:40px}
+details.back>summary::-webkit-details-marker{display:none}
+details.back>summary::after{content:"▾";margin-inline-start:auto;opacity:.8}
+details.back[open]>summary::after{content:"▴"}
+details.back>summary i{font-style:normal;font-size:1.15em}
+details.back>.combo{margin:0 10px;background:var(--surface)}
+details.back>p{margin:8px 12px 10px;font-size:.92rem;color:var(--muted)}

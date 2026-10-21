@@ -83,4 +83,6 @@
 .a kbd.any{border-style:dashed;font-family:var(--f-body);font-weight:700}
 .a-ear{border-style:dotted}
 .a-say{border-style:dashed;font-weight:600;white-space:normal}
-.combo .pr{display:inline-flex;align-items:center;gap:6px;max-width:100%}
+.combo .pr{display:inline-flex;align-items:center;gap:6px;max-width:100%;min-width:0}
+.combo .pr>.grp{min-width:0;flex:0 1 auto}
+.combo .prg{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:100%}

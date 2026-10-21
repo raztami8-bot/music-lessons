@@ -49,6 +49,11 @@ for gid, gname, _, items in tricks.GOALS:
             if "@" in seq and tid not in tricks.ANY:
                 problems.append((f"מה אפשר לעשות · {title}", "דוגמה בלי ״עובד על״", seq))
 
+# back to base (src/base.py)
+import base
+for key, (seq, note) in base.BACK.items():
+    check_seq(f"חזרה לבסיס · {key}", seq)
+
 # the lessons
 for n in (4, 5, 6, 7):
     src = (HERE / "src" / f"l{n}.html").read_text(encoding="utf8")

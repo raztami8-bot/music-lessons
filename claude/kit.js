@@ -54,17 +54,25 @@ function strip(seq){
   var raw=parse(seq), steps=[];
   raw.forEach(function(st){ var last=steps[steps.length-1];
     if(last && st.a==="tap" && last.a==="tap" && last.k===st.k) last.n=(last.n||1)+1; else steps.push({a:st.a,k:st.k}); });
-  /* Outside a hold group, each arrow is glued to the step after it (.pr), so a line never starts or ends with a lone arrow. */
-  var h="", open=false, first=true, pair=false;
-  function arrow(){ if(first) return; if(open){ h+='<span class="to">←</span>'; return; } h+='<span class="pr"><span class="to">←</span>'; pair=true; }
-  function unpair(){ if(pair && !open){ h+='</span>'; pair=false; } }
-  steps.forEach(function(st){
-    if(st.a==="rel"){ if(open){ h+='</span>'; open=false; unpair(); } arrow(); h+=chip(st); unpair(); first=false; return; }
-    if(st.a==="hold" && !open){ arrow(); h+='<span class="grp"><small>כל עוד מחזיקים</small>'+chip(st); open=true; first=false; return; }
-    arrow(); h+=chip(st); unpair(); first=false;
-  });
-  if(open){ h+='</span>'; open=false; unpair(); }
-  return '<div class="row">'+h+'</div>';
+  /* Every step is a piece (.pr) with the arrow that leads into it, so a line never ends with a lone arrow.
+     A hold opens a group that lasts until the release. A turn and what it should show (look/say/ear) wrap together (.prg). */
+  var out=[], i=0, first=true;
+  function arr(){ var a=first?'':'<span class="to">←</span>'; first=false; return a; }
+  while(i<steps.length){
+    var st=steps[i];
+    if(st.a==="hold"){
+      var a=arr(), g='<span class="grp"><small>כל עוד מחזיקים</small>'+chip(st); i++;
+      while(i<steps.length && steps[i].a!=="rel"){ g+='<span class="to">←</span>'+chip(steps[i]); i++; }
+      out.push('<span class="pr">'+a+g+'</span></span>');
+      continue;
+    }
+    var p='<span class="pr">'+arr()+chip(st)+'</span>'; i++;
+    if(st.a==="turn" && i<steps.length && /^(look|say|ear)$/.test(steps[i].a)){
+      p='<span class="prg">'+p+'<span class="pr">'+arr()+chip(steps[i])+'</span></span>'; i++;
+    }
+    out.push(p);
+  }
+  return '<div class="row">'+out.join("")+'</div>';
 }
 [].forEach.call(document.querySelectorAll(".combo[data-seq]"),function(c){
   if(c.dataset.hide){ c.hidden=true; return; }

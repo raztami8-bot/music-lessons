@@ -138,7 +138,7 @@ def split_cards(html, n):
 
 
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (6,)  # lessons built with the kit: sessions, action marks, display drawings, hand practice
+KIT_LESSONS = (4, 5, 6, 7)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
@@ -239,6 +239,28 @@ def set_notes(html, n, S):
     return html
 
 
+def base_boxes(html, n):
+    """Cards in src/base.py get "מתחילים כש:" (when missing) and a "↩ חזרה לבסיס" button with the exact presses."""
+    import base
+    for key, (seq, note) in base.BACK.items():
+        ln, _, num = key.partition(":")
+        if int(ln) != n:
+            continue
+        m = re.search(r'<div class="card-head"><span class="num">' + re.escape(num) + r"</span>.*?</div>", html, re.S)
+        assert m, ("base.BACK points to a missing card", key)
+        end = html.index("</article>", m.end())
+        st = re.compile(r"\[\[state:[^\n]*?\]\](?=\s*\n)").search(html, m.end(), end)
+        box = (f'<details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary>'
+               f'<div class="combo" data-seq="{seq}" data-title="הלחיצות, לפי הסדר"></div><p>{note}</p></details>')
+        if st:
+            at, add = st.end(), "\n    " + box
+        else:
+            assert key in base.START, ("card has no start line; add one to base.START", key)
+            at, add = m.end(), f"\n    [[state:{base.START[key]}]]\n    " + box
+        html = html[:at] + add + html[at:]
+    return html
+
+
 def page(n):
     title, _ = LESSONS[n]
     html = (SRC / f"l{n}.html").read_text(encoding="utf8")
@@ -246,7 +268,7 @@ def page(n):
     html = re.sub(r'<nav class="topnav".*?</nav>\s*', "", html, count=1, flags=re.S)
     for k in LESSONS:
         html = html.replace(f"URL_L{k}", f"lesson-{k}.html")
-    html = srcs(xrefs(any_lines(html, n), n))
+    html = srcs(xrefs(any_lines(base_boxes(html, n), n), n))
     if n in T8_LESSONS:
         import settings
         html = set_notes(html, n, settings)
