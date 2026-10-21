@@ -42,6 +42,8 @@ function seg(t){
 function chip(st){
   if(st.a==="rel") return '<span class="a a-rel"><i>🖐</i>שחרר</span>';
   if(st.a==="look") return '<span class="a a-look">'+seg(st.k)+'</span>';
+  if(st.a==="ear") return '<span class="a a-ear"><i>👂</i>הקשב</span>';   /* turn and listen: there is no single right value */
+  if(st.a==="say") return '<span class="a a-say">'+esc(st.k)+'</span>';    /* a short note, when the display text is unknown */
   var v=VERB[st.a]; if(!v) return "";
   /* "@step:16" = any step, 16 is only the example (written under the strip on map.html) */
   var ANY={step:"צעד",num:"מספר",bank:"1 עד 4",drum:"כלי",inst:"כלי"}, any=/^@(\w+):/.exec(st.k||"");
@@ -52,14 +54,16 @@ function strip(seq){
   var raw=parse(seq), steps=[];
   raw.forEach(function(st){ var last=steps[steps.length-1];
     if(last && st.a==="tap" && last.a==="tap" && last.k===st.k) last.n=(last.n||1)+1; else steps.push({a:st.a,k:st.k}); });
-  var h="", open=false, first=true;
+  /* Outside a hold group, each arrow is glued to the step after it (.pr), so a line never starts or ends with a lone arrow. */
+  var h="", open=false, first=true, pair=false;
+  function arrow(){ if(first) return; if(open){ h+='<span class="to">←</span>'; return; } h+='<span class="pr"><span class="to">←</span>'; pair=true; }
+  function unpair(){ if(pair && !open){ h+='</span>'; pair=false; } }
   steps.forEach(function(st){
-    if(st.a==="rel"){ if(open){ h+='</span>'; open=false; } h+='<span class="to">←</span>'+chip(st); first=false; return; }
-    if(!first && !(open && h.slice(-1)===">" && h.slice(-6)==="</small>")) h+='<span class="to">←</span>';
-    if(st.a==="hold" && !open){ h+='<span class="grp"><small>כל עוד מחזיקים</small>'+chip(st); open=true; first=false; return; }
-    h+=chip(st); first=false;
+    if(st.a==="rel"){ if(open){ h+='</span>'; open=false; unpair(); } arrow(); h+=chip(st); unpair(); first=false; return; }
+    if(st.a==="hold" && !open){ arrow(); h+='<span class="grp"><small>כל עוד מחזיקים</small>'+chip(st); open=true; first=false; return; }
+    arrow(); h+=chip(st); unpair(); first=false;
   });
-  if(open) h+='</span>';
+  if(open){ h+='</span>'; open=false; unpair(); }
   return '<div class="row">'+h+'</div>';
 }
 [].forEach.call(document.querySelectorAll(".combo[data-seq]"),function(c){

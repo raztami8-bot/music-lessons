@@ -81,3 +81,6 @@
 
 /* any step / any instrument in a combination (map.html) */
 .a kbd.any{border-style:dashed;font-family:var(--f-body);font-weight:700}
+.a-ear{border-style:dotted}
+.a-say{border-style:dashed;font-weight:600;white-space:normal}
+.combo .pr{display:inline-flex;align-items:center;gap:6px;max-width:100%}
