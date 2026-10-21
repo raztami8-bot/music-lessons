@@ -30,6 +30,7 @@ def label(n, full=True):
 
 
 NAVCSS = '<link rel="stylesheet" href="nav.css">'
+SETTAB = '<a class="tb" href="settings.html">💾 מה נשמר</a>'
 NAVJS = '<script src="nav.js"></script>\n'
 
 T8CAP = "תרשים מצויר לפי המדריך הרשמי, לא צילום"
@@ -190,6 +191,48 @@ def macros(html):
     return re.sub(r"\[\[((?:hold|tap|turn|rel|seg|state|combo-?)(?::[^\]]*)?)\]\]", one, html)
 
 
+XREF_RE = re.compile(r"\[\[go:([^|\]]+)\|([^\]]+)\]\]")
+
+
+def xref_href(t, here=None):
+    """[[go:TARGET|text]] targets: "5" a lesson, "5:s2" a stage, "5:2.3" a card, "set:pan" a row in settings.html.
+    Lesson numbers are file numbers (lesson-5.html), not the per-device numbers the text shows."""
+    if t.startswith("set:"):
+        return "settings.html#set-" + t[4:]
+    n, _, rest = t.partition(":")
+    n = int(n)
+    assert n in LESSONS, ("unknown lesson in [[go]]", t)
+    anchor = f"l{n}-" + rest.replace(".", "-") if re.fullmatch(r"\d+\.\d+", rest) else rest
+    if n == here and anchor:
+        return "#" + anchor
+    return f"lesson-{n}.html" + ("#" + anchor if anchor else "")
+
+
+def xrefs(html, here=None):
+    """Turn every [[go:TARGET|text]] into a direct link. check_links() makes sure each one lands on a real card."""
+    return XREF_RE.sub(lambda m: f'<a class="xref" href="{xref_href(m.group(1), here)}">{m.group(2)}</a>', html)
+
+
+def set_notes(html, n, S):
+    """Each card listed in a settings row (src/settings.py) gets one line: is this saved, wiped, or unknown. Links to the row."""
+    want = {}
+    for gid, _t, _l, _a, rows in S.GROUPS:
+        for rid, *_x, cards, _src in rows:
+            for c in cards:
+                ln, _, num = c.partition(":")
+                if int(ln) == n:
+                    want.setdefault(num, []).append((gid, rid, _x[0]))
+    for num, lst in want.items():
+        m = re.search(r'<span class="num">' + re.escape(num) + r"</span>", html)
+        assert m, ("settings row points to a missing card", n, num)
+        end = html.index("</article>", m.end())
+        learn = html.find('<div class="learn">', m.end(), end)
+        at = learn if learn >= 0 else end
+        notes = "".join(f'<a class="setnote g-{g}" href="settings.html#set-{r}"><i aria-hidden="true"></i><span><b>{name}:</b> {S.NOTE[g]}</span></a>' for g, r, name in lst)
+        html = html[:at] + f'<div class="setnotes">{notes}</div>\n    ' + html[at:]
+    return html
+
+
 def page(n):
     title, _ = LESSONS[n]
     html = (SRC / f"l{n}.html").read_text(encoding="utf8")
@@ -197,6 +240,10 @@ def page(n):
     html = re.sub(r'<nav class="topnav".*?</nav>\s*', "", html, count=1, flags=re.S)
     for k in LESSONS:
         html = html.replace(f"URL_L{k}", f"lesson-{k}.html")
+    html = xrefs(html, n)
+    if n in T8_LESSONS:
+        import settings
+        html = set_notes(html, n, settings)
     for (ln, kind, anchor, imgs, legend, cap) in PHOTOS:
         if ln != n:
             continue
@@ -217,7 +264,7 @@ def page(n):
         f'<a class="tb{" cur" if k == n else ""}" href="lesson-{k}.html"{" aria-current=page" if k == n else ""}>{label(k, False)}</a>'
         for k in DEVICES[dev][3])
     if dev == "t8":
-        tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>'
+        tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB
     total = len(re.findall(r'data-id="l%d:' % n, html))
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
@@ -263,6 +310,7 @@ def hub(totals, mtotal):
 """
         if dev == "t8":
             tiles += f"""<li><a class="tile ref" href="map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות</h3><p>{mtotal} דברים שהטי־8 יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
+<li><a class="tile ref" href="settings.html"><span class="bub">💾</span><div class="tx"><span class="kind">דף עזר</span><h3>מה נשמר ומה נמחק</h3><p>לכל הגדרה: האם היא נשמרת עם התבנית, האם מחיקה מוחקת אותה, ומה נשאר תמיד. בדוק מול המדריך.</p></div></a></li>
 """
         secs += f"""<section class="dev {dev}" id="{dev}">
 <div class="dhead"><span class="ico" aria-hidden="true">{icons[dev]}</span><div><h2>{name}</h2><p>{sub} <span class="code">{code}</span></p></div></div>
@@ -469,7 +517,7 @@ def map_page(t8map):
 {NAVCSS}
 </head>
 <body data-t8="map">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{SETTAB}{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:8px">
   <h1>מה אפשר לעשות בטי־8</h1>
@@ -503,6 +551,101 @@ def map_page(t8map):
     return total
 
 
+def settings_page(S):
+    """settings.html: what the T-8 keeps with a pattern, what clearing wipes, what stays (data in src/settings.py)."""
+    MARK = {"yes": "✓", "no": "✕", "dash": "–", "q": "?"}
+    head = "".join(f"<th>{q}</th>" for q in ("נשמר עם התבנית?", "מחיקה מוחקת?", "נשאר תמיד?"))
+    mx = ""
+    for gid, title, _line, ans, _rows in S.GROUPS:
+        cells = "".join(f'<td class="m-{m}"><b aria-hidden="true">{MARK[m]}</b><small>{t}</small></td>' for m, t in ans)
+        mx += f'<tr class="g-{gid}"><th><a href="#g-{gid}"><i aria-hidden="true"></i>{title}</a></th>{cells}</tr>'
+
+    def at(cards):
+        """Links to the cards that teach it, grouped by lesson: "שיעור 3: 1.2 1.4" """
+        by = {}
+        for c in cards:
+            by.setdefault(int(c.partition(":")[0]), []).append(c)
+        parts = "".join(f'<span class="atl">{label(n, False)}:</span>' + "".join(f'<a class="xref" href="{xref_href(c)}">{c.partition(":")[2]}</a>' for c in cs)
+                        for n, cs in by.items())
+        return f'<p class="at"><b>לומדים:</b>{parts}</p>' if cards else ""
+
+    acts = ""
+    for name, how, what, card, src in S.ACTIONS:
+        url = S.SRC[src][0]
+        acts += (f'<div class="act"><h3>{name}</h3><p class="how">{how}</p><p>{what} '
+                 f'<a class="src man" href="{url}" target="_blank" rel="noopener">📖 במדריך</a></p>{at([card])}</div>')
+
+    groups = ""
+    for gid, title, line, _ans, rows in S.GROUPS:
+        cards = ""
+        for rid, name, how, note, rcards, src in rows:
+            if src:
+                badge = f'<a class="src man" href="{S.SRC[src][0]}" target="_blank" rel="noopener">📖 במדריך</a>'
+            else:
+                badge = "" if gid == "unknown" else '<span class="src no">🔍 לא כתוב במדריך</span>'
+            cards += (f'<article class="card set-row" id="set-{rid}"><div class="sr-top"><h3>{name}</h3>{badge}</div>'
+                      + (f'<p class="how">{how}</p>' if how else "") + (f'<p class="note">{note}</p>' if note else "")
+                      + at(rcards) + "</article>\n")
+        test = S.TEST if gid == "unknown" else ""
+        groups += (f'<section class="sgroup g-{gid}" id="g-{gid}"><div class="sg-head"><span class="dot" aria-hidden="true"></span>'
+                   f'<div><h2>{title}</h2><p>{line}</p></div></div><div class="sg-rows">{cards}</div>{test}</section>\n')
+
+    srcs = "".join(f'<li><a href="{u}" target="_blank" rel="noopener">{t}</a></li>' for u, t in S.SRC.values())
+    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">{label(k, False)}</a>' for k in DEVICES["t8"][3])
+    body = macros(xrefs(f"""<header style="display:flex;flex-direction:column;gap:8px">
+  <span class="eyebrow t8">טי־8 · דף עזר</span>
+  <h1>מה נשמר, מה נמחק, מה נשאר</h1>
+  <p class="lede">כל הגדרה שהשיעורים משנים, בארבע קבוצות לפי צבע. כל שורה בדוקה מול המדריך הרשמי, גרסה 1.02. מה שהמדריך לא אומר, צהוב. גם בכרטיסים בשיעורים יש עכשיו שורה בצבע של הקבוצה.</p>
+</header>
+<div class="tbl-box set-sum"><table class="set-mx"><thead><tr><th></th>{head}</tr></thead><tbody>{mx}</tbody></table></div>
+<section class="sgroup g-act" id="g-act"><div class="sg-head"><span class="dot" aria-hidden="true"></span><div><h2>חמש פעולות שקובעות הכל</h2><p>מה כל אחת עושה לתבנית.</p></div></div>
+<div class="acts">{acts}</div>
+<p class="info">מחקת בטעות? כל עוד לא שמרת, שחזור (<kbd>PATTERN</kbd> + <kbd>16</kbd>) או כיבוי מחזירים את מה ששמרת.</p></section>
+{groups}<section class="set-srcs"><h2>מקורות</h2><p>המדריך הרשמי של הטי־8, גרסה 1.02:</p><ul>{srcs}</ul>
+<p>מה שלא כתוב שם מסומן בכל שורה. ספר לי מה ראית על המכשיר, ואעדכן.</p></section>"""))
+    out = f"""<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>מה נשמר ומה נמחק בטי־8 · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="kit.css">
+{NAVCSS}
+</head>
+<body>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb" href="map.html">▦ מה אפשר לעשות</a><a class="tb cur" href="settings.html">💾 מה נשמר</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="wrap set-page">
+{body}
+</div>
+<script src="app.js"></script>
+<script src="extras.js"></script>
+{NAVJS}</body>
+</html>
+"""
+    (HERE / "settings.html").write_text(out, encoding="utf8")
+
+
+def check_links():
+    """Every in-site link with an anchor on Claude's pages must land on an element with that id."""
+    ids = {}
+    for p in HERE.glob("*.html"):
+        ids[p.name] = set(re.findall(r'\bid="([^"]+)"', p.read_text(encoding="utf8")))
+    bad = []
+    for name in ids:
+        for href in re.findall(r'href="([^"#]*)#([^"]+)"', (HERE / name).read_text(encoding="utf8")):
+            target = href[0] or name
+            if target in ids and href[1] not in ids[target]:
+                bad.append((name, href[0] + "#" + href[1]))
+    assert not bad, ("links to missing anchors", bad)
+
+
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, str(SRC))
@@ -512,6 +655,9 @@ if __name__ == "__main__":
     for k in TOOLS:
         tool_page(k)
     mtotal = map_page(t8map)
+    import settings
+    settings_page(settings)
     hub(totals, mtotal)
+    check_links()
     print("map", mtotal)
     print("built", totals)
