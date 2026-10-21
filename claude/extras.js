@@ -64,11 +64,12 @@ function cardText(card){
   walk(card);
   var txt=out.join("\n"); return txt.length>1800 ? txt.slice(0,1800)+"…" : txt;
 }
+var TITLES={"1":"וולקות · שיעור 1","2":"וולקות · שיעור 2","3":"וולקות · שיעור 3","4":"טי־8 · שיעור 1","5":"טי־8 · שיעור 2","6":"טי־8 · שיעור 3","7":"טי־8 · שיעור 4"};
 function askPrompt(card){
   var L=document.body.dataset.lesson||"", n=card.querySelector(".card-head .num"), h=card.querySelector(".card-head h3");
   var h1=document.querySelector(".wrap h1"), note=((get(NOTES,{})[card.dataset.id]||{}).text||"").trim();
   var p=["אני לומד לנגן על "+(DEVICE[L]||"המכשיר שלי")+", משיעורים באתר שלי. אני רוצה לדבר על כרטיס אחד מהשיעור.","",
-    "שיעור "+L+(h1?": "+h1.textContent.trim():""),
+    (TITLES[L]||"")+(h1?": "+h1.textContent.trim():""),
     "כרטיס "+(n?n.textContent.trim()+" · ":"")+(h?h.textContent.trim():""),"",cardText(card)];
   if(note) p.push("","ההערה שלי לכרטיס: "+note);
   p.push("","בבקשה לענות בעברית פשוטה, בלי מילים באנגלית חוץ משמות של כפתורים. קודם להסביר במשפט או שניים מה הכרטיס הזה עושה ולמה זה שימושי, ואחר כך לשאול אותי איפה בדיוק נתקעתי. אם משהו בכרטיס לא מתאים למכשיר לפי הידע שלך, להגיד את זה ולא לנחש.");
@@ -207,7 +208,7 @@ function renderGlossary(root){
   var order=GLOSS.map(function(g,i){return i;}).sort(function(a,b){ return GLOSS[a][0].localeCompare(GLOSS[b][0],"he"); });
   var h='<label class="gl-search" for="gl-q">חיפוש</label><input id="gl-q" type="search" placeholder="למשל: מעטפת" autocomplete="off"><dl class="gl-list">';
   order.forEach(function(i){ var g=GLOSS[i];
-    h+='<div class="gl-item" id="t'+i+'" data-s="'+esc((g[0]+" "+g[3].join(" ")+" "+g[1]).toLowerCase())+'"><dt>'+esc(g[0])+'</dt><dd>'+esc(g[1])+' <a href="lesson-'+g[2]+'.html">שיעור '+g[2]+'</a></dd></div>'; });
+    h+='<div class="gl-item" id="t'+i+'" data-s="'+esc((g[0]+" "+g[3].join(" ")+" "+g[1]).toLowerCase())+'"><dt>'+esc(g[0])+'</dt><dd>'+esc(g[1])+' <a href="lesson-'+g[2]+'.html">'+TITLES[g[2]]+'</a></dd></div>'; });
   h+='</dl>'; root.innerHTML=h;
   var q=document.getElementById("gl-q");
   q.addEventListener("input",function(){ var v=q.value.trim().toLowerCase();
@@ -215,7 +216,7 @@ function renderGlossary(root){
 }
 
 /* ---------- notebook page ---------- */
-var TITLES={"1":"שיעור 1","2":"שיעור 2","3":"שיעור 3","4":"שיעור 4","5":"שיעור 5","6":"שיעור 6","7":"שיעור 7"};
+
 function renderNotebook(root){
   var notes=get(NOTES,{});
   var ids=Object.keys(notes).sort(function(a,b){ var x=a.split(":"),y=b.split(":"); return x[0]===y[0]?parseFloat(x[1])-parseFloat(y[1]):(x[0]<y[0]?-1:1); });

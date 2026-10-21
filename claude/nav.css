@@ -1,0 +1,12 @@
+/* Back button (nav.js) and the "which device, which lesson" line above each lesson title */
+.backbtn{position:fixed;z-index:30;bottom:calc(14px + env(safe-area-inset-bottom,0px));inset-inline-start:max(14px,env(safe-area-inset-right,0px));
+  display:inline-flex;align-items:center;gap:6px;max-width:calc(100vw - 28px);
+  padding:12px 20px;border-radius:999px;background:var(--fg);color:var(--bg);
+  font-family:var(--f-body);font-weight:700;font-size:1rem;line-height:1.2;text-decoration:none;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.backbtn:active{transform:scale(.96)}
+.eyebrow{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;padding:4px 14px;border-radius:999px;
+  font-weight:700;font-size:.92rem;color:#fff;background:var(--dev,#6b5bd6)}
+.eyebrow.t8{--dev:#e0561b}
+.eyebrow.volca{--dev:#12907f}
+.wrap{padding-bottom:96px}

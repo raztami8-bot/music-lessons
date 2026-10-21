@@ -1,6 +1,6 @@
 {
-  "name": "שיעורי מוזיקה · גרסת קלוד",
-  "short_name": "שיעורים · קלוד",
+  "name": "השיעורים שלי",
+  "short_name": "השיעורים שלי",
   "lang": "he",
   "dir": "rtl",
   "start_url": "index.html",
@@ -9,7 +9,15 @@
   "background_color": "#121824",
   "theme_color": "#1d2433",
   "icons": [
-    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }

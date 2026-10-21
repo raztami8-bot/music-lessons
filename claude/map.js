@@ -48,6 +48,7 @@ function initMap(){
 }
 function pick(id){
   var T=window.T8;
+  try{ sessionStorage.setItem("map-sel",id); }catch(e){}
   [].forEach.call(map.querySelectorAll(".ctl.on"),function(g){ g.classList.remove("on"); });
   var g=map.querySelector('.ctl[data-id="'+id+'"]'); if(g) g.classList.add("on");
   var hits=tricks.filter(function(t){ return (t.dataset.ctl||"").split(" ").indexOf(id)>-1; });
@@ -71,5 +72,6 @@ function flashHash(){
 }
 window.addEventListener("hashchange",flashHash);
 var saved=null; try{ saved=sessionStorage.getItem("map-view"); }catch(e){}
-if(location.hash.indexOf("#t-")===0) flashHash(); else if(saved==="btn") view("btn");
+if(location.hash.indexOf("#t-")===0) flashHash();
+else if(saved==="btn"){ view("btn"); var ss=null; try{ ss=sessionStorage.getItem("map-sel"); }catch(e){} if(ss && map && map.querySelector('.ctl[data-id="'+ss+'"]')) pick(ss); }
 })();

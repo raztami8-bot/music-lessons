@@ -15,6 +15,23 @@ LESSONS = {
     7: ("צליל: הטריקים של הסאונד", "התפריט, החלפת כלים, עיוות, טרנספוז, הד לקצב, שאיבה ושער"),
 }
 
+# Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
+DEVICES = {
+    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7)),
+    "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3)),
+}
+DEV = {n: (d, i + 1) for d, v in DEVICES.items() for i, n in enumerate(v[3])}
+SHORT = {"t8": "טי־8", "volca": "וולקות"}
+
+
+def label(n, full=True):
+    d, k = DEV[n]
+    return f"{SHORT[d]} · שיעור {k}" if full else f"שיעור {k}"
+
+
+NAVCSS = '<link rel="stylesheet" href="nav.css">'
+NAVJS = '<script src="nav.js"></script>\n'
+
 T8CAP = "תרשים מצויר לפי המדריך הרשמי, לא צילום"
 T8_LESSONS = (4, 5, 6, 7)
 
@@ -194,9 +211,13 @@ def page(n):
     if n in KIT_LESSONS:
         html = macros(html)
     html = split_cards(html, n)
+    dev = DEV[n][0]
+    html = html.replace("<h1>", f'<span class="eyebrow {dev}">{label(n)}</span>\n  <h1>', 1)
     tabs = "".join(
-        f'<a class="tb{" cur" if k == n else ""}" href="lesson-{k}.html"{" aria-current=page" if k == n else ""}>שיעור {k}</a>'
-        for k in LESSONS)
+        f'<a class="tb{" cur" if k == n else ""}" href="lesson-{k}.html"{" aria-current=page" if k == n else ""}>{label(k, False)}</a>'
+        for k in DEVICES[dev][3])
+    if dev == "t8":
+        tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>'
     total = len(re.findall(r'data-id="l%d:' % n, html))
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
@@ -209,29 +230,45 @@ def page(n):
 <meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>{title} · גרסת קלוד</title>
+<title>{title} · {label(n)}</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">{chr(10) + '<link rel="stylesheet" href="kit.css">' if n in KIT_LESSONS else ""}
+{NAVCSS}
 </head>
 <body data-lesson="{n}">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
 <div class="wrap">
 {html}
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
-{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}</body>
+{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}{NAVJS}</body>
 </html>
 """
     (HERE / f"lesson-{n}.html").write_text(out, encoding="utf8")
     return total
 
 
-def hub(totals):
-    items = ""
-    for n, (title, sub) in LESSONS.items():
-        items += f"""<li><a class="lesson" href="lesson-{n}.html"><span class="ln">{n}</span><div class="lt"><h2>{title}</h2><p>{sub}</p>
-<div data-progress="l{n}" data-total="{totals[n]}"><div class="progress"><span style="width:0"></span></div><small class="ptxt">0 מתוך {totals[n]} כרטיסים</small></div></div></a></li>
+def hub(totals, mtotal):
+    """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
+    secs = ""
+    icons = {"t8": "🥁", "volca": "🎛️"}
+    for dev, (name, code, sub, nums) in DEVICES.items():
+        tiles = ""
+        for n in nums:
+            title, desc = LESSONS[n]
+            k = DEV[n][1]
+            tiles += f"""<li><a class="tile" href="lesson-{n}.html" data-l="{n}"><span class="bub">{k}</span><div class="tx"><span class="kind">שיעור {k}</span><h3>{title}</h3><p>{desc}</p>
+<div data-progress="l{n}" data-total="{totals[n]}"><div class="bar"><div class="progress"><span style="width:0"></span></div></div><small class="ptxt">0 מתוך {totals[n]} כרטיסים</small></div></div></a></li>
+"""
+        if dev == "t8":
+            tiles += f"""<li><a class="tile ref" href="map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות</h3><p>{mtotal} דברים שהטי־8 יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
+"""
+        secs += f"""<section class="dev {dev}" id="{dev}">
+<div class="dhead"><span class="ico" aria-hidden="true">{icons[dev]}</span><div><h2>{name}</h2><p>{sub} <span class="code">{code}</span></p></div></div>
+<ol class="tiles">
+{tiles}</ol>
+</section>
 """
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
@@ -241,48 +278,90 @@ def hub(totals):
 <meta name="theme-color" content="#1d2433">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<meta name="apple-mobile-web-app-title" content="השיעורים שלי">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>שיעורי מוזיקה · גרסת קלוד</title>
+<title>השיעורים שלי</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
 <style>
-.hero{{display:flex;flex-direction:column;gap:6px;padding-block:12px 4px}}
-.hero .k{{font-family:var(--f-mono);color:var(--accent);font-weight:600;letter-spacing:.06em;font-size:.85rem}}
-.lessons{{list-style:none;margin:0;padding:0;display:grid;gap:12px}}
-@media (min-width:820px){{.lessons{{grid-template-columns:repeat(3,1fr)}}}}
-.lesson{{display:flex;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-decoration:none;color:var(--fg);height:100%}}
-.lesson:active{{background:var(--accent-soft)}}
-.ln{{flex:none;width:40px;height:40px;border-radius:50%;background:var(--fg);color:var(--accent);display:grid;place-items:center;font-family:var(--f-display);font-size:1.3rem}}
-.lt{{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1}}
-.lt h2{{font-size:1.25rem}}
-.lt p{{color:var(--muted);font-size:.95rem}}
-.lt small{{color:var(--muted)}}
+:root{{--t8:#e0561b;--volca:#12907f}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--t8:#ff8a4c;--volca:#3fd0bb}}}}
+:root[data-theme="dark"]{{--t8:#ff8a4c;--volca:#3fd0bb}}
+.wrap{{max-width:900px;gap:22px;padding-top:max(22px,env(safe-area-inset-top,0px))}}
+.hello{{display:flex;flex-direction:column;gap:6px}}
+.hello h1{{font-size:2.3rem}}
+.hello p{{color:var(--muted)}}
+.resume{{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:22px;text-decoration:none;color:#fff;
+  background:linear-gradient(135deg,var(--dev),color-mix(in srgb,var(--dev) 70%,#000));box-shadow:0 8px 22px color-mix(in srgb,var(--dev) 35%,transparent)}}
+.resume[hidden]{{display:none}}
+.resume .pl{{flex:none;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-size:1.4rem}}
+.resume small{{display:block;opacity:.85;font-weight:600}}
+.resume b{{font-family:var(--f-display);font-weight:400;font-size:1.3rem;line-height:1.25}}
+.resume:active,.tile:active{{transform:scale(.98)}}
+.dev{{--dev:var(--t8);display:flex;flex-direction:column;gap:14px;padding:18px 14px;border-radius:26px;
+  background:color-mix(in srgb,var(--dev) 9%,var(--bg));border:2px solid color-mix(in srgb,var(--dev) 22%,transparent)}}
+.dev.volca{{--dev:var(--volca)}}
+.dhead{{display:flex;align-items:center;gap:14px;padding-inline:4px}}
+.ico{{flex:none;width:60px;height:60px;border-radius:20px;background:var(--dev);display:grid;place-items:center;font-size:2rem;
+  box-shadow:0 5px 0 color-mix(in srgb,var(--dev) 65%,#000);transform:rotate(-4deg)}}
+.dhead h2{{font-size:1.75rem;color:var(--fg)}}
+.dhead p{{color:var(--muted);font-size:.95rem}}
+.code{{font-family:var(--f-mono);font-size:.78rem;font-weight:600;direction:ltr;unicode-bidi:isolate;white-space:nowrap;
+  border:1px solid var(--line);border-radius:6px;padding:1px 6px;background:var(--surface)}}
+.tiles{{list-style:none;margin:0;padding:0;display:grid;gap:12px}}
+@media (min-width:700px){{.tiles{{grid-template-columns:1fr 1fr}}}}
+.tile{{display:flex;gap:14px;align-items:flex-start;height:100%;padding:16px;border-radius:20px;background:var(--surface);
+  color:var(--fg);text-decoration:none;border:1px solid var(--line);box-shadow:0 3px 0 color-mix(in srgb,var(--dev) 25%,var(--line));transition:transform .08s}}
+.bub{{flex:none;width:52px;height:52px;border-radius:50%;background:var(--dev);color:#fff;display:grid;place-items:center;
+  font-family:var(--f-display);font-size:1.6rem;line-height:1}}
+.tile.done .bub{{background:var(--ok);font-size:1.4rem}}
+.tile.ref{{border:2px dashed color-mix(in srgb,var(--dev) 55%,transparent);box-shadow:none;background:color-mix(in srgb,var(--dev) 5%,var(--surface))}}
+.tile.ref .bub{{background:var(--fg);color:var(--dev)}}
+.tx{{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}}
+.kind{{font-weight:700;font-size:.82rem;color:var(--dev);letter-spacing:.02em}}
+.tx h3{{font-size:1.25rem}}
+.tx p{{color:var(--muted);font-size:.95rem;line-height:1.5}}
+.tx .bar{{margin-top:8px}}
+.tx .progress{{height:8px;border-radius:99px;background:color-mix(in srgb,var(--dev) 15%,var(--bg));overflow:hidden}}
+.tx .progress span{{display:block;height:100%;border-radius:99px;background:var(--dev)}}
+.tx small{{color:var(--muted);font-size:.85rem}}
+.tile.done small{{color:var(--ok);font-weight:700}}
+.install{{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;color:var(--muted)}}
+.install summary{{cursor:pointer;font-weight:700;color:var(--fg)}}
+.install ol{{margin:10px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="hero"><span class="k">גרסת קלוד</span><h1>שיעורי מוזיקה</h1><p class="lede">בס חומצי ומכונת תופים, צעד אחר צעד. ההתקדמות נשמרת במכשיר שבו סימנת ״סיימתי״.</p></header>
-<ul class="lessons">
-{items}</ul>
-<ul class="lessons">
-<li><a class="lesson" href="notebook.html"><span class="ln">☆</span><div class="lt"><h2>הפנקס שלי</h2><p>ההערות שכתבת בכרטיסים</p></div></a></li>
-<li><a class="lesson" href="glossary.html"><span class="ln">א</span><div class="lt"><h2>מילון מושגים</h2><p>כל המושגים מהשיעורים במקום אחד</p></div></a></li>
-</ul>
-<article class="card">
-<h3>להתקנה באייפד כמו אפליקציה</h3>
-<ol class="steps">
-<li><div>פתח את העמוד הזה בספארי.</div></li>
-<li><div>גע בכפתור השיתוף (ריבוע עם חץ למעלה).</div></li>
-<li><div>בחר ״הוספה למסך הבית״.</div></li>
+<header class="hello"><h1>מה מנגנים היום?</h1><p>בוחרים מכשיר ושיעור. ההתקדמות נשמרת באייפד, ובכל דף יש כפתור חזרה למטה.</p></header>
+<a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך מאיפה שעצרת</small><b id="resume-t"></b></span></a>
+{secs}<details class="install"><summary>לשמור את העמוד הזה במסך הבית</summary>
+<ol>
+<li>פתח את העמוד הזה בספארי.</li>
+<li>גע בכפתור השיתוף, הריבוע עם החץ למעלה.</li>
+<li>בחר ״הוספה למסך הבית״.</li>
+<li>את האייקון הישן אפשר למחוק: לוחצים עליו לחיצה ארוכה, ״הסר״.</li>
 </ol>
-<p class="info">באפליקציה מהמסך הבית, ההתקדמות נשמרת בנפרד מספארי.</p>
-</article>
-<p class="legend"><a href="../index.html">← לעמוד הראשי: כל השיעורים והכלים, גם של גרוק</a></p>
+</details>
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
+<script>
+(function(){{
+var L={{{", ".join(f'"{n}":["{label(n)}","{LESSONS[n][0]}","{DEV[n][0]}"]' for n in LESSONS)}}};
+function get(k,d){{ try{{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }}catch(e){{ return d; }} }}
+var done=get("ml2:done",{{}});
+[].forEach.call(document.querySelectorAll(".tile[data-l]"),function(a){{
+  var p=a.querySelector("[data-progress]"), n=a.dataset.l, tot=+p.dataset.total, c=0;
+  Object.keys(done).forEach(function(k){{ if(k.indexOf("l"+n+":")===0) c++; }});
+  if(tot && c>=tot){{ a.classList.add("done"); a.querySelector(".bub").textContent="✓"; p.querySelector(".ptxt").textContent="✓ סיימת את כל הכרטיסים"; }}
+}});
+var last=get("ml2:last",null), r=document.getElementById("resume");
+if(last && L[last.l]){{ r.href="lesson-"+last.l+".html"; document.getElementById("resume-t").textContent=L[last.l][0]+": "+L[last.l][1];
+  r.style.setProperty("--dev","var(--"+L[last.l][2]+")"); r.hidden=false; }}
+}})();
+</script>
 </body>
 </html>
 """
@@ -297,7 +376,7 @@ TOOLS = {
 
 def tool_page(key):
     title, lede, body = TOOLS[key]
-    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">שיעור {k}</a>' for k in LESSONS)
+    tabs = ""
     links = "".join(f'<a class="tb{" cur" if k == key else ""}" href="{k}.html">{lbl}</a>' for k, lbl in (("notebook", "☆ פנקס"), ("glossary", "א־ת מילון")))
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
@@ -312,16 +391,17 @@ def tool_page(key):
 <title>{title} · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
+{NAVCSS}
 </head>
 <body>
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">☰ כל השיעורים</a>{tabs}{links}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a>{tabs}{links}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:8px"><h1>{title}</h1><p class="lede">{lede}</p></header>
 {body}
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
-</body>
+{NAVJS}</body>
 </html>
 """
     (HERE / f"{key}.html").write_text(out, encoding="utf8")
@@ -358,24 +438,19 @@ def map_page(t8map):
                 if num.replace(".", "").isdigit():
                     anchor = f"l{n}-" + num.replace(".", "-")
                     keys.append(f"l{n}:{num}")
-                    label = f"שיעור {n} · {num}"
+                    lbl = f"{label(n, False)} · {num}"
                 else:
-                    anchor, label = num, f"שיעור {n}"
+                    anchor, lbl = num, label(n, False)
                 src = (HERE / f"lesson-{n}.html").read_text(encoding="utf8")
                 assert f'id="{anchor}"' in src, ("missing card", tid, c)
-                links.append(f'<a class="go" href="lesson-{n}.html#{anchor}">ללמוד: {label}</a>')
-            for who, anchor in also:
-                if who == "grok":
-                    links.append(f'<a class="also" href="../t8-guide/#{anchor}"><span class="who grok">גרוק</span> במדריך</a>')
-                else:
-                    links.append(f'<a class="also" href="../codex/#{anchor}"><span class="who codex">קודקס</span> בשיעור</a>')
+                links.append(f'<a class="go" href="lesson-{n}.html#{anchor}">ללמוד: {lbl}</a>')
             combo = f'<div class="combo" data-seq="{H.escape(seq)}" data-title="איך"></div>' if seq else ""
             knobs = "" if seq else '<p class="knobs">' + " ".join(f"<kbd>{H.escape(t8map.C[c][5] or t8map.C[c][0])}</kbd>" for c in extra if t8map.C[c][5]) + "</p>"
             rows.append(f'<div class="trick" id="t-{tid}" data-ctl="{" ".join(ctl)}" data-cards="{" ".join(keys)}">'
                         f'<div class="tt"><span class="mark" aria-hidden="true"></span><b>{title}</b></div><p>{line}</p>{combo}{knobs}'
                         f'<div class="links">{"".join(links)}</div></div>')
         sections.append(f'<section class="goal" id="g-{gid}"><h2>{gname}</h2><p class="sub">{gsub}</p><div class="tricks">{"".join(rows)}</div></section>')
-    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">שיעור {k}</a>' for k in LESSONS if k >= 4)
+    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">{label(k, False)}</a>' for k in DEVICES["t8"][3])
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
@@ -391,13 +466,14 @@ def map_page(t8map):
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="kit.css">
 <link rel="stylesheet" href="map.css">
+{NAVCSS}
 </head>
 <body data-t8="map">
-<div class="toolbar"><div class="in"><a class="tb" href="../index.html">⌂ הבית</a><a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:8px">
   <h1>מה אפשר לעשות בטי־8</h1>
-  <p class="lede">כל מה שהמכשיר יודע, מכל השיעורים באתר, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו.</p>
+  <p class="lede">כל מה שהמכשיר יודע, מכל שיעורי הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו.</p>
   <p class="progress-line" id="mp-prog"></p>
 </header>
 <div class="mviews" role="tablist">
@@ -420,7 +496,7 @@ def map_page(t8map):
 <script src="t8-data.js"></script>
 <script src="t8.js"></script>
 <script src="map.js"></script>
-</body>
+{NAVJS}</body>
 </html>
 """
     (HERE / "map.html").write_text(out, encoding="utf8")
@@ -433,8 +509,9 @@ if __name__ == "__main__":
     import t8map
     t8map.build()
     totals = {n: page(n) for n in LESSONS}
-    hub(totals)
     for k in TOOLS:
         tool_page(k)
-    print("map", map_page(t8map))
+    mtotal = map_page(t8map)
+    hub(totals, mtotal)
+    print("map", mtotal)
     print("built", totals)
