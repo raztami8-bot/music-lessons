@@ -208,6 +208,12 @@ def xref_href(t, here=None):
     return f"lesson-{n}.html" + ("#" + anchor if anchor else "")
 
 
+def srcs(html):
+    """[[src:label|text]]: a source named in Hebrew; tapping it shows what we took from it, in Hebrew."""
+    return re.sub(r"\[\[src:([^|\]]+)\|([^\]]+)\]\]",
+                  lambda m: f'<details class="src man"><summary>{m.group(1)}</summary><p>{m.group(2)}</p></details>', html)
+
+
 def xrefs(html, here=None):
     """Turn every [[go:TARGET|text]] into a direct link. check_links() makes sure each one lands on a real card."""
     return XREF_RE.sub(lambda m: f'<a class="xref" href="{xref_href(m.group(1), here)}">{m.group(2)}</a>', html)
@@ -240,7 +246,7 @@ def page(n):
     html = re.sub(r'<nav class="topnav".*?</nav>\s*', "", html, count=1, flags=re.S)
     for k in LESSONS:
         html = html.replace(f"URL_L{k}", f"lesson-{k}.html")
-    html = xrefs(html, n)
+    html = srcs(xrefs(html, n))
     if n in T8_LESSONS:
         import settings
         html = set_notes(html, n, settings)
@@ -569,28 +575,30 @@ def settings_page(S):
                         for n, cs in by.items())
         return f'<p class="at"><b>לומדים:</b>{parts}</p>' if cards else ""
 
+    def badge(key, src):
+        """Tap to read, in Hebrew, what the manual says (or why it is not there). No links to the English pages."""
+        if src:
+            return f'<details class="src man"><summary>✓ כתוב במדריך</summary><p><b>המדריך אומר:</b> {S.SAYS[key]}</p></details>'
+        if key in S.SAYS:
+            return f'<details class="src no"><summary>🔍 לא כתוב במדריך</summary><p>{S.SAYS[key]}</p></details>'
+        return ""
+
     acts = ""
     for name, how, what, card, src in S.ACTIONS:
-        url = S.SRC[src][0]
-        acts += (f'<div class="act"><h3>{name}</h3><p class="how">{how}</p><p>{what} '
-                 f'<a class="src man" href="{url}" target="_blank" rel="noopener">📖 במדריך</a></p>{at([card])}</div>')
+        acts += f'<div class="act"><div class="sr-top"><h3>{name}</h3>{badge(name, src)}</div><p class="how">{how}</p><p>{what}</p>{at([card])}</div>'
+
 
     groups = ""
     for gid, title, line, _ans, rows in S.GROUPS:
         cards = ""
         for rid, name, how, note, rcards, src in rows:
-            if src:
-                badge = f'<a class="src man" href="{S.SRC[src][0]}" target="_blank" rel="noopener">📖 במדריך</a>'
-            else:
-                badge = "" if gid == "unknown" else '<span class="src no">🔍 לא כתוב במדריך</span>'
-            cards += (f'<article class="card set-row" id="set-{rid}"><div class="sr-top"><h3>{name}</h3>{badge}</div>'
+            cards += (f'<article class="card set-row" id="set-{rid}"><div class="sr-top"><h3>{name}</h3>{badge(rid, src)}</div>'
                       + (f'<p class="how">{how}</p>' if how else "") + (f'<p class="note">{note}</p>' if note else "")
                       + at(rcards) + "</article>\n")
         test = S.TEST if gid == "unknown" else ""
         groups += (f'<section class="sgroup g-{gid}" id="g-{gid}"><div class="sg-head"><span class="dot" aria-hidden="true"></span>'
                    f'<div><h2>{title}</h2><p>{line}</p></div></div><div class="sg-rows">{cards}</div>{test}</section>\n')
 
-    srcs = "".join(f'<li><a href="{u}" target="_blank" rel="noopener">{t}</a></li>' for u, t in S.SRC.values())
     tabs = "".join(f'<a class="tb" href="lesson-{k}.html">{label(k, False)}</a>' for k in DEVICES["t8"][3])
     body = macros(xrefs(f"""<header style="display:flex;flex-direction:column;gap:8px">
   <span class="eyebrow t8">טי־8 · דף עזר</span>
@@ -601,8 +609,8 @@ def settings_page(S):
 <section class="sgroup g-act" id="g-act"><div class="sg-head"><span class="dot" aria-hidden="true"></span><div><h2>חמש פעולות שקובעות הכל</h2><p>מה כל אחת עושה לתבנית.</p></div></div>
 <div class="acts">{acts}</div>
 <p class="info">מחקת בטעות? כל עוד לא שמרת, שחזור (<kbd>PATTERN</kbd> + <kbd>16</kbd>) או כיבוי מחזירים את מה ששמרת.</p></section>
-{groups}<section class="set-srcs"><h2>מקורות</h2><p>המדריך הרשמי של הטי־8, גרסה 1.02:</p><ul>{srcs}</ul>
-<p>מה שלא כתוב שם מסומן בכל שורה. ספר לי מה ראית על המכשיר, ואעדכן.</p></section>"""))
+{groups}<section class="set-srcs"><h2>מקורות</h2><p>כל שורה עם ✓ נבדקה מול המדריך הרשמי של רולנד לטי־8, גרסה 1.02. נגיעה בתגית מראה מה כתוב שם, בעברית.</p>
+<p>מה שלא כתוב שם מסומן 🔍, או בצהוב. ספר לי מה ראית על המכשיר, ואעדכן.</p></section>"""))
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
