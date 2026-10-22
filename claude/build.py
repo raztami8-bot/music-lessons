@@ -1,6 +1,7 @@
 """Build the v2 lesson pages from the content files in src/.
 Run: python3 build.py   (from the v2 folder)"""
-import re, pathlib
+import re, pathlib, json, datetime
+from zoneinfo import ZoneInfo
 
 HERE = pathlib.Path(__file__).parent
 SRC = HERE / "src"
@@ -27,6 +28,20 @@ SHORT = {"t8": "טי־8", "volca": "וולקות"}
 def label(n, full=True):
     d, k = DEV[n]
     return f"{SHORT[d]} · שיעור {k}" if full else f"שיעור {k}"
+
+
+# Version stamp: the build time in Israel. Goes into index.html, version.json and every css/js link (?v=),
+# so a refresh always gets the new files, and the home page can tell when the site has a newer version.
+NOW = datetime.datetime.now(ZoneInfo("Asia/Jerusalem"))
+STAMP = int(NOW.timestamp())
+DAYS = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
+STAMP_TXT = f"יום {DAYS[NOW.weekday()]} {NOW.day}.{NOW.month}, {NOW:%H:%M}"
+ASSET_RE = re.compile(r'((?:href|src)=")((?:app|kit|map|nav)\.css|(?:app|extras|kit|t8-data|t8|map|nav)\.js)(")')
+
+
+def write_page(name, html):
+    """Every Claude page goes out through here: local css/js get ?v=STAMP."""
+    (HERE / name).write_text(ASSET_RE.sub(lambda m: f"{m.group(1)}{m.group(2)}?v={STAMP}{m.group(3)}", html), encoding="utf8")
 
 
 NAVCSS = '<link rel="stylesheet" href="nav.css">'
@@ -320,7 +335,7 @@ def page(n):
 {KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}{NAVJS}</body>
 </html>
 """
-    (HERE / f"lesson-{n}.html").write_text(out, encoding="utf8")
+    write_page(f"lesson-{n}.html", out)
     return total
 
 
@@ -333,7 +348,7 @@ def hub(totals, mtotal):
         for n in nums:
             title, desc = LESSONS[n]
             k = DEV[n][1]
-            tiles += f"""<li><a class="tile" href="lesson-{n}.html" data-l="{n}"><span class="bub">{k}</span><div class="tx"><span class="kind">שיעור {k}</span><h3>{title}</h3><p>{desc}</p>
+            tiles += f"""<li><a class="tile" href="lesson-{n}.html?v={STAMP}" data-l="{n}"><span class="bub">{k}</span><div class="tx"><span class="kind">שיעור {k}</span><h3>{title}</h3><p>{desc}</p>
 <div data-progress="l{n}" data-total="{totals[n]}"><div class="bar"><div class="progress"><span style="width:0"></span></div></div><small class="ptxt">0 מתוך {totals[n]} כרטיסים</small></div></div></a></li>
 """
         if dev == "t8":
@@ -406,10 +421,24 @@ def hub(totals, mtotal):
 .install{{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;color:var(--muted)}}
 .install summary{{cursor:pointer;font-weight:700;color:var(--fg)}}
 .install ol{{margin:10px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}}
+.verrow{{display:flex;align-items:center;gap:10px;flex-wrap:wrap}}
+.upd{{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;font-size:.9rem;font-weight:600;color:var(--muted);line-height:1.3}}
+.upd b{{font-weight:700}}
+.upd small{{font-size:.85rem;white-space:nowrap}}
+.upd.latest b{{color:var(--ok)}}
+.refresh{{flex:none;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}}
+.newver{{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:14px 16px;border-radius:16px;border:0;cursor:pointer;
+  background:#f2c94c;color:#1d2433;font:inherit;font-size:1rem;text-align:start;box-shadow:0 4px 0 #b07800}}
+.newver[hidden]{{display:none}}
+.newver .t{{display:flex;flex-direction:column;gap:1px;min-width:0}}
+.newver small{{font-size:.85rem;font-weight:600;white-space:nowrap}}
+.newver .go{{flex:none;font-weight:700;white-space:nowrap}}
 </style>
 </head>
-<body>
+<body data-v="{STAMP}">
 <div class="wrap">
+<div class="verrow"><span class="upd" id="upd"><b>עודכן</b><small>{STAMP_TXT}</small></span><button class="refresh" id="refresh" type="button">↻ רענון</button></div>
+<button class="newver" id="newver" type="button" hidden><span class="t"><b>יש עדכון חדש</b><small id="newver-t"></small></span><span class="go">גע כדי לרענן ↻</span></button>
 <header class="hello"><h1>מה מנגנים היום?</h1><p>בוחרים מכשיר ושיעור. ההתקדמות נשמרת באייפד, ובכל דף יש כפתור חזרה למטה.</p></header>
 <a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך מאיפה שעצרת</small><b id="resume-t"></b></span></a>
 {secs}<details class="install"><summary>לשמור את העמוד הזה במסך הבית</summary>
@@ -434,14 +463,33 @@ var done=get("ml2:done",{{}});
   if(tot && c>=tot){{ a.classList.add("done"); a.querySelector(".bub").textContent="✓"; p.querySelector(".ptxt").textContent="✓ סיימת את כל הכרטיסים"; }}
 }});
 var last=get("ml2:last",null), r=document.getElementById("resume");
-if(last && L[last.l]){{ r.href="lesson-"+last.l+".html"; document.getElementById("resume-t").textContent=L[last.l][0]+": "+L[last.l][1];
+if(last && L[last.l]){{ r.href="lesson-"+last.l+".html?v={STAMP}"; document.getElementById("resume-t").textContent=L[last.l][0]+": "+L[last.l][1];
   r.style.setProperty("--dev","var(--"+L[last.l][2]+")"); r.hidden=false; }}
+
+/* Is this the newest version? Ask the site (never from cache) on open, and whenever the app comes back to the front. */
+var mine=+document.body.dataset.v, upd=document.getElementById("upd"), nv=document.getElementById("newver"), busy=false;
+function fresh(){{ location.replace(location.pathname+"?r="+Date.now()); }}
+function check(){{
+  if(busy || !window.fetch) return; busy=true;
+  fetch("version.json?x="+Date.now(),{{cache:"no-store"}}).then(function(r){{ return r.ok?r.json():null; }}).then(function(j){{
+    busy=false; if(!j || !j.v) return;
+    var head=upd.querySelector("b");
+    if(j.v>mine){{ nv.hidden=false; document.getElementById("newver-t").textContent="מ"+j.t; upd.classList.remove("latest"); head.textContent="הדף הזה מ:"; }}
+    else {{ nv.hidden=true; upd.classList.add("latest"); head.textContent="✓ הגרסה האחרונה"; }}
+  }}).catch(function(){{ busy=false; }});
+}}
+document.getElementById("refresh").addEventListener("click",fresh);
+nv.addEventListener("click",fresh);
+check();
+document.addEventListener("visibilitychange",function(){{ if(document.visibilityState==="visible") check(); }});
+window.addEventListener("pageshow",function(e){{ if(e.persisted) check(); }});
 }})();
 </script>
 </body>
 </html>
 """
-    (HERE / "index.html").write_text(out, encoding="utf8")
+    write_page("index.html", out)
+    (HERE / "version.json").write_text(json.dumps({"v": STAMP, "t": STAMP_TXT}, ensure_ascii=False) + "\n", encoding="utf8")
 
 
 TOOLS = {
@@ -480,7 +528,7 @@ def tool_page(key):
 {NAVJS}</body>
 </html>
 """
-    (HERE / f"{key}.html").write_text(out, encoding="utf8")
+    write_page(f"{key}.html", out)
 
 
 DRUMS = ["bd", "sd", "clap", "tom", "ch", "oh"]
@@ -603,7 +651,7 @@ def map_page(t8map):
 {NAVJS}</body>
 </html>
 """
-    (HERE / "map.html").write_text(out, encoding="utf8")
+    write_page("map.html", out)
     return total
 
 
@@ -687,7 +735,7 @@ def settings_page(S):
 {NAVJS}</body>
 </html>
 """
-    (HERE / "settings.html").write_text(out, encoding="utf8")
+    write_page("settings.html", out)
 
 
 def check_links():
