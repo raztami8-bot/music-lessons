@@ -55,7 +55,7 @@ for key, (seq, note) in base.BACK.items():
     check_seq(f"חזרה לבסיס · {key}", seq)
 
 # the lessons
-for n in (4, 5, 6, 7):
+for n in (4, 5, 6, 7, 8):
     src = (HERE / "src" / f"l{n}.html").read_text(encoding="utf8")
     for m in re.finditer(r'<article class="card[^"]*"[^>]*>(.*?)</article>', src, re.S):
         card = m.group(1)

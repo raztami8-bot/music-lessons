@@ -14,11 +14,12 @@ LESSONS = {
     5: ("ג׳אם אסיד עם הטי־8", "תופים ובס בקופסה אחת, הדגשות, שאיבה מהקיק וסיבובים חיים"),
     6: ("גרוב חי: הטריקים של הקצב", "סיכוי, עוצמה לכל מכה, גלגולים, אורכים, גמגום, מילוי ואקראי"),
     7: ("צליל: הטריקים של הסאונד", "התפריט, החלפת כלים, עיוות, טרנספוז, הד לקצב, שאיבה ושער"),
+    8: ("האוס עם הוולקה בס", "שני מכשירים בקצב אחד: חיבור וסנכרון, ביט האוס, בס האוס בוולקה, וג׳אם בארבע ידיים"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
-    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7)),
+    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7, 8)),
     "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3)),
 }
 DEV = {n: (d, i + 1) for d, v in DEVICES.items() for i, n in enumerate(v[3])}
@@ -49,7 +50,7 @@ SETTAB = '<a class="tb" href="settings.html">💾 מה נשמר</a>'
 NAVJS = '<script src="nav.js"></script>\n'
 
 T8CAP = "תרשים מצויר לפי המדריך הרשמי, לא צילום"
-T8_LESSONS = (4, 5, 6, 7)
+T8_LESSONS = (4, 5, 6, 7, 8)
 
 # Photos: (lesson, kind, anchor) -> images + legend. Legend order matches the numbers drawn on each photo.
 PHOTOS = [
@@ -99,6 +100,8 @@ PHOTOS = [
     (7, "card", "2.1", ["l7-01"], ["PATTERN|מחזיקים", "10|עיוות", "BASS|", "BASS DRUM|ב־2.2"], T8CAP),
     (7, "card", "3.1", ["l7-02"], ["BASS|מחזיקים", "KYBD|מחזיקים", "TEMPO/VALUE|מסובבים"], T8CAP),
     (7, "card", "4.2", ["l7-03"], ["SHIFT|", "13|שליחה להד", "14|שליחה להדהוד", "DELAY|", "REVERB|"], T8CAP),
+    (8, "card", "1.1", ["l8-01"], ["SYNC OUT|כבל הקצב, אל הוולקה", "MIX IN|כבל השמע, מהוולקה", "MIX OUT|אוזניות", "VOLUME|העוצמה של הכל"], T8CAP),
+    (8, "card", "1.2", ["l4-10"], ["SHIFT|", "15|MENU", "TEMPO/VALUE|", "2|ENTER", "1|EXIT"], T8CAP),
     (7, "card", "5.1", ["l7-04"], ["PATTERN|מחזיקים", "12|שאיבה", "ACCENT|הד והדהוד, ב־5.3", "BASS|"], T8CAP),
 ]
 
@@ -153,7 +156,7 @@ def split_cards(html, n):
 
 
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+KIT_LESSONS = (4, 5, 6, 7, 8)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}

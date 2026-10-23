@@ -84,6 +84,12 @@ GOALS = [
         ("scfx", "שאיבה גם להדהוד", "הרבה הדהוד, והקיק נשאר נקי. עובד אחרי <a class='xref' href='#t-sc'>שאיבה מהקיק</a>.", "hold:SHIFT,tap:15,rel,turn:TEMPO/VALUE,look:SC.dG,tap:2,tap:ACCENT,turn:TEMPO/VALUE,look:dv.25,hold:SHIFT,tap:1,rel", ["7:5.3"], [], []),
         ("gate", "שער", "ניסוי: הבס נחתך בקצב של ההיי־האט. אחר כך החזר את SC.Sr ל־bd.", "hold:SHIFT,tap:15,rel,turn:TEMPO/VALUE,look:SC.Sr,tap:2,turn:TEMPO/VALUE,look:CH,tap:1,turn:TEMPO/VALUE,look:SC.dG,tap:2,tap:BASS,turn:TEMPO/VALUE,look:Gt.25,hold:SHIFT,tap:1,rel", ["7:5.4"], [], []),
     ]),
+    ("connect", "לנגן עם מכשיר אחר", "הוולקה, או כל מכשיר עם שקע סנכרון.", [
+        ("syncout", "לשלוח קצב לוולקה", "כבל מונו מ־SYNC OUT של הטי־8 אל SYNC IN של הוולקה. הטי־8 מנצח, והוולקה הולכת אחרי הקצב שלו.", "", ["8:1.1"], ["syncout"], []),
+        ("mixin", "לשמוע מכשיר אחר דרך הטי־8", "כבל סטריאו מהאוזניות של הוולקה אל MIX IN. הכל יוצא יחד ב־MIX OUT. את העוצמה של הוולקה מאזנים בוולקה.", "", ["8:1.1", "8:1.4"], ["mixin", "mixout", "volume"], []),
+        ("clk", "כמה טיקים בכל פעמה", "לוולקות: 2. אם הוולקה רצה כפול מהר או חצי לאט, זה הפריט.", "hold:SHIFT,tap:15,rel,turn:TEMPO/VALUE,say:הפריט שאחרי SC.Sr,tap:2,turn:TEMPO/VALUE,look:2,hold:SHIFT,tap:1,rel", ["8:1.2"], ["syncout"], []),
+        ("both", "להתחיל ולעצור יחד", "▶ בוולקה, ואז ▶ בטי־8. בעצירה הפוך.", "say:▶ בוולקה,tap:▶", ["8:1.3"], ["syncout"], []),
+    ]),
     ("safe", "לשמור ולצאת מבלגן", "רשת הביטחון.", [
         ("reload", "לחזור למצב השמור", "תופים, בס או הכל, בלחיצה.", "hold:PATTERN,tap:16", ["6:1.1"], ["s14", "s15"], [("grok", "patterns")]),
         ("save", "לשמור", "Ptn לתבנית אחת, ALL לכולן.", "hold:SHIFT,tap:16,rel,turn:TEMPO/VALUE,look:Ptn,tap:2", ["6:7.2", "5:8.1"], [], [("codex", "finish"), ("grok", "patterns")]),

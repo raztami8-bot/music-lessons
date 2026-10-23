@@ -84,6 +84,13 @@ BACK = {
     "7:5.3": (MENU + ",look:SC.dG,tap:2,tap:ACCENT,turn:TEMPO/VALUE," + REC + "," + EXIT + ",turn:REVERB,say:לאן שהיה", MENUN),
     "7:5.4": (MENU + ",look:SC.Sr,tap:2,turn:TEMPO/VALUE," + REC + ",tap:1,turn:TEMPO/VALUE,look:SC.dG,tap:2,tap:BASS,turn:TEMPO/VALUE,"
               + REC + "," + EXIT, "מי מפעיל, ועל מי זה פועל, חוזרים לערכים שרשמת. בשיעור 2 זה היה bd ושאיבה (dv.) לבס."),
+    # ---- T-8 lesson 5 (file 8). Base: T-8 pattern 13 (saved in 2.5), Volca memory 6 (saved in 3.4), both playing.
+    "8:2.4": ("hold:SHIFT,tap:3,rel,turn:TEMPO/VALUE," + REC + ",tap:1",
+              "לא ידוע אם השחזור מחזיר את השאפל, לכן מחזירים ביד."),
+    "8:4.1": ("turn:VOLUME,say:של הוולקה, למקום שבצילום",
+              "הוולקה לא הפסיקה לנגן. רק העוצמה שלה חוזרת."),
+    "8:4.2": ("hold:SHIFT,tap:BASS DRUM,rel,say:רק אם הקיק מהבהב,turn:CUTOFF,say:של הוולקה, שעה 11",
+              "הקיק חוזר, והמסנן של הוולקה חוזר למקום שלו. ההשתקה לא נוגעת בתבנית."),
 }
 
 START = {

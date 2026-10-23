@@ -282,6 +282,8 @@ FIGS = {
     "l7-02": (["display"], ["bass", "kybd", "tempo"]),
     "l7-03": ([], ["shift", "s13", "s14", "delay", "reverb"]),
     "l7-04": (["display", "tempo"], ["pattern", "s12", "accent", "bass"]),
+    # lesson 8
+    "l8-01": (GROUPS["jacks"], ["syncout", "mixin", "mixout", "volume"]),
 }
 
 AREA = {"jacks_": "volume", "common_": "display", "drums_": "bd", "bass_": "bass", "fx_": "delay", "steps_": "s1"}

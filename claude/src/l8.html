@@ -1,0 +1,419 @@
+<header style="display:flex;flex-direction:column;gap:10px">
+  <h1>האוס עם הוולקה בס</h1>
+  <p class="lede">שני מכשירים, קצב אחד. הטי־8 מנגן את התופים ושולח את הקצב, והוולקה בס מנגנת את הבס. ארבע מנות קצרות: מחברים, בונים ביט האוס, כותבים בס האוס, ומנגנים בארבע ידיים.</p>
+  <div class="meta"><span><b>זמן:</b> 10 עד 15 דקות למנה</span><span><b>מכשירים:</b> הטי־8 <span class="label">T-8</span> והוולקה בס <span class="label">Volca Bass</span></span><span><b>קצב:</b> 122</span><span><b>דורש:</b> [[go:5|שיעור 2]], ו[[go:1:s4|כתיבת בס בשיעור 1 של הוולקות]]</span></div>
+</header>
+
+<article class="card howto">
+  <h3>איך לקרוא כל כרטיס</h3>
+  <ol>
+    <li><b>מתחילים כש:</b> השורה הצהובה. לפני שנוגעים, מוודאים שהמכשירים במצב הזה.</li>
+    <li><b>איזה מכשיר:</b> כל צעד מתחיל בתגית. <span class="dv t8">טי־8</span> או <span class="dv vb">וולקה</span>. שני המכשירים יכולים להיות עם לחצן באותו שם, למשל <kbd>▶</kbd>, אז מסתכלים על התגית.</li>
+    <li>הסימנים: <span class="a a-hold"><i>✋</i>החזק</span> לוחצים ולא עוזבים. <span class="a a-tap"><i>👆</i>לחץ</span> לחיצה קצרה. <span class="a a-turn"><i>⟳</i>סובב</span> מסובבים כפתור. <span class="a a-rel"><i>🖐</i>שחרר</span> עוזבים הכל.</li>
+    <li><b>↩ חזרה לבסיס:</b> בכרטיסים שמשנים משהו בג׳אם. נגיעה פותחת את הלחיצות שמחזירות לנקודת ההתחלה.</li>
+    <li>התצוגה מצוירת כמו על המכשיר: [[seg:122]].</li>
+  </ol>
+  <a class="btn" id="mana-next" href="#s1" hidden></a>
+</article>
+
+<nav class="toc" aria-label="תוכן">
+  <b>ארבע המנות</b>
+  <ol>
+    <li><a href="#s1">מחברים את שני המכשירים</a></li>
+    <li><a href="#s2">ביט האוס בטי־8</a></li>
+    <li><a href="#s3">בס האוס בוולקה</a></li>
+    <li><a href="#s4">ג׳אם בארבע ידיים</a></li>
+    <li><a href="#ref">דף עזר ותקלות</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== mana 1 ===================== -->
+<section class="stage" id="s1" data-mana="1" data-min="10" data-title="מחברים" data-goal="בסוף המנה: שני כבלים במקום, הוולקה הולכת אחרי הקצב של הטי־8, ושומעים את שניהם באוזניות אחת.">
+  <span class="stage-tag">מנה 1</span>
+  <h2>מחברים את שני המכשירים</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: מנצח ונגן</span>
+    <p>שני מכשירים שמנגנים כל אחד בשעון שלו יתרחקו זה מזה אחרי כמה תיבות, גם אם בשניהם כתוב אותו קצב. לכן אחד הוא <b>המנצח</b> והשני <b>הנגן</b>. הטי־8 מנצח: הוא שולח בכבל קטן ״טיק״ קצר כמה פעמים בכל פעמה, והוולקה מתקדמת רק כשמגיע טיק. הכבל הזה מעביר רק קצב, לא צליל.</p>
+    <p>את הצליל של הוולקה מכניסים לטי־8 בכבל שני, ומשם הכל יוצא יחד לאוזניות. אין צורך במיקסר.</p>
+  </div>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.1</span><h3>שני כבלים</h3><span class="label">SYNC OUT · MIX IN</span></div>
+    [[state:stop||שני המכשירים כבויים|הוולקה בעצירה]]
+    <ol class="steps">
+      <li><div><b>כבל הקצב</b>, מונו: מ־<span class="dv t8">טי־8</span> <kbd>SYNC OUT</kbd> אל <span class="dv vb">וולקה</span> <kbd>SYNC IN</kbd>.<span class="where">בטי־8: השני משמאל בשורת השקעים הקטנים למעלה. בוולקה: מימין לשקע העגול הגדול יש שני שקעים קטנים, והשמאלי מביניהם הוא SYNC IN.</span></div></li>
+      <li><div><b>כבל השמע</b>, סטריאו: מ־<span class="dv vb">וולקה</span> <kbd>PHONES</kbd> אל <span class="dv t8">טי־8</span> <kbd>MIX IN</kbd>.<span class="where">בטי־8: השלישי משמאל, מיד משמאל ל־MIX OUT.</span></div></li>
+      <li><div>אוזניות ב־<span class="dv t8">טי־8</span> <kbd>MIX OUT</kbd>, כמו תמיד.</div></li>
+      <li><div>הדלק את שניהם. [[turn:VOLUME]] של <span class="dv vb">וולקה</span> לשעה 12, ושל <span class="dv t8">טי־8</span> לשעה 9.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כבל אחד יוצא מהטי־8 ונכנס לוולקה (קצב), והשני יוצא מהוולקה ונכנס לטי־8 (שמע). כל כבל בכיוון ההפוך מהשני.</div>
+    <p class="warn">לפי המדריך של הטי־8, כבל סטריאו לא עובד בשקעי SYNC. ובשקעי MIX צריך דווקא סטריאו.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>לפי המדריך של הטי־8, <b>MIX IN</b> מכניס שמע ממכשיר אחר, והוא יוצא ב־MIX OUT יחד עם הטי־8. בטי־8 אין כפתור לעוצמה של מה שנכנס, ולכן את הוולקה מאזנים בכפתור <kbd>VOLUME</kbd> שלה.</p>
+      <p>שום דבר לא מחובר ל־SYNC IN של הטי־8, ולכן הוא מנגן לפי השעון שלו. הוא המנצח.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.2</span><h3>כמה טיקים בכל פעמה</h3><span class="label">תפריט · cLk</span></div>
+    [[state:stop||הטי־8 עצור]]
+    [[combo-:איך קובעים בטי־8 שני טיקים בכל פעמה, בשביל הוולקה?|hold:SHIFT,tap:15,rel,turn:TEMPO/VALUE,say:הפריט שאחרי SC.Sr,tap:2,turn:TEMPO/VALUE,look:2,tap:1,tap:1]]
+    <ol class="steps">
+      <li><div><span class="dv t8">טי־8</span> [[hold:SHIFT]] ו־[[tap:15]] (MENU). [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:SC.Sr]], ועוד קליק אחד ימינה. בתצוגה מילה שנגמרת ב־<b>cLk</b>.</div></li>
+      <li><div>[[tap:2]] (ENTER). [[turn:TEMPO/VALUE]] עד [[seg:2]].</div></li>
+      <li><div>[[tap:1]] (EXIT) פעמיים.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> לפני היציאה התצוגה הראתה 2, ואחרי היציאה היא מראה את הקצב.</div>
+    <p class="info">ספר לי מה כתוב בתצוגה בפריט הזה, ואת הערך שהיה בו לפני ששינית. במדריך האות הראשונה מודפסת בסימן שקשה לקרוא.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>לפי המדריך, הפריט הזה קובע כמה טיקים הטי־8 שולח בכל פעמה: 1, 2, 3, 4, 6, 8, 12 או 24. הוולקות של קורג מצפות לשניים, טיק אחד כל שני צעדים. אם יוצאים ארבעה, הוולקה רצה כפול מהר.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.3</span><h3>להתחיל יחד</h3><span class="label">▶ · ▶</span></div>
+    [[state:stop||בוולקה יש רצף כלשהו, למשל הקו משיעור 1 של הוולקות]]
+    <ol class="steps">
+      <li><div><span class="dv vb">וולקה</span> [[tap:▶]]. היא נדלקת ומחכה.</div></li>
+      <li><div><span class="dv t8">טי־8</span> [[tap:▶]]. שניהם יוצאים לדרך יחד.</div></li>
+      <li><div><span class="dv t8">טי־8</span> [[turn:TEMPO/VALUE]] עד [[seg:122]]. הקשב: הוולקה מאטה יחד איתו.</div></li>
+      <li><div>לעצירה: קודם <span class="dv t8">טי־8</span> [[tap:▶]], ואחר כך <span class="dv vb">וולקה</span> [[tap:▶]].</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> הבס של הוולקה נשמע באוזניות, והוא זז בדיוק עם התופים, גם כשמשנים קצב.</div>
+    <p class="warn">הוולקה התחילה לרוץ לפני שלחצת ▶ בטי־8? כנראה הטי־8 שולח טיקים גם כשהוא עצור. ספר לי, ואשנה את הסדר בכרטיס.</p>
+    <p class="info">רץ כפול מהר או חצי לאט? חזור ל־[[go:8:1.2|1.2]]: הערך צריך להיות 2.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>הטיקים לא אומרים לוולקה ״תתחילי״, רק ״צעד הבא״. לכן הוולקה צריכה להיות מוכנה עם ▶ לפני הטיק הראשון, ואז הצעד הראשון שלה נוחת על הקיק הראשון. מעכשיו כפתור <kbd>TEMPO</kbd> של הוולקה לא עושה כלום.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.4</span><h3>איזון</h3><span class="label">VOLUME · VOLUME</span></div>
+    [[state:play||שני המכשירים מנגנים]]
+    <ol class="steps">
+      <li><div><span class="dv t8">טי־8</span> [[turn:VOLUME]] עד שהקיק בעוצמה נוחה. הכפתור הזה הוא העוצמה של <b>הכל</b> באוזניות.</div></li>
+      <li><div><span class="dv vb">וולקה</span> [[turn:VOLUME]] עד שהבס יושב ממש מתחת לקיק: שומעים אותו ברור, אבל הקיק עדיין הבוס.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אפשר לשמוע כל מכה של הקיק, וגם כל תו של הבס.</div>
+    <p class="info">הבס מעוות או רועש? הוולקה גבוהה מדי. הורד אותה, ואת העוצמה הכללית הרם בטי־8.</p>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">1.5</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> התחלה ועצירה, שוב ושוב. וולקה ואז טי־8. עצירה: טי־8 ואז וולקה. עד שהסדר בידיים.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> בזמן נגינה, <span class="dv t8">טי־8</span> [[turn:TEMPO/VALUE]] לאט בין 118 ל־128. שני המכשירים זזים יחד.</div></li>
+      <li><div><b>דקה 5:</b> השאר על [[seg:122]], ונגן עם <span class="dv vb">וולקה</span> [[turn:CUTOFF]].</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="1"></div>
+    <p class="end">המנה נגמרה. הכבלים יכולים להישאר מחוברים. מחר: [[go:8:s2|מנה 2, ביט האוס]].</p>
+  </article>
+</section>
+
+<!-- ===================== mana 2 ===================== -->
+<section class="stage" id="s2" data-mana="2" data-min="15" data-title="ביט האוס" data-goal="בסוף המנה: תבנית 13 בטי־8 עם ביט האוס, בלי בס, שמורה.">
+  <span class="stage-tag">מנה 2</span>
+  <h2>ביט האוס בטי־8</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: מה עושה ביט להאוס</span>
+    <p>אותו קיק ישר כמו באסיד, ארבע מכות בתיבה. ההבדל בשלושה דברים קטנים: <b>היי־האט פתוח בדיוק באמצע בין הקיקים</b>, ה״צְ״ שעונה לכל ״בום״; <b>שאפל קטן</b>, שעושה את ההיי־האטים מתנדנדים ופחות רובוטיים; ו<b>מקום</b>. בהאוס הבס לא נלחם בקיק, הוא מנגן ברווחים ביניהם. לכן בתבנית הזו של הטי־8 אין בס בכלל: הבס יגיע מהוולקה.</p>
+  </div>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">2.0</span><h3>חזרה בדקה</h3><span class="label">ממנה 1</span></div>
+    <details><summary>מי מחובר לאן בכבל הקצב?</summary><p>SYNC OUT של הטי־8 אל SYNC IN של הוולקה.</p></details>
+    <details><summary>איזה מכשיר מתחילים קודם?</summary><p>הוולקה, ואז הטי־8. בעצירה הפוך.</p></details>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.1</span><h3>תבנית ריקה</h3><span class="label">PATTERN · 13 · SHIFT + 11</span></div>
+    [[state:stop||רק הטי־8. הוולקה בעצירה]]
+    [[combo-:איך עוברים לתבנית 13 ומוחקים אותה?|tap:PATTERN,tap:13,tap:BASS DRUM,hold:SHIFT,tap:11,rel]]
+    <ol class="steps">
+      <li><div><span class="dv t8">טי־8</span> [[tap:PATTERN]], ואז [[tap:13]]. [[tap:BASS DRUM]] כדי לחזור לעריכה.</div></li>
+      <li><div>[[hold:SHIFT]] ו־[[tap:11]] (PTN CLEAR ALL). [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:122]], ו־[[tap:▶]].</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> המשולש דולק והכל שקט. תבנית 16, הג׳אם מ־[[go:5|שיעור 2]], לא נפגעה.</div>
+    <p class="warn">מה שהיה בתבנית 13 נמחק כשתשמור בסוף המנה.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.2</span><h3>קיק וקלאפ</h3><span class="label">BASS DRUM · HAND CLAP</span></div>
+    [[state:play|BASS DRUM|תבנית 13, ריקה]]
+    <ol class="steps">
+      <li><div>[[tap:BASS DRUM]], ואז [[tap:1]] [[tap:5]] [[tap:9]] [[tap:13]].</div></li>
+      <li><div>[[tap:HAND CLAP]], ואז [[tap:5]] [[tap:13]].</div></li>
+    </ol>
+    <div class="grid-box"><div class="seq" data-rows='[["קיק",[1,5,9,13]],["קלאפ",[5,13]]]'></div></div>
+    <div class="ok"><b>הצלחת אם:</b> ״בום, בום־קלאפ, בום, בום־קלאפ״.</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.3</span><h3>ההיי־האטים של ההאוס</h3><span class="label">OPEN HIHAT · CLOSED HIHAT</span></div>
+    [[state:play|HAND CLAP|קיק וקלאפ מ־[[go:8:2.2|2.2]]]]
+    <ol class="steps">
+      <li><div>[[tap:OPEN HIHAT]], ואז [[tap:3]] [[tap:7]] [[tap:11]] [[tap:15]]. בדיוק באמצע בין הקיקים.</div></li>
+      <li><div>[[tap:CLOSED HIHAT]], ואז כל הצעדים הזוגיים: 2, 4, 6, 8, 10, 12, 14, 16.</div></li>
+      <li><div>[[turn:DECAY]] של ההיי־האטים לשעה 11. הפתוח צריך להיגמר לפני הקיק הבא.</div></li>
+    </ol>
+    <div class="grid-box"><div class="seq" data-rows='[["קיק",[1,5,9,13]],["קלאפ",[5,13]],["פתוח",[3,7,11,15]],["סגור",[2,4,6,8,10,12,14,16]]]'></div></div>
+    <div class="ok"><b>הצלחת אם:</b> ״בום־צְ, בום־צְ״: הפתוח עונה לכל קיק, והסגורים ממלאים בשקט ביניהם.</div>
+    <p class="info">שונה מהאסיד ב[[go:5:s2|שיעור 2]]: שם הסגור היה בתחילת הפעמה, כאן הוא רק על הצעדים הזוגיים, בין כל השאר.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.4</span><h3>שאפל קטן</h3><span class="label">SHIFT + 3</span></div>
+    [[state:play||הביט מ־[[go:8:2.3|2.3]]]]
+    [[combo-:איך מוסיפים שאפל?|hold:SHIFT,tap:3,rel,turn:TEMPO/VALUE,ear,tap:1]]
+    <ol class="steps">
+      <li><div>[[hold:SHIFT]] ו־[[tap:3]] (SHUFFLE). [[rel]]. רשום את המספר בתצוגה.</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] ימינה, קליק אחרי קליק, והקשב לסגורים. עצור כשהם מתחילים ״להתנדנד״, לפני שזה נשמע כמו דהירה.</div></li>
+      <li><div>[[tap:1]] (EXIT).</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> הביט ״הולך״ ולא ״צועד״. אם זה נשמע עקום, חזור כמה קליקים.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>שאפל מאחר מעט כל צעד זוגי. בביט הזה הסגורים יושבים בדיוק שם, ולכן הם אלה שמתנדנדים, והקיק נשאר ישר. ראית את זה ב[[go:6:2.3|שיעור 3, 2.3]].</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.5</span><h3>שומרים</h3><span class="label">SHIFT + 16 (WRITE)</span></div>
+    [[state:play||הביט מ־[[go:8:2.4|2.4]], עם שאפל]]
+    [[combo-:איך שומרים רק את התבנית הזו?|hold:SHIFT,tap:16,rel,turn:TEMPO/VALUE,look:Ptn,tap:2]]
+    <ol class="steps">
+      <li><div>[[hold:SHIFT]] ו־[[tap:16]] (WRITE). [[rel]].</div></li>
+      <li><div>[[turn:TEMPO/VALUE]] עד [[seg:Ptn]]. [[tap:2]] (ENTER).</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אחרי כיבוי והדלקה, תבנית 13 מנגנת את ביט ההאוס.</div>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">2.6</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> רק [[turn:DECAY]] של ההיי־האטים, בין שעה 9 לשעה 1. קצר זה הדוק, ארוך זה פתוח ושמח.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> השתקות. [[hold:SHIFT]] ו־[[tap:OPEN HIHAT]], ארבע תיבות, ושוב לביטול. אותו דבר עם הקלאפ.</div></li>
+      <li><div><b>דקה 5:</b> בלי ידיים. רק להקשיב לנדנוד.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="2"></div>
+    <p class="end">המנה נגמרה. מחר: [[go:8:s3|מנה 3, הבס בוולקה]].</p>
+  </article>
+</section>
+
+<!-- ===================== mana 3 ===================== -->
+<section class="stage" id="s3" data-mana="3" data-min="15" data-title="בס האוס" data-goal="בסוף המנה: בוולקה צליל בס עגול ועבה, וקו האוס של 16 צעדים, שמור במקום 6.">
+  <span class="stage-tag">מנה 3</span>
+  <h2>בס האוס בוולקה</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: בס שמנגן ברווחים</span>
+    <p>הבס של אסיד צורח ומתפתל. הבס של האוס <b>עגול ונמוך</b>, והוא מנגן <b>ברווחים</b>: התווים נופלים בין הקיקים, יחד עם ההיי־האט הפתוח. ככה הקיק והבס אף פעם לא נלחמים, ואין צורך בשאיבה. האוזן שומעת ״בום־דום, בום־דום״, וזה הגרוב.</p>
+    <p>בשביל זה הצליל אחר: גל מרובע, כמעט בלי צפצוף, מסנן חצי פתוח, ושני מתנדים שזזים מעט זה מזה כדי שהבס יהיה רחב.</p>
+  </div>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">3.0</span><h3>חזרה בדקה</h3><span class="label">ממנה 2</span></div>
+    <details><summary>איפה ההיי־האט הפתוח בהאוס?</summary><p>בצעדים 3, 7, 11, 15. בדיוק באמצע בין הקיקים.</p></details>
+    <details><summary>מה השאפל מזיז?</summary><p>את הצעדים הזוגיים. כאן אלה ההיי־האטים הסגורים.</p></details>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.1</span><h3>שני מתנדים, גל מרובע</h3><span class="label">FUNC + 3 · 8 · 9</span></div>
+    [[state:stop||הוולקה עצורה|STEP MODE כבוי]]
+    <ol class="steps">
+      <li><div><span class="dv vb">וולקה</span> [[tap:VCO1]]. [[hold:FUNC]] וגע בקליד <kbd>3</kbd>. [[rel]]. שלושת המתנדים מנגנים יחד.</div></li>
+      <li><div>[[hold:FUNC]], ובלי לשחרר הסתכל: <kbd>VCO1</kbd> ו־<kbd>VCO2</kbd> מוארים, <kbd>VCO3</kbd> חשוך. לחצן שלא כמו שצריך? לחץ עליו. [[rel]].</div></li>
+      <li><div>[[hold:FUNC]], ובלי לשחרר הסתכל על נורות 8 ו־9: שתיהן צריכות לדלוק (מרובע). כבויה? גע בקליד שלה. [[rel]].</div></li>
+      <li><div>[[turn:PITCH 1]] לשעה 12. [[turn:PITCH 2]] לשעה 12, ועוד מעט מאוד ימינה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> נגיעה בקליד 1 משמיעה צליל רחב ועגול, עם פעימה איטית בתוכו.</div>
+    <p class="info">שמעת שני תווים נפרדים? <kbd>PITCH 2</kbd> רחוק מדי מהמרכז. ככה זה היה ב[[go:2:2.2|שיעור 2 של הוולקות, 2.2]].</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>גל <b>מרובע</b> חלול ועגול יותר ממסור, ולכן הוא יושב נמוך בלי לצרוח. שני מתנדים עם סטייה זעירה נותנים <b>רוחב</b>. השלישי נשאר מושתק, כדי שהבס לא יהיה עמוס.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.2</span><h3>הצליל של ההאוס</h3><span class="label">CUTOFF · PEAK · EG</span></div>
+    [[state:stop||הצליל מ־[[go:8:3.1|3.1]]]]
+    <ol class="steps">
+      <li><div><span class="dv vb">וולקה</span> [[turn:OCTAVE]] עד שבתצוגה כתוב <b>oct 2</b>. הכפתור עובר בקפיצות.</div></li>
+      <li><div>[[turn:CUTOFF]] לשעה 11. [[turn:PEAK]] לשעה 9.</div></li>
+      <li><div>[[turn:CUTOFF EG INT]] לשעה 12. [[turn:ATTACK]] עד הסוף שמאלה. [[turn:DECAY/RELEASE]] לשעה 12.</div></li>
+      <li><div>[[turn:INT]] באזור LFO עד הסוף שמאלה.</div></li>
+    </ol>
+    <div class="tbl-box"><table>
+      <thead><tr><th>כפתור</th><th>אסיד, משיעור 1 של הוולקות</th><th>האוס</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>CUTOFF</kbd></td><td>שעה 10</td><td>שעה 11</td></tr>
+        <tr><td><kbd>PEAK</kbd></td><td>שעה 12 עד 2</td><td>שעה 9</td></tr>
+        <tr><td><kbd>CUTOFF EG INT</kbd></td><td>שעה 1</td><td>שעה 12</td></tr>
+        <tr><td><kbd>DECAY/RELEASE</kbd></td><td>שעה 10</td><td>שעה 12</td></tr>
+        <tr><td><kbd>OCTAVE</kbd></td><td>oct 3</td><td>oct 2</td></tr>
+      </tbody>
+    </table></div>
+    <div class="ok"><b>הצלחת אם:</b> כל נגיעה נשמעת כמו ״דוּם״ עמוק ורך, בלי ״וואו״ ובלי צפצוף.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>כל שינוי הולך לאותו כיוון: פחות צרחה, יותר גוף. <b>PEAK</b> נמוך מוריד את הצפצוף, <b>EG INT</b> נמוך מקטין את ה״וואו״, ו<b>DECAY</b> ארוך יותר נותן לכל תו להתנפח לפני שהוא נגמר.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.3</span><h3>כותבים את הקו</h3><span class="label">FUNC + 15 · FUNC + ● </span></div>
+    [[state:stop||הצליל מ־[[go:8:3.2|3.2]]|VCO1 נבחר]]
+    <p>תווים רק ברווחים בין הקיקים. <kbd>●</kbd> = שתיקה.</p>
+    <div class="grid-box"><div class="seq" data-keys="-,-,1,-,-,-,1,13,-,-,4,-,-,-,8,-" data-slides="7"></div></div>
+    <ol class="steps">
+      <li><div><span class="dv vb">וולקה</span> מחיקה: [[hold:FUNC]] וגע בקליד <kbd>15</kbd>. [[rel]].</div></li>
+      <li><div>כל 16 פעילים: [[hold:FUNC]] ו־[[tap:▶]]. [[rel]]. גע בכל נורה כבויה עד שכל 16 דולקות. [[tap:FUNC]] ליציאה.</div></li>
+      <li><div>הקלטת צעדים: [[hold:FUNC]] ו־[[tap:●]]. [[rel]]. ואז 16 נגיעות, לפי הסדר. במקום שכתוב <kbd>●</kbd>, לחץ על לחצן העיגול:
+        <div class="taps" id="l8line" data-keys="-,-,1,-,-,-,1,13,-,-,4,-,-,-,8,-" style="margin-top:10px"></div></div></li>
+      <li><div>[[tap:FUNC]] לסיום.</div></li>
+      <li><div>גלישה: [[hold:FUNC]] ו־[[tap:STEP MODE]]. [[rel]]. גע בקליד <kbd>7</kbd>. [[tap:STEP MODE]] ליציאה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אחרי ▶ (קודם בוולקה ואז בטי־8) הבס נכנס בכל רווח בין הקיקים, ובאמצע התיבה קופץ למעלה ב״יללה״ קצרה.</div>
+    <p class="info">טעית בנגיעה? [[tap:FUNC]] ליציאה, וחזור לשלב הראשון. כפתור ״להתחיל מחדש״ מנקה את הסימונים כאן.</p>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>שלושת התווים הם לה (קליד 1), דו (4) ומי (8): האקורד של לה מינור, אחד אחרי השני. צעדים 3, 7, 11 ו־15 הם בדיוק המקומות של ההיי־האט הפתוח, אז הבס וה״צְ״ נוחתים יחד. התו בצעד 8 הוא לה גבוה, והגלישה מצעד 7 מחליקה אליו.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.4</span><h3>שומרים בוולקה</h3><span class="label">FUNC + MEMORY · 6</span></div>
+    [[state:stop||הקו מ־[[go:8:3.3|3.3]]]]
+    <ol class="steps">
+      <li><div><span class="dv vb">וולקה</span> [[hold:FUNC]] ו־[[tap:MEMORY]]. [[rel]]. גע בקליד <kbd>6</kbd>.</div></li>
+      <li><div>צלם את הלוח של הוולקה. הכפתורים לא נשמרים.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אחרי [[tap:MEMORY]] וקליד <kbd>6</kbd>, הקו חוזר.</div>
+    <p class="info">מקומות 1 עד 5 תפוסים בתרגילים מ[[go:3:s8|שיעור 3 של הוולקות]]. לכן 6.</p>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">3.5</span><h3>נגן עכשיו</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>הכנה:</b> <span class="dv t8">טי־8</span> תבנית 13. <span class="dv vb">וולקה</span> [[tap:▶]], ואז <span class="dv t8">טי־8</span> [[tap:▶]].</div></li>
+      <li><div><b>דקות 1 ו־2:</b> רק <span class="dv vb">וולקה</span> [[turn:CUTOFF]], בין שעה 10 לשעה 1. שים לב: גם פתוח, הבס לא צורח. ה־PEAK נמוך.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> רק <span class="dv vb">וולקה</span> [[turn:DECAY/RELEASE]], בין שעה 10 לשעה 2. קצר זה ״פּוּק״, ארוך זה ״דוּוּם״.</div></li>
+      <li><div><b>דקה 5:</b> החזר: CUTOFF לשעה 11, DECAY/RELEASE לשעה 12. רק להקשיב.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="3"></div>
+    <p class="end">המנה נגמרה. מחר: [[go:8:s4|מנה 4, ג׳אם]].</p>
+  </article>
+</section>
+
+<!-- ===================== mana 4 ===================== -->
+<section class="stage" id="s4" data-mana="4" data-min="15" data-title="ג׳אם בארבע ידיים" data-goal="בסוף המנה: סט קצר של חמש דקות עם פתיחה, כניסה של הבס, שבירה וחזרה.">
+  <span class="stage-tag">מנה 4</span>
+  <h2>ג׳אם בארבע ידיים</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: להוציא ולהחזיר</span>
+    <p>טראק האוס לא מוסיף כל הזמן דברים. הוא <b>מוציא</b> משהו, נותן לאוזן להתגעגע, ומחזיר אותו. הרגע הכי חזק בטראק הוא כשהקיק חוזר אחרי שבירה. כאן לכל יד יש תפקיד: יד שמאל על הטי־8 (מי מנגן), יד ימין על הוולקה (איך הבס נשמע).</p>
+  </div>
+
+  <article class="card recap">
+    <div class="card-head"><span class="num">4.0</span><h3>נקודת התחלה</h3><span class="label">לכל המנה</span></div>
+    <ol class="steps">
+      <li><div><span class="dv t8">טי־8</span> [[tap:PATTERN]], [[tap:13]], [[tap:BASS DRUM]]. ביט ההאוס.</div></li>
+      <li><div><span class="dv vb">וולקה</span> [[tap:MEMORY]] וקליד <kbd>6</kbd>. הכפתורים כמו בצילום מ־[[go:8:3.4|3.4]].</div></li>
+      <li><div>[[tap:▶]] בוולקה, ואז [[tap:▶]] בטי־8.</div></li>
+    </ol>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.1</span><h3>הבס נכנס לאט</h3><span class="label">VOLUME של הוולקה</span></div>
+    [[state:play||מ־[[go:8:4.0|4.0]]]]
+    <ol class="steps">
+      <li><div><span class="dv vb">וולקה</span> [[turn:VOLUME]] עד הסוף שמאלה. נשארים רק התופים.</div></li>
+      <li><div>שמונה תיבות של תופים בלבד.</div></li>
+      <li><div>[[turn:VOLUME]] לאט חזרה למקום שלו, לאורך ארבע תיבות.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> הבס ״מתגנב״ פנימה, והגרוב מתמלא.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>הכפתור הזה הוא עכשיו כמו פיידר במיקסר, כי השמע של הוולקה נכנס דרך הטי־8. הוולקה ממשיכה לנגן גם כשלא שומעים אותה, אז היא לא מאבדת את המקום בקצב.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.2</span><h3>שבירה וחזרה</h3><span class="label">SHIFT + BASS DRUM</span></div>
+    [[state:play||מ־[[go:8:4.0|4.0]]]]
+    [[combo-:איך מוציאים את הקיק לשבירה, ואיך מחזירים?|hold:SHIFT,tap:BASS DRUM,rel,hold:SHIFT,tap:BASS DRUM,rel]]
+    <ol class="steps">
+      <li><div><span class="dv t8">טי־8</span> [[hold:SHIFT]] ו־[[tap:BASS DRUM]]. [[rel]]. הקיק מושתק, והלחצן מהבהב.</div></li>
+      <li><div>ארבע תיבות בלי קיק. ביד ימין, <span class="dv vb">וולקה</span> [[turn:CUTOFF]] לאט פתוח, לשעה 2.</div></li>
+      <li><div>בסוף התיבה הרביעית, בדיוק לפני ה״אחת״: [[hold:SHIFT]] ו־[[tap:BASS DRUM]]. [[rel]]. ובאותו רגע <kbd>CUTOFF</kbd> חזרה לשעה 11.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כשהקיק חוזר, זה מרגיש כמו נחיתה.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>ההשתקה של הטי־8 לא נוגעת בוולקה. לכן בזמן השבירה הבס ממשיך לבד, וזה בדיוק מה שמחזיק את המתח.</p>
+    </div>
+  </article>
+
+  <article class="card playnow">
+    <div class="card-head"><span class="num">4.3</span><h3>סט של חמש דקות</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקה 1, פתיחה:</b> <span class="dv vb">וולקה</span> <kbd>VOLUME</kbd> למטה. <span class="dv t8">טי־8</span> השתק את שני ההיי־האטים: רק קיק וקלאפ.</div></li>
+      <li><div><b>דקה 2, בנייה:</b> בטל השתקה של הסגור, ואחרי ארבע תיבות של הפתוח.</div></li>
+      <li><div><b>דקה 3, הבס:</b> <span class="dv vb">וולקה</span> <kbd>VOLUME</kbd> עולה לאט, כמו ב־[[go:8:4.1|4.1]].</div></li>
+      <li><div><b>דקה 4, שבירה:</b> הקיק יוצא, <kbd>CUTOFF</kbd> נפתח, והקיק חוזר. כמו ב־[[go:8:4.2|4.2]].</div></li>
+      <li><div><b>דקה 5, יציאה:</b> הפוך מהפתיחה. <kbd>VOLUME</kbd> של הוולקה יורד, ההיי־האטים יוצאים, ונשאר קיק.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="4"></div>
+    <p class="end">זהו, יש לך סט. רוצה להקליט אותו? הטי־8 מוציא שמע גם ב־USB.</p>
+  </article>
+</section>
+
+<!-- ===================== ref ===================== -->
+<section class="stage" id="ref">
+  <span class="stage-tag">לעיון</span>
+  <h2>דף עזר ותקלות</h2>
+
+  <article class="card">
+    <h3>כל הצירופים מהשיעור</h3>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מה</th><th>איפה</th><th>צירוף</th></tr></thead>
+      <tbody>
+        <tr><td>טיקים לפעמה</td><td><span class="dv t8">טי־8</span></td><td>[[hold:SHIFT]] + [[tap:15]], הפריט שאחרי [[seg:SC.Sr]], [[tap:2]], [[seg:2]]</td></tr>
+        <tr><td>להתחיל יחד</td><td>שניהם</td><td><kbd>▶</kbd> בוולקה, ואז <kbd>▶</kbd> בטי־8</td></tr>
+        <tr><td>לעצור</td><td>שניהם</td><td><kbd>▶</kbd> בטי־8, ואז <kbd>▶</kbd> בוולקה</td></tr>
+        <tr><td>שאפל</td><td><span class="dv t8">טי־8</span></td><td>[[hold:SHIFT]] + [[tap:3]], [[turn:TEMPO/VALUE]], [[tap:1]]</td></tr>
+        <tr><td>השתקה</td><td><span class="dv t8">טי־8</span></td><td>[[hold:SHIFT]] + לחצן הכלי</td></tr>
+        <tr><td>שלושה מתנדים יחד</td><td><span class="dv vb">וולקה</span></td><td><kbd>FUNC</kbd> + קליד 3</td></tr>
+        <tr><td>הקלטת צעדים</td><td><span class="dv vb">וולקה</span></td><td><kbd>FUNC</kbd> + <kbd>●</kbd>, נגיעות, <kbd>FUNC</kbd></td></tr>
+        <tr><td>גלישות</td><td><span class="dv vb">וולקה</span></td><td><kbd>FUNC</kbd> + <kbd>STEP MODE</kbd>, קלידים, <kbd>STEP MODE</kbd></td></tr>
+        <tr><td>שמירה וטעינה</td><td><span class="dv vb">וולקה</span></td><td><kbd>FUNC</kbd> + <kbd>MEMORY</kbd>, קליד 6. טעינה: <kbd>MEMORY</kbd>, קליד 6</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <article class="card">
+    <h3>כשמשהו לא עובד</h3>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מה קורה</th><th>מה לבדוק</th></tr></thead>
+      <tbody>
+        <tr><td><b>לא שומעים את הוולקה</b></td><td>כבל השמע ב־MIX IN, לא ב־SYNC? <kbd>VOLUME</kbd> של הוולקה למעלה? הוולקה מנגנת (▶ דולק)?</td></tr>
+        <tr><td><b>הוולקה לא זזה</b></td><td>כבל הקצב יוצא מ־SYNC OUT של הטי־8, ונכנס ל־SYNC IN של הוולקה? לחצת ▶ בוולקה?</td></tr>
+        <tr><td><b>הוולקה רצה כפול מהר או חצי לאט</b></td><td>הפריט שאחרי SC.Sr בתפריט של הטי־8: צריך להיות 2. [[go:8:1.2|1.2]].</td></tr>
+        <tr><td><b>הבס לא נוחת עם הקיק</b></td><td>עצור את שניהם, והתחל שוב: קודם הוולקה.</td></tr>
+        <tr><td><b>הכבל מחובר ולא קורה כלום</b></td><td>כבל סטריאו בשקע SYNC לא עובד. צריך מונו.</td></tr>
+        <tr><td><b>רעש או עיוות</b></td><td>הוולקה חזקה מדי. הורד את <kbd>VOLUME</kbd> שלה.</td></tr>
+        <tr><td><b>הבס של הטי־8 מנגן גם</b></td><td>זו לא תבנית 13. [[tap:PATTERN]], [[tap:13]].</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <article class="card">
+    <h3>מקורות</h3>
+    <div class="legend">מדריך הבעלים הרשמי של רולנד לטי־8, גרסה 1.02: שקעי SYNC ו־MIX, הכבלים, ופריט התפריט של מספר הטיקים לפעמה. [[src:מאמר של ארטוריה על קצבי סנכרון|מה לקחתי ממנו: הסנכרון של קורג הוא טיק אחד כל שני צעדים, כלומר שניים לכל פעמה.]] הפעולות בוולקה בס לפי [[go:1|שיעור 1]], [[go:2|שיעור 2]] ו[[go:3|שיעור 3]] של הוולקות, שנבדקו מול החוברת שלה. מה שלא כתוב במדריכים מסומן בכרטיסים 1.2 ו־1.3.</div>
+  </article>
+
+  <div class="endnav"><a href="URL_L7">→ לשיעור 4</a><a href="index.html">לבית ←</a></div>
+</section>
