@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>תנועה חיה בוולקה בס · וולקות · שיעור 5</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="app.css?v=1792760494">
+<link rel="stylesheet" href="kit.css?v=1792760494">
+<link rel="stylesheet" href="nav.css?v=1792760494">
+</head>
+<body data-lesson="10" data-panel="vb">
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb" href="lesson-1.html">שיעור 1</a><a class="tb" href="lesson-2.html">שיעור 2</a><a class="tb" href="lesson-3.html">שיעור 3</a><a class="tb" href="lesson-9.html">שיעור 4</a><a class="tb cur" href="lesson-10.html" aria-current=page>שיעור 5</a><a class="tb" href="vb-map.html">▦ מה אפשר לעשות בבס</a><button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow volca">וולקות · שיעור 5</span>
+  <h1>תנועה חיה בוולקה בס</h1>
+  <p class="lede">התנועה המחזורית (LFO) היא יד שלישית שמסובבת כפתור בשבילך, שוב ושוב. בשיעור הזה היא חותכת את הצליל כמו שער, נושמת במסנן, ומרטיטה את הגובה. ובסוף, גלישות שקובעות מתי התנועה מתחילה מחדש. ארבע מנות קצרות.</p>
+  <div class="meta"><span><b>זמן:</b> 10 עד 15 דקות למנה</span><span><b>מכשיר:</b> הוולקה בס <span class="label">Volca Bass</span></span><span><b>קצב:</b> 120</span><span><b>דורש:</b> <a class="xref" href="lesson-2.html#s4">שיעור 2 של הוולקות, שלב 4</a></span></div>
+</header>
+
+<article class="card howto">
+  <h3>איך לקרוא כל כרטיס</h3>
+  <ol>
+    <li><b>מתחילים כש:</b> השורה הצהובה. לפני שנוגעים, מוודאים שהוולקה במצב הזה.</li>
+    <li>הסימנים: <span class="a a-hold"><i>✋</i>החזק</span> לוחצים ולא עוזבים. <span class="a a-tap"><i>👆</i>לחץ</span> לחיצה קצרה. <span class="a a-turn"><i>⟳</i>סובב</span> מסובבים כפתור. <span class="a a-rel"><i>🖐</i>שחרר</span> עוזבים הכל.</li>
+    <li><b>נורות 4 עד 7:</b> כשמחזיקים <kbd>FUNC</kbd>, הן מראות על מה התנועה פועלת. 4 עוצמה, 5 גובה, 6 מסנן. 7: כבויה משולש חלק, דולקת מרובע קופץ. נגיעה בקליד מדליקה או מכבה את הנורה שלו.</li>
+    <li><b>↩ חזרה לבסיס:</b> הבסיס של השיעור הוא מקום זיכרון 8, שנשמר ב־<a class="xref" href="#l10-1-3">1.3</a>.</li>
+  </ol>
+  <a class="btn" id="mana-next" href="#s1" hidden></a>
+</article>
+
+<details class="card mapbox"><summary><b>🗺 תרשים הלוח של הוולקה בס</b> · נגיעה בכל כפתור מראה מה הוא עושה</summary><div id="t8tour"></div></details>
+
+<nav class="toc" aria-label="תוכן">
+  <b>ארבע המנות</b>
+  <ol>
+    <li><a href="#s1">תו ארוך</a></li>
+    <li><a href="#s2">שער</a></li>
+    <li><a href="#s3">נשימה ורטט</a></li>
+    <li><a href="#s4">גלישות שקובעות את הקצב</a></li>
+    <li><a href="#ref">דף עזר ותקלות</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== mana 1 ===================== -->
+<section class="stage" id="s1" data-mana="1" data-min="15" data-title="תו ארוך" data-goal="בסוף המנה: תו אחד שנמשך תיבה שלמה, שמור במקום 8. עליו נשמע כל תנועה.">
+  <span class="stage-tag">מנה 1</span>
+  <h2>תו ארוך</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: קודם צריך משהו שיזוז</span>
+    <p>תנועה מחזורית צריכה זמן. על תו קצר של רגע היא לא מספיקה לעשות כלום. לכן מתחילים מ<b>תו אחד ארוך</b>, שנמשך תיבה שלמה. הטריק: אותו תו בכל 16 הצעדים, וגלישה בין כולם. גלישה בין שני תווים זהים לא נשמעת כגלישה. היא פשוט <b>קושרת</b> אותם לתו אחד.</p>
+  </div>
+
+  <article class="card" data-id="l10:1.1" id="l10-1-1">
+    <div class="card-head"><span class="num">1.1</span><h3>צליל אחד עבה</h3><span class="label">FUNC + 3 · FUNC + 16</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>רצף שחשוב לך כבר שמור</span></div>
+    <div class="combo" data-q="איך מאחדים את שלושת המתנדים לצליל אחד?" data-seq="hold:FUNC,tap:3,rel" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>3</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. שלושת המתנדים יחד.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>16</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. הכל נמחק.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> והסתכל: <kbd>VCO1</kbd> ו־<kbd>VCO2</kbd> מוארים, <kbd>VCO3</kbd> חשוך. לחצן שלא כמו שצריך? לחץ עליו. ונורה 11 (החזקה): דולקת. כבויה? <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>11</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>PITCH 1</kbd></span> לשעה 12, <span class="a a-turn"><i>⟳</i>סובב <kbd>PITCH 2</kbd></span> לשעה 12 ועוד קצת ימינה.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF</kbd></span> לשעה 11, <span class="a a-turn"><i>⟳</i>סובב <kbd>PEAK</kbd></span> לשעה 11, <span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF EG INT</kbd></span> לשעה 12, <span class="a a-turn"><i>⟳</i>סובב <kbd>ATTACK</kbd></span> שמאלה עד הסוף, <span class="a a-turn"><i>⟳</i>סובב <kbd>DECAY/RELEASE</kbd></span> לשעה 12, <span class="a a-turn"><i>⟳</i>סובב <kbd>TEMPO</kbd></span> לבערך 120.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כשמחזיקים את קליד 1, הצליל רחב, ונשאר כל עוד האצבע על הקליד.</div>
+  </article>
+
+  <figure class="photo"><div class="imgs"><img src="img/vb-04.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי הלוח והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>FUNC</b></li><li><b>STEP MODE</b> עריכת גלישות</li><li><b>13</b> מחיקת גלישות</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
+<article class="card split" data-id="l10:1.2" id="l10-1-2"><div class="card-head"><span class="num">1.2</span><h3>16 פעמים לה, וגלישות</h3><span class="label">FUNC + ● · FUNC + STEP MODE</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>הצליל מ־<a class="xref" href="#l10-1-1">1.1</a></span><span>VCO1 נבחר</span></div>
+    <div class="combo" data-q="איך נכנסים לעריכת גלישות, ואיך יוצאים?" data-seq="hold:FUNC,tap:STEP MODE,rel,tap:1,tap:STEP MODE" data-hide="1"></div>
+    <div class="grid-box"><div class="seq" data-keys="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1" data-slides="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"></div></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>. <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. הדלק כל נורה כבויה, ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>●</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. 16 נגיעות בקליד 1:
+        <div class="taps" id="l10a" data-keys="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1" style="margin-top:10px"></div></div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>STEP MODE</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. גע בקלידים 1 עד 15. כולם נדלקים, חוץ מ־16. <span class="a a-tap"><i>👆</i>לחץ <kbd>STEP MODE</kbd></span> ליציאה.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שומעים תו אחד ארוך, ״וּוּוּם״, שמתחיל מחדש פעם אחת בכל תיבה.</div>
+    <p class="warn">שומעים 16 תווים קצרים? הגלישות לא נכנסו, או שנורה 11 כבויה. אם הכל נכון ועדיין קצר, ספר לי מה שמעת.</p>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>לפי המדריך, אחרי צעד עם גלישה המעטפת והתנועה המחזורית <b>לא</b> מתחילות מחדש. לכן 15 גלישות הן תו אחד. צעד 16 בלי גלישה, וכך בצעד 1 של התיבה הבאה הכל מתחיל מחדש.</p>
+    </div></div></article>
+
+  <article class="card" data-id="l10:1.3" id="l10-1-3">
+    <div class="card-head"><span class="num">1.3</span><h3>שומרים במקום 8</h3><span class="label">FUNC + MEMORY · 8</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>התו הארוך מ־<a class="xref" href="#l10-1-2">1.2</a></span></div>
+    <div class="combo" data-q="איך שומרים במקום 8?" data-seq="hold:FUNC,tap:MEMORY,rel,tap:8" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>8</kbd></span>.</div></li>
+      <li><div>צלם את הלוח.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אחרי <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span> ו־<span class="a a-tap"><i>👆</i>לחץ קליד <kbd>8</kbd></span>, התו הארוך חוזר.</div>
+  </article>
+
+  <article class="card playnow" data-id="l10:1.4" id="l10-1-4">
+    <div class="card-head"><span class="num">1.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> <span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF</kbd></span> לאט מאוד, תיבה שלמה לכל כיוון. על תו ארוך שומעים כל מילימטר.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> <span class="a a-turn"><i>⟳</i>סובב <kbd>PITCH 2</kbd></span> קצת ימינה ושמאלה. הפעימה בתוך הצליל מאיצה ומאטה.</div></li>
+      <li><div><b>דקה 5:</b> החזר <kbd>PITCH 2</kbd> לשעה 12 ועוד קצת.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="1"></div>
+    <p class="end">המנה נגמרה. מחר: <a class="xref" href="#s2">מנה 2, שער</a>.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 2 ===================== -->
+<section class="stage" id="s2" data-mana="2" data-min="10" data-title="שער" data-goal="בסוף המנה: התו הארוך נחתך לחתיכות קצובות, בעומק ובמהירות שבחרת.">
+  <span class="stage-tag">מנה 2</span>
+  <h2>שער</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: לחתוך צליל ארוך לקצב</span>
+    <p>שער פותח וסוגר את העוצמה בקצב קבוע: יש, אין, יש, אין. מתו אחד ארוך נולד מקצב. זה הצליל של טראנס והאוס משנות ה־90. בוולקה עושים את זה עם תנועה <b>מרובעת</b> על <b>העוצמה</b>.</p>
+  </div>
+
+  <article class="card recap" data-id="l10:2.0" id="l10-2-0">
+    <div class="card-head"><span class="num">2.0</span><h3>נקודת התחלה</h3><span class="label">לכל המנה</span></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>8</kbd></span>, ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. הכפתורים כמו בצילום.</div></li>
+    </ol>
+  </article>
+
+  <figure class="photo"><div class="imgs"><img src="img/vb-03.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי הלוח והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>FUNC</b></li><li><b>4</b> עוצמה</li><li><b>5</b> גובה</li><li><b>6</b> מסנן</li><li><b>7</b> צורה</li><li><b>RATE</b> מהירות</li><li><b>INT</b> עומק</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
+<article class="card split" data-id="l10:2.1" id="l10-2-1"><div class="card-head"><span class="num">2.1</span><h3>השער</h3><span class="label">FUNC + 4 · FUNC + 7 · RATE · INT</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מקום 8, התו הארוך</span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="hold:FUNC,tap:4,tap:7,rel,say:עד ש־4 ו־7 כבויות,turn:INT,say:עד הסוף שמאלה" data-title="הלחיצות, לפי הסדר"></div><p>בלי נורות ובלי עומק, אין תנועה. התו הארוך חוזר נקי.</p></details>
+    <div class="combo" data-q="איך מכוונים את התנועה לעוצמה, בצורה מרובעת?" data-seq="hold:FUNC,tap:4,tap:7,rel" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> והסתכל על נורות 4 עד 7. צריך: 4 דולקת, 5 ו־6 כבויות, 7 דולקת. גע בכל קליד שהנורה שלו לא כמו שצריך. <span class="a a-rel"><i>🖐</i>שחרר</span>.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> של LFO עד הסוף ימינה.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span> לאט, והקשב. עצור כשהחיתוכים ״יושבים״ על הקצב: ארבעה או שמונה בכל פעמה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> התו הארוך נשמע כמו ״טה־טה־טה־טה״ בקצב קבוע.</div>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>כפתור <kbd>RATE</kbd> לא נעול לקצב, ולכן מכוונים באוזן. אם השער ״מתנדנד״ מול הקצב, סובב מילימטר.</p>
+      <p>התנועה המרובעת מתחילה מחדש בכל תו, חוץ מצעד שאחרי גלישה. בתו הארוך שלנו זה קורה פעם בתיבה, בצעד 1. לכן כל תיבה מתחילה מאותה נקודה של השער.</p>
+    </div></div></article>
+
+  <article class="card" data-id="l10:2.2" id="l10-2-2">
+    <div class="card-head"><span class="num">2.2</span><h3>כמה עמוק החיתוך</h3><span class="label">INT</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>השער מ־<a class="xref" href="#l10-2-1">2.1</a></span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="turn:INT,say:עד הסוף ימינה" data-title="הלחיצות, לפי הסדר"></div><p>השער חוזר לחיתוך מלא.</p></details>
+    <ol class="steps">
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> לאט שמאלה, עד שעה 12. החיתוך כבר לא מגיע לשקט.</div></li>
+      <li><div>המשך עד שעה 9. נשאר רק ״פעימה״ עדינה.</div></li>
+      <li><div>חזור עד הסוף ימינה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שמעת שלושה אופיים: פעימה, גלים וחיתוך מלא.</div>
+  </article>
+
+  <article class="card playnow" data-id="l10:2.3" id="l10-2-3">
+    <div class="card-head"><span class="num">2.3</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> רק <span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span>. מהר: זמזום. לאט: ״יש... אין...״. חפש את שלוש המהירויות שהכי ״רוקדות״.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> רק <span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span>, בין שעה 9 לסוף. כמו פיידר של שער.</div></li>
+      <li><div><b>דקה 5:</b> שתי ידיים: <kbd>INT</kbd> ביד שמאל, <kbd>CUTOFF</kbd> ביד ימין.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="2"></div>
+    <p class="end">המנה נגמרה. מחר: <a class="xref" href="#s3">מנה 3, נשימה ורטט</a>.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 3 ===================== -->
+<section class="stage" id="s3" data-mana="3" data-min="10" data-title="נשימה ורטט" data-goal="בסוף המנה: אותה תנועה על המסנן ועל הגובה, חלקה וקופצת.">
+  <span class="stage-tag">מנה 3</span>
+  <h2>נשימה ורטט</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: אותה יד, כפתור אחר</span>
+    <p>התנועה היא תמיד אותה תנועה. מה שמשתנה זה <b>על מה</b> היא פועלת. על העוצמה היא שער. על המסנן היא <b>נשימה</b>, ״ווּאָה־ווּאָה״. על הגובה היא <b>רטט</b>, כמו זמר שמרעיד את הקול, או כשהיא מרובעת, קפיצה בין שני תווים.</p>
+  </div>
+
+  <article class="card recap" data-id="l10:3.0" id="l10-3-0">
+    <div class="card-head"><span class="num">3.0</span><h3>חזרה בדקה</h3><span class="label">ממנה 2</span></div>
+    <details><summary>איזו נורה שולחת את התנועה לעוצמה?</summary><p>4.</p></details>
+    <details><summary>מה נורה 7 עושה?</summary><p>צורת התנועה. כבויה משולש חלק, דולקת מרובע קופץ.</p></details>
+  </article>
+
+  <article class="card" data-id="l10:3.1" id="l10-3-1">
+    <div class="card-head"><span class="num">3.1</span><h3>נשימה במסנן</h3><span class="label">FUNC + 6 · FUNC + 7</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מקום 8, התו הארוך</span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="hold:FUNC,tap:6,rel,say:עד ש־6 כבויה,turn:INT,say:עד הסוף שמאלה,turn:PEAK,say:שעה 11" data-title="הלחיצות, לפי הסדר"></div><p>התנועה כבויה, והצפצוף חוזר למקום.</p></details>
+    <div class="combo" data-q="איך שולחים תנועה חלקה למסנן?" data-seq="hold:FUNC,tap:6,tap:7,rel" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>: צריך רק 6 דולקת מבין 4, 5, 6. ו־7 כבויה. גע בכל קליד שלא כמו שצריך. <span class="a a-rel"><i>🖐</i>שחרר</span>.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> לשעה 2, ו־<span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span> לשעה 9.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>PEAK</kbd></span> לשעה 1. הנשימה נשמעת יותר.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> התו נפתח ונסגר לבד, לאט: ״ווּאָה... ווּאָה...״.</div>
+    <p class="info">אותה תנועה מהירה יותר, <kbd>RATE</kbd> לשעה 2: ״וובל״, הבס הרוטט של דאבסטפ.</p>
+  </article>
+
+  <article class="card" data-id="l10:3.2" id="l10-3-2">
+    <div class="card-head"><span class="num">3.2</span><h3>רטט וקפיצה בגובה</h3><span class="label">FUNC + 5 · FUNC + 7</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מ־<a class="xref" href="#l10-3-1">3.1</a></span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="hold:FUNC,tap:5,tap:7,rel,say:עד ש־5 ו־7 כבויות,turn:INT,say:עד הסוף שמאלה" data-title="הלחיצות, לפי הסדר"></div><p>הגובה יציב שוב.</p></details>
+    <div class="combo" data-q="איך שולחים את התנועה לגובה במקום למסנן?" data-seq="hold:FUNC,tap:6,tap:5,rel" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>: <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>6</kbd></span> (נכבית) ו־<span class="a a-tap"><i>👆</i>לחץ קליד <kbd>5</kbd></span> (נדלקת). 7 עדיין כבויה. <span class="a a-rel"><i>🖐</i>שחרר</span>.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> לשעה 8, כמעט כלום. <span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span> לשעה 1. רטט עדין.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. עכשיו מרובע: הגובה קופץ בין שני תווים.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> לאט ימינה. הקפיצה גדלה. עצור כשהתו העליון נשמע ״נכון״.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שמעת רטט עדין, ואחר כך ״טְרִיל״, קפיצה מהירה בין שני תווים.</div>
+    <p class="warn">עם <kbd>INT</kbd> גבוה על הגובה, הצליל יכול לקפוץ רחוק ולצרום. התחל מלמטה.</p>
+  </article>
+
+  <article class="card playnow" data-id="l10:3.3" id="l10-3-3">
+    <div class="card-head"><span class="num">3.3</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> נשימה (6 דולקת, 7 כבויה). רק <span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span>, מאוד לאט ועד וובל.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> טריל (5 ו־7 דולקות). רק <span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span>.</div></li>
+      <li><div><b>דקה 5:</b> נסה שתיים יחד: 5 ו־6 דולקות. הגובה והמסנן זזים ביחד.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="3"></div>
+    <p class="end">המנה נגמרה. מחר: <a class="xref" href="#s4">מנה 4, גלישות</a>.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 4 ===================== -->
+<section class="stage" id="s4" data-mana="4" data-min="10" data-title="גלישות שקובעות את הקצב" data-goal="בסוף המנה: השער ננעל לפעמות, כי הגלישות קובעות מתי הוא מתחיל מחדש.">
+  <span class="stage-tag">מנה 4</span>
+  <h2>גלישות שקובעות את הקצב</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: מתי מתחילים מחדש</span>
+    <p>תנועה מרובעת מתחילה מחדש בכל תו, חוץ מצעד שאחרי גלישה. אז מי שמחליט <b>איפה</b> מוחקים גלישה, מחליט איפה השער מתחיל מחדש. גלישה בכל הצעדים: השער רץ חופשי לאורך התיבה. בלי גלישה בסוף כל פעמה: השער ״מתיישר״ על כל פעמה מחדש, ונשמע הרבה יותר הדוק.</p>
+  </div>
+
+  <article class="card recap" data-id="l10:4.0" id="l10-4-0">
+    <div class="card-head"><span class="num">4.0</span><h3>נקודת התחלה</h3><span class="label">לכל המנה</span></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>8</kbd></span>. <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+      <li><div>השער מ־<a class="xref" href="#l10-2-1">2.1</a>: 4 ו־7 דולקות, 5 ו־6 כבויות, <kbd>INT</kbd> עד הסוף ימינה.</div></li>
+    </ol>
+  </article>
+
+  <article class="card split" data-id="l10:4.1" id="l10-4-1"><div class="card-head"><span class="num">4.1</span><h3>שער שמתיישר על כל פעמה</h3><span class="label">FUNC + STEP MODE</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>השער מ־<a class="xref" href="#l10-4-0">4.0</a></span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="tap:MEMORY,tap:8" data-title="הלחיצות, לפי הסדר"></div><p>הגלישות חוזרות למה ששמרת ב־1.3: תו אחד ארוך. הנורות של התנועה לא משתנות.</p></details>
+    <div class="combo" data-q="איך מורידים את הגלישה מצעדים 4, 8 ו־12?" data-seq="hold:FUNC,tap:STEP MODE,rel,tap:4,tap:8,tap:12,tap:STEP MODE" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span> קצת לא מדויק בכוונה, כך שהשער ״זוחל״ מול הקצב.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>STEP MODE</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. גע בקלידים <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>4</kbd></span> <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>8</kbd></span> <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>12</kbd></span>. הנורות שלהם כבות. <span class="a a-tap"><i>👆</i>לחץ <kbd>STEP MODE</kbd></span>.</div></li>
+      <li><div>הקשב.</div></li>
+    </ol>
+    <div class="grid-box"><div class="seq" data-keys="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1" data-slides="1,2,3,5,6,7,9,10,11,13,14,15"></div></div>
+    <div class="ok"><b>הצלחת אם:</b> בתחילת כל פעמה השער ״מתאפס״, והזחילה נעלמת. ארבעה תווים ארוכים בתיבה במקום אחד.</div>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>בצעדים 5, 9 ו־13 אין עכשיו גלישה לפניהם, ולכן התו, המעטפת והשער מתחילים שם מחדש. זו דרך לנעול לקצב תנועה שאין לה כפתור נעילה.</p>
+    </div></div></article>
+
+  <article class="card split" data-id="l10:4.2" id="l10-4-2"><div class="card-head"><span class="num">4.2</span><h3>מנגינה בתוך התו</h3><span class="label">הקלטת צעדים · גלישות</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>מ־<a class="xref" href="#l10-4-1">4.1</a></span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="tap:MEMORY,tap:8" data-title="הלחיצות, לפי הסדר"></div><p>התו הארוך חוזר. המנגינה נמחקת, אלא אם שמרת אותה.</p></details>
+    <div class="grid-box"><div class="seq" data-keys="1,1,1,1,1,1,1,1,4,4,4,4,8,8,6,6" data-slides="1,2,3,4,5,6,7,8,9,10,11,13,14,15"></div></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>. <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>15</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. הרצף של המתנד נמחק.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>●</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. 16 נגיעות:
+        <div class="taps" id="l10b" data-keys="1,1,1,1,1,1,1,1,4,4,4,4,8,8,6,6" style="margin-top:10px"></div></div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>. גלישות: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>STEP MODE</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. הדלק 1 עד 11, ו־13 עד 15. כבויים נשארים רק 12 ו־16. <span class="a a-tap"><i>👆</i>לחץ <kbd>STEP MODE</kbd></span>.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> לה ארוך שמחליק אל דו, ואז מי שמתחיל מחדש ומחליק אל רה. שתי ״יללות״ ושתי התחלות בכל תיבה.</div>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>הגלישה בצעד 8 מחליקה מלה לדו בלי התחלה חדשה, וכך גם בצעד 14, ממי לרה. בצעדים 12 ו־16 אין גלישה, ולכן בצעדים 13 ו־1 התו והשער מתחילים מחדש. ככה בוחרים איפה המנגינה זורמת ואיפה היא ״מכה״.</p>
+    </div></div></article>
+
+  <article class="card playnow" data-id="l10:4.3" id="l10-4-3">
+    <div class="card-head"><span class="num">4.3</span><h3>ג׳אם של חמש דקות</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקה 1:</b> השער, <kbd>INT</kbd> נמוך. כמעט רק תווים ארוכים.</div></li>
+      <li><div><b>דקה 2:</b> <kbd>INT</kbd> עולה לאט עד הסוף. השער נפתח.</div></li>
+      <li><div><b>דקה 3:</b> החלף לנשימה: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>4</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>6</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. נשארת רק 6.</div></li>
+      <li><div><b>דקה 4:</b> <span class="a a-turn"><i>⟳</i>סובב <kbd>RATE</kbd></span> עד וובל, ובחזרה.</div></li>
+      <li><div><b>דקה 5:</b> <span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> עד הסוף שמאלה. נשארים התווים הארוכים, ושקט.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="4"></div>
+    <p class="end">זהו. רוצה לשמור את המנגינה? <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>, ו־<span class="a a-tap"><i>👆</i>לחץ קליד <kbd>8</kbd></span>. זה מחליף את התו הארוך.</p>
+  </article>
+</section>
+
+<!-- ===================== ref ===================== -->
+<section class="stage" id="ref">
+  <span class="stage-tag">לעיון</span>
+  <h2>דף עזר ותקלות</h2>
+
+  <article class="card">
+    <h3>על מה התנועה פועלת</h3>
+    <div class="tbl-box"><table>
+      <thead><tr><th>נורות דולקות (עם FUNC)</th><th>מה שומעים</th><th>איפה</th></tr></thead>
+      <tbody>
+        <tr><td>4 ו־7</td><td>שער: יש, אין</td><td><a class="xref" href="#l10-2-1">2.1</a></td></tr>
+        <tr><td>6</td><td>נשימה, ובמהירות: וובל</td><td><a class="xref" href="#l10-3-1">3.1</a></td></tr>
+        <tr><td>5</td><td>רטט עדין</td><td><a class="xref" href="#l10-3-2">3.2</a></td></tr>
+        <tr><td>5 ו־7</td><td>טריל: קפיצה בין שני תווים</td><td><a class="xref" href="#l10-3-2">3.2</a></td></tr>
+      </tbody>
+    </table></div>
+    <p class="info"><kbd>INT</kbd> עד הסוף שמאלה מבטל כל תנועה, מה שלא יהיה בנורות.</p>
+  </article>
+
+  <article class="card">
+    <h3>כשמשהו לא עובד</h3>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מה קורה</th><th>מה לבדוק</th></tr></thead>
+      <tbody>
+        <tr><td><b>אין שום תנועה</b></td><td><kbd>INT</kbd> של LFO בקצה השמאלי? אף נורה מ־4 עד 6 לא דולקת?</td></tr>
+        <tr><td><b>התו לא ארוך</b></td><td>גלישות בצעדים 1 עד 15? נורה 11 דולקת?</td></tr>
+        <tr><td><b>השער לא יושב על הקצב</b></td><td><kbd>RATE</kbd> לא נעול לקצב. כוון באוזן, או השתמש בטריק של <a class="xref" href="#l10-4-1">4.1</a>.</td></tr>
+        <tr><td><b>הגובה קופץ רחוק מדי</b></td><td><kbd>INT</kbd> גבוה כשנורה 5 דולקת. הורד.</td></tr>
+        <tr><td><b>הקלידים לא מנגנים</b></td><td>עדיין בעריכת גלישות: <kbd>STEP MODE</kbd> ליציאה.</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <article class="card">
+    <h3>מקורות</h3>
+    <div class="legend">המדריך הרשמי של קורג לוולקה בס: יעדי התנועה (קלידים 4 עד 6), צורת התנועה (7), החזקה (11), והכלל שאחרי צעד עם גלישה המעטפת והתנועה לא מתחילות מחדש. על התנועה המרובעת שמתחילה מחדש בכל תו, ראה <a class="xref" href="lesson-2.html#l2-4-2">שיעור 2 של הוולקות, 4.2</a>. מה שלא בדוק על המכשיר מסומן בכרטיס 1.2.</div>
+  </article>
+
+  <div class="endnav"><a href="lesson-9.html">→ לשיעור 4</a><a href="vb-map.html">לדף ״מה אפשר לעשות״ ←</a></div>
+</section>
+
+</div>
+<script src="app.js?v=1792760494"></script>
+<script src="extras.js?v=1792760494"></script>
+<script src="kit.js?v=1792760494"></script>
+<script src="vb-data.js?v=1792760494"></script>
+<script src="t8.js?v=1792760494"></script>
+<script src="nav.js?v=1792760494"></script>
+</body>
+</html>

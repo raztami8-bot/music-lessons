@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>שלושה קווים בוולקה אחת · וולקות · שיעור 4</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="app.css?v=1792760494">
+<link rel="stylesheet" href="kit.css?v=1792760494">
+<link rel="stylesheet" href="nav.css?v=1792760494">
+</head>
+<body data-lesson="9" data-panel="vb">
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb" href="lesson-1.html">שיעור 1</a><a class="tb" href="lesson-2.html">שיעור 2</a><a class="tb" href="lesson-3.html">שיעור 3</a><a class="tb cur" href="lesson-9.html" aria-current=page>שיעור 4</a><a class="tb" href="lesson-10.html">שיעור 5</a><a class="tb" href="vb-map.html">▦ מה אפשר לעשות בבס</a><button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow volca">וולקות · שיעור 4</span>
+  <h1>שלושה קווים בוולקה אחת</h1>
+  <p class="lede">בוולקה בס יש שלושה מתנדים. עד עכשיו הם ניגנו יחד, כצליל אחד. כאן כל אחד מקבל רצף משלו: <b>בס</b>, <b>תשובה</b> ו<b>צלצול</b>. אחר כך נותנים להם אורכים שונים, ומעבדים קטע שלם רק בהשתקות. ארבע מנות קצרות.</p>
+  <div class="meta"><span><b>זמן:</b> 10 עד 15 דקות למנה</span><span><b>מכשיר:</b> הוולקה בס <span class="label">Volca Bass</span></span><span><b>קצב:</b> 120</span><span><b>דורש:</b> <a class="xref" href="lesson-2.html">שיעור 2 של הוולקות</a></span></div>
+</header>
+
+<article class="card howto">
+  <h3>איך לקרוא כל כרטיס</h3>
+  <ol>
+    <li><b>מתחילים כש:</b> השורה הצהובה. לפני שנוגעים, מוודאים שהוולקה במצב הזה.</li>
+    <li>הסימנים: <span class="a a-hold"><i>✋</i>החזק</span> לוחצים ולא עוזבים. <span class="a a-tap"><i>👆</i>לחץ</span> לחיצה קצרה. <span class="a a-turn"><i>⟳</i>סובב</span> מסובבים כפתור. <span class="a a-rel"><i>🖐</i>שחרר</span> עוזבים הכל.</li>
+    <li><b>קליד</b> הוא אחד מ־16 הקלידים בשורה התחתונה. <kbd>FUNC</kbd> + קליד: מחזיקים <kbd>FUNC</kbd>, נוגעים בקליד, ורק אז משחררים.</li>
+    <li>גע בשם של כפתור, ויופיע תרשים של הלוח עם הכפתור מסומן.</li>
+    <li><b>↩ חזרה לבסיס:</b> בכרטיסים שמשנים משהו. הבסיס של השיעור הוא מקום זיכרון 7, שנשמר ב־<a class="xref" href="#l9-2-3">2.3</a>.</li>
+  </ol>
+  <a class="btn" id="mana-next" href="#s1" hidden></a>
+</article>
+
+<details class="card mapbox"><summary><b>🗺 תרשים הלוח של הוולקה בס</b> · נגיעה בכל כפתור מראה מה הוא עושה</summary><div id="t8tour"></div></details>
+
+<nav class="toc" aria-label="תוכן">
+  <b>ארבע המנות</b>
+  <ol>
+    <li><a href="#s1">שלושה נגנים, מסנן אחד</a></li>
+    <li><a href="#s2">תשובה וצלצול</a></li>
+    <li><a href="#s3">אורכים שונים</a></li>
+    <li><a href="#s4">עיבוד בהשתקות</a></li>
+    <li><a href="#ref">דף עזר ותקלות</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== mana 1 ===================== -->
+<section class="stage" id="s1" data-mana="1" data-min="15" data-title="שלושה נגנים" data-goal="בסוף המנה: שלושת המתנדים נפרדים, ובמתנד 1 קו בס של 3־3־2.">
+  <span class="stage-tag">מנה 1</span>
+  <h2>שלושה נגנים, מסנן אחד</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: שלושה נגנים, מסנן אחד</span>
+    <p>כשהמתנדים <b>נפרדים</b>, כל אחד הוא נגן עם דף תווים משלו. אבל שלושתם עוברים דרך אותו מסנן, ולכן זה נשמע כמו כלי אחד שמנגן קו עשיר, לא כמו שלושה כלים. הסוד הוא <b>רווחים</b>: כל נגן מנגן כשהאחרים שותקים. כשהם כן נופלים על אותו צעד, שומעים אקורד.</p>
+  </div>
+
+  <figure class="photo"><div class="imgs"><img src="img/vb-01.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי הלוח והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>FUNC</b></li><li><b>1</b> קיבוץ: נפרדים</li><li><b>VCO1</b></li><li><b>VCO2</b></li><li><b>VCO3</b></li><li><b>16</b> מחיקת הכל</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
+<article class="card" data-id="l9:1.1" id="l9-1-1">
+    <div class="card-head"><span class="num">1.1</span><h3>מצב נפרד ודף נקי</h3><span class="label">FUNC + 1 · FUNC + 16</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>רצף שחשוב לך כבר שמור</span></div>
+    <div class="combo" data-q="איך נותנים לכל מתנד רצף משלו?" data-seq="hold:FUNC,tap:1,rel" data-hide="1"></div>
+    <div class="combo" data-q="איך מוחקים את הרצף של כל שלושת המתנדים?" data-seq="hold:FUNC,tap:16,rel" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>1</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. שלושת המתנדים נפרדים.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, ובלי לשחרר הסתכל: <kbd>VCO1</kbd>, <kbd>VCO2</kbd> ו־<kbd>VCO3</kbd> מוארים. מתנד חשוך מושתק: לחץ עליו. <span class="a a-rel"><i>🖐</i>שחרר</span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>16</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. הרצף של כל המתנדים נמחק.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> עם <kbd>FUNC</kbd> מוחזק, נורה 1 דולקת ושלושת לחצני המתנדים מוארים.</div>
+    <p class="warn">לפי המדריך, אם לא שינית כלום אחרי המחיקה, אותה פעולה שוב מחזירה את מה שנמחק. לא לסמוך על זה: לשמור קודם.</p>
+  </article>
+
+  <article class="card" data-id="l9:1.2" id="l9-1-2">
+    <div class="card-head"><span class="num">1.2</span><h3>צליל משותף</h3><span class="label">PITCH · CUTOFF · PEAK</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>אחרי <a class="xref" href="#l9-1-1">1.1</a></span></div>
+    <ol class="steps">
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>PITCH 1</kbd></span>, <span class="a a-turn"><i>⟳</i>סובב <kbd>PITCH 2</kbd></span> ו־<span class="a a-turn"><i>⟳</i>סובב <kbd>PITCH 3</kbd></span> לשעה 12, בדיוק באמצע.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>OCTAVE</kbd></span> עד שבתצוגה כתוב <b>oct 3</b>.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF</kbd></span> לשעה 11, <span class="a a-turn"><i>⟳</i>סובב <kbd>PEAK</kbd></span> לשעה 10, <span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF EG INT</kbd></span> לשעה 12.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>ATTACK</kbd></span> עד הסוף שמאלה, <span class="a a-turn"><i>⟳</i>סובב <kbd>DECAY/RELEASE</kbd></span> לשעה 11, ו־<span class="a a-turn"><i>⟳</i>סובב <kbd>INT</kbd></span> של LFO עד הסוף שמאלה.</div></li>
+      <li><div><span class="a a-turn"><i>⟳</i>סובב <kbd>TEMPO</kbd></span> לבערך 120.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> נגיעה בקליד 1 נשמעת כמו ״דוּם״ ברור, ונגיעה בקליד 13 כמו אותו תו גבוה יותר.</div>
+    <p class="info">למה <kbd>PITCH</kbd> באמצע? כפתור שזז מהמרכז מזיז את כל הקו של המתנד שלו. כאן רוצים שכל קליד ינגן בדיוק את התו שעליו.</p>
+  </article>
+
+  <figure class="photo"><div class="imgs"><img src="img/vb-02.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי הלוח והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>FUNC</b></li><li><b>▶</b> צעדים פעילים</li><li><b>●</b> הקלטת צעדים</li><li><b>STEP MODE</b></li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
+<article class="card split" data-id="l9:1.3" id="l9-1-3"><div class="card-head"><span class="num">1.3</span><h3>הבס: 3־3־2</h3><span class="label">VCO1 · FUNC + ▶ · FUNC + ●</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>הצליל מ־<a class="xref" href="#l9-1-2">1.2</a></span></div>
+    <div class="combo" data-q="איך נכנסים לצעדים פעילים, ואיך יוצאים?" data-seq="hold:FUNC,tap:▶,rel,tap:FUNC" data-hide="1"></div>
+    <div class="combo" data-q="איך נכנסים להקלטת צעדים?" data-seq="hold:FUNC,tap:●,rel" data-hide="1"></div>
+    <div class="grid-box"><div class="seq" data-keys="1,-,-,1,-,-,1,-,1,-,-,1,-,-,8,-"></div></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. גע בכל נורה כבויה, עד שכל 16 דולקות. <span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span> ליציאה.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>●</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. ועכשיו 16 נגיעות לפי הסדר. במקום שכתוב <kbd>●</kbd>, לחץ על לחצן העיגול:
+        <div class="taps" id="l9a" data-keys="1,-,-,1,-,-,1,-,1,-,-,1,-,-,8,-" style="margin-top:10px"></div></div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span> לסיום, ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> ״דוּם, ־ ־, דוּם, ־ ־, דוּם, ־״ פעמיים בכל תיבה. הקבוצות לא שוות, וזה מה שגורם לזה לרקוד.</div>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>16 צעדים מחולקים ל־3, 3 ו־2, ושוב. זה המקצב הכי נפוץ בבס של מוזיקת ריקודים, מלטינית ועד טכנו. בצעד 15 יש מי (קליד 8) במקום לה, כדי להוביל חזרה להתחלה.</p>
+    </div></div></article>
+
+  <article class="card playnow" data-id="l9:1.4" id="l9-1-4">
+    <div class="card-head"><span class="num">1.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> רק <span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF</kbd></span>, בין שעה 10 לשעה 1.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> רק <span class="a a-turn"><i>⟳</i>סובב <kbd>DECAY/RELEASE</kbd></span>, בין שעה 9 לשעה 2. קצר: הבס ״קופץ״. ארוך: הוא ״זורם״.</div></li>
+      <li><div><b>דקה 5:</b> החזר לצליל של <a class="xref" href="#l9-1-2">1.2</a>.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="1"></div>
+    <p class="end">המנה נגמרה. מחר: <a class="xref" href="#s2">מנה 2, תשובה וצלצול</a>. הוולקה זוכרת עד הכיבוי, אז אם תכבה, כתוב את 1.3 שוב.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 2 ===================== -->
+<section class="stage" id="s2" data-mana="2" data-min="15" data-title="תשובה וצלצול" data-goal="בסוף המנה: שלושה קווים שמנגנים יחד, שמורים במקום 7.">
+  <span class="stage-tag">מנה 2</span>
+  <h2>תשובה וצלצול</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: שאלה ותשובה</span>
+    <p>הבס שואל, הקו העליון עונה. התשובה נכנסת רק ב<b>רווחים</b> של הבס, כמו בשיחה: אחד מדבר, השני מקשיב. הצלצול הוא הנגן השלישי: שני תווים בלבד, בצבע אחר, שמזכירים איפה אנחנו בתיבה.</p>
+  </div>
+
+  <article class="card recap" data-id="l9:2.0" id="l9-2-0">
+    <div class="card-head"><span class="num">2.0</span><h3>חזרה בדקה</h3><span class="label">ממנה 1</span></div>
+    <details><summary>איך נותנים לכל מתנד רצף משלו?</summary><p><kbd>FUNC</kbd> + קליד 1.</p></details>
+    <details><summary>איך כותבים שתיקה בהקלטת צעדים?</summary><p>לוחצים על לחצן העיגול <kbd>●</kbd>.</p></details>
+  </article>
+
+  <article class="card" data-id="l9:2.1" id="l9-2-1">
+    <div class="card-head"><span class="num">2.1</span><h3>התשובה, במתנד 2</h3><span class="label">VCO2 · FUNC + ●</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>הבס מ־<a class="xref" href="#l9-1-3">1.3</a></span></div>
+    <div class="grid-box"><div class="seq" data-keys="-,-,-,-,-,13,-,-,-,-,11,-,-,16,-,-"></div></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. הדלק כל נורה כבויה, ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>●</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. 16 נגיעות:
+        <div class="taps" id="l9b" data-keys="-,-,-,-,-,13,-,-,-,-,11,-,-,16,-,-" style="margin-top:10px"></div></div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>, ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בין תווי הבס נשמעים שלושה תווים גבוהים: לה, סול ודו. אף אחד מהם לא נופל יחד עם הבס.</div>
+    <p class="info">שומעים רק את הבס? <kbd>VCO2</kbd> מושתק. <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>.</p>
+  </article>
+
+  <article class="card split" data-id="l9:2.2" id="l9-2-2"><div class="card-head"><span class="num">2.2</span><h3>הצלצול, במתנד 3</h3><span class="label">VCO3 · FUNC + 10</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>בס ותשובה מ־<a class="xref" href="#l9-2-1">2.1</a></span></div>
+    <div class="grid-box"><div class="seq" data-keys="-,-,8,-,-,-,-,-,-,8,-,-,-,-,-,-"></div></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO3</kbd></span>. <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. הדלק כל נורה כבויה, ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>●</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. 16 נגיעות:
+        <div class="taps" id="l9c" data-keys="-,-,8,-,-,-,-,-,-,8,-,-,-,-,-,-" style="margin-top:10px"></div></div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>.</div></li>
+      <li><div>צבע אחר: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, ובלי לשחרר הסתכל על נורה 10. כבויה? <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>10</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. עכשיו מתנד 3 מרובע.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בצעדים 3 ו־10 נשמע ״דינג״ חלול, שונה מהבס. שלושה קווים, ואף אחד לא דורך על השני.</div>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>קליד 8 הוא מי, הקווינטה של לה. התו הזה תמיד ״מסתדר״ עם כל השאר. הגל המרובע נותן לו צבע חלול, ככה האוזן מבדילה אותו מהבס, למרות שהוא באותו גובה.</p>
+    </div></div></article>
+
+  <article class="card" data-id="l9:2.3" id="l9-2-3">
+    <div class="card-head"><span class="num">2.3</span><h3>שומרים במקום 7</h3><span class="label">FUNC + MEMORY · 7</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>שלושה קווים מ־<a class="xref" href="#l9-2-2">2.2</a></span></div>
+    <div class="combo" data-q="איך שומרים במקום 7?" data-seq="hold:FUNC,tap:MEMORY,rel,tap:7" data-hide="1"></div>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span>.</div></li>
+      <li><div>צלם את הלוח. הכפתורים לא נשמרים.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> אחרי כיבוי, <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span> ו־<span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span> מחזירים את שלושת הקווים.</div>
+    <p class="info">מקומות 1 עד 5 תפוסים בתרגילים של <a class="xref" href="lesson-3.html#s8">שיעור 3</a>, ו־6 בבס ההאוס מ<a class="xref" href="lesson-8.html#l8-3-4">שיעור 5 של הטי־8</a>.</p>
+  </article>
+
+  <article class="card playnow" data-id="l9:2.4" id="l9-2-4">
+    <div class="card-head"><span class="num">2.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקות 1 ו־2:</b> השתקה של התשובה. <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. ארבע תיבות, ושוב לביטול.</div></li>
+      <li><div><b>דקות 3 ו־4:</b> אותו דבר עם הצלצול, <kbd>VCO3</kbd>.</div></li>
+      <li><div><b>דקה 5:</b> כל השלושה, ו־<span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF</kbd></span> לאט פתוח וסגור.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="2"></div>
+    <p class="end">המנה נגמרה. מחר: <a class="xref" href="#s3">מנה 3, אורכים שונים</a>.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 3 ===================== -->
+<section class="stage" id="s3" data-mana="3" data-min="10" data-title="אורכים שונים" data-goal="בסוף המנה: התשובה בלולאה של 12 והצלצול בלולאה של 10, מול בס של 16.">
+  <span class="stage-tag">מנה 3</span>
+  <h2>אורכים שונים</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: לופ שלא חוזר על עצמו</span>
+    <p>כשהבס באורך 16 והתשובה באורך 12, התשובה נוחתת כל תיבה במקום אחר מול הבס. הם נפגשים שוב באותה נקודה רק אחרי שלוש תיבות. אף תו לא השתנה, ובכל זאת כל תיבה נשמעת קצת חדשה. לזה קוראים <b>פולימטר</b>.</p>
+  </div>
+
+  <article class="card recap" data-id="l9:3.0" id="l9-3-0">
+    <div class="card-head"><span class="num">3.0</span><h3>נקודת התחלה</h3><span class="label">לכל המנה</span></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span>. הכפתורים כמו בצילום מ־<a class="xref" href="#l9-2-3">2.3</a>.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>.</div></li>
+    </ol>
+  </article>
+
+  <article class="card split" data-id="l9:3.1" id="l9-3-1"><div class="card-head"><span class="num">3.1</span><h3>התשובה ב־12</h3><span class="label">VCO2 · FUNC + ▶</span></div><div class="col-do">
+    
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מקום 7</span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="tap:MEMORY,tap:7" data-title="הלחיצות, לפי הסדר"></div><p>הרצף חוזר למה ששמרת ב־2.3. אם הלולאה עדיין קצרה, ראה 3.3.</p></details>
+    <div class="combo" data-q="איך מקצרים את הלולאה של מתנד 2 ל־12, בלי לגעת בתווים שלו?" data-seq="tap:VCO2,hold:FUNC,tap:▶,rel,tap:1,tap:2,tap:3,tap:4,tap:FUNC" data-hide="1"></div>
+    <p class="anyline"><i aria-hidden="true">🔁</i><span><b>עובד על:</b> כל מתנד, וכל צעדים שתבחר. כאן: VCO2, צעדים 1 עד 4.</span></p>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>.</div></li>
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. המשולש מהבהב.</div></li>
+      <li><div>גע בקלידים <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>1</kbd></span> <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>2</kbd></span> <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>3</kbd></span> <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>4</kbd></span>. הנורות שלהם כבות.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span> ליציאה. הקשב שלוש תיבות.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> התשובה ״נודדת״: בכל תיבה היא נוחתת על מקום אחר מול הבס, ואחרי שלוש תיבות חוזרת.</div>
+    
+  </div><div class="col-learn"><div class="learn"><span class="learn-tag">להבין</span>
+      <p>צעד <b>לא פעיל</b> לא קיים בלולאה, ולכן היא מתקצרת. כיבינו דווקא את 1 עד 4 כי אין בהם תווים של התשובה. כך שלושת התווים שלה נשארים. ב<a class="xref" href="lesson-2.html#l2-6-2">שיעור 2, 6.2</a> ראית את ההבדל בין שתיקה לדילוג.</p>
+    </div></div></article>
+
+  <article class="card" data-id="l9:3.2" id="l9-3-2">
+    <div class="card-head"><span class="num">3.2</span><h3>הצלצול ב־10</h3><span class="label">VCO3 · FUNC + ▶</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מ־<a class="xref" href="#l9-3-1">3.1</a></span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="tap:MEMORY,tap:7" data-title="הלחיצות, לפי הסדר"></div><p>הרצף חוזר למה ששמרת ב־2.3. אם הלולאה עדיין קצרה, ראה 3.3.</p></details>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>VCO3</kbd></span>. <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>.</div></li>
+      <li><div>גע בקלידים 11, 12, 13, 14, 15 ו־16. שש נורות כבות.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span>.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שלושה קווים, שלושה אורכים: 16, 12 ו־10. הגרוב משתנה כל הזמן, אבל נשאר אותו גרוב.</div>
+    <p class="info">נשמע מבולגן? השתק את התשובה, <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> ו־<span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>, ותשמע רק 16 מול 10.</p>
+  </article>
+
+  <article class="card" data-id="l9:3.3" id="l9-3-3">
+    <div class="card-head"><span class="num">3.3</span><h3>חזרה ל־16</h3><span class="label">MEMORY · 7</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מ־<a class="xref" href="#l9-3-2">3.2</a></span></div>
+    <ol class="steps">
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span> לעצירה. <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span>.</div></li>
+      <li><div><span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>. הקשב: הכל חזר לאורך 16?</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שלושת הקווים שוב נפגשים בכל תיבה.</div>
+    <p class="warn">המדריך לא אומר אם הזיכרון שומר גם את הצעדים הפעילים. אם האורכים נשארו קצרים, החזר ביד: לכל מתנד, <kbd>FUNC</kbd> + <kbd>▶</kbd>, הדלק את הנורות הכבויות, <kbd>FUNC</kbd>. וספר לי מה ראית.</p>
+  </article>
+
+  <article class="card playnow" data-id="l9:3.4" id="l9-3-4">
+    <div class="card-head"><span class="num">3.4</span><h3>נגן עכשיו, ותרגול ידיים</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>הכנה:</b> התשובה ב־12, כמו ב־<a class="xref" href="#l9-3-1">3.1</a>.</div></li>
+      <li><div><b>דקות 1 עד 4:</b> בלי ידיים. ספור תיבות, ונסה לשמוע מתי התשובה חוזרת למקום של התחלה.</div></li>
+      <li><div><b>דקה 5:</b> <span class="a a-turn"><i>⟳</i>סובב <kbd>PEAK</kbd></span> לאט עד שעה 1, ובחזרה.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="3"></div>
+    <p class="end">המנה נגמרה. מחר: <a class="xref" href="#s4">מנה 4, עיבוד</a>.</p>
+  </article>
+</section>
+
+<!-- ===================== mana 4 ===================== -->
+<section class="stage" id="s4" data-mana="4" data-min="10" data-title="עיבוד בהשתקות" data-goal="בסוף המנה: קטע של חמש דקות, שנבנה ומתפרק רק בהשתקות ובסיבובים.">
+  <span class="stage-tag">מנה 4</span>
+  <h2>עיבוד בהשתקות</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: עיבוד זה מה שלא מנגן</span>
+    <p>כל הקטע כבר כתוב: שלושה קווים. מה שהופך אותו לסיפור זה <b>מתי כל אחד נכנס ויוצא</b>. התחלה דלילה, בנייה, שיא עם כולם, שבירה בלי בס, וחזרה. ההשתקה לא מוחקת כלום, אז אפשר להעז.</p>
+  </div>
+
+  <article class="card" data-id="l9:4.1" id="l9-4-1">
+    <div class="card-head"><span class="num">4.1</span><h3>נכנסים אחד אחד</h3><span class="label">FUNC + VCO</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>מקום 7, שלושת הקווים</span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="hold:FUNC,tap:@vco:VCO1,rel,say:כל מתנד חשוך, אותו דבר" data-title="הלחיצות, לפי הסדר"></div><p>השתקה לא מוחקת כלום. מחזירים כל מתנד שחשוך כשמחזיקים FUNC.</p></details>
+    <div class="combo" data-q="איך משתיקים את מתנד 1, ואיך מחזירים?" data-seq="hold:FUNC,tap:VCO1,rel,hold:FUNC,tap:VCO1,rel" data-hide="1"></div>
+    <p class="anyline"><i aria-hidden="true">🔁</i><span><b>עובד על:</b> כל מתנד. כאן: VCO1 ו־VCO2.</span></p>
+    <ol class="steps">
+      <li><div>השתק את הבס ואת התשובה: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>. <span class="a a-rel"><i>🖐</i>שחרר</span>. נשאר רק הצלצול.</div></li>
+      <li><div>אחרי ארבע תיבות: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. הבס נכנס.</div></li>
+      <li><div>אחרי ארבע תיבות: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO2</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. התשובה נכנסת.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> הקטע נבנה בשלוש קומות, וכל כניסה מרגישה כמו אירוע.</div>
+    <p class="info">טריק: לחץ את <kbd>VCO</kbd> רגע לפני ה״אחת״ של התיבה. ככה הכניסה נוחתת בדיוק בהתחלה.</p>
+  </article>
+
+  <article class="card" data-id="l9:4.2" id="l9-4-2">
+    <div class="card-head"><span class="num">4.2</span><h3>שבירה בלי בס</h3><span class="label">FUNC + VCO1 · CUTOFF</span></div>
+    <div class="state"><b>מתחילים כש:</b><span>▶ מנגן</span><span>שלושת הקווים מנגנים</span></div>
+    <details class="back"><summary><i aria-hidden="true">↩</i>חזרה לבסיס</summary><div class="combo" data-seq="hold:FUNC,tap:VCO1,rel,say:רק אם הוא חשוך,turn:CUTOFF,say:שעה 11" data-title="הלחיצות, לפי הסדר"></div><p>הבס חוזר, והמסנן למקום שלו.</p></details>
+    <ol class="steps">
+      <li><div><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>. הבס יוצא.</div></li>
+      <li><div>ארבע תיבות: <span class="a a-turn"><i>⟳</i>סובב <kbd>CUTOFF</kbd></span> לאט עד שעה 2. התשובה והצלצול נפתחים.</div></li>
+      <li><div>בסוף התיבה הרביעית: <span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ <kbd>VCO1</kbd></span>, <span class="a a-rel"><i>🖐</i>שחרר</span>, ו־<kbd>CUTOFF</kbd> חזרה לשעה 11 באותו רגע.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> כשהבס חוזר, זה מרגיש כמו נחיתה.</div>
+  </article>
+
+  <article class="card playnow" data-id="l9:4.3" id="l9-4-3">
+    <div class="card-head"><span class="num">4.3</span><h3>קטע של חמש דקות</h3><span class="label">5 דקות</span></div>
+    <ol class="steps">
+      <li><div><b>דקה 1:</b> רק צלצול. <kbd>CUTOFF</kbd> סגור, שעה 10.</div></li>
+      <li><div><b>דקה 2:</b> הבס נכנס, ואחריו התשובה. כמו ב־<a class="xref" href="#l9-4-1">4.1</a>.</div></li>
+      <li><div><b>דקה 3:</b> התשובה ב־12, כמו ב־<a class="xref" href="#l9-3-1">3.1</a>. שיא.</div></li>
+      <li><div><b>דקה 4:</b> שבירה בלי בס, כמו ב־<a class="xref" href="#l9-4-2">4.2</a>.</div></li>
+      <li><div><b>דקה 5:</b> יוצאים בסדר הפוך: התשובה, הבס, ונשאר צלצול.</div></li>
+    </ol>
+    <div class="timer" data-min="5"></div>
+    <div class="drill" data-mana="4"></div>
+    <p class="end">זהו. רוצה את זה עם תופים? חבר לטי־8 כמו ב<a class="xref" href="lesson-8.html#s1">שיעור 5 של הטי־8</a>, והוולקה תלך אחרי הקצב שלו.</p>
+  </article>
+</section>
+
+<!-- ===================== ref ===================== -->
+<section class="stage" id="ref">
+  <span class="stage-tag">לעיון</span>
+  <h2>דף עזר ותקלות</h2>
+
+  <article class="card">
+    <h3>כל הצירופים מהשיעור</h3>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מה</th><th>צירוף</th><th>מנה</th></tr></thead>
+      <tbody>
+        <tr><td>כל מתנד עם רצף משלו</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>1</kbd></span></td><td>1</td></tr>
+        <tr><td>מחיקת כל המתנדים</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>16</kbd></span></td><td>1</td></tr>
+        <tr><td>מחיקת המתנד הנבחר</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>15</kbd></span></td><td>1</td></tr>
+        <tr><td>צעדים פעילים</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ <kbd>▶</kbd></span>, קלידים, <span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span></td><td>1, 3</td></tr>
+        <tr><td>הקלטת צעדים</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ <kbd>●</kbd></span>, קלידים, <span class="a a-tap"><i>👆</i>לחץ <kbd>FUNC</kbd></span></td><td>1</td></tr>
+        <tr><td>גל מרובע למתנד 3</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>10</kbd></span></td><td>2</td></tr>
+        <tr><td>השתקה</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <kbd>VCO1</kbd> / <kbd>VCO2</kbd> / <kbd>VCO3</kbd></td><td>2, 4</td></tr>
+        <tr><td>שמירה וטעינה</td><td><span class="a a-hold"><i>✋</i>החזק <kbd>FUNC</kbd></span> + <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span>. טעינה: <span class="a a-tap"><i>👆</i>לחץ <kbd>MEMORY</kbd></span>, <span class="a a-tap"><i>👆</i>לחץ קליד <kbd>7</kbd></span></td><td>2</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <article class="card">
+    <h3>כשמשהו לא עובד</h3>
+    <div class="tbl-box"><table>
+      <thead><tr><th>מה קורה</th><th>מה לבדוק</th></tr></thead>
+      <tbody>
+        <tr><td><b>כל הקווים מנגנים את אותם תווים</b></td><td>הקיבוץ לא על 1. <kbd>FUNC</kbd> + קליד 1.</td></tr>
+        <tr><td><b>קו אחד לא נשמע</b></td><td>המתנד מושתק. החזק <kbd>FUNC</kbd> ובדוק שהלחצן שלו מואר.</td></tr>
+        <tr><td><b>הקו נשמע בגובה מוזר</b></td><td><kbd>PITCH</kbd> של המתנד לא באמצע.</td></tr>
+        <tr><td><b>כתבתי והקו נכנס למתנד הלא נכון</b></td><td>לפני ההקלטה בוחרים את המתנד: <kbd>VCO1</kbd>, <kbd>VCO2</kbd> או <kbd>VCO3</kbd>.</td></tr>
+        <tr><td><b>הלולאה קצרה מדי</b></td><td>צעדים כבויים ב־<kbd>FUNC</kbd> + <kbd>▶</kbd>.</td></tr>
+        <tr><td><b>הקלידים לא מנגנים</b></td><td>עדיין בתוך הקלטת צעדים או צעדים פעילים. <kbd>FUNC</kbd> ליציאה.</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <article class="card">
+    <h3>מקורות</h3>
+    <div class="legend">המדריך הרשמי של קורג לוולקה בס: קיבוץ המתנדים, הקלטת צעדים, צעדים פעילים, השתקה, מחיקה ושמירה. <details class="src man"><summary>ביקורת על הוולקות במגזין Sound On Sound</summary><p>מה לקחתי ממנה: בוולקה בס אפשר להקליט קו נפרד לכל מתנד, ובצעדים הפעילים אפשר לתת לכל קו אורך משלו.</p></details> מה שלא כתוב במדריך מסומן בכרטיס 3.3.</div>
+  </article>
+
+  <div class="endnav"><a href="lesson-3.html">→ לשיעור 3</a><a href="lesson-10.html">לשיעור 5 ←</a></div>
+</section>
+
+</div>
+<script src="app.js?v=1792760494"></script>
+<script src="extras.js?v=1792760494"></script>
+<script src="kit.js?v=1792760494"></script>
+<script src="vb-data.js?v=1792760494"></script>
+<script src="t8.js?v=1792760494"></script>
+<script src="nav.js?v=1792760494"></script>
+</body>
+</html>

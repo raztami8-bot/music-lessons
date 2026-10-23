@@ -38,7 +38,7 @@ bb.addEventListener("click",function(){ view("btn"); });
 var ready=false, map=null;
 function initMap(){
   if(ready) return; ready=true;
-  var T=window.T8; if(!T) return;
+  var T=window.PANEL||window.T8; if(!T) return;
   map=document.createElement("div"); map.className="t8-map"; map.dir="ltr"; map.innerHTML=T.svg;
   document.getElementById("mp-map").appendChild(map);
   var count={};
@@ -47,12 +47,12 @@ function initMap(){
   map.addEventListener("click",function(e){ var g=e.target.closest(".ctl"); if(g) pick(g.dataset.id); });
 }
 function pick(id){
-  var T=window.T8;
+  var T=window.PANEL||window.T8;
   try{ sessionStorage.setItem("map-sel",id); }catch(e){}
   [].forEach.call(map.querySelectorAll(".ctl.on"),function(g){ g.classList.remove("on"); });
   var g=map.querySelector('.ctl[data-id="'+id+'"]'); if(g) g.classList.add("on");
   var hits=tricks.filter(function(t){ return (t.dataset.ctl||"").split(" ").indexOf(id)>-1; });
-  var name=/^s\d+$/.test(id) ? "לחצן "+id.slice(1) : (T.names[id]||id);
+  var name=/^s\d+$/.test(id) ? (T.stepWord||"לחצן")+" "+id.slice(1) : (T.names[id]||id);
   var sel=document.getElementById("mp-sel");
   sel.innerHTML='<b dir="auto">'+esc(name)+'</b><p>'+esc(T.info[id]||"")+'</p><p><b>'+(hits.length?hits.length+" דברים שאפשר לעשות איתו:":"אין לו כרגע טריק בשיעורים.")+'</b></p>';
   var list=document.getElementById("mp-list"); list.innerHTML="";

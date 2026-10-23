@@ -37,7 +37,7 @@ function addNotes(){
 /* ---------- "ask about this card": opens an AI chat with the whole card already written in ---------- */
 var ASK="ml2:ask";
 var AIS=[["claude","Claude","https://claude.ai/new?q="],["chatgpt","ChatGPT","https://chatgpt.com/?q="],["grok","Grok","https://grok.com/?q="]];
-var DEVICE={"1":"Korg Volca Beats ו־Korg Volca Bass","2":"Korg Volca Bass","3":"Korg Volca Bass","4":"Roland T-8","5":"Roland T-8","6":"Roland T-8","7":"Roland T-8","8":"Roland T-8 ו־Korg Volca Bass, מחוברים יחד"};
+var DEVICE={"1":"Korg Volca Beats ו־Korg Volca Bass","2":"Korg Volca Bass","3":"Korg Volca Bass","4":"Roland T-8","5":"Roland T-8","6":"Roland T-8","7":"Roland T-8","8":"Roland T-8 ו־Korg Volca Bass, מחוברים יחד","9":"Korg Volca Bass","10":"Korg Volca Bass"};
 function clean(node){
   var c=node.cloneNode(true);
   [].forEach.call(c.querySelectorAll(".seg"),function(g){ var l=(g.getAttribute("aria-label")||"").replace(/^בתצוגה:\s*/,""); g.replaceWith("‹"+l+"›"); });
@@ -64,7 +64,7 @@ function cardText(card){
   walk(card);
   var txt=out.join("\n"); return txt.length>1800 ? txt.slice(0,1800)+"…" : txt;
 }
-var TITLES={"1":"וולקות · שיעור 1","2":"וולקות · שיעור 2","3":"וולקות · שיעור 3","4":"טי־8 · שיעור 1","5":"טי־8 · שיעור 2","6":"טי־8 · שיעור 3","7":"טי־8 · שיעור 4","8":"טי־8 · שיעור 5"};
+var TITLES={"1":"וולקות · שיעור 1","2":"וולקות · שיעור 2","3":"וולקות · שיעור 3","4":"טי־8 · שיעור 1","5":"טי־8 · שיעור 2","6":"טי־8 · שיעור 3","7":"טי־8 · שיעור 4","8":"טי־8 · שיעור 5","9":"וולקות · שיעור 4","10":"וולקות · שיעור 5"};
 function askPrompt(card){
   var L=document.body.dataset.lesson||"", n=card.querySelector(".card-head .num"), h=card.querySelector(".card-head h3");
   var h1=document.querySelector(".wrap h1"), note=((get(NOTES,{})[card.dataset.id]||{}).text||"").trim();

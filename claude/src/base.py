@@ -84,6 +84,18 @@ BACK = {
     "7:5.3": (MENU + ",look:SC.dG,tap:2,tap:ACCENT,turn:TEMPO/VALUE," + REC + "," + EXIT + ",turn:REVERB,say:לאן שהיה", MENUN),
     "7:5.4": (MENU + ",look:SC.Sr,tap:2,turn:TEMPO/VALUE," + REC + ",tap:1,turn:TEMPO/VALUE,look:SC.dG,tap:2,tap:BASS,turn:TEMPO/VALUE,"
               + REC + "," + EXIT, "מי מפעיל, ועל מי זה פועל, חוזרים לערכים שרשמת. בשיעור 2 זה היה bd ושאיבה (dv.) לבס."),
+    # ---- Volca lesson 4 (file 9). Base: Volca memory 7 (saved in 2.3).
+    "9:3.1": ("tap:MEMORY,tap:7", "הרצף חוזר למה ששמרת ב־2.3. אם הלולאה עדיין קצרה, ראה 3.3."),
+    "9:3.2": ("tap:MEMORY,tap:7", "הרצף חוזר למה ששמרת ב־2.3. אם הלולאה עדיין קצרה, ראה 3.3."),
+    "9:4.1": ("hold:FUNC,tap:@vco:VCO1,rel,say:כל מתנד חשוך, אותו דבר", "השתקה לא מוחקת כלום. מחזירים כל מתנד שחשוך כשמחזיקים FUNC."),
+    "9:4.2": ("hold:FUNC,tap:VCO1,rel,say:רק אם הוא חשוך,turn:CUTOFF,say:שעה 11", "הבס חוזר, והמסנן למקום שלו."),
+    # ---- Volca lesson 5 (file 10). Base: Volca memory 8 (saved in 1.3), LFO INT all the way left.
+    "10:2.1": ("hold:FUNC,tap:4,tap:7,rel,say:עד ש־4 ו־7 כבויות,turn:INT,say:עד הסוף שמאלה", "בלי נורות ובלי עומק, אין תנועה. התו הארוך חוזר נקי."),
+    "10:2.2": ("turn:INT,say:עד הסוף ימינה", "השער חוזר לחיתוך מלא."),
+    "10:3.1": ("hold:FUNC,tap:6,rel,say:עד ש־6 כבויה,turn:INT,say:עד הסוף שמאלה,turn:PEAK,say:שעה 11", "התנועה כבויה, והצפצוף חוזר למקום."),
+    "10:3.2": ("hold:FUNC,tap:5,tap:7,rel,say:עד ש־5 ו־7 כבויות,turn:INT,say:עד הסוף שמאלה", "הגובה יציב שוב."),
+    "10:4.1": ("tap:MEMORY,tap:8", "הגלישות חוזרות למה ששמרת ב־1.3: תו אחד ארוך. הנורות של התנועה לא משתנות."),
+    "10:4.2": ("tap:MEMORY,tap:8", "התו הארוך חוזר. המנגינה נמחקת, אלא אם שמרת אותה."),
     # ---- T-8 lesson 5 (file 8). Base: T-8 pattern 13 (saved in 2.5), Volca memory 6 (saved in 3.4), both playing.
     "8:2.4": ("hold:SHIFT,tap:3,rel,turn:TEMPO/VALUE," + REC + ",tap:1",
               "לא ידוע אם השחזור מחזיר את השאפל, לכן מחזירים ביד."),

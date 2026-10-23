@@ -4,13 +4,13 @@
    - every <kbd> whose text names a control becomes tappable and shows where it is */
 (function(){
 "use strict";
-var T=window.T8; if(!T) return;
+var T=window.PANEL||window.T8; if(!T) return;   /* the Volca Bass pages load vb-data.js, which sets window.PANEL */
 
 var QUAL={bd:"של הקיק",sd:"של הסנר",tc:"של הקלאפ והטום",hh:"של ההיי־האטים",b:"של הבס"};
 function areaOf(id){ for(var i=0;i<T.areas.length;i++) if(T.areas[i][1].indexOf(id)>-1) return T.areas[i][0]; return ""; }
 function label(id){
   var n=T.names[id]||id;
-  if(/^s\d+$/.test(id)){ var k=+id.slice(1), d=T.info[id].match(/התו ([^.]+)\. עם SHIFT: ([^,]+),/); return "לחצן "+k+(d?" ("+d[1]+", "+d[2]+")":""); }
+  if(/^s\d+$/.test(id)){ var k=+id.slice(1), d=T.info[id].match(/התו ([^.]+)\. עם SHIFT: ([^,]+),/); return (T.stepWord||"לחצן")+" "+k+(d?" ("+d[1]+", "+d[2]+")":""); }
   var dup=0; Object.keys(T.names).forEach(function(k){ if(T.names[k]===n) dup++; });
   if(dup>1){ var q=/^b(lvl|pitch|dec)$/.test(id)?QUAL.b:(QUAL[id.slice(0,2)]||""); if(q) n+=" "+q; }
   return n;

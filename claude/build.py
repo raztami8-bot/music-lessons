@@ -14,13 +14,15 @@ LESSONS = {
     5: ("ג׳אם אסיד עם הטי־8", "תופים ובס בקופסה אחת, הדגשות, שאיבה מהקיק וסיבובים חיים"),
     6: ("גרוב חי: הטריקים של הקצב", "סיכוי, עוצמה לכל מכה, גלגולים, אורכים, גמגום, מילוי ואקראי"),
     7: ("צליל: הטריקים של הסאונד", "התפריט, החלפת כלים, עיוות, טרנספוז, הד לקצב, שאיבה ושער"),
+    9: ("שלושה קווים בוולקה אחת", "כל מתנד מנגן רצף משלו: בס, תשובה וצלצול, אורכים שונים, והשתקות כעיבוד"),
+    10: ("תנועה חיה בוולקה בס", "התנועה המחזורית כשער, כנשימה וכרטט, וגלישות שמחברות משפט שלם"),
     8: ("האוס עם הוולקה בס", "שני מכשירים בקצב אחד: חיבור וסנכרון, ביט האוס, בס האוס בוולקה, וג׳אם בארבע ידיים"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
     "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7, 8)),
-    "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3)),
+    "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10)),
 }
 DEV = {n: (d, i + 1) for d, v in DEVICES.items() for i, n in enumerate(v[3])}
 SHORT = {"t8": "טי־8", "volca": "וולקות"}
@@ -37,7 +39,7 @@ NOW = datetime.datetime.now(ZoneInfo("Asia/Jerusalem"))
 STAMP = int(NOW.timestamp())
 DAYS = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
 STAMP_TXT = f"יום {DAYS[NOW.weekday()]} {NOW.day}.{NOW.month}, {NOW:%H:%M}"
-ASSET_RE = re.compile(r'((?:href|src)=")((?:app|kit|map|nav)\.css|(?:app|extras|kit|t8-data|t8|map|nav)\.js)(")')
+ASSET_RE = re.compile(r'((?:href|src)=")((?:app|kit|map|nav)\.css|(?:app|extras|kit|t8-data|vb-data|t8|map|nav)\.js)(")')
 
 
 def write_page(name, html):
@@ -50,6 +52,7 @@ SETTAB = '<a class="tb" href="settings.html">💾 מה נשמר</a>'
 NAVJS = '<script src="nav.js"></script>\n'
 
 T8CAP = "תרשים מצויר לפי המדריך הרשמי, לא צילום"
+VBCAP = "תרשים מצויר לפי הלוח והמדריך הרשמי, לא צילום"
 T8_LESSONS = (4, 5, 6, 7, 8)
 
 # Photos: (lesson, kind, anchor) -> images + legend. Legend order matches the numbers drawn on each photo.
@@ -102,6 +105,10 @@ PHOTOS = [
     (7, "card", "4.2", ["l7-03"], ["SHIFT|", "13|שליחה להד", "14|שליחה להדהוד", "DELAY|", "REVERB|"], T8CAP),
     (8, "card", "1.1", ["l8-01"], ["SYNC OUT|כבל הקצב, אל הוולקה", "MIX IN|כבל השמע, מהוולקה", "MIX OUT|אוזניות", "VOLUME|העוצמה של הכל"], T8CAP),
     (8, "card", "1.2", ["l4-10"], ["SHIFT|", "15|MENU", "TEMPO/VALUE|", "2|ENTER", "1|EXIT"], T8CAP),
+    (9, "card", "1.1", ["vb-01"], ["FUNC|", "1|קיבוץ: נפרדים", "VCO1|", "VCO2|", "VCO3|", "16|מחיקת הכל"], VBCAP),
+    (9, "card", "1.3", ["vb-02"], ["FUNC|", "▶|צעדים פעילים", "●|הקלטת צעדים", "STEP MODE|"], VBCAP),
+    (10, "card", "2.1", ["vb-03"], ["FUNC|", "4|עוצמה", "5|גובה", "6|מסנן", "7|צורה", "RATE|מהירות", "INT|עומק"], VBCAP),
+    (10, "card", "1.2", ["vb-04"], ["FUNC|", "STEP MODE|עריכת גלישות", "13|מחיקת גלישות"], VBCAP),
     (7, "card", "5.1", ["l7-04"], ["PATTERN|מחזיקים", "12|שאיבה", "ACCENT|הד והדהוד, ב־5.3", "BASS|"], T8CAP),
 ]
 
@@ -156,7 +163,9 @@ def split_cards(html, n):
 
 
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7, 8)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+VB_LESSONS = (9, 10)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
+VBJS = '<script src="vb-data.js"></script>\n<script src="t8.js"></script>\n'
+KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
@@ -176,7 +185,7 @@ def _seg(text):
     return f'<span class="seg" role="img" aria-label="בתצוגה: {text}">{inner}</span>'
 
 
-def macros(html):
+def macros(html, kw="לחצן"):
     """Shorthand used in kit lessons:
     [[hold:X]] [[tap:X]] [[turn:X]] [[rel]] [[seg:TEXT]]  (X = button name or step number)
     [[state:play|SNARE DRUM|free text]]  start state; first item play or stop, second the selected part
@@ -190,7 +199,7 @@ def macros(html):
             return _seg(rest)
         if kind in VERBS:
             ic, verb = VERBS[kind]
-            name = f"לחצן <kbd>{rest}</kbd>" if rest.isdigit() else f"<kbd>{rest}</kbd>"
+            name = f"{kw} <kbd>{rest}</kbd>" if rest.isdigit() else f"<kbd>{rest}</kbd>"
             return f'<span class="a a-{kind}"><i>{ic}</i>{verb} {name}</span>'
         if kind == "state":
             parts = rest.split("|")
@@ -284,7 +293,7 @@ def page(n):
     html = (SRC / f"l{n}.html").read_text(encoding="utf8")
     # topnav from the artifact version is replaced by the toolbar
     html = re.sub(r'<nav class="topnav".*?</nav>\s*', "", html, count=1, flags=re.S)
-    for k in LESSONS:
+    for k in sorted(LESSONS, reverse=True):  # URL_L10 before URL_L1
         html = html.replace(f"URL_L{k}", f"lesson-{k}.html")
     html = srcs(xrefs(any_lines(base_boxes(html, n), n), n))
     if n in T8_LESSONS:
@@ -302,7 +311,7 @@ def page(n):
             assert pat.search(html), (n, anchor)
             html = pat.sub(lambda m: fig + m.group(1), html, count=1)
     if n in KIT_LESSONS:
-        html = macros(html)
+        html = macros(html, "קליד" if n in VB_LESSONS else "לחצן")
     html = split_cards(html, n)
     dev = DEV[n][0]
     html = html.replace("<h1>", f'<span class="eyebrow {dev}">{label(n)}</span>\n  <h1>', 1)
@@ -311,6 +320,8 @@ def page(n):
         for k in DEVICES[dev][3])
     if dev == "t8":
         tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB
+    else:
+        tabs += '<a class="tb" href="vb-map.html">▦ מה אפשר לעשות בבס</a>'
     total = len(re.findall(r'data-id="l%d:' % n, html))
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
@@ -328,21 +339,21 @@ def page(n):
 <link rel="stylesheet" href="app.css">{chr(10) + '<link rel="stylesheet" href="kit.css">' if n in KIT_LESSONS else ""}
 {NAVCSS}
 </head>
-<body data-lesson="{n}">
+<body data-lesson="{n}"{' data-panel="vb"' if n in VB_LESSONS else ""}>
 <div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
 <div class="wrap">
 {html}
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
-{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}{NAVJS}</body>
+{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}{VBJS if n in VB_LESSONS else ""}{NAVJS}</body>
 </html>
 """
     write_page(f"lesson-{n}.html", out)
     return total
 
 
-def hub(totals, mtotal):
+def hub(totals, mtotal, vbtotal=0):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
     icons = {"t8": "🥁", "volca": "🎛️"}
@@ -357,6 +368,9 @@ def hub(totals, mtotal):
         if dev == "t8":
             tiles += f"""<li><a class="tile ref" href="map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות</h3><p>{mtotal} דברים שהטי־8 יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
 <li><a class="tile ref" href="settings.html"><span class="bub">💾</span><div class="tx"><span class="kind">דף עזר</span><h3>מה נשמר ומה נמחק</h3><p>לכל הגדרה: האם היא נשמרת עם התבנית, האם מחיקה מוחקת אותה, ומה נשאר תמיד. בדוק מול המדריך.</p></div></a></li>
+"""
+        if dev == "volca":
+            tiles += f"""<li><a class="tile ref" href="vb-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות בוולקה בס</h3><p>{vbtotal} דברים שהבס יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
 """
         secs += f"""<section class="dev {dev}" id="{dev}">
 <div class="dhead"><span class="ico" aria-hidden="true">{icons[dev]}</span><div><h2>{name}</h2><p>{sub} <span class="code">{code}</span></p></div></div>
@@ -541,8 +555,8 @@ ANYCTL = {"step": [f"s{i}" for i in range(1, 17)], "num": [f"s{i}" for i in rang
 
 def any_lines(html, n):
     """Lesson cards that practice on one example get a line saying what else it works on (tricks.CARD_ANY)."""
-    import tricks
-    for key, text in tricks.CARD_ANY.items():
+    import tricks, vbtricks
+    for key, text in {**tricks.CARD_ANY, **vbtricks.CARD_ANY}.items():
         ln, _, num = key.partition(":")
         if int(ln) != n:
             continue
@@ -554,9 +568,16 @@ def any_lines(html, n):
     return html
 
 
-def map_page(t8map):
-    """map.html: everything you can do on the T-8, by goal and by button (data in src/tricks.py)."""
-    import tricks, html as H
+VBANY = {"step": [f"s{i}" for i in range(1, 17)], "mem": [f"s{i}" for i in range(1, 9)], "vco": ["vco1", "vco2", "vco3"]}
+
+
+def map_page(t8map, tricks=None, out="map.html", dev="t8"):
+    """map.html: everything you can do on the T-8, by goal and by button (data in src/tricks.py).
+    vb-map.html: the same for the Volca Bass (src/vbtricks.py, panel src/vbmap.py)."""
+    import html as H
+    if tricks is None:
+        import tricks
+    anyctl = ANYCTL if dev == "t8" else VBANY
     total = 0
     sections, chips = [], []
     for gid, gname, gsub, items in tricks.GOALS:
@@ -571,8 +592,8 @@ def map_page(t8map):
                     continue
                 if key.startswith("@"):  # works on any step / instrument: list it under every button it fits
                     kind, _, ex = key[1:].partition(":")
-                    assert kind in ANYCTL and tid in tricks.ANY, ("@ token needs a line in tricks.ANY", tid, key)
-                    ids = ANYCTL[kind]
+                    assert kind in anyctl and tid in tricks.ANY, ("@ token needs a line in tricks.ANY", tid, key)
+                    ids = anyctl[kind]
                 else:
                     ids = ["s" + key] if key.isdigit() else (t8map.ALIAS.get(key) or [None])[:1]
                 assert ids and ids[0], ("unknown control", tid, key)
@@ -604,8 +625,18 @@ def map_page(t8map):
                         f'<div class="tt"><span class="mark" aria-hidden="true"></span><b>{title}</b></div><p>{line}</p>{anyl}{combo}{knobs}'
                         f'<div class="links">{"".join(links)}</div></div>')
         sections.append(f'<section class="goal" id="g-{gid}"><h2>{gname}</h2><p class="sub">{gsub}</p><div class="tricks">{"".join(rows)}</div></section>')
-    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">{label(k, False)}</a>' for k in DEVICES["t8"][3])
-    out = f"""<!doctype html>
+    tabs = "".join(f'<a class="tb" href="lesson-{k}.html">{label(k, False)}</a>' for k in DEVICES[dev][3])
+    if dev == "t8":
+        cur, title, h1 = f'<a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{SETTAB}', "מה אפשר לעשות בטי־8", "מה אפשר לעשות בטי־8"
+        lede = f"כל מה שהמכשיר יודע, מכל שיעורי הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו."
+        anyp = 'כשכתוב <b>לחצן צעד</b> או <b>לחצן כלי</b>, זה עובד על כל צעד או כלי, והמספר הוא רק דוגמה. ״כל צעד״ כולל גם 17 עד 32: עוברים לחצי השני עם <kbd>SHIFT</kbd> + <kbd>6</kbd>, ושם לחצן 1 הוא צעד 17.'
+        data, attr = "t8-data.js", 'data-t8="map"'
+    else:
+        cur, title, h1 = '<a class="tb cur" href="vb-map.html">▦ מה אפשר לעשות בבס</a>', "מה אפשר לעשות בוולקה בס", "מה אפשר לעשות בוולקה בס"
+        lede = f"כל מה שהבס יודע, מכל שיעורי הוולקות ומשיעור 5 של הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו."
+        anyp = 'כשכתוב <b>קליד צעד</b> או <b>מתנד</b>, זה עובד על כל קליד או מתנד, והמספר הוא רק דוגמה. בכל הצירופים של FUNC: מחזיקים FUNC ולוחצים, ורק אז משחררים.'
+        data, attr = "vb-data.js", 'data-t8="map" data-panel="vb"'
+    out_html = f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -615,20 +646,20 @@ def map_page(t8map):
 <meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>מה אפשר לעשות בטי־8 · גרסת קלוד</title>
+<title>{title} · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="kit.css">
 <link rel="stylesheet" href="map.css">
 {NAVCSS}
 </head>
-<body data-t8="map">
-<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb cur" href="map.html">▦ מה אפשר לעשות</a>{SETTAB}{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<body {attr}>
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a>{cur}{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:8px">
-  <h1>מה אפשר לעשות בטי־8</h1>
-  <p class="lede">כל מה שהמכשיר יודע, מכל שיעורי הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו.</p>
-  <p class="anyline"><i aria-hidden="true">🔁</i><span>כשכתוב <b>לחצן צעד</b> או <b>לחצן כלי</b>, זה עובד על כל צעד או כלי, והמספר הוא רק דוגמה. ״כל צעד״ כולל גם 17 עד 32: עוברים לחצי השני עם <kbd>SHIFT</kbd> + <kbd>6</kbd>, ושם לחצן 1 הוא צעד 17.</span></p>
+  <h1>{h1}</h1>
+  <p class="lede">{lede}</p>
+  <p class="anyline"><i aria-hidden="true">🔁</i><span>{anyp}</span></p>
   <p class="progress-line" id="mp-prog"></p>
 </header>
 <div class="mviews" role="tablist">
@@ -648,13 +679,13 @@ def map_page(t8map):
 <p class="legend">✓ = סימנת ״סיימתי״ בכרטיס שמלמד את זה. הסימונים נשמרים באייפד הזה.</p>
 </div>
 <script src="kit.js"></script>
-<script src="t8-data.js"></script>
+<script src="{data}"></script>
 <script src="t8.js"></script>
 <script src="map.js"></script>
 {NAVJS}</body>
 </html>
 """
-    write_page("map.html", out)
+    write_page(out, out_html)
     return total
 
 
@@ -764,9 +795,12 @@ if __name__ == "__main__":
     for k in TOOLS:
         tool_page(k)
     mtotal = map_page(t8map)
+    import vbmap, vbtricks
+    vbmap.build()
+    vbtotal = map_page(vbmap, vbtricks, "vb-map.html", "volca")
     import settings
     settings_page(settings)
-    hub(totals, mtotal)
+    hub(totals, mtotal, vbtotal)
     check_links()
     print("map", mtotal)
     print("built", totals)
