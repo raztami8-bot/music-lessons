@@ -9,6 +9,7 @@
   font-weight:700;font-size:.92rem;color:#fff;background:var(--dev,#6b5bd6)}
 .eyebrow.t8{--dev:#e0561b}
 .eyebrow.volca{--dev:#12907f}
+.eyebrow.together{--dev:#6a4bc4}
 .wrap{padding-bottom:96px}
 
 /* Direct links between cards: [[go:...]] in src/*.html. The card you land on gets a frame. */

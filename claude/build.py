@@ -16,17 +16,20 @@ LESSONS = {
     7: ("צליל: הטריקים של הסאונד", "התפריט, החלפת כלים, עיוות, טרנספוז, הד לקצב, שאיבה ושער"),
     9: ("שלושה קווים בוולקה אחת", "כל מתנד מנגן רצף משלו: בס, תשובה וצלצול, אורכים שונים, והשתקות כעיבוד"),
     10: ("תנועה חיה בוולקה בס", "התנועה המחזורית כשער, כנשימה וכרטט, וגלישות שמחברות משפט שלם"),
-    11: ("ארגז טריקים לבס", "שני בסים יחד, איפה לשים את הבס, אילו תווים לכתוב, ומה לעשות בידיים כשהקו כבר רץ"),
+    11: ("ארגז טריקים לוולקה בס", "איפה לשים את הבס, אילו תווים לכתוב, ומה לעשות בידיים כשהקו כבר רץ"),
+    12: ("שני בסים: הוולקה והטי־8", "טריקים קצרים כשהוולקה בס והבס של הטי־8 מנגנים יחד"),
     8: ("אסיד טכנו עם הוולקה בס", "שני מכשירים בקצב אחד: חיבור וסנכרון, ביט טכנו, קו אסיד בוולקה, ושני בסים יחד"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
-    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7, 8)),
+    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7)),
     "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10, 11)),
+    # several machines connected together. More machines join here later.
+    "together": ("ביחד", "T-8 + Volca Bass", "כמה מכשירים מחוברים, בקצב אחד", (8, 12)),
 }
 DEV = {n: (d, i + 1) for d, v in DEVICES.items() for i, n in enumerate(v[3])}
-SHORT = {"t8": "טי־8", "volca": "וולקות"}
+SHORT = {"t8": "טי־8", "volca": "וולקות", "together": "ביחד"}
 
 
 def label(n, full=True):
@@ -166,7 +169,7 @@ def split_cards(html, n):
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
 VB_LESSONS = (9, 10, 11)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
 VBJS = '<script src="vb-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
@@ -321,7 +324,7 @@ def page(n):
         for k in DEVICES[dev][3])
     if dev == "t8":
         tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB
-    else:
+    elif dev == "volca":
         tabs += '<a class="tb" href="vb-map.html">▦ מה אפשר לעשות בבס</a>'
     total = len(re.findall(r'data-id="l%d:' % n, html))
     out = f"""<!doctype html>
@@ -357,7 +360,7 @@ def page(n):
 def hub(totals, mtotal, vbtotal=0):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
-    icons = {"t8": "🥁", "volca": "🎛️"}
+    icons = {"t8": "🥁", "volca": "🎛️", "together": "🔗"}
     for dev, (name, code, sub, nums) in DEVICES.items():
         tiles = ""
         for n in nums:
@@ -394,9 +397,9 @@ def hub(totals, mtotal, vbtotal=0):
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
 <style>
-:root{{--t8:#e0561b;--volca:#12907f}}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--t8:#ff8a4c;--volca:#3fd0bb}}}}
-:root[data-theme="dark"]{{--t8:#ff8a4c;--volca:#3fd0bb}}
+:root{{--t8:#e0561b;--volca:#12907f;--together:#6a4bc4}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--t8:#ff8a4c;--volca:#3fd0bb;--together:#a98bff}}}}
+:root[data-theme="dark"]{{--t8:#ff8a4c;--volca:#3fd0bb;--together:#a98bff}}
 .wrap{{max-width:900px;gap:22px;padding-top:max(22px,env(safe-area-inset-top,0px))}}
 .hello{{display:flex;flex-direction:column;gap:6px}}
 .hello h1{{font-size:2.3rem}}
@@ -411,6 +414,7 @@ def hub(totals, mtotal, vbtotal=0):
 .dev{{--dev:var(--t8);display:flex;flex-direction:column;gap:14px;padding:18px 14px;border-radius:26px;
   background:color-mix(in srgb,var(--dev) 9%,var(--bg));border:2px solid color-mix(in srgb,var(--dev) 22%,transparent)}}
 .dev.volca{{--dev:var(--volca)}}
+.dev.together{{--dev:var(--together)}}
 .dhead{{display:flex;align-items:center;gap:14px;padding-inline:4px}}
 .ico{{flex:none;width:60px;height:60px;border-radius:20px;background:var(--dev);display:grid;place-items:center;font-size:2rem;
   box-shadow:0 5px 0 color-mix(in srgb,var(--dev) 65%,#000);transform:rotate(-4deg)}}
