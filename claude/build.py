@@ -16,13 +16,14 @@ LESSONS = {
     7: ("צליל: הטריקים של הסאונד", "התפריט, החלפת כלים, עיוות, טרנספוז, הד לקצב, שאיבה ושער"),
     9: ("שלושה קווים בוולקה אחת", "כל מתנד מנגן רצף משלו: בס, תשובה וצלצול, אורכים שונים, והשתקות כעיבוד"),
     10: ("תנועה חיה בוולקה בס", "התנועה המחזורית כשער, כנשימה וכרטט, וגלישות שמחברות משפט שלם"),
+    11: ("ארגז טריקים לוולקה בס", "איפה לשים את הבס, אילו תווים לכתוב, ומה לעשות בידיים כשהקו כבר רץ"),
     8: ("אסיד טכנו עם הוולקה בס", "שני מכשירים בקצב אחד: חיבור וסנכרון, ביט טכנו, קו אסיד בוולקה, ושני בסים יחד"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
     "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7, 8)),
-    "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10)),
+    "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10, 11)),
 }
 DEV = {n: (d, i + 1) for d, v in DEVICES.items() for i, n in enumerate(v[3])}
 SHORT = {"t8": "טי־8", "volca": "וולקות"}
@@ -163,9 +164,9 @@ def split_cards(html, n):
 
 
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
-VB_LESSONS = (9, 10)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
+VB_LESSONS = (9, 10, 11)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
 VBJS = '<script src="vb-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
