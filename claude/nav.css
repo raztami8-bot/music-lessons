@@ -128,3 +128,5 @@ details.back>p{margin:8px 12px 10px;font-size:.92rem;color:var(--muted)}
 .dv{display:inline-block;font-size:.78rem;font-weight:700;line-height:1.5;padding:0 8px;border-radius:999px;color:#fff;vertical-align:1px;margin-inline-end:2px;white-space:nowrap}
 .dv.t8{background:#e0561b}
 .dv.vb{background:#12907f}
+.eyebrow.live{--dev:#c2357a}
+.dv.vbt{background:#3b6fd1}
