@@ -1,8 +1,10 @@
 <header style="display:flex;flex-direction:column;gap:10px">
   <h1>הכבלים באדג׳</h1>
   <p class="lede">אותו רעיון כמו בכל סינתי חצי־מודולרי: כבל אומר ״החלק הזה יזיז את הכפתור ההוא״. באדג׳ הכבלים הכי שווים הופכים את שתי שורות הסיקוונסר לשורות של כל דבר שתרצה.</p>
-  <div class="meta"><span><b>מכשיר:</b> האדג׳ <span class="label">Behringer Edge</span></span><span><b>צריך:</b> כבלי חיבור קצרים, 3.5 מ״מ מונו</span><span><b>הקצב:</b> מ[[go:21:2.3|שיעור 2, 2.3]]</span></div>
+  <div class="meta"><span><b>מכשיר:</b> האדג׳ <span class="label">Behringer Edge</span></span><span><b>צריך:</b> כבלי חיבור קצרים, 3.5 מ״מ מונו</span><span><b>הקצב:</b> מ[[go:21:2.3|שיעור 3, 2.3]]</span></div>
 </header>
+
+<details class="card mapbox"><summary><b>🗺 תרשים הלוח של האדג׳</b> · נגיעה בכל שקע מראה מה הוא עושה</summary><div id="t8tour"></div></details>
 
 <nav class="toc" aria-label="תוכן">
   <b>שני שלבים</b>
@@ -37,7 +39,7 @@
         <tr><td><kbd>VCA</kbd> · <kbd>PHONES</kbd></td><td>הצליל הסופי, למיקסר ולאוזניות</td></tr>
         <tr><td><kbd>OSC 1</kbd> · <kbd>OSC 2</kbd></td><td>כל מתנד לבד, לפני המסנן</td></tr>
         <tr><td><kbd>VELOCITY</kbd></td><td>מיקום כפתור <kbd>VEL</kbd> של הצעד שמנגן</td></tr>
-        <tr><td><kbd>PITCH</kbd></td><td>מיקום כפתור <kbd>PITCH</kbd> של הצעד שמנגן</td></tr>
+        <tr><td><kbd>PITCH (שקע)</kbd></td><td>מיקום כפתור <kbd>PITCH</kbd> של הצעד שמנגן</td></tr>
         <tr><td><kbd>OSC EG</kbd> · <kbd>VCF EG</kbd> · <kbd>VCA EG</kbd></td><td>שלוש הדעיכות: גובה, מסנן, עוצמה</td></tr>
         <tr><td><kbd>TRIGGER</kbd></td><td>״עכשיו!״ בכל צעד</td></tr>
       </tbody>
@@ -72,7 +74,7 @@
 
   <article class="card">
     <div class="card-head"><span class="num">2.1</span><h3>רעש רק בצעדים החזקים</h3><span class="label">VELOCITY → NOISE LEVEL</span></div>
-    [[state:play||הקצב מ[[go:21:2.3|שיעור 2]], NOISE / EXT לאפס]]
+    [[state:play||הקצב מ[[go:21:2.3|שיעור 3]], NOISE/EXT לאפס]]
     <ol class="steps">
       <li><div>כבל מיציאת <kbd>VELOCITY</kbd> אל <kbd>NOISE LEVEL</kbd>.</div></li>
       <li><div>מקשיבים: בצעדים עם <kbd>VEL</kbd> גבוה יש רעש, ובחלשים כמעט אין.</div></li>
@@ -86,7 +88,7 @@
     [[state:play||הקצב מנגן]]
     <ol class="steps">
       <li><div>מתג <kbd>SEQ PITCH MOD</kbd> על OFF. עכשיו שורת הגובה לא משנה גובה.</div></li>
-      <li><div>כבל מיציאת <kbd>PITCH</kbd> אל <kbd>VCA DECAY</kbd>.</div></li>
+      <li><div>כבל מיציאת <kbd>PITCH (שקע)</kbd> אל <kbd>VCA DECAY</kbd>.</div></li>
       <li><div>[[turn:PITCH]] של כל צעד: ימינה מכה ארוכה, שמאלה קצרה.</div></li>
     </ol>
     <div class="ok"><b>הצלחת אם:</b> כל צעד באורך משלו, ושורת הגובה הפכה לשורת אורכים.</div>
@@ -100,12 +102,12 @@
     [[state:play||הקצב מנגן, RESONANCE לשעה 12]]
     <ol class="steps">
       <li><div>כבל מיציאת <kbd>OSC 2</kbd> אל <kbd>VCF MOD</kbd>.</div></li>
-      <li><div>[[turn:NOISE / VCF MOD]] לאט מאפס. זה קובע כמה.</div></li>
+      <li><div>[[turn:NOISE/VCF MOD]] לאט מאפס. זה קובע כמה.</div></li>
       <li><div>מתנד 2: [[turn:FREQUENCY]] לאט. כל גובה נותן נהמה אחרת.</div></li>
     </ol>
     <div class="ok"><b>הצלחת אם:</b> המכות נוהמות ונשמעות מתכתיות.</div>
     <div class="learn"><span class="learn-tag">להבין</span>
-      <p>בלי הכבל, הרעש מנענע את המסנן. עם הכבל, מתנד 2 מנענע אותו במקום הרעש, והכפתור <kbd>NOISE / VCF MOD</kbd> קובע עדיין כמה.</p>
+      <p>בלי הכבל, הרעש מנענע את המסנן. עם הכבל, מתנד 2 מנענע אותו במקום הרעש, והכפתור <kbd>NOISE/VCF MOD</kbd> קובע עדיין כמה.</p>
     </div>
   </article>
 
@@ -118,5 +120,5 @@
     </ol>
     <div class="ok"><b>הצלחת אם:</b> כל מכה מתחילה מתכתית ונהיית נקייה תוך כדי שהיא דועכת.</div>
   </article>
-  <div class="endnav"><a href="URL_L21">→ לשיעור 2</a><a href="index.html">לבית ←</a></div>
+  <div class="endnav"><a href="URL_L21">→ לשיעור 3</a><a href="URL_L27">לארגז הטריקים ←</a></div>
 </section>

@@ -1,0 +1,148 @@
+<header style="display:flex;flex-direction:column;gap:10px">
+  <h1>ארגז טריקים לקרייב</h1>
+  <p class="lede">טריקים קצרים לתוך הג׳אם, רק לקרייב: מה עושים בידיים כשהקו רץ, צלילים שלא היו בשיעורים, וכבל אחד שמשנה הכל. כל כרטיס: מה זה, למה, ואיך. פותחים, מנסים, וממשיכים לנגן. טריקים חדשים שתביא נכנסים לכאן.</p>
+  <div class="meta"><span><b>מכשיר:</b> הקרייב <span class="label">Behringer Crave</span></span><span><b>בסיס:</b> רצף שמור מ[[go:18:3.1|שיעור 3]], והצליל של האסיד מ[[go:17:2.3|שיעור 2]]</span></div>
+</header>
+
+<article class="card howto">
+  <h3>איך משתמשים</h3>
+  <ol>
+    <li><b>נקודת הבסיס:</b> הרצף שלך מנגן, והצליל של האסיד. כל טריק שמשנה משהו נגמר ב״חזרה״ לשם.</li>
+    <li><b>לפני ניסוי ששווה לשמור:</b> צלם את הפאנל. הקרייב לא שומר כפתורים.</li>
+    <li>הסימנים: <span class="a a-hold"><i>✋</i>החזק</span> <span class="a a-tap"><i>👆</i>לחץ</span> <span class="a a-turn"><i>⟳</i>סובב</span> <span class="a a-rel"><i>🖐</i>שחרר</span>.</li>
+  </ol>
+</article>
+
+<details class="card mapbox"><summary><b>🗺 תרשים הלוח של הקרייב</b> · נגיעה בכל כפתור מראה מה הוא עושה</summary><div id="t8tour"></div></details>
+
+<nav class="toc" aria-label="תוכן">
+  <b>שלוש מגירות</b>
+  <ol>
+    <li><a href="#s1">בזמן שהקו רץ</a></li>
+    <li><a href="#s2">צלילים</a></li>
+    <li><a href="#s3">כבל אחד</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== 1 ===================== -->
+<section class="stage" id="s1">
+  <span class="stage-tag">מגירה 1</span>
+  <h2>בזמן שהקו רץ</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 הכלל</span>
+    <p>הקו עצמו לא צריך להשתנות כדי שהג׳אם יתפתח. מספיק לשנות <b>כמה ממנו נשמע</b>, <b>באיזה גובה</b>, ו<b>מתי הוא חוזר</b>. כל הטריקים כאן זמניים: הרצף השמור לא נפגע.</p>
+  </div>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.1</span><h3>קו שמתקצר</h3><span class="label">SET END בזמן נגינה</span></div>
+    [[state:play||רצף של 8 צעדים מנגן]]
+    <p><b>מה זה:</b> באמצע הג׳אם הקו נגמר בצעד 4 וחוזר שוב ושוב, ואז חוזר לאורך המלא.</p>
+    [[combo:איך מקצרים ל־4 צעדים?|hold:SHIFT,hold:ARP/SET END,tap:STEP 4,rel]]
+    [[combo:איך מחזירים ל־8?|hold:SHIFT,hold:ARP/SET END,tap:STEP 8,rel]]
+    <p><b>למה:</b> חצי קו שחוזר על עצמו בונה מתח, כמו לפני דרופ. כשהוא חוזר לשמונה, זה מרגיש כמו שחרור.</p>
+    <p class="info">🔁 <b>עובד עם:</b> כל אורך. 3 או 5 מעל תופים של 16 נותנים קו שזז כל פעם למקום אחר.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.2</span><h3>אוקטבה למטה בשבירה</h3><span class="label">&lt;KYBD · STEP&gt;</span></div>
+    [[state:play||הרצף מנגן]]
+    <p><b>מה זה:</b> בשבירה, כל הקו יורד אוקטבה. בדרופ, הוא קופץ חזרה.</p>
+    <ol class="steps">
+      <li><div>בתחילת השבירה: [[tap:&lt;KYBD]].</div></li>
+      <li><div>על הפעמה של הדרופ: [[tap:STEP&gt;]].</div></li>
+    </ol>
+    <p><b>למה:</b> הקו נשמע מאיים ושקט למטה, והקפיצה למעלה מרגישה כמו פיצוץ, בלי לגעת בתו אחד.</p>
+  </article>
+</section>
+
+<!-- ===================== 2 ===================== -->
+<section class="stage" id="s2">
+  <span class="stage-tag">מגירה 2</span>
+  <h2>צלילים</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.1</span><h3>טריל: שני תווים שמתחלפים</h3><span class="label">LFO · FREQ · SQU</span></div>
+    [[state:play||הרצף מנגן]]
+    <p><b>מה זה:</b> כל תו קופץ מהר בינו לבין תו גבוה יותר, כמו טריל.</p>
+    <ol class="steps">
+      <li><div><kbd>MOD SOURCE (VCO)</kbd> על LFO, <kbd>MOD DEST</kbd> על FREQ, <kbd>SHAPE (LFO)</kbd> על SQU.</div></li>
+      <li><div>[[turn:OSC MOD]] לאט מאפס, עד שהקפיצה היא תו שנשמע טוב. [[turn:LFO RATE]] קובע כמה מהר.</div></li>
+      <li><div>חזרה: <kbd>OSC MOD</kbd> לאפס.</div></li>
+    </ol>
+    <p><b>למה:</b> קו של שני תווים נשמע פתאום כמו ארפג׳יו של טרנס.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.2</span><h3>פולס שנושם</h3><span class="label">PULSE · WIDTH · LFO</span></div>
+    [[state:play||הרצף מנגן]]
+    <p><b>מה זה:</b> הצליל מתנפח ומתכווץ לאט, כמו מקהלה.</p>
+    <ol class="steps">
+      <li><div><kbd>SHAPE (VCO)</kbd> על PULSE. <kbd>MOD SOURCE (VCO)</kbd> על LFO, <kbd>MOD DEST</kbd> על WIDTH, <kbd>SHAPE (LFO)</kbd> על TRI.</div></li>
+      <li><div>[[turn:LFO RATE]] לשעה 9, ו[[turn:OSC MOD]] לשעה 12.</div></li>
+      <li><div>חזרה: <kbd>OSC MOD</kbd> לאפס, <kbd>SHAPE (VCO)</kbd> על SAW.</div></li>
+    </ol>
+    <p><b>למה:</b> קו של סינתי אחד נשמע רחב ועשיר, כמו כמה כלים. טוב במיוחד בתווים ארוכים.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.3</span><h3>רוח לפני הדרופ</h3><span class="label">VCA MODE · MIX · CUTOFF</span></div>
+    [[state:play||תיבה לפני הדרופ]]
+    <p><b>מה זה:</b> נשיפה של רעש שעולה ונפתחת, ונעלמת בדרופ.</p>
+    <ol class="steps">
+      <li><div>[[tap:PLAY/STOP]] לעצירת הקו. <kbd>VCA MODE</kbd> על ON, [[turn:MIX]] עד הסוף ימינה, <kbd>CUTOFF</kbd> סגור.</div></li>
+      <li><div>לאורך ארבע תיבות: [[turn:CUTOFF]] לאט עד הסוף ימינה.</div></li>
+      <li><div>על הדרופ: <kbd>VCA MODE</kbd> על ENV, <kbd>MIX</kbd> שמאלה, ו<kbd>PLAY/STOP</kbd>.</div></li>
+    </ol>
+    <p><b>למה:</b> ככה בונים מתח בלי עוד מכשיר. 🔍 לבדוק: אם הקרייב לא מסונכרן, ה־<kbd>PLAY/STOP</kbd> צריך להיות מדויק על הפעמה.</p>
+  </article>
+</section>
+
+<!-- ===================== 3 ===================== -->
+<section class="stage" id="s3">
+  <span class="stage-tag">מגירה 3</span>
+  <h2>כבל אחד</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 הכלל</span>
+    <p>השקע <kbd>ASSIGN</kbd> הוא היציאה הכי שווה: בוחרים בהגדרות מה יוצא ממנו. ערך 1 הוא ההדגשות, וערך 8 הוא מספר אקראי חדש בכל צעד. את הבחירה עושים פעם אחת, והיא נשמרת.</p>
+  </div>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.1</span><h3>מסנן אקראי בכל צעד</h3><span class="label">ASSIGN → VCF CUTOFF</span></div>
+    [[state:play||הרצף מנגן]]
+    <p><b>מה זה:</b> כל צעד נפתח קצת אחרת, ואף פעם לא בדיוק אותו דבר.</p>
+    [[combo:איך מגדירים את ASSIGN לאקראי?|hold:SHIFT,hold:HOLD/REST,tap:STEP 8,rel,tap:STEP&gt;,tap:STEP 8,hold:SHIFT,hold:HOLD/REST,tap:STEP 8,rel]]
+    <ol class="steps">
+      <li><div>הגדרות, עמוד 2, ערך 8: לפי הצירוף שלמעלה. נכנסים, <kbd>STEP&gt;</kbd> פעם אחת לעמוד 2, <kbd>STEP 8</kbd>, ויוצאים.</div></li>
+      <li><div>כבל מ־<kbd>ASSIGN</kbd> אל <kbd>VCF CUTOFF</kbd>.</div></li>
+      <li><div>[[turn:CUTOFF]] נמוך, ו<kbd>RESONANCE</kbd> לשעה 12.</div></li>
+    </ol>
+    <p><b>למה:</b> זה ״ג׳אם שמתפתח לבד״: אותו קו, וכל סיבוב נשמע חדש.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.2</span><h3>הדגשה שצועקת</h3><span class="label">ASSIGN → VCF RES</span></div>
+    [[state:play||רצף עם הדגשות מנגן]]
+    <p><b>מה זה:</b> בצעדים המודגשים המסנן גם שורק, כמו ההדגשה של 303.</p>
+    [[combo:איך מגדירים את ASSIGN להדגשות?|hold:SHIFT,hold:HOLD/REST,tap:STEP 8,rel,tap:STEP&gt;,tap:STEP 1,hold:SHIFT,hold:HOLD/REST,tap:STEP 8,rel]]
+    <ol class="steps">
+      <li><div>הגדרות, עמוד 2, ערך 1.</div></li>
+      <li><div>כבל מ־<kbd>ASSIGN</kbd> אל <kbd>VCF RES</kbd>.</div></li>
+    </ol>
+    <p><b>למה:</b> ההדגשות בקרייב בדרך כלל רק מחזקות. עם הכבל, הן משנות גם צבע. ״הכל מודגש״ בזמן נגינה הופך לצעקה של כל הקו.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.3</span><h3>הקפאות אוטומטיות</h3><span class="label">LFO SQU → HOLD</span></div>
+    [[state:play||הרצף מנגן]]
+    <p><b>מה זה:</b> הקו נתקע לרגע על צעד, משתחרר, ונתקע שוב, בקצב של ה־LFO.</p>
+    <ol class="steps">
+      <li><div>כבל מ־<kbd>LFO SQU</kbd> אל השקע <kbd>HOLD</kbd>.</div></li>
+      <li><div>[[turn:LFO RATE]]: לאט נותן תקיעות ארוכות, מהר נותן גמגום.</div></li>
+      <li><div>שולפים את הכבל כשרוצים את הקו נקי.</div></li>
+    </ol>
+    <p><b>למה:</b> גליץ׳ חי, בלי לגעת בכלום. ה־LFO הריבועי ״למעלה״ חצי מהזמן, ולכן הקו קפוא בערך חצי מהזמן. 🔍 לבדוק שהשקע מקפיא כל עוד יש בו מתח, כמו החזקה של <kbd>HOLD/REST</kbd>.</p>
+  </article>
+  <div class="endnav"><a href="URL_L19">→ לשיעור 4</a><a href="index.html">לבית ←</a></div>
+</section>

@@ -68,7 +68,7 @@ if(tour){
 /* ---------- quiz ---------- */
 var quiz=document.getElementById("t8quiz");
 if(quiz){
-  var POOL=["volume","mixout","tempo","shift","pattern","play","rec","bd","sd","clap","tom","ch","oh","bdtune","bddec","hhdec",
+  var POOL=T.pool||["volume","mixout","tempo","shift","pattern","play","rec","bd","sd","clap","tom","ch","oh","bdtune","bddec","hhdec",
             "bass","kybd","cutoff","reso","envmod","bdec","delay","reverb","accent","s1","s10","s11","s12","s14","s15","s16"];
   var qmap=makeMap(false), ask=el("div","t8-ask"), fb=el("div","t8-fb"), ctrl=el("div","t8-bar");
   fb.setAttribute("aria-live","polite");

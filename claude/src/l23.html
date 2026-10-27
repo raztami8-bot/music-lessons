@@ -1,7 +1,7 @@
 <header style="display:flex;flex-direction:column;gap:10px">
   <h1>הטי־8, הקרייב והאדג׳ בקצב אחד</h1>
   <p class="lede">איך כל אחד נכנס למיקסר, איך הטי־8 נותן קצב לשניהם דרך כבלי מידי, ואיך כבלים קטנים בין הקרייב לאדג׳ גורמים להם להקשיב אחד לשני.</p>
-  <div class="meta"><span><b>מכשירים:</b> הטי־8 <span class="label">T-8</span>, הקרייב <span class="label">Crave</span> והאדג׳ <span class="label">Edge</span></span><span><b>לפני זה:</b> [[go:17|הקרייב]] ו[[go:20|האדג׳]], כל אחד לבד</span></div>
+  <div class="meta"><span><b>מכשירים:</b> הטי־8 <span class="label">T-8</span>, הקרייב <span class="label">Crave</span> והאדג׳ <span class="label">Edge</span></span><span><b>לפני זה:</b> [[go:24|הקרייב]] ו[[go:25|האדג׳]], כל אחד לבד</span></div>
 </header>
 
 <article class="card howto">
@@ -16,11 +16,12 @@
 <p class="info">הכל כאן לפי המדריכים הרשמיים. מה שהמדריך לא אומר מסומן ״🔍 לבדוק״. כשתבדוק על המכשירים, ספר לי מה ראית, ואתקן.</p>
 
 <nav class="toc" aria-label="תוכן">
-  <b>שלושה שלבים</b>
+  <b>ארבעה שלבים</b>
   <ol>
     <li><a href="#s1">שמע: הכל למיקסר</a></li>
     <li><a href="#s2">קצב: מידי מהטי־8</a></li>
     <li><a href="#s3">כבלים בין הקרייב לאדג׳</a></li>
+    <li><a href="#s4">הקרייב והאדג׳ לבד, בלי מידי</a></li>
   </ol>
 </nav>
 
@@ -68,10 +69,13 @@
     <div class="card-head"><span class="num">2.1</span><h3>שני כבלים</h3><span class="label">MIDI OUT → MIDI IN → MIDI THRU → MIDI IN</span></div>
     [[state:stop||כל המכשירים כבויים]]
     <ol class="steps">
-      <li><div><span class="dv t8">טי־8</span> <kbd>MIDI OUT</kbd> בגב, בכבל <code>Roland BMIDI-5-35</code>, אל <span class="dv cr">קרייב</span> <kbd>MIDI IN</kbd>.<span class="where">בטי־8 זה מיני־ג׳ק. בקרייב שקע עגול גדול.</span></div></li>
-      <li><div><span class="dv cr">קרייב</span> <kbd>MIDI THRU</kbd>, בכבל מידי רגיל, עגול לעגול, אל <span class="dv ed">אדג׳</span> <kbd>MIDI IN</kbd>.</div></li>
+      <li><div><span class="dv t8">טי־8</span> <kbd>MIDI OUT</kbd> בגב, בכבל של בוס <code>BMIDI-2-35</code> (60 ס״מ), אל <span class="dv cr">קרייב</span> <kbd>MIDI IN</kbd>.<span class="where">בטי־8 זה מיני־ג׳ק, ליד <kbd>MIDI IN</kbd> שנראה אותו דבר: צריך את OUT. בקרייב שקע עגול גדול, השמאלי.</span></div></li>
+      <li><div><span class="dv cr">קרייב</span> <kbd>MIDI THRU</kbd>, בכבל מידי רגיל, עגול לעגול (<code>Bespeco CM150</code>), אל <span class="dv ed">אדג׳</span> <kbd>MIDI IN</kbd>.</div></li>
     </ol>
     <div class="ok"><b>הצלחת אם:</b> כבל אחד יוצא מהטי־8, נכנס לקרייב, וממשיך מהקרייב לאדג׳.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>במיני־ג׳ק של מידי יש שתי שיטות חיווט, A ו־B. הטי־8 והכבל של בוס הם בשיטה A, ולכן כבל אחר לא בהכרח היה עובד. בתקע העגול יש רק חיווט אחד.</p>
+    </div>
   </article>
 
   <article class="card">
@@ -117,7 +121,7 @@
     [[state:stop||הכל מחובר ומוגדר]]
     <ol class="steps">
       <li><div><span class="dv ed">אדג׳</span> [[tap:ADVANCE]] עד שנורית צעד 1 דולקת.</div></li>
-      <li><div><span class="dv cr">קרייב</span> טוען רצף, כמו ב[[go:18:4.2|שיעור 2 של הקרייב]].</div></li>
+      <li><div><span class="dv cr">קרייב</span> טוען רצף, כמו ב[[go:18:3.2|שיעור 3 של הקרייב]].</div></li>
       <li><div><span class="dv t8">טי־8</span> [[tap:▶]]. כולם יוצאים לדרך.</div></li>
       <li><div><span class="dv t8">טי־8</span> [[turn:TEMPO/VALUE]] מעט, ומקשיבים: כולם משנים מהירות יחד.</div></li>
     </ol>
@@ -188,6 +192,51 @@
     <div class="learn"><span class="learn-tag">להבין</span>
       <p>כניסת <kbd>TRIGGER</kbd> מכה בלי להתקדם צעד, בעוצמה של הצעד שבו האדג׳ עומד. רוצה מכה אחרת? <kbd>ADVANCE</kbd> לצעד אחר.</p>
     </div>
+  </article>
+</section>
+
+<!-- ===================== 4 ===================== -->
+<section class="stage" id="s4">
+  <span class="stage-tag">שלב 4</span>
+  <h2>הקרייב והאדג׳ לבד, בלי מידי</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: כבל קטן במקום מנצח</span>
+    <p>כשהטי־8 לא בג׳אם, אין צורך במידי. כבל קטן אחד בין לוחות השקעים מספיק: <b>הקרייב נותן את הקצב</b>, והאדג׳ הולך אחריו. מידי עדיין עדיף כשהטי־8 בפנים, כי רק הוא מעביר גם ״התחלה״ ו״עצירה״.</p>
+  </div>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.1</span><h3>סנכרון בכבל</h3><span class="label">ASSIGN → ADV/CLOCK</span></div>
+    [[state:stop||שניהם עצורים, בלי כבלי מידי]]
+    [[combo:איך מגדירים את ASSIGN לשעון של הסיקוונסר?|hold:SHIFT,hold:HOLD/REST,tap:STEP 8,rel,tap:STEP&gt;,tap:STEP 2,hold:SHIFT,hold:HOLD/REST,tap:STEP 8,rel]]
+    <ol class="steps">
+      <li><div><span class="dv cr">קרייב</span> הגדרות, עמוד 2, ערך 2: ״שעון הסיקוונסר״. נכנסים, <kbd>STEP&gt;</kbd> פעם אחת, <kbd>STEP 2</kbd>, ויוצאים.</div></li>
+      <li><div><span class="dv cr">קרייב</span> השעון שלו מהקרייב עצמו: הגדרות, עמוד 3, ערך 1. אם שינית ל־2 בשביל הטי־8, מחזירים. לא בא לך להחליף כל פעם? ערך 5, אוטומטי, בוחר לבד לפי מה שמחובר. 🔍 לבדוק שזה עובד חלק.</div></li>
+      <li><div>כבל מ<span class="dv cr">קרייב</span> <kbd>ASSIGN</kbd> אל <span class="dv ed">אדג׳</span> <kbd>ADV/CLOCK</kbd>.</div></li>
+      <li><div><span class="dv ed">אדג׳</span> מתג <kbd>CLOCK</kbd> על INT/EXT. מעכשיו כל דפיקה מקדמת אותו צעד, ו־<kbd>TEMPO</kbd> שלו כבר לא עושה כלום.</div></li>
+      <li><div><span class="dv cr">קרייב</span> [[tap:PLAY/STOP]]. האדג׳ הולך איתו, צעד אחרי צעד.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> מסובבים <kbd>TEMPO/GATE LENGTH</kbd> בקרייב, ושניהם מאיצים יחד.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p><b>טריק:</b> בעמוד 2, ערך 3 במקום 2 שולח דפיקה כל שני צעדים. האדג׳ מנגן בחצי מהירות, מתחת לקו של הקרייב.</p>
+    </div>
+    <p class="info">🔍 לבדוק: אם צעד 1 של האדג׳ לא נוחת על התו הראשון של הקרייב, לוחצים <kbd>ADVANCE</kbd> באדג׳ תוך כדי נגינה עד שהם מתיישרים. ואם האדג׳ מתקדם מהר מדי או לא אחיד, עוצרים את הסיקוונסר שלו ב־<kbd>PLAY/STOP</kbd>, כדי שרק הכבל יקדם אותו.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">4.2</span><h3>התופים רצים כשהבס מנגן</h3><span class="label">GATE → PLAY/STOP · מהסרטון</span></div>
+    [[state:play||הקרייב מנגן רצף עם שקטים, האדג׳ בקצב שלו]]
+    <p><b>מה זה:</b> החיבור מהסרטון של בהרינגר. הקרייב אומר לאדג׳ מתי לנגן ומתי לעצור: כשהקרייב מנגן תו, הסיקוונסר של האדג׳ רץ. בשקטים של הקרייב, הוא נעצר.</p>
+    <ol class="steps">
+      <li><div><span class="dv ed">אדג׳</span> מתג <kbd>CLOCK</kbd> על INT/EXT, ו[[turn:TEMPO]] לקצב שנשמע טוב מול הקרייב.</div></li>
+      <li><div>כבל מ<span class="dv cr">קרייב</span> <kbd>GATE</kbd> אל <span class="dv ed">אדג׳</span> השקע <kbd>PLAY/STOP</kbd>, בשורה התחתונה, הרביעי משמאל.</div></li>
+      <li><div>משחקים באורכי התווים של הקרייב, ב[[go:18:2.3|שיעור 3]]: תו ארוך נותן לאדג׳ לרוץ יותר.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> התופים של האדג׳ נשמעים כמו תשובה לבס: נעצרים ומתחילים איתו.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>זה לא סנכרון של קצב. המהירות של האדג׳ עדיין שלו, מ־<kbd>TEMPO</kbd>, ולכן הצעדים לא נעולים על הקרייב. זה טריק לגיוון. לקצב יציב של טכנו, [[go:23:4.1|4.1]].</p>
+    </div>
+    <p class="info">🔍 לבדוק: האם האדג׳ רץ כל זמן שהתו של הקרייב מחזיק, או שכל תו מדליק ומכבה אותו לסירוגין. בצילום מהסרטון היד מסתירה את השקע בקרייב, אבל לפי המיקום זה <kbd>GATE</kbd>.</p>
   </article>
   <div class="endnav"><a href="URL_L12">→ שני בסים</a><a href="index.html">לבית ←</a></div>
 </section>

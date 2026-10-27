@@ -1,0 +1,151 @@
+<header style="display:flex;flex-direction:column;gap:10px">
+  <h1>ארגז טריקים לאדג׳</h1>
+  <p class="lede">טריקים קצרים לתוך הג׳אם, רק לאדג׳: משחקים עם הצעדים, צלילים שלא היו בשיעורים, וכבל אחד שמשנה את הגרוב. כל כרטיס: מה זה, למה, ואיך. טריקים חדשים שתביא נכנסים לכאן.</p>
+  <div class="meta"><span><b>מכשיר:</b> האדג׳ <span class="label">Behringer Edge</span></span><span><b>בסיס:</b> הקצב מ[[go:21:2.3|שיעור 3, 2.3]]</span></div>
+</header>
+
+<article class="card howto">
+  <h3>איך משתמשים</h3>
+  <ol>
+    <li><b>נקודת הבסיס:</b> הקצב מ[[go:21:2.3|שיעור 3]] מנגן. כל טריק שמשנה משהו נגמר ב״חזרה״ לשם.</li>
+    <li><b>לפני ניסוי:</b> צלם את הפאנל. האדג׳ לא שומר כלום.</li>
+    <li>הסימנים: <span class="a a-hold"><i>✋</i>החזק</span> <span class="a a-tap"><i>👆</i>לחץ</span> <span class="a a-turn"><i>⟳</i>סובב</span> <span class="a a-rel"><i>🖐</i>שחרר</span>.</li>
+  </ol>
+</article>
+
+<details class="card mapbox"><summary><b>🗺 תרשים הלוח של האדג׳</b> · נגיעה בכל כפתור מראה מה הוא עושה</summary><div id="t8tour"></div></details>
+
+<nav class="toc" aria-label="תוכן">
+  <b>שלוש מגירות</b>
+  <ol>
+    <li><a href="#s1">צעדים</a></li>
+    <li><a href="#s2">צלילים</a></li>
+    <li><a href="#s3">כבל אחד</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== 1 ===================== -->
+<section class="stage" id="s1">
+  <span class="stage-tag">מגירה 1</span>
+  <h2>צעדים</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 הכלל</span>
+    <p>באדג׳ שורת <kbd>VEL</kbd> היא לא רק עוצמה: היא גם <b>אורך</b>, כי היא משנה את שלוש הדעיכות. ושורת <kbd>PITCH</kbd> היא לא רק גובה: היא <b>איזה כלי</b>. לכן שני הכפתורים של צעד אחד הם בעצם בחירה של תוף.</p>
+  </div>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.1</span><h3>פתוח וסגור מאותו צליל</h3><span class="label">VEL</span></div>
+    [[state:play||צליל ההיי־האט מ[[go:20:4.1|המתכונים]]]]
+    <p><b>מה זה:</b> היי־האט אחד, ושורת <kbd>VEL</kbd> מחליטה בכל צעד אם הוא סגור או פתוח.</p>
+    <ol class="steps">
+      <li><div>[[turn:DECAY (VCA)]] לשעה 12, כדי שיהיה מקום לאורך.</div></li>
+      <li><div>צעדים 1, 2, 4, 5, 6, 8: <kbd>VEL</kbd> לשעה 10. סגור, קצר.</div></li>
+      <li><div>צעדים 3 ו־7: <kbd>VEL</kbd> עד הסוף ימינה. פתוח, ארוך, על האוף־ביט.</div></li>
+    </ol>
+    <p><b>למה:</b> זה הגרוב של טרנס: טיקים קטנים, ו״צ׳ששש״ פתוח בין הקיקים. מכלי אחד.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.2</span><h3>פיל של טומים במתג</h3><span class="label">SEQ PITCH MOD</span></div>
+    [[state:play||הקצב מנגן, SEQ PITCH MOD על OFF]]
+    <p><b>מה זה:</b> שורת <kbd>PITCH</kbd> מוכנה מראש כגלגול טומים שיורד. כל הזמן היא כבויה, ומדליקים אותה רק לתיבה של פיל.</p>
+    <ol class="steps">
+      <li><div><kbd>PITCH 5</kbd> לשעה 3, <kbd>PITCH 6</kbd> לשעה 2, <kbd>PITCH 7</kbd> לשעה 1, <kbd>PITCH 8</kbd> לשעה 12. כרגע לא שומעים הבדל.</div></li>
+      <li><div>בתיבה שלפני הדרופ: מתג <kbd>SEQ PITCH MOD</kbd> למעלה, על VCO 1&amp;2.</div></li>
+      <li><div>על הדרופ: חזרה ל־OFF.</div></li>
+    </ol>
+    <p><b>למה:</b> פיל מוכן בהזזה אחת, בלי לסובב שמונה כפתורים בזמן אמת.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.3</span><h3>מזיזים את הקצב צעד</h3><span class="label">ADVANCE בזמן נגינה</span></div>
+    [[state:play||הקצב מנגן]]
+    <p><b>מה זה:</b> לחיצה על <kbd>ADVANCE</kbd> בזמן שהקצב רץ מקפיצה אותו צעד קדימה, וכל המכות זזות מול הטי־8.</p>
+    [[combo:איך מזיזים את הקצב צעד קדימה?|tap:ADVANCE]]
+    <p><b>למה:</b> אותו קצב נשמע פתאום אחר: הקיק עובר לאוף־ביט, והטום נוחת על הפעמה. עוד לחיצה, ועוד גרוב. 🔍 לבדוק שזה מה שקורה כשלוחצים בזמן נגינה.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.4</span><h3>תוף ביד</h3><span class="label">TRIGGER</span></div>
+    [[state:stop||הסיקוונסר של האדג׳ עצור, הטי־8 מנגן]]
+    <p><b>מה זה:</b> האדג׳ לא מנגן קצב בכלל. אתה מכה ביד, ב־<kbd>TRIGGER</kbd>, מעל התופים של הטי־8.</p>
+    <ol class="steps">
+      <li><div>[[tap:TRIGGER]] כשבא לך: מכה בצליל של הצעד שהנורה שלו דולקת.</div></li>
+      <li><div>[[tap:ADVANCE]] מחליף לצליל של הצעד הבא, אם כל צעד מכוון אחרת.</div></li>
+    </ol>
+    <p><b>למה:</b> הכי חי שיש: קיק מתגלגל, מכה של מתכת או לייזר, בדיוק מתי שאתה מרגיש.</p>
+  </article>
+</section>
+
+<!-- ===================== 2 ===================== -->
+<section class="stage" id="s2">
+  <span class="stage-tag">מגירה 2</span>
+  <h2>צלילים</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.1</span><h3>האדג׳ כבס</h3><span class="label">8 צעדים של בס</span></div>
+    [[state:stop||הבית]]
+    <p><b>מה זה:</b> שמונה צעדים של קו בס, במקום תופים.</p>
+    <ol class="steps">
+      <li><div><kbd>SEQ PITCH MOD</kbd> על VCO 1&amp;2. <kbd>ENVELOPE (VCO 1)</kbd> לשעה 12: בלי צניחה.</div></li>
+      <li><div><kbd>SHAPE (VCO 1)</kbd> על PULSE. [[turn:DECAY (VCA)]] לשעה 2.</div></li>
+      <li><div>במסנן: <kbd>CUTOFF</kbd> לשעה 10, <kbd>RESONANCE</kbd> לשעה 12, <kbd>ENVELOPE (VCF)</kbd> לשעה 2.</div></li>
+      <li><div>שורת <kbd>PITCH</kbd>: מכוונים תווים לפי האוזן. כל <kbd>VEL</kbd> לשעה 1.</div></li>
+    </ol>
+    <p><b>למה:</b> כשהקרייב מנגן מלודיה, האדג׳ יכול לקחת את הבס. הגובה לא נעול על תווים, אז מכוונים כל צעד מול הקרייב או הטי־8.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.2</span><h3>סנכרון שצורח</h3><span class="label">HARD SYNC · VCO 2</span></div>
+    [[state:play||הקצב מנגן]]
+    <p><b>מה זה:</b> כל צעד צורח בצבע אחר.</p>
+    <ol class="steps">
+      <li><div><kbd>HARD SYNC</kbd> על ON. <kbd>SEQ PITCH MOD</kbd> על VCO 2.</div></li>
+      <li><div>[[turn:LEVEL (VCO 2)]] לשעה 2, <kbd>LEVEL (VCO 1)</kbd> לשעה 10.</div></li>
+      <li><div>שורת <kbd>PITCH</kbd>: כל צעד במקום אחר.</div></li>
+    </ol>
+    <p><b>למה:</b> מתנד 2 נעול על מתנד 1, אז הגובה לא משתנה, רק הצבע. נשמע כמו סינתי שמדבר בכל מכה. נהדר לטכנו תעשייתי.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.3</span><h3>לייזר עולה למעבר</h3><span class="label">ENVELOPE (VCO 1) שמאלה</span></div>
+    [[state:play||הקצב מנגן]]
+    <p><b>מה זה:</b> במקום שהגובה יצנח, כל מכה עולה. ״ווּוּפ״ למעלה.</p>
+    <ol class="steps">
+      <li><div>[[turn:ENVELOPE (VCO 1)]] שמאלה, לשעה 9.</div></li>
+      <li><div>[[turn:DECAY (EG)]] לשעה 2: העלייה ארוכה.</div></li>
+      <li><div>חזרה: <kbd>ENVELOPE (VCO 1)</kbd> לשעה 2, <kbd>DECAY (EG)</kbd> לשעה 10.</div></li>
+    </ol>
+    <p><b>למה:</b> מכה שעולה מושכת קדימה, כמו לפני דרופ. כמה תיבות כאלה, וחזרה לקיק שצונח.</p>
+  </article>
+</section>
+
+<!-- ===================== 3 ===================== -->
+<section class="stage" id="s3">
+  <span class="stage-tag">מגירה 3</span>
+  <h2>כבל אחד</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.1</span><h3>סווינג מהעוצמה</h3><span class="label">VELOCITY → TEMPO</span></div>
+    [[state:play||הקצב מנגן, CLOCK על INT/EXT]]
+    <p><b>מה זה:</b> הצעדים החזקים משנים את המהירות לצעד שאחריהם, והקצב מתחיל להתנדנד.</p>
+    <ol class="steps">
+      <li><div>כבל מיציאת <kbd>VELOCITY</kbd> אל השקע <kbd>TEMPO</kbd>.</div></li>
+      <li><div>משחקים בשורת <kbd>VEL</kbd>: כל שינוי משנה גם את המרווחים.</div></li>
+    </ol>
+    <p><b>למה:</b> גרוב שמתנדנד, כמו מתופף אנושי. 🔍 לבדוק: עובד רק כשהאדג׳ קובע את הקצב בעצמו. כשהוא מסונכרן לטי־8, נסה ולמד מה קורה.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.2</span><h3>נהמה הפוכה</h3><span class="label">OSC 2 → OSC 1 CV</span></div>
+    [[state:play||הקצב מנגן]]
+    <p><b>מה זה:</b> מתנד 2 מטלטל את הגובה של מתנד 1, בכיוון ההפוך מ־<kbd>1-2 FM AMT</kbd>.</p>
+    <ol class="steps">
+      <li><div>כבל מיציאת <kbd>OSC 2</kbd> אל <kbd>OSC 1 CV</kbd>.</div></li>
+      <li><div>[[turn:FREQUENCY (VCO 2)]] לאט: כל גובה נותן נהמה אחרת.</div></li>
+    </ol>
+    <p><b>למה:</b> קיק שנוהם, כמו מנוע. כשמוסיפים גם <kbd>1-2 FM AMT</kbd>, המתנדים מלכלכים זה את זה בשני הכיוונים.</p>
+  </article>
+  <div class="endnav"><a href="URL_L22">→ לשיעור 4</a><a href="index.html">לבית ←</a></div>
+</section>

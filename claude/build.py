@@ -29,15 +29,19 @@ LESSONS = {
     20: ("איך מכה נבנית", "שני מתנדים, רעש ושלוש דעיכות: כל כפתור, ומתכונים לקיק, טום, סנר, היי־האט ומתכת"),
     21: ("הסיקוונסר: בונים קצב", "שמונה צעדים, שורת עוצמה ושורת גובה, כלי אחד שמנגן כמה תופים, וידיים על הקצב"),
     22: ("הכבלים באדג׳", "שורות הסיקוונסר כשורות של כל דבר: רעש, אורך, מתכת, ומתנד שמנענע את המסנן"),
-    23: ("הטי־8, הקרייב והאדג׳ בקצב אחד", "מי נכנס לאיזה ערוץ במיקסר, מידי מהטי־8 לשניהם, וכבלים בין הקרייב לאדג׳"),
+    23: ("הטי־8, הקרייב והאדג׳ בקצב אחד", "מי נכנס לאיזה ערוץ במיקסר, מידי מהטי־8 לשניהם, כבלים בין הקרייב לאדג׳, וסנכרון בכבל"),
+    24: ("היכרות עם הקרייב", "מה המכשיר, מפת הלוח, השפה של הכפתורים והנורות, המצבים, והבית שתמיד חוזרים אליו"),
+    25: ("היכרות עם האדג׳", "מה המכשיר, מפת הלוח, השפה של הכפתורים, מי קובע את הקצב, והבית שתמיד חוזרים אליו"),
+    26: ("ארגז טריקים לקרייב", "קו שמתקצר, טריל, פולס שנושם, רוח לפני הדרופ, מסנן אקראי והקפאות אוטומטיות"),
+    27: ("ארגז טריקים לאדג׳", "פתוח וסגור מצליל אחד, פיל במתג, תוף ביד, האדג׳ כבס, וסווינג מהעוצמה"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
     "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7)),
     "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10, 11)),
-    "crave": ("הקרייב", "Behringer Crave", "הסינתי הכתום: קול אחד שמנגן קווים", (17, 18, 19)),
-    "edge": ("האדג׳", "Behringer Edge", "הסינתי הוורוד: תופים שבונים מסינתזה", (20, 21, 22)),
+    "crave": ("הקרייב", "Behringer Crave", "הסינתי הכתום: קול אחד שמנגן קווים", (24, 17, 18, 19, 26)),
+    "edge": ("האדג׳", "Behringer Edge", "הסינתי הוורוד: תופים שבונים מסינתזה", (25, 20, 21, 22, 27)),
     # several machines connected together. More machines join here later.
     "together": ("ביחד", "T-8 · Volca · Crave · Edge", "כמה מכשירים מחוברים, בקצב אחד", (8, 12, 23)),
     # a channel of the together family: evolving live jams, two machines at a time
@@ -58,7 +62,7 @@ NOW = datetime.datetime.now(ZoneInfo("Asia/Jerusalem"))
 STAMP = int(NOW.timestamp())
 DAYS = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
 STAMP_TXT = f"יום {DAYS[NOW.weekday()]} {NOW.day}.{NOW.month}, {NOW:%H:%M}"
-ASSET_RE = re.compile(r'((?:href|src)=")((?:app|kit|map|nav)\.css|(?:app|extras|kit|t8-data|vb-data|t8|map|nav)\.js)(")')
+ASSET_RE = re.compile(r'((?:href|src)=")((?:app|kit|map|nav)\.css|(?:app|extras|kit|t8-data|vb-data|crave-data|edge-data|t8|map|nav)\.js)(")')
 
 
 def write_page(name, html):
@@ -184,8 +188,14 @@ def split_cards(html, n):
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
 VB_LESSONS = (9, 10, 11)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
 VBJS = '<script src="vb-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
+CR_LESSONS = (24, 17, 18, 19, 26)  # Crave lessons: panel from src/cravemap.py (crave-data.js)
+ED_LESSONS = (25, 20, 21, 22, 27)  # Edge lessons: panel from src/edgemap.py (edge-data.js)
+CRJS = '<script src="crave-data.js"></script>\n<script src="t8.js"></script>\n'
+EDJS = '<script src="edge-data.js"></script>\n<script src="t8.js"></script>\n'
+CRCAP = "תרשים מצויר לפי צילום של הקרייב והמדריך הרשמי, לא צילום"
+EDCAP = "תרשים מצויר לפי צילום של האדג׳ והמדריך הרשמי, לא צילום"
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
 
@@ -341,6 +351,8 @@ def page(n):
         tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB
     elif dev == "volca":
         tabs += '<a class="tb" href="vb-map.html">▦ מה אפשר לעשות בבס</a>'
+    elif dev in ("crave", "edge"):
+        tabs += f'<a class="tb" href="{dev}-map.html">▦ מה אפשר לעשות</a>'
     total = len(re.findall(r'data-id="l%d:' % n, html))
     out = f"""<!doctype html>
 <html lang="he" dir="rtl">
@@ -358,21 +370,21 @@ def page(n):
 <link rel="stylesheet" href="app.css">{chr(10) + '<link rel="stylesheet" href="kit.css">' if n in KIT_LESSONS else ""}
 {NAVCSS}
 </head>
-<body data-lesson="{n}"{' data-panel="vb"' if n in VB_LESSONS else ""}>
+<body data-lesson="{n}"{' data-panel="vb"' if n in VB_LESSONS else (' data-panel="cr"' if n in CR_LESSONS else (' data-panel="ed"' if n in ED_LESSONS else ""))}>
 <div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a>{tabs}<button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
 <div class="wrap">
 {html}
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>
-{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}{VBJS if n in VB_LESSONS else ""}{NAVJS}</body>
+{KITJS if n in KIT_LESSONS else ""}{T8JS if n in T8_LESSONS else ""}{VBJS if n in VB_LESSONS else ""}{CRJS if n in CR_LESSONS else ""}{EDJS if n in ED_LESSONS else ""}{NAVJS}</body>
 </html>
 """
     write_page(f"lesson-{n}.html", out)
     return total
 
 
-def hub(totals, mtotal, vbtotal=0):
+def hub(totals, mtotal, vbtotal=0, devmaps=None):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
     icons = {"t8": "🥁", "volca": "🎛️", "crave": "🧡", "edge": "💗", "together": "🔗", "live": "🌊"}
@@ -390,6 +402,9 @@ def hub(totals, mtotal, vbtotal=0):
 """
         if dev == "volca":
             tiles += f"""<li><a class="tile ref" href="vb-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות בוולקה בס</h3><p>{vbtotal} דברים שהבס יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
+"""
+        if devmaps and dev in devmaps:
+            tiles += f"""<li><a class="tile ref" href="{dev}-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות ב{name[1:]}</h3><p>{devmaps[dev]} דברים שהמכשיר יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור על התרשים, ונכנסים לכרטיס שמלמד.</p></div></a></li>
 """
         secs += f"""<section class="dev {dev}" id="{dev}">
 <div class="dhead"><span class="ico" aria-hidden="true">{icons[dev]}</span><div><h2>{name}</h2><p>{sub} <span class="code">{code}</span></p></div></div>
@@ -592,6 +607,8 @@ def any_lines(html, n):
 
 
 VBANY = {"step": [f"s{i}" for i in range(1, 17)], "mem": [f"s{i}" for i in range(1, 9)], "vco": ["vco1", "vco2", "vco3"]}
+CRANY = {"step": [f"s{i}" for i in range(1, 9)]}
+EDANY = {"vel": [f"v{i}" for i in range(1, 9)], "pitch": [f"p{i}" for i in range(1, 9)]}
 
 
 def map_page(t8map, tricks=None, out="map.html", dev="t8"):
@@ -600,7 +617,8 @@ def map_page(t8map, tricks=None, out="map.html", dev="t8"):
     import html as H
     if tricks is None:
         import tricks
-    anyctl = ANYCTL if dev == "t8" else VBANY
+    anyctl = {"t8": ANYCTL, "volca": VBANY, "crave": CRANY, "edge": EDANY}[dev]
+    lab = getattr(t8map, "label", None)
     total = 0
     sections, chips = [], []
     for gid, gname, gsub, items in tricks.GOALS:
@@ -642,7 +660,7 @@ def map_page(t8map, tricks=None, out="map.html", dev="t8"):
                 assert f'id="{anchor}"' in src, ("missing card", tid, c)
                 links.append(f'<a class="go" href="lesson-{n}.html#{anchor}">ללמוד: {lbl}</a>')
             combo = f'<div class="combo" data-seq="{H.escape(seq)}" data-title="איך"></div>' if seq else ""
-            knobs = "" if seq else '<p class="knobs">' + " ".join(f"<kbd>{H.escape(t8map.C[c][5] or t8map.C[c][0])}</kbd>" for c in extra if t8map.C[c][5]) + "</p>"
+            knobs = "" if seq else '<p class="knobs">' + " ".join(f"<kbd>{H.escape(lab(c) if lab else (t8map.C[c][5] or t8map.C[c][0]))}</kbd>" for c in extra if t8map.C[c][5]) + "</p>"
             anyl = f'<p class="anyline"><i aria-hidden="true">🔁</i><span><b>עובד על:</b> {tricks.ANY[tid]}</span></p>' if tid in tricks.ANY else ""
             rows.append(f'<div class="trick" id="t-{tid}" data-ctl="{" ".join(ctl)}" data-cards="{" ".join(keys)}">'
                         f'<div class="tt"><span class="mark" aria-hidden="true"></span><b>{title}</b></div><p>{line}</p>{anyl}{combo}{knobs}'
@@ -654,6 +672,14 @@ def map_page(t8map, tricks=None, out="map.html", dev="t8"):
         lede = f"כל מה שהמכשיר יודע, מכל שיעורי הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו."
         anyp = 'כשכתוב <b>לחצן צעד</b> או <b>לחצן כלי</b>, זה עובד על כל צעד או כלי, והמספר הוא רק דוגמה. ״כל צעד״ כולל גם 17 עד 32: עוברים לחצי השני עם <kbd>SHIFT</kbd> + <kbd>6</kbd>, ושם לחצן 1 הוא צעד 17.'
         data, attr = "t8-data.js", 'data-t8="map"'
+    elif dev in ("crave", "edge"):
+        nm = DEVICES[dev][0]
+        bnm = "ב" + nm[1:]  # "בקרייב", not "בהקרייב"
+        cur, title, h1 = f'<a class="tb cur" href="{dev}-map.html">▦ מה אפשר לעשות</a>', f"מה אפשר לעשות {bnm}", f"מה אפשר לעשות {bnm}"
+        lede = f"כל מה ש{nm} יודע, מכל השיעורים שלו, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו."
+        anyp = ('כשכתוב <b>קליד צעד</b>, זה עובד על כל אחד משמונת הקלידים הלבנים, STEP 1 עד STEP 8, והמספר הוא רק דוגמה.' if dev == "crave" else
+                'כשכתוב <b>VEL</b> או <b>PITCH</b> במסגרת מנוקדת, זה עובד על כל אחד משמונת הצעדים, והמספר הוא רק דוגמה.')
+        data, attr = f"{dev}-data.js", f'data-t8="map" data-panel="{"cr" if dev == "crave" else "ed"}"'
     else:
         cur, title, h1 = '<a class="tb cur" href="vb-map.html">▦ מה אפשר לעשות בבס</a>', "מה אפשר לעשות בוולקה בס", "מה אפשר לעשות בוולקה בס"
         lede = f"כל מה שהבס יודע, מכל שיעורי הוולקות ומשיעור 5 של הטי־8, במקום אחד. {total} דברים. לכל אחד: מה הוא עושה, איך עושים, ואיפה לומדים אותו."
@@ -814,6 +840,24 @@ if __name__ == "__main__":
     sys.path.insert(0, str(SRC))
     import t8map
     t8map.build()
+    import cravemap, edgemap
+    cravemap.build()
+    edgemap.build()
+    PHOTOS.extend(cravemap.P.photos(CRCAP))
+    PHOTOS.extend(edgemap.P.photos(EDCAP))
+
+    def pair(card, cr, ed, cap="הכתום הוא הקרייב, הוורוד הוא האדג׳"):
+        """Together lesson: one figure of each panel, side by side, with one legend."""
+        crn, edn = cravemap.P.names(), edgemap.P.names()
+        legend = [f"{crn[i]}|קרייב: {t}" for i, t in cravemap.P.FIGS[cr][1]] + [f"{edn[i]}|אדג׳: {t}" for i, t in edgemap.P.FIGS[ed][1]]
+        return (23, "card", card, [cr, ed], legend, cap)
+    PHOTOS.extend([
+        pair("1.1", "cr-52", "ed-44"),
+        (23, "card", "2.2", ["cr-49"], [f"{cravemap.P.names()[i]}|{t}" for i, t in cravemap.P.FIGS["cr-49"][1]], CRCAP),
+        (23, "card", "2.3", ["ed-41"], [f"{edgemap.P.names()[i]}|{t}" for i, t in edgemap.P.FIGS["ed-41"][1]], EDCAP),
+        pair("4.1", "cr-50", "ed-42"),
+        pair("4.2", "cr-51", "ed-43"),
+    ])
     totals = {n: page(n) for n in LESSONS}
     for k in TOOLS:
         tool_page(k)
@@ -821,9 +865,12 @@ if __name__ == "__main__":
     import vbmap, vbtricks
     vbmap.build()
     vbtotal = map_page(vbmap, vbtricks, "vb-map.html", "volca")
+    import cravetricks, edgetricks
+    devmaps = {"crave": map_page(cravemap, cravetricks, "crave-map.html", "crave"),
+               "edge": map_page(edgemap, edgetricks, "edge-map.html", "edge")}
     import settings
     settings_page(settings)
-    hub(totals, mtotal, vbtotal)
+    hub(totals, mtotal, vbtotal, devmaps)
     check_links()
     print("map", mtotal)
     print("built", totals)

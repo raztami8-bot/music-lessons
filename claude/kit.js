@@ -46,9 +46,9 @@ function chip(st){
   if(st.a==="say") return '<span class="a a-say">'+esc(st.k)+'</span>';    /* a short note, when the display text is unknown */
   var v=VERB[st.a]; if(!v) return "";
   /* "@step:16" = any step, 16 is only the example (written under the strip on map.html) */
-  var ANY={step:"צעד",num:"מספר",bank:"1 עד 4",drum:"כלי",inst:"כלי",mem:"1 עד 8",vco:"VCO 1/2/3"}, any=/^@(\w+):/.exec(st.k||"");
-  var KW=document.body.dataset.panel==="vb"?"קליד":"לחצן";   /* Volca Bass: the step buttons are keys */
-  var name=any?(any[1]==="vco"?"":KW+' ')+'<kbd class="any">'+ANY[any[1]]+'</kbd>':/^\d+$/.test(st.k)?KW+' <kbd>'+esc(st.k)+'</kbd>':'<kbd>'+esc(st.k)+'</kbd>';
+  var ANY={step:"צעד",num:"מספר",bank:"1 עד 4",drum:"כלי",inst:"כלי",mem:"1 עד 8",vco:"VCO 1/2/3",vel:"VEL",pitch:"PITCH"}, any=/^@(\w+):/.exec(st.k||"");
+  var KW=({vb:"קליד",cr:"קליד"})[document.body.dataset.panel]||"לחצן";   /* Volca Bass and Crave: the step buttons are keys */
+  var name=any?(/^(vco|vel|pitch)$/.test(any[1])?"":KW+' ')+'<kbd class="any">'+ANY[any[1]]+'</kbd>':/^\d+$/.test(st.k)?KW+' <kbd>'+esc(st.k)+'</kbd>':'<kbd>'+esc(st.k)+'</kbd>';
   return '<span class="a a-'+st.a+'"><i>'+v[0]+'</i>'+v[1]+' '+name+(st.n>1?' <b>×'+st.n+'</b>':'')+'</span>';
 }
 function strip(seq){
