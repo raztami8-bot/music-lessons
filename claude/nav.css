@@ -130,3 +130,9 @@ details.back>p{margin:8px 12px 10px;font-size:.92rem;color:var(--muted)}
 .dv.vb{background:#12907f}
 .eyebrow.live{--dev:#c2357a}
 .dv.vbt{background:#3b6fd1}
+
+/* Crave (orange) and Edge (pink): their own areas, and tags in the together lessons */
+.eyebrow.crave{--dev:#d97706}
+.eyebrow.edge{--dev:#b5179e}
+.dv.cr{background:#c76a05}
+.dv.ed{background:#b5179e}

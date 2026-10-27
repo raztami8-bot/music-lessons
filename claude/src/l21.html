@@ -1,0 +1,166 @@
+<header style="display:flex;flex-direction:column;gap:10px">
+  <h1>הסיקוונסר של האדג׳: בונים קצב</h1>
+  <p class="lede">שמונה צעדים, ולכל צעד שני כפתורים: עוצמה וגובה. אין כאן הקלטה: הקצב הוא מיקום הכפתורים. בונים קיק, מוסיפים כלי שני מאותו צליל, ומנגנים בידיים כשזה רץ.</p>
+  <div class="meta"><span><b>מכשיר:</b> האדג׳ <span class="label">Behringer Edge</span></span><span><b>זמן:</b> כעשרים דקות</span><span><b>הצליל:</b> נקודת הבית מ[[go:20:1.2|שיעור 1]]</span></div>
+</header>
+
+<nav class="toc" aria-label="תוכן">
+  <b>שלושה שלבים</b>
+  <ol>
+    <li><a href="#s1">איך הסיקוונסר עובד</a></li>
+    <li><a href="#s2">בונים קצב</a></li>
+    <li><a href="#s3">בזמן שהקצב רץ</a></li>
+  </ol>
+</nav>
+
+<!-- ===================== 1 ===================== -->
+<section class="stage" id="s1">
+  <span class="stage-tag">שלב 1</span>
+  <h2>איך הסיקוונסר עובד</h2>
+
+  <div class="essence">
+    <span class="essence-tag">💡 המהות: כלי אחד, הרבה תופים</span>
+    <p>האדג׳ מנגן צליל אחד בכל רגע. מה שהופך אותו למכונת תופים: <b>כל צעד מקבל גובה ועוצמה משלו</b>. צעד נמוך וחזק הוא קיק, צעד גבוה וחלש הוא טיק. אותו צליל, שמונה תפקידים.</p>
+  </div>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.1</span><h3>שתי השורות</h3><span class="label">VEL · PITCH</span></div>
+    <div class="tbl-box"><table>
+      <thead><tr><th>שורה</th><th>מה היא עושה</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>VEL</kbd></td><td>עוצמה של הצעד. עד הסוף שמאלה, הצעד <b>שותק</b>. ככל שמסובבים ימינה, המכה חזקה יותר וגם ארוכה יותר, כי העוצמה משנה גם את הדעיכות.</td></tr>
+        <tr><td><kbd>PITCH</kbd></td><td>גובה של הצעד. שעה 12 היא ״כלום״, ימינה גבוה, שמאלה נמוך. עובדת רק כשמתג <kbd>SEQ PITCH MOD</kbd> לא על OFF.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>הגובה לא נעול על תווים. הכפתור זז חלק, ולכן ״מנגינה״ כאן מכוונים לפי האוזן. בתופים זה יתרון: כל טום יכול לשבת בדיוק איפה שנעים.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.2</span><h3>שמונה צעדים מול שש־עשרה</h3><span class="label">איפה הפעמה</span></div>
+    <p>תיבה רגילה היא 16 צעדים קטנים, כמו בטי־8. באדג׳ יש 8, ולכן כשכל צעד הוא צעד קטן כזה, 8 הצעדים חוזרים פעמיים בכל תיבה.</p>
+    <div class="tbl-box"><table>
+      <thead><tr><th>צעד באדג׳</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead>
+      <tbody><tr><td>מה זה</td><td><b>פעמה</b></td><td></td><td>אוף־ביט</td><td></td><td><b>פעמה</b></td><td></td><td>אוף־ביט</td><td></td></tr></tbody>
+    </table></div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>צעדים 1 ו־5 הם הפעמות, שם הקיק. 3 ו־7 הם האוף־ביט, שם היי־האט פתוח של טרנס. 2, 4, 6, 8 הם הרווחים הקטנים, למכות רפאים.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">1.3</span><h3>ארבעת הכפתורים</h3><span class="label">PLAY/STOP · TEMPO · ADVANCE · TRIGGER</span></div>
+    [[state:stop||נקודת הבית]]
+    <ol class="steps">
+      <li><div>[[tap:PLAY/STOP]] מתחיל ועוצר, מהצעד שבו הוא עומד.</div></li>
+      <li><div>[[turn:TEMPO]] קובע מהירות, כשמתג <kbd>CLOCK</kbd> על INT.</div></li>
+      <li><div>כשהוא עצור: [[tap:ADVANCE]] מתקדם צעד אחד, ו[[tap:TRIGGER]] מנגן את הצעד הנוכחי בלי להתקדם.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> הגעת לצעד 5 עם <kbd>ADVANCE</kbd>, ושמעת אותו לבד עם <kbd>TRIGGER</kbd>.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>זו הדרך לכוונן צעד: עוצרים, <kbd>ADVANCE</kbd> עד הצעד, <kbd>TRIGGER</kbd> ומסובבים את שני הכפתורים שלו. <b>🔁 עובד על:</b> כל אחד מ־8 הצעדים.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 2 ===================== -->
+<section class="stage" id="s2">
+  <span class="stage-tag">שלב 2</span>
+  <h2>בונים קצב</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.1</span><h3>קיק על כל פעמה</h3><span class="label">VEL 1 · 5</span></div>
+    [[state:play||נקודת הבית מ[[go:20:1.2|שיעור 1]]]]
+    <ol class="steps">
+      <li><div>[[turn:VEL]] של צעדים 2, 3, 4, 6, 7, 8 עד הסוף שמאלה.</div></li>
+      <li><div>נשארים רק צעדים 1 ו־5, בשעה 2.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שומעים ״בום, בום, בום, בום״, קיק של טכנו.</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.2</span><h3>כלי שני מאותו צליל</h3><span class="label">SEQ PITCH MOD · PITCH 3 · 7</span></div>
+    [[state:play||הקיק מ־[[go:21:2.1|2.1]]]]
+    <ol class="steps">
+      <li><div>מתג <kbd>SEQ PITCH MOD</kbd> על שני המתנדים (OSC 1&amp;2).</div></li>
+      <li><div>צעדים 3 ו־7: [[turn:VEL]] לשעה 12, ו[[turn:PITCH]] לשעה 3.</div></li>
+      <li><div>מכוונים לפי האוזן: <kbd>PITCH</kbd> של 3 ושל 7 עד שהמכה הגבוהה נעימה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> בין הקיקים יש ״טוק״ גבוה וקצר יותר, על האוף־ביט.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>הגובה הגבוה הפך את הקיק לטום, והעוצמה הנמוכה קיצרה אותו. ככה נבנה כלי חדש בלי לגעת בצליל.</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.3</span><h3>מכות רפאים</h3><span class="label">VEL · PITCH 2 · 4 · 6 · 8</span></div>
+    [[state:play||הקצב מ־[[go:21:2.2|2.2]]]]
+    <ol class="steps">
+      <li><div>[[turn:NOISE / EXT]] לשעה 10, כדי לתת לכל מכה קצת רעש.</div></li>
+      <li><div>צעד 8: [[turn:VEL]] לשעה 10, ו[[turn:PITCH]] לשעה 4. מכה קטנה וגבוהה רגע לפני הקיק.</div></li>
+      <li><div>נסה גם בצעד 4 או 6. לא בכולם: רווח הוא חלק מהגרוב.</div></li>
+    </ol>
+    <div class="tbl-box"><table>
+      <thead><tr><th>צעד</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>VEL</kbd></td><td>2</td><td>0</td><td>12</td><td>0</td><td>2</td><td>0</td><td>12</td><td>10</td></tr>
+        <tr><td><kbd>PITCH</kbd></td><td>12</td><td>12</td><td>3</td><td>12</td><td>12</td><td>12</td><td>3</td><td>4</td></tr>
+      </tbody>
+    </table></div>
+    <p class="legend">המספרים הם שעות בשעון. 0 זה עד הסוף שמאלה: צעד שותק.</p>
+    <div class="ok"><b>הצלחת אם:</b> הקצב מתגלגל אל הקיק הבא.</div>
+    <p class="info">הקצב הזה שווה צילום. האדג׳ לא שומר כלום, אז הצילום הוא השמירה.</p>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">2.4</span><h3>קיק קבוע, צלצול שמנגן</h3><span class="label">SEQ PITCH MOD: OSC 2</span></div>
+    [[state:play||הקצב מ־[[go:21:2.3|2.3]]]]
+    <ol class="steps">
+      <li><div>מתג <kbd>SEQ PITCH MOD</kbd> על מתנד 2 בלבד.</div></li>
+      <li><div>מתנד 2: [[turn:LEVEL]] לשעה 12.</div></li>
+      <li><div>מקשיבים: הקיק של מתנד 1 לא זז, ומעליו מתנד 2 מנגן את שורת הגובה.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> יש קיק יציב, ועליו צלצול שמשנה גובה בכל צעד.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>שלושת מצבי המתג: <b>שניהם</b> כל המכה זזה, טוב לתופים. <b>רק 2</b> הגוף נשאר והצלצול מנגן, טוב לקצב עם מנגינה. <b>OFF</b> כל הצעדים באותו גובה, ושורת הגובה פנויה לכבלים, ב[[go:22:2.2|שיעור 3]].</p>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== 3 ===================== -->
+<section class="stage" id="s3">
+  <span class="stage-tag">שלב 3</span>
+  <h2>בזמן שהקצב רץ</h2>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.1</span><h3>ידיים על הקצב</h3><span class="label">לחיות</span></div>
+    [[state:play||הקצב מ־[[go:21:2.3|2.3]]]]
+    <div class="tbl-box"><table>
+      <thead><tr><th>מה</th><th>איך</th></tr></thead>
+      <tbody>
+        <tr><td>להוריד או להחזיר מכה</td><td><kbd>VEL</kbd> של הצעד, שמאלה או ימינה</td></tr>
+        <tr><td>מקצר ומהודק לבום מתגלגל</td><td>במגבר <kbd>DECAY</kbd></td></tr>
+        <tr><td>מבום ללייזר</td><td><kbd>EG (VCO 1&amp;2) DECAY</kbd></td></tr>
+        <tr><td>עמום לפתוח, בילד</td><td><kbd>CUTOFF</kbd>, לאט, לאורך כמה תיבות</td></tr>
+        <tr><td>מתכת שנכנסת לאט</td><td><kbd>1-2 FM AMT</kbd></td></tr>
+      </tbody>
+    </table></div>
+    <div class="ok"><b>הצלחת אם:</b> שיחקת דקה שלמה בלי לעצור, והקצב השתנה כל הזמן.</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><span class="num">3.2</span><h3>הקצב שהופך לצליל</h3><span class="label">TEMPO עד הסוף</span></div>
+    [[state:play||הקצב מנגן, CLOCK על INT]]
+    <ol class="steps">
+      <li><div>[[turn:TEMPO]] לאט ימינה, עד הסוף. המכות מתקרבות, ובסוף מתחברות לצליל אחד מזמזם.</div></li>
+      <li><div>חזרה: <kbd>TEMPO</kbd> לקצב הקודם.</div></li>
+    </ol>
+    <div class="ok"><b>הצלחת אם:</b> שמעת את הרגע שבו הקצב הופך לצליל.</div>
+    <div class="learn"><span class="learn-tag">להבין</span>
+      <p>הסיקוונסר מגיע עד 10,000 בדקה. בקצב כזה 8 הצעדים חוזרים מהר כל כך, שהאוזן שומעת אותם כגובה. זה צליל מוזר לרגע של מעבר או של שבירה.</p>
+    </div>
+    <p class="warn">כשהקצב בא ממכשיר אחר, <kbd>TEMPO</kbd> לא עובד. הטריק הזה רק כש־<kbd>CLOCK</kbd> על INT.</p>
+  </article>
+  <div class="endnav"><a href="URL_L20">→ לשיעור 1</a><a href="URL_L22">לשיעור 3 ←</a></div>
+</section>

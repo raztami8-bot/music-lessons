@@ -23,19 +23,28 @@ LESSONS = {
     14: ("לולאה ראשונה: למה זה עובד", "בונים את הלולאה כלי אחרי כלי, ושומעים מה כל אחד מוסיף. ושני קיקים"),
     15: ("תבניות שזזות", "גרסה שנייה לכל זוג, ומעבר ביניהן בזמן נגינה: שבירה, דרופ וגמגום"),
     16: ("מפה של ג׳אם", "חמש דקות מתוכננות לכל זוג, שורה אחרי שורה, ומה עושים כשנתקעים"),
+    17: ("איך הצליל בנוי", "מתנד, מסנן, מעטפת ומגבר: כל כפתור, מה הוא עושה, ומה לנסות. ונקודת הבית"),
+    18: ("הסיקוונסר: מקליטים ומנגנים", "הקלטה בקלידים, עריכת צעד, שמירה וטעינה, ומה עושים בידיים כשהרצף רץ"),
+    19: ("הכבלים: מה הרעיון", "חיבורים נסתרים, מיציאה לכניסה, צליל מול הוראה, וחמישה חיבורים ראשונים"),
+    20: ("איך מכה נבנית", "שני מתנדים, רעש ושלוש דעיכות: כל כפתור, ומתכונים לקיק, טום, סנר, היי־האט ומתכת"),
+    21: ("הסיקוונסר: בונים קצב", "שמונה צעדים, שורת עוצמה ושורת גובה, כלי אחד שמנגן כמה תופים, וידיים על הקצב"),
+    22: ("הכבלים באדג׳", "שורות הסיקוונסר כשורות של כל דבר: רעש, אורך, מתכת, ומתנד שמנענע את המסנן"),
+    23: ("הטי־8, הקרייב והאדג׳ בקצב אחד", "מי נכנס לאיזה ערוץ במיקסר, מידי מהטי־8 לשניהם, וכבלים בין הקרייב לאדג׳"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
     "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7)),
     "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10, 11)),
+    "crave": ("הקרייב", "Behringer Crave", "הסינתי הכתום: קול אחד שמנגן קווים", (17, 18, 19)),
+    "edge": ("האדג׳", "Behringer Edge", "הסינתי הוורוד: תופים שבונים מסינתזה", (20, 21, 22)),
     # several machines connected together. More machines join here later.
-    "together": ("ביחד", "T-8 + Volca Bass", "כמה מכשירים מחוברים, בקצב אחד", (8, 12)),
+    "together": ("ביחד", "T-8 · Volca · Crave · Edge", "כמה מכשירים מחוברים, בקצב אחד", (8, 12, 23)),
     # a channel of the together family: evolving live jams, two machines at a time
     "live": ("לייב מתפתח", "T-8 + Volca", "ג׳אם שמתפתח, שני מכשירים בכל פעם", (13, 14, 15, 16)),
 }
 DEV = {n: (d, i + 1) for d, v in DEVICES.items() for i, n in enumerate(v[3])}
-SHORT = {"t8": "טי־8", "volca": "וולקות", "together": "ביחד", "live": "לייב"}
+SHORT = {"t8": "טי־8", "volca": "וולקות", "crave": "קרייב", "edge": "אדג׳", "together": "ביחד", "live": "לייב"}
 
 
 def label(n, full=True):
@@ -175,7 +184,7 @@ def split_cards(html, n):
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
 VB_LESSONS = (9, 10, 11)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
 VBJS = '<script src="vb-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 
 VERBS = {"hold": ("✋", "החזק"), "tap": ("👆", "לחץ"), "turn": ("⟳", "סובב")}
@@ -366,7 +375,7 @@ def page(n):
 def hub(totals, mtotal, vbtotal=0):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
-    icons = {"t8": "🥁", "volca": "🎛️", "together": "🔗", "live": "🌊"}
+    icons = {"t8": "🥁", "volca": "🎛️", "crave": "🧡", "edge": "💗", "together": "🔗", "live": "🌊"}
     for dev, (name, code, sub, nums) in DEVICES.items():
         tiles = ""
         for n in nums:
@@ -403,9 +412,9 @@ def hub(totals, mtotal, vbtotal=0):
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="app.css">
 <style>
-:root{{--t8:#e0561b;--volca:#12907f;--together:#6a4bc4;--live:#c2357a}}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--t8:#ff8a4c;--volca:#3fd0bb;--together:#a98bff;--live:#ff7ab8}}}}
-:root[data-theme="dark"]{{--t8:#ff8a4c;--volca:#3fd0bb;--together:#a98bff;--live:#ff7ab8}}
+:root{{--t8:#e0561b;--volca:#12907f;--crave:#d97706;--edge:#b5179e;--together:#6a4bc4;--live:#c2357a}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--t8:#ff8a4c;--volca:#3fd0bb;--crave:#ffb04a;--edge:#f07ad8;--together:#a98bff;--live:#ff7ab8}}}}
+:root[data-theme="dark"]{{--t8:#ff8a4c;--volca:#3fd0bb;--crave:#ffb04a;--edge:#f07ad8;--together:#a98bff;--live:#ff7ab8}}
 .wrap{{max-width:900px;gap:22px;padding-top:max(22px,env(safe-area-inset-top,0px))}}
 .hello{{display:flex;flex-direction:column;gap:6px}}
 .hello h1{{font-size:2.3rem}}
@@ -420,6 +429,8 @@ def hub(totals, mtotal, vbtotal=0):
 .dev{{--dev:var(--t8);display:flex;flex-direction:column;gap:14px;padding:18px 14px;border-radius:26px;
   background:color-mix(in srgb,var(--dev) 9%,var(--bg));border:2px solid color-mix(in srgb,var(--dev) 22%,transparent)}}
 .dev.volca{{--dev:var(--volca)}}
+.dev.crave{{--dev:var(--crave)}}
+.dev.edge{{--dev:var(--edge)}}
 .dev.together{{--dev:var(--together)}}
 .dev.live{{--dev:var(--live)}}
 .dhead{{display:flex;align-items:center;gap:14px;padding-inline:4px}}
