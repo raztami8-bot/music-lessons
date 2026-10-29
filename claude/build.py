@@ -857,6 +857,7 @@ if __name__ == "__main__":
         (23, "card", "2.3", ["ed-41"], [f"{edgemap.P.names()[i]}|{t}" for i, t in edgemap.P.FIGS["ed-41"][1]], EDCAP),
         pair("4.1", "cr-50", "ed-42"),
         pair("4.2", "cr-51", "ed-43"),
+        pair("4.3", "cr-53", "ed-42"),
     ])
     totals = {n: page(n) for n in LESSONS}
     for k in TOOLS:
