@@ -33,12 +33,13 @@ LESSONS = {
     24: ("היכרות עם הקרייב", "מה המכשיר, מפת הלוח, השפה של הכפתורים והנורות, המצבים, והבית שתמיד חוזרים אליו"),
     25: ("היכרות עם האדג׳", "מה המכשיר, מפת הלוח, השפה של הכפתורים, מי קובע את הקצב, והבית שתמיד חוזרים אליו"),
     26: ("ארגז טריקים לקרייב", "קו שמתקצר, טריל, פולס שנושם, רוח לפני הדרופ, מסנן אקראי והקפאות אוטומטיות"),
+    28: ("מקצבים מעולמות אחרים", "אלקטרו, ברייקביט, דאב טכנו, מינימל, חצי קצב ודראם אנד בייס: איפה הקיק, למה זה מרגיש ככה, ושינוי אחד"),
     27: ("ארגז טריקים לאדג׳", "פתוח וסגור מצליל אחד, פיל במתג, תוף ביד, האדג׳ כבס, וסווינג מהעוצמה"),
 }
 
 # Lessons are numbered per device on the site; file names and saved progress keys stay lesson-1..7 / l1..l7.
 DEVICES = {
-    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7)),
+    "t8": ("הטי־8", "T-8", "תופים ובס בקופסה אחת", (4, 5, 6, 7, 28)),
     "volca": ("הוולקות", "Volca Beats · Volca Bass", "מכונת תופים ובס, שני מכשירים קטנים", (1, 2, 3, 9, 10, 11)),
     "crave": ("הקרייב", "Behringer Crave", "הסינתי הכתום: קול אחד שמנגן קווים", (24, 17, 18, 19, 26)),
     "edge": ("האדג׳", "Behringer Edge", "הסינתי הוורוד: תופים שבונים מסינתזה", (25, 20, 21, 22, 27)),
@@ -76,7 +77,7 @@ NAVJS = '<script src="nav.js"></script>\n'
 
 T8CAP = "תרשים מצויר לפי המדריך הרשמי, לא צילום"
 VBCAP = "תרשים מצויר לפי הלוח והמדריך הרשמי, לא צילום"
-T8_LESSONS = (4, 5, 6, 7, 8)
+T8_LESSONS = (4, 5, 6, 7, 8, 28)
 
 # Photos: (lesson, kind, anchor) -> images + legend. Legend order matches the numbers drawn on each photo.
 PHOTOS = [
@@ -188,7 +189,7 @@ def split_cards(html, n):
 T8JS = '<script src="t8-data.js"></script>\n<script src="t8.js"></script>\n'
 VB_LESSONS = (9, 10, 11)  # Volca Bass lessons in the kit format: panel from src/vbmap.py (vb-data.js)
 VBJS = '<script src="vb-data.js"></script>\n<script src="t8.js"></script>\n'
-KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
+KIT_LESSONS = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28)  # T-8 lessons: action marks, display drawings, back-to-base; lesson 6 also has sessions and hand practice
 KITJS = '<script src="kit.js"></script>\n'
 CR_LESSONS = (24, 17, 18, 19, 26)  # Crave lessons: panel from src/cravemap.py (crave-data.js)
 ED_LESSONS = (25, 20, 21, 22, 27)  # Edge lessons: panel from src/edgemap.py (edge-data.js)

@@ -10,7 +10,7 @@ sock=socket.socket(); sock.bind(("127.0.0.1",0)); PORT=sock.getsockname()[1]; so
 srv=subprocess.Popen([sys.executable,"-m","http.server",str(PORT),"--bind","127.0.0.1"],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 time.sleep(1)
 BASE=f"http://127.0.0.1:{PORT}/"
-PAGES=["index.html"]+[f"claude/lesson-{n}.html" for n in range(1,28)]+["claude/map.html","claude/vb-map.html","claude/crave-map.html","claude/edge-map.html","claude/settings.html","claude/notebook.html","claude/glossary.html","claude/index.html"]
+PAGES=["index.html"]+[f"claude/lesson-{n}.html" for n in range(1,29)]+["claude/map.html","claude/vb-map.html","claude/crave-map.html","claude/edge-map.html","claude/settings.html","claude/notebook.html","claude/glossary.html","claude/index.html"]
 problems=[]
 ids_cache={}
 with sync_playwright() as p:
