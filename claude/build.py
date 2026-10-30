@@ -914,6 +914,15 @@ MENUTAB = '<a class="tb" href="menus.html">📖 מה זה?</a>'
 CONTAB = '<a class="tb" href="connections.html">🔌 חיבורים</a>'
 
 
+LTR_RUN = re.compile(r"[A-Za-z0-9#▶●][A-Za-z0-9#▶●+/._()\- ]*[A-Za-z0-9#)▶●]|[A-Za-z0-9#▶●]")
+
+
+def ltr(text):
+    """Keep each run of button names and numbers in its own order inside a Hebrew line ("SHIFT + 4, TEMPO/VALUE")."""
+    parts = re.split(r"(<[^>]+>)", text)
+    return "".join(p if p.startswith("<") else LTR_RUN.sub(lambda m: f'<bdi dir="ltr">{m.group(0)}</bdi>', p) for p in parts)
+
+
 def menus_page(M):
     """menus.html: every name on the T-8, as printed or shown, with what it is, the idea, and why you go there (src/menus.py).
     The search matches the plain spelling too (data-k), since the display drawing splits the text into cells."""
@@ -928,18 +937,23 @@ def menus_page(M):
     for sid, title, line, items in M.SECTIONS:
         nav += f'<a href="#ms-{sid}">{title.split(":")[0].replace("התפריט · ", "")}</a>'
         cards = ""
-        for (id, shown, kind, full, what, idea, why, cards_, doubt) in items:
+        for e in items:
             count += 1
-            face = _seg(shown) if kind == "seg" else " ".join(f"<kbd>{s}</kbd>" for s in shown.split(" · "))
-            dbt = f'<details class="src no"><summary>🔍 הכתיב</summary><p>{M.DOUBT}</p></details>' if doubt else ""
-            cards += (f'<article class="card mrow" id="m-{id}"><div class="sr-top"><div class="mface" data-k="{H.escape(shown)}">{face}</div>{dbt}</div>'
-                      f'<h3>{full}</h3><dl><dt>מה זה</dt><dd>{what}</dd><dt>הרעיון</dt><dd>{idea}</dd><dt>למה נכנסים</dt><dd>{why}</dd></dl>{at(cards_)}</article>\n')
+            shown = e["shown"]
+            face = _seg(shown) if e["kind"] == "seg" else " ".join(f"<kbd>{s}</kbd>" for s in shown.split(" · "))
+            dbt = f'<details class="src no"><summary>🔍 הכתיב</summary><p>{M.DOUBT}</p></details>' if e["doubt"] else ""
+            if e["unsure"]:
+                dbt += f'<details class="src no"><summary>🔍 לא כתוב במדריך</summary><p>{e["unsure"]} בדוק ותספר לי.</p></details>'
+            rows = [("מה זה", e["what"]), ("עובד על", e["on"]), ("הרעיון", e["idea"]), ("איך", e["how"]), ("דוגמה", e["ex"]), ("למה נכנסים", e["why"])]
+            dl = "".join(f'<dt>{k}</dt><dd>{ltr(v)}</dd>' for k, v in rows if v)
+            cards += (f'<article class="card mrow" id="m-{e["id"]}"><div class="sr-top"><div class="mface" data-k="{H.escape(shown)}">{face}</div>{dbt}</div>'
+                      f'<h3>{e["full"]}</h3><dl>{dl}</dl>{at(e["cards"])}</article>\n')
         secs += (f'<section class="sgroup msec" id="ms-{sid}"><div class="sg-head"><span class="dot" aria-hidden="true"></span>'
                  f'<div><h2>{title}</h2>{f"<p>{line}</p>" if line else ""}</div></div><div class="sg-rows">{cards}</div></section>\n')
     body = xrefs(f"""<header style="display:flex;flex-direction:column;gap:8px">
   <span class="eyebrow t8">טי־8 · דף עזר</span>
   <h1>מה זה? כל השמות בטי־8</h1>
-  <p class="lede">כל שם שמודפס על המכשיר או מופיע בתצוגה, כתוב כמו שרואים אותו. לכל אחד: מה זה, מה הרעיון, ולמה נכנסים לזה. איך עושים, לומדים בשיעורים, בקישור שבתחתית.</p>
+  <p class="lede">כל שם שמודפס על המכשיר או מופיע בתצוגה, כתוב כמו שרואים אותו. לכל אחד: מה זה, על מה זה עובד, הרעיון, איך מגיעים, דוגמה, ולמה נכנסים. בתחתית: הכרטיס שמלמד צעד אחרי צעד.</p>
 </header>
 <div class="msearch"><input type="search" id="mq" placeholder="חיפוש: שם מהתצוגה, מהלוח, או מילה בעברית" autocomplete="off" dir="auto"><span id="mn" class="mn"></span></div>
 <nav class="mnav">{nav}</nav>
