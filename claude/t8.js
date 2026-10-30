@@ -1,6 +1,5 @@
 /* T-8 panel tools for lessons 4 and 5. Data comes from t8-data.js (built by src/t8map.py).
    - #t8tour: tap a control (or its name in the list) to see what it does
-   - #t8quiz: "find the control" game
    - every <kbd> whose text names a control becomes tappable and shows where it is */
 (function(){
 "use strict";
@@ -63,45 +62,6 @@ if(tour){
   }
   map.onPick=function(id){ pick(id,false); };
   tour.appendChild(bar); tour.appendChild(map); tour.appendChild(info); tour.appendChild(chips);
-}
-
-/* ---------- quiz ---------- */
-var quiz=document.getElementById("t8quiz");
-if(quiz){
-  var POOL=T.pool||["volume","mixout","tempo","shift","pattern","play","rec","bd","sd","clap","tom","ch","oh","bdtune","bddec","hhdec",
-            "bass","kybd","cutoff","reso","envmod","bdec","delay","reverb","accent","s1","s10","s11","s12","s14","s15","s16"];
-  var qmap=makeMap(false), ask=el("div","t8-ask"), fb=el("div","t8-fb"), ctrl=el("div","t8-bar");
-  fb.setAttribute("aria-live","polite");
-  var go=el("button","btn","התחל"); go.type="button";
-  var score=el("span","t8-score");
-  ctrl.appendChild(go); ctrl.appendChild(score); ctrl.appendChild(sizeToggle(qmap));
-  var order=[], cur=-1, right=0, tries=0, locked=true;
-  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
-  function next(){
-    qmap.mark([],"ok"); qmap.mark([],"bad"); fb.textContent="";
-    cur++;
-    if(cur>=order.length){ ask.innerHTML='<b>סיימת: '+right+' מתוך '+order.length+' בניסיון הראשון.</b>'; go.textContent="עוד סיבוב"; go.hidden=false; locked=true; return; }
-    tries=0; locked=false;
-    ask.innerHTML='<small>'+(cur+1)+' מתוך '+order.length+'</small><b>מצא: <span dir="auto">'+esc(label(order[cur]))+'</span></b>';
-    score.textContent=right+" נכונות";
-  }
-  go.addEventListener("click",function(){ order=shuffle(POOL.slice()).slice(0,10); cur=-1; right=0; go.hidden=true; next(); });
-  qmap.onPick=function(id){
-    if(locked) return;
-    var want=order[cur];
-    if(id===want){
-      if(tries===0) right++;
-      qmap.mark([want],"ok"); fb.innerHTML="✓ נכון. "+esc(T.info[want]||""); locked=true;
-      score.textContent=right+" נכונות";
-      var n=el("button","btn","הבא ←"); n.type="button"; n.addEventListener("click",next); fb.appendChild(document.createElement("br")); fb.appendChild(n);
-    } else {
-      tries++; qmap.mark([id],"bad");
-      fb.textContent = tries<2 ? "זה "+label(id)+". נסה שוב." : "זה "+label(id)+". הנכון מסומן בירוק.";
-      if(tries>=2){ qmap.mark([want],"ok"); qmap.reveal(want); }
-    }
-  };
-  ask.innerHTML='<b>עשר שאלות. בכל אחת מופיע שם, ואתה נוגע בו בתרשים.</b>';
-  quiz.appendChild(ask); quiz.appendChild(ctrl); quiz.appendChild(qmap); quiz.appendChild(fb);
 }
 
 /* ---------- "where is it?" on button names ---------- */

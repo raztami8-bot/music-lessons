@@ -2,12 +2,11 @@
    - .combo[data-seq]   draws the button combination as action marks
    - .stage[data-mana]  a short session: header, start button, done mark in the table of contents
    - .playnow .timer    a five-minute timer
-   - .drill[data-mana]  hand practice: do the combination on the panel diagram, in order
    Combination syntax: "tap:X,hold:Y,rel,turn:TEMPO/VALUE,look:P.50" (X = a button name or a step number). */
 (function(){
 "use strict";
 var page=document.body.dataset.lesson||""; if(!page && !document.body.dataset.t8) return;
-var DONE="ml2:done", NOTES="ml2:notes", DRILL="ml2:drill";
+var DONE="ml2:done", NOTES="ml2:notes";
 function get(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
 function set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
@@ -123,99 +122,4 @@ if(total){ paintMana(); document.addEventListener("click",function(e){ if(e.targ
   t.appendChild(b); t.appendChild(shown); paint();
 });
 
-/* ---------- hand practice (needs the panel data, which loads after this file) ---------- */
-function initDrills(){
-  var T=window.PANEL||window.T8; if(!T) return;
-  function idOf(k){ if(/^\d+$/.test(k)) return "s"+k; var a=T.alias[k]; return a&&a.length?a[0]:null; }
-  function pool(manaNo){
-    var out=[], seen={};
-    stages.forEach(function(s,i){
-      [].forEach.call(s.querySelectorAll(".combo[data-q]"),function(c){
-        var q=c.dataset.q; if(seen[q]) return; seen[q]=1;
-        var acts=parse(c.dataset.seq).filter(function(x){ return x.a==="hold"||x.a==="tap"||x.a==="turn"||x.a==="rel"; });
-        if(acts.some(function(x){ return x.a!=="rel" && !idOf(x.k); })) return;
-        out.push({q:q,seq:c.dataset.seq,acts:acts,mana:i+1,state:c.dataset.state||""});
-      });
-    });
-    if(manaNo==="all") return out;
-    var cur=out.filter(function(x){ return x.mana===+manaNo; });
-    var stats=get(DRILL,{}), old=out.filter(function(x){ return x.mana<+manaNo; })
-      .sort(function(a,b){ return ((stats[b.q]||0)-(stats[a.q]||0)) || (Math.random()-.5); }).slice(0,2);
-    return cur.concat(old);
-  }
-  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
-
-  [].forEach.call(document.querySelectorAll(".drill[data-mana]"),function(box){
-    var head=el("h4",null,"תרגול ידיים"), q=el("div","dq"), dots=el("div","dsteps"), fb=el("div","dfb"), bar=el("div","dbar");
-    fb.setAttribute("aria-live","polite");
-    var map=el("div","t8-map",T.svg); map.dir="ltr";
-    var go=el("button","btn","▶ להתחיל"), hint=el("button","btn","רמז"), size=el("button","btn"), score=el("span","t8-score");
-    [go,hint,size].forEach(function(b){ b.type="button"; });
-    hint.hidden=true;
-    function paintSize(){ size.textContent=map.classList.contains("big")?"⤡ תרשים קטן":"⤢ תרשים גדול"; }
-    size.addEventListener("click",function(){ map.classList.toggle("big"); paintSize(); }); paintSize();
-    bar.appendChild(go); bar.appendChild(hint); bar.appendChild(el("span","sp")); bar.appendChild(score); bar.appendChild(size);
-    q.innerHTML='<b>מבצעים את הצירוף על התרשים, לפי הסדר.</b><small>✋ החזקה: נוגעים פעם אחת, והכפתור נשאר ״מוחזק״ עד שחרור. 👆 לחיצה: נוגעים. ⟳ סיבוב: נוגעים בכפתור.</small>';
-    box.appendChild(head); box.appendChild(q); box.appendChild(bar); box.appendChild(dots); box.appendChild(map); box.appendChild(fb);
-
-    var list=[], qi=-1, si=0, miss=0, clean=0, held=[], locked=true;
-    function mark(ids,cls){ [].forEach.call(map.querySelectorAll(".ctl."+cls),function(g){ g.classList.remove(cls); });
-      (ids||[]).forEach(function(id){ var g=map.querySelector('.ctl[data-id="'+id+'"]'); if(g) g.classList.add(cls); }); }
-    function reveal(id){ var g=map.querySelector('.ctl[data-id="'+id+'"]'); if(!g||map.scrollWidth<=map.clientWidth) return;
-      var r=g.getBoundingClientRect(), b=map.getBoundingClientRect(); map.scrollLeft+=(r.left+r.width/2)-(b.left+b.width/2); }
-    function skipRel(){ var it=list[qi]; while(si<it.acts.length && it.acts[si].a==="rel"){ held=[]; mark(held,"held"); si++; } }
-    function paintDots(){
-      var it=list[qi], real=it.acts.filter(function(x){ return x.a!=="rel"; }), done=it.acts.slice(0,si).filter(function(x){ return x.a!=="rel"; }).length;
-      dots.innerHTML=real.map(function(_,i){ return '<span class="'+(i<done?"done":(i===done?"cur":""))+'"></span>'; }).join("");
-    }
-    function ask(){
-      mark([],"ok"); mark([],"bad"); mark([],"hint"); held=[]; mark(held,"held"); fb.innerHTML=""; miss=0; si=0;
-      qi++;
-      if(qi>=list.length){
-        q.innerHTML='<b>סיימת סיבוב: '+clean+' מתוך '+list.length+' בלי טעות.</b><small>'+(clean===list.length?"הידיים כבר יודעות. עכשיו אותו דבר על המכשיר.":"הצירופים שטעית בהם יחזרו בסיבוב הבא ובמנות הבאות.")+'</small>';
-        dots.innerHTML=""; go.textContent="↻ עוד סיבוב"; go.hidden=false; hint.hidden=true; locked=true; return;
-      }
-      var it=list[qi];
-      q.innerHTML='<small>'+(qi+1)+' מתוך '+list.length+(it.state?' · '+esc(it.state):'')+'</small><b>'+esc(it.q)+'</b>';
-      hint.hidden=false; locked=false; skipRel(); paintDots();
-    }
-    function finish(){
-      var it=list[qi], stats=get(DRILL,{});
-      if(miss===0){ clean++; if(stats[it.q]) stats[it.q]=Math.max(0,stats[it.q]-1); } else stats[it.q]=(stats[it.q]||0)+1;
-      set(DRILL,stats);
-      held=[]; mark(held,"held"); locked=true; hint.hidden=true;
-      fb.innerHTML='<b>'+(miss===0?"✓ מדויק.":"✓ הגעת. עוד פעם בהמשך.")+'</b><div class="combo"><span class="ch">הצירוף המלא</span>'+strip(it.seq)+'</div>';
-      var n=el("button","btn",qi===list.length-1?"לסיכום ←":"הבא ←"); n.type="button"; n.addEventListener("click",ask);
-      fb.appendChild(n); score.textContent=clean+" מדויקים"; paintDots();
-    }
-    map.addEventListener("click",function(e){
-      var g=e.target.closest(".ctl"); if(!g||locked) return;
-      var it=list[qi], want=it.acts[si], wid=idOf(want.k), id=g.dataset.id;
-      if(id===wid){
-        mark([],"bad"); mark([],"hint");
-        if(want.a==="hold"){ held.push(id); mark(held,"held"); fb.textContent="✋ מוחזק. עכשיו הפעולה הבאה, בלי לשחרר."; }
-        else { mark([id],"ok"); fb.textContent=want.a==="turn"?"⟳ נכון.":"👆 נכון."; setTimeout(function(){ mark([],"ok"); },350); }
-        si++; skipRel();
-        if(si>=it.acts.length) finish(); else paintDots();
-      } else {
-        miss++; mark([id],"bad");
-        var nm=T.names[id]||id, want2=T.names[wid]||want.k;
-        fb.textContent=(held.indexOf(id)>-1?"הוא כבר מוחזק. ":"")+(miss<2?"לא זה. נסה שוב.":"לא זה. הנכון מהבהב בירוק.");
-        if(miss>=2){ mark([wid],"hint"); reveal(wid); }
-        setTimeout(function(){ mark([],"bad"); },500);
-      }
-    });
-    hint.addEventListener("click",function(){
-      var it=list[qi], want=it.acts[si], v=VERB[want.a];
-      fb.innerHTML='רמז: הפעולה הבאה היא '+chip(want)+'.';
-      miss=Math.max(miss,1);
-    });
-    go.addEventListener("click",function(){
-      list=shuffle(pool(box.dataset.mana)); qi=-1; clean=0; score.textContent=""; go.hidden=true;
-      if(!list.length){ q.innerHTML="<b>אין כאן צירופים לתרגל.</b>"; return; }
-      ask();
-    });
-  });
-}
-if(document.readyState==="complete") initDrills(); else window.addEventListener("load",initDrills);
 })();

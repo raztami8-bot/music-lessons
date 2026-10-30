@@ -145,7 +145,7 @@ except Exception:
     pass
 
 
-def figure(imgs, legend, cap):
+def figure(imgs, legend, cap, cls=""):
     two = " two" if len(imgs) > 1 else ""
     tags = []
     for i in imgs:
@@ -161,7 +161,7 @@ def figure(imgs, legend, cap):
     cap_html = ""
     if lis or cap:
         cap_html = "<figcaption>" + (f"<p>{cap}</p>" if cap else "") + (f'<ol class="marks">{lis}</ol>' if lis else "") + "<p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption>"
-    return f'<figure class="photo"><div class="imgs{two}">{"".join(tags)}</div>{cap_html}</figure>\n'
+    return f'<figure class="photo{cls}"><div class="imgs{two}">{"".join(tags)}</div>{cap_html}</figure>\n'
 
 
 def split_cards(html, n):
@@ -256,6 +256,10 @@ def xref_href(t, here=None):
     Lesson numbers are file numbers (lesson-5.html), not the per-device numbers the text shows."""
     if t.startswith("set:"):
         return "settings.html#set-" + t[4:]
+    if t.startswith("menu:"):
+        return "menus.html#m-" + t[5:]
+    if t.startswith("con:"):
+        return "connections.html#con-" + t[4:]
     n, _, rest = t.partition(":")
     n = int(n)
     assert n in LESSONS, ("unknown lesson in [[go]]", t)
@@ -318,6 +322,49 @@ def base_boxes(html, n):
     return html
 
 
+AUTO_CTX = {"BASS DRUM": "bd", "SNARE DRUM": "sd", "HAND CLAP": "tc", "TOM": "tc", "CLOSED HIHAT": "hh", "OPEN HIHAT": "hh", "BASS": "b"}
+AUTO_PRE = {"bd": ("bd",), "sd": ("sd",), "tc": ("tc",), "hh": ("hh",), "b": ("blvl", "bdec", "bpitch")}
+
+
+def auto_figs(html, n):
+    """T-8 lessons: every card whose steps press two or more controls gets a still picture of the panel,
+    with those controls lit and numbered in the order the steps use them. Cards that already have a figure keep theirs."""
+    import t8map
+    have = {a for (ln, kind, a, *_r) in PHOTOS if ln == n and kind == "card"}
+    names = {id: v[5] for id, v in t8map.C.items()}
+    for i, (note, fn, _w, _p) in enumerate(t8map.STEPS, 1):
+        names[f"s{i}"] = f"לחצן {i}"
+    names.update({"display": "התצוגה", "play": "▶ PLAY", "rec": "● REC"})
+
+    def ids_of(steps, card):
+        ctx = [AUTO_CTX[k] for k in AUTO_CTX if re.search(r"(?:\[\[(?:tap|hold|turn):|<kbd>)" + re.escape(k) + r"(?:\]\]|</kbd>)", card)]
+        out = []
+        for k in re.findall(r"\[\[(?:tap|hold|turn):([^\]]+)\]\]|<kbd>([^<]+)</kbd>", steps):
+            key = (k[0] or k[1]).strip()
+            cand = t8map.ALIAS.get(key) or []
+            if len(cand) > 1:   # TUNE, DECAY, LEVEL: pick the one of the instrument the card works on
+                cand = [c for c in cand if any(c.startswith(p) for x in ctx for p in AUTO_PRE[x])][:1]
+            for c in cand[:1]:
+                if c not in out:
+                    out.append(c)
+        return out
+
+    def one(m):
+        card = m.group(0)
+        num = re.search(r'<span class="num">([^<]+)</span>', card)
+        steps = re.search(r'<ol class="steps">.*?</ol>', card, re.S)
+        if not num or not steps or num.group(1) in have:
+            return card
+        ids = ids_of(steps.group(0), card)
+        if len(ids) < 2:
+            return card
+        name = f"a{n}-" + num.group(1).replace(".", "-")
+        t8map.svg(name, on=ids, marks=ids)
+        fig = figure([name], [f"{names[i]}|" for i in ids], "", " auto")
+        return card[:steps.start()] + fig + "    " + card[steps.start():]
+    return re.sub(r'<article class="card[^"]*">.*?</article>', one, html, flags=re.S)
+
+
 def page(n):
     title, _ = LESSONS[n]
     html = (SRC / f"l{n}.html").read_text(encoding="utf8")
@@ -340,6 +387,8 @@ def page(n):
             pat = re.compile(r'(<article class="card">\s*<div class="card-head"><span class="num">' + re.escape(anchor) + r'</span>)')
             assert pat.search(html), (n, anchor)
             html = pat.sub(lambda m: fig + m.group(1), html, count=1)
+    if n in DEVICES["t8"][3]:
+        html = auto_figs(html, n)
     if n in KIT_LESSONS:
         html = macros(html, "קליד" if n in VB_LESSONS else "לחצן")
     html = split_cards(html, n)
@@ -349,7 +398,9 @@ def page(n):
         f'<a class="tb{" cur" if k == n else ""}" href="lesson-{k}.html"{" aria-current=page" if k == n else ""}>{label(k, False)}</a>'
         for k in DEVICES[dev][3])
     if dev == "t8":
-        tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB
+        tabs += '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB + MENUTAB
+    elif dev in ("together", "live"):
+        tabs += CONTAB
     elif dev == "volca":
         tabs += '<a class="tb" href="vb-map.html">▦ מה אפשר לעשות בבס</a>'
     elif dev in ("crave", "edge"):
@@ -385,7 +436,7 @@ def page(n):
     return total
 
 
-def hub(totals, mtotal, vbtotal=0, devmaps=None):
+def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
     icons = {"t8": "🥁", "volca": "🎛️", "crave": "🧡", "edge": "💗", "together": "🔗", "live": "🌊"}
@@ -399,7 +450,11 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None):
 """
         if dev == "t8":
             tiles += f"""<li><a class="tile ref" href="map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות</h3><p>{mtotal} דברים שהטי־8 יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
+<li><a class="tile ref" href="menus.html"><span class="bub">📖</span><div class="tx"><span class="kind">דף עזר</span><h3>מה זה? כל השמות בטי־8</h3><p>{ntotal} שמות, כמו שהם כתובים על המכשיר ובתצוגה. לכל אחד: מה זה, מה הרעיון, ולמה נכנסים.</p></div></a></li>
 <li><a class="tile ref" href="settings.html"><span class="bub">💾</span><div class="tx"><span class="kind">דף עזר</span><h3>מה נשמר ומה נמחק</h3><p>לכל הגדרה: האם היא נשמרת עם התבנית, האם מחיקה מוחקת אותה, ומה נשאר תמיד. בדוק מול המדריך.</p></div></a></li>
+"""
+        if dev == "together":
+            tiles += """<li><a class="tile ref" href="connections.html"><span class="bub">🔌</span><div class="tx"><span class="kind">דף עזר</span><h3>חיבורים</h3><p>כל החיבורים במקום אחד: הטי־8 לבד, עם וולקה, במיקסר, ושרשרת המידי.</p></div></a></li>
 """
         if dev == "volca":
             tiles += f"""<li><a class="tile ref" href="vb-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות בוולקה בס</h3><p>{vbtotal} דברים שהבס יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
@@ -822,6 +877,113 @@ def settings_page(S):
     write_page("settings.html", out)
 
 
+def ref_page(fname, title, eyebrow, body, tabs, cls=""):
+    """A Claude reference page: same head and toolbar as settings.html."""
+    out = f"""<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d2433">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="שיעורים · קלוד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>{title} · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="kit.css">
+{NAVCSS}
+</head>
+<body data-t8="1">
+<div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a>{tabs}<span class="sp"></span><span class="ver">גרסת קלוד</span></div></div>
+<div class="wrap {cls}">
+{body}
+</div>
+<script src="app.js"></script>
+<script src="extras.js"></script>
+<script src="t8-data.js"></script>
+<script src="t8.js"></script>
+{NAVJS}</body>
+</html>
+"""
+    write_page(fname, out)
+
+
+MENUTAB = '<a class="tb" href="menus.html">📖 מה זה?</a>'
+CONTAB = '<a class="tb" href="connections.html">🔌 חיבורים</a>'
+
+
+def menus_page(M):
+    """menus.html: every name on the T-8, as printed or shown, with what it is, the idea, and why you go there (src/menus.py).
+    The search matches the plain spelling too (data-k), since the display drawing splits the text into cells."""
+    import html as H
+    def at(cards):
+        if not cards:
+            return ""
+        links = "".join(f'<a class="xref" href="{xref_href(c)}">{label(int(c.split(":")[0]), False)}, {c.split(":")[1]}</a>' for c in cards)
+        return f'<p class="at"><b>לומדים:</b>{links}</p>'
+
+    nav, secs, count = "", "", 0
+    for sid, title, line, items in M.SECTIONS:
+        nav += f'<a href="#ms-{sid}">{title.split(":")[0].replace("התפריט · ", "")}</a>'
+        cards = ""
+        for (id, shown, kind, full, what, idea, why, cards_, doubt) in items:
+            count += 1
+            face = _seg(shown) if kind == "seg" else " ".join(f"<kbd>{s}</kbd>" for s in shown.split(" · "))
+            dbt = f'<details class="src no"><summary>🔍 הכתיב</summary><p>{M.DOUBT}</p></details>' if doubt else ""
+            cards += (f'<article class="card mrow" id="m-{id}"><div class="sr-top"><div class="mface" data-k="{H.escape(shown)}">{face}</div>{dbt}</div>'
+                      f'<h3>{full}</h3><dl><dt>מה זה</dt><dd>{what}</dd><dt>הרעיון</dt><dd>{idea}</dd><dt>למה נכנסים</dt><dd>{why}</dd></dl>{at(cards_)}</article>\n')
+        secs += (f'<section class="sgroup msec" id="ms-{sid}"><div class="sg-head"><span class="dot" aria-hidden="true"></span>'
+                 f'<div><h2>{title}</h2>{f"<p>{line}</p>" if line else ""}</div></div><div class="sg-rows">{cards}</div></section>\n')
+    body = xrefs(f"""<header style="display:flex;flex-direction:column;gap:8px">
+  <span class="eyebrow t8">טי־8 · דף עזר</span>
+  <h1>מה זה? כל השמות בטי־8</h1>
+  <p class="lede">כל שם שמודפס על המכשיר או מופיע בתצוגה, כתוב כמו שרואים אותו. לכל אחד: מה זה, מה הרעיון, ולמה נכנסים לזה. איך עושים, לומדים בשיעורים, בקישור שבתחתית.</p>
+</header>
+<div class="msearch"><input type="search" id="mq" placeholder="חיפוש: שם מהתצוגה, מהלוח, או מילה בעברית" autocomplete="off" dir="auto"><span id="mn" class="mn"></span></div>
+<nav class="mnav">{nav}</nav>
+{secs}<p class="info">הכל לפי המדריך הרשמי של רולנד לטי־8, גרסה 1.02. מה שמסומן 🔍 לא ברור במדריך. ספר לי מה רואים אצלך, ואתקן.</p>
+<script>
+(function(){{
+  var q=document.getElementById("mq"), n=document.getElementById("mn");
+  function norm(s){{ return s.toLowerCase().replace(/[.\\s_]/g,""); }}
+  [].forEach.call(document.querySelectorAll(".mrow"),function(c){{ c.dataset.k=norm(c.textContent+" "+c.querySelector(".mface").getAttribute("data-k")); }});
+  q.addEventListener("input",function(){{
+    var t=norm(q.value), shown=0;
+    [].forEach.call(document.querySelectorAll(".msec"),function(s){{
+      var any=0;
+      [].forEach.call(s.querySelectorAll(".mrow"),function(c){{ var ok=!t||c.dataset.k.indexOf(t)>-1; c.hidden=!ok; if(ok){{any++;shown++;}} }});
+      s.hidden=!any;
+    }});
+    n.textContent=t?(shown?shown+" תוצאות":"לא נמצא. נסה בלי נקודות, או מילה בעברית"):"";
+  }});
+}})();
+</script>""")
+    tabs = '<a class="tb" href="map.html">▦ מה אפשר לעשות</a>' + SETTAB + '<a class="tb cur" href="menus.html">📖 מה זה?</a><a class="tb" href="connections.html">🔌 חיבורים</a>'
+    ref_page("menus.html", "מה זה? כל השמות בטי־8", "", body, tabs, "set-page mdict")
+    return count
+
+
+def connections_page(K):
+    """connections.html: every way to connect the gear, once (src/connections.py). Lessons link here."""
+    blocks = ""
+    for bid, title, line, rows, note in K.BLOCKS:
+        trs = "".join(f"<tr><td>{a}</td><td>{c}</td><td>{b}</td></tr>" for a, c, b in rows)
+        blocks += (f'<article class="card con" id="con-{bid}"><h2>{title}</h2><p class="lede">{line}</p>'
+                   f'<div class="tbl-box"><table><thead><tr><th>מאיפה</th><th>כבל</th><th>לאן</th></tr></thead><tbody>{trs}</tbody></table></div>'
+                   f'<p class="info">{note}</p></article>\n')
+    tr = "".join(f"<tr><td><b>{a}</b></td><td>{b}</td></tr>" for a, b in K.TROUBLE)
+    body = xrefs(f"""<header style="display:flex;flex-direction:column;gap:8px">
+  <span class="eyebrow together">כל המכשירים · דף עזר</span>
+  <h1>חיבורים</h1>
+  <p class="lede">כל החיבורים במקום אחד. השיעורים לא חוזרים על זה, הם רק מקשרים לכאן.</p>
+</header>
+{blocks}<article class="card con" id="con-trouble"><h2>כשמשהו לא עובד</h2><div class="tbl-box"><table><thead><tr><th>מה קורה</th><th>מה בודקים</th></tr></thead><tbody>{tr}</tbody></table></div></article>""")
+    tabs = '<a class="tb" href="menus.html">📖 מה זה?</a><a class="tb cur" href="connections.html">🔌 חיבורים</a>'
+    ref_page("connections.html", "חיבורים", "", body, tabs, "set-page")
+
+
 def check_links():
     """Every in-site link with an anchor on Claude's pages must land on an element with that id."""
     ids = {}
@@ -841,6 +1003,8 @@ if __name__ == "__main__":
     sys.path.insert(0, str(SRC))
     import t8map
     t8map.build()
+    for old in (HERE / "img").glob("a*-*.svg"):   # pictures made by auto_figs(); rebuilt below
+        old.unlink()
     import cravemap, edgemap
     cravemap.build()
     edgemap.build()
@@ -872,7 +1036,10 @@ if __name__ == "__main__":
                "edge": map_page(edgemap, edgetricks, "edge-map.html", "edge")}
     import settings
     settings_page(settings)
-    hub(totals, mtotal, vbtotal, devmaps)
+    import menus, connections
+    ntotal = menus_page(menus)
+    connections_page(connections)
+    hub(totals, mtotal, vbtotal, devmaps, ntotal)
     check_links()
     print("map", mtotal)
     print("built", totals)

@@ -136,3 +136,30 @@ details.back>p{margin:8px 12px 10px;font-size:.92rem;color:var(--muted)}
 .eyebrow.edge{--dev:#b5179e}
 .dv.cr{background:#c76a05}
 .dv.ed{background:#b5179e}
+/* menus.html: "מה זה?" dictionary of every T-8 name */
+.mdict .msec{--g:#e0561b}
+.mdict .msec[id^="ms-m-"]{--g:#6a4bc4}
+.mdict .msec#ms-screen{--g:#c2357a}
+.mrow{gap:6px;padding:12px 14px;border-inline-start:5px solid var(--g);scroll-margin-top:150px}
+.mrow h3{font-size:1.05rem;color:var(--muted);font-weight:600}
+.mface{display:flex;flex-wrap:wrap;gap:6px;align-items:center;flex:1;min-width:0}
+.mface kbd{font-size:1.02rem}
+.mface .seg{font-size:1.15em}
+.mrow dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:0;font-size:.95rem;line-height:1.5}
+.mrow dt{font-weight:700;color:var(--g);white-space:nowrap}
+.mrow dd{margin:0}
+@media (max-width:480px){.mrow dl{grid-template-columns:1fr}.mrow dt{margin-top:4px}}
+.msearch{display:flex;flex-direction:column;gap:4px;position:sticky;top:58px;z-index:5;background:var(--bg);padding:6px 0}
+.msearch input{font:inherit;font-size:1rem;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--fg);width:100%;box-sizing:border-box}
+.msearch .mn{font-size:.86rem;color:var(--muted);min-height:1em}
+.mnav{display:flex;flex-wrap:wrap;gap:6px}
+.mnav a{padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none;font-size:.88rem}
+/* connections.html */
+.con{gap:10px;scroll-margin-top:80px}
+.con h2{font-size:1.3rem}
+.con td{vertical-align:top}
+/* the panel picture auto_figs() adds to T-8 cards: full width, the numbered names in one line under it */
+figure.photo.auto{flex-direction:column;align-items:stretch;gap:6px;padding:8px}
+figure.photo.auto figcaption{font-size:.88rem}
+figure.photo.auto ol.marks{display:flex;flex-direction:row;flex-wrap:wrap;gap:2px 16px;margin:0}
+figure.photo.auto figcaption>p:last-child{display:none}
