@@ -461,6 +461,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 """
         if dev == "edge":
             tiles += """<li><a class="tile ref" href="edge-guide.html"><span class="bub">🎛️</span><div class="tx"><span class="kind">דף עזר</span><h3>מה כל כפתור עושה באדג׳</h3><p>קבוצה אחרי קבוצה כמו על הלוח: השם באנגלית, בעברית, מה זה עושה, ומי שולט במי.</p></div></a></li>
+<li><a class="tile ref" href="edge-patch.html"><span class="bub">🔌</span><div class="tx"><span class="kind">דף עזר</span><h3>השקעים של האדג׳</h3><p>המפה של השקעים כמו למעלה על הלוח, מה כל שקע עושה ומה הוא משנה, ומה מחברים לאן.</p></div></a></li>
 """
         if devmaps and dev in devmaps:
             tiles += f"""<li><a class="tile ref" href="{dev}-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות ב{name[1:]}</h3><p>{devmaps[dev]} דברים שהמכשיר יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור על התרשים, ונכנסים לכרטיס שמלמד.</p></div></a></li>

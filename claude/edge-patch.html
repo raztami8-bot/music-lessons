@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d1920">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="מדריך אדג׳">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>השקעים של האדג׳ · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one-thumb phone page. Sticky tab strip of board groups, one group visible, a card per control. Single dark look, like the synth's black panel with magenta trim. */
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#141116; --panel:#1d1920; --card:#25202a; --line:#3a3240;
+  --fg:#f1ebf2; --muted:#b3a8b8; --magenta:#d63fa6; --magenta-soft:#3a1f33;
+  --red:#ff4b4b;
+  --display:"Secular One","Assistant",system-ui,sans-serif;
+  --body:"Assistant",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;direction:rtl}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--panel);border-bottom:3px solid var(--magenta)}
+header .wrap{padding-block:18px 14px}
+h1{font-family:var(--display);font-weight:400;font-size:1.7rem;margin:0;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.95rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .95rem/1 var(--body);padding:10px 14px;border-radius:999px;cursor:pointer}
+.tab small{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-inline-start:6px;letter-spacing:.04em}
+.tab[aria-selected="true"]{background:var(--magenta);border-color:var(--magenta);color:#fff}
+.tab[aria-selected="true"] small{color:#ffe3f4}
+.tab:focus-visible,.nextbtn:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+main .wrap{padding-block:18px 40px;max-width:640px;margin:0 auto}
+section{display:flex;flex-direction:column;gap:12px}
+.ghead{display:flex;flex-direction:column;gap:2px}
+.label{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;color:var(--magenta);text-transform:uppercase}
+h2{font-family:var(--display);font-weight:400;font-size:1.4rem;margin:0;line-height:1.25}
+.intro{color:var(--muted);margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.en{font-family:var(--mono);font-weight:600;font-size:1.05rem;direction:ltr;unicode-bidi:isolate}
+.he{color:var(--magenta);font-weight:700}
+.kind{font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+.card p{margin:0}
+.opts{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.opts li{display:flex;gap:10px;align-items:baseline;font-size:.97rem}
+.opts b{font-family:var(--mono);font-weight:600;font-size:.82rem;background:var(--magenta-soft);color:#ffd1ee;border-radius:5px;padding:1px 7px;direction:ltr;unicode-bidi:isolate;flex:0 0 auto;min-width:3.4em;text-align:center}
+.who{background:var(--magenta-soft);border:1px solid var(--magenta);border-radius:12px;padding:12px 16px}
+.who strong{display:block;font-family:var(--display);font-weight:400;font-size:1.05rem;margin-bottom:2px}
+.who p{margin:0}
+.flow{display:flex;flex-direction:column;gap:8px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.step .en{font-size:.85rem;color:var(--muted)}
+.arrow{text-align:center;color:var(--magenta);font-size:1.2rem;line-height:1}
+.src{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.src .step{flex-direction:column;align-items:flex-start;gap:0;padding:10px 12px}
+ol.ex{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.led{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);vertical-align:middle}
+.nextbtn{align-self:flex-start;margin-top:6px;background:none;border:1px solid var(--magenta);color:var(--fg);font:600 .95rem var(--body);padding:10px 16px;border-radius:999px;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){section{animation:in .18s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+.home{display:inline-block;color:var(--muted);text-decoration:none;font-size:.9rem;margin-bottom:6px}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.chip{font-family:var(--mono);font-size:.72rem;font-weight:600;padding:1px 6px;border-radius:4px;direction:ltr}
+.chip.in{border:1.5px solid var(--fg);color:var(--fg)}
+.chip.out{background:var(--fg);color:var(--bg)}
+.mapbox{overflow-x:auto;background:#c7268f;border-radius:12px;padding:12px 10px}
+.bay{display:grid;grid-template-columns:repeat(13,44px);gap:8px 4px;direction:ltr;width:max-content}
+.j{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:0;cursor:pointer;color:inherit}
+.j i{width:22px;height:22px;border-radius:50%;background:#111;border:3px solid #ddd;box-shadow:inset 0 0 0 4px #333}
+.j span{font-family:var(--mono);font-size:8.5px;font-weight:600;line-height:1.1;text-align:center;white-space:pre-line;padding:1px 2px;border-radius:3px;min-height:20px;display:flex;align-items:center}
+.j.in span{border:1px solid #fff;color:#fff}
+.j.out span{background:#1a1a1a;color:#fff}
+.j:focus-visible i{outline:2px solid #fff;outline-offset:2px}
+.hint{font-size:.85rem;color:var(--muted);margin:0}
+.card.flash{border-color:var(--magenta);box-shadow:0 0 0 2px var(--magenta)}
+.io{font-size:.78rem;border-radius:6px;padding:1px 7px}
+.io.in{border:1px solid var(--fg)}
+.io.out{background:var(--fg);color:var(--bg);font-weight:700}
+.row2{display:flex;gap:8px;font-size:.95rem}
+.row2 b{color:var(--muted);font-weight:600;flex:0 0 auto}
+a.go{color:#ffd1ee}
+.rule{display:flex;gap:12px;align-items:flex-start}
+.rule .n{font-family:var(--display);color:var(--magenta);font-size:1.3rem;line-height:1.2;flex:0 0 1.2em}
+.home{display:inline-block;color:var(--muted);text-decoration:none;font-size:.9rem;margin-bottom:6px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="home" href="index.html">⌂ הבית</a>
+  <h1>השקעים של האדג׳</h1>
+  <p class="sub">מה כל שקע למעלה, מה הוא משנה, ומה מחברים לאן</p>
+</div></header>
+<nav><div class="wrap"><div class="tabs" id="tabs" role="tablist"></div></div></nav>
+<main><div class="wrap" id="main"></div></main>
+<script>
+const J={
+ osc1cv:["OSC 1 CV","in","גובה מתנד 1","קובע את גובה הצליל של מתנד 1, כמו יד שמסובבת את FREQUENCY.","מתנד 1","PITCH, כדי שהרצף ינגן רק את מתנד 1 (המתג SEQ PITCH MOD על OFF)."],
+ osc2cv:["OSC 2 CV","in","גובה מתנד 2","כמו הקודם, רק למתנד 2.","מתנד 2","PITCH או VELOCITY, כדי שמתנד 2 יקבל מנגינה משלו."],
+ oscdec:["OSC DECAY","in","דעיכת הגובה","משנה כמה זמן נמשכת הקפיצה בגובה, כמו הכפתור DECAY של EG.","שני המתנדים","VELOCITY: בכל צעד קפיצה באורך אחר."],
+ adv:["ADV/CLOCK","in","קידום / שעון","כל דפיקה שנכנסת מקדמת את הרצף צעד אחד. כשמחובר כאן כבל, TEMPO לא עובד.","הרצף","TRIGGER של מכשיר אחר, כדי ללכת יחד איתו."],
+ trigin:["TRIGGER","in","הקשה","כל דפיקה מנגנת מכה של הצעד הנוכחי, בלי להתקדם. כמו ללחוץ על הלחצן TRIGGER.","שלוש המעטפות","TRIGGER של מכשיר אחר, למכות נוספות."],
+ velin:["VELOCITY","in","עוצמת מכה","קובע כמה חזקה המכה, כלומר כמה עמוק שלוש המעטפות פועלות.","גובה, מסנן ועוצמה ביחד","מתח ממכשיר אחר, לדינמיקה חיה."],
+ noisein:["NOISE LEVEL","in","כמות רעש","קובע כמה רעש (או צליל חיצוני) נכנס, כמו יד על הכפתור NOISE/EXT.","הרעש","VELOCITY: רעש רק בצעדים שה-VEL שלהם גבוה."],
+ osc1:["OSC 1","out","מתנד 1","הצליל של מתנד 1 לבד, לפני המסנן.","","כניסה אחרת, כדי שצליל ינענע משהו מהר מאוד, למשל VCF MOD."],
+ osc2:["OSC 2","out","מתנד 2","הצליל של מתנד 2 לבד, לפני המסנן.","","VCF MOD, למסנן מחוספס ומתכתי."],
+ osceg:["OSC EG","out","מעטפת הגובה","מתח שקופץ ויורד בכל מכה, באורך של EG DECAY.","","כניסה שתקבל את אותה קפיצה, למשל 1-2 FM AMT."],
+ trigout:["TRIGGER","out","הקשה","דפיקה בכל צעד.","","ADV/CLOCK של מכשיר אחר, כשעון."],
+ velout:["VELOCITY","out","עוצמת מכה","המיקום של כפתור VEL בצעד שמנגן עכשיו. שמונה כפתורים = שמונה ערכים לשלוח.","","VCF DECAY, NOISE LEVEL או TEMPO."],
+ phones:["PHONES","out","אוזניות","יציאה לאוזניות. VOLUME שולט בה. חלשה יחסית.","","אוזניות. מורידים VOLUME לפני שמחברים."],
+ fmin:["1-2 FM AMT","in","כמות אפנון תדר","קובע כמה מתנד 2 מנענע את מתנד 1, כמו יד על הכפתור 1-2 FM AMT.","מתנד 1","מעטפת: מתכת בתחילת המכה שנעלמת."],
+ ext:["EXT AUDIO","in","צליל חיצוני","צליל ממכשיר אחר נכנס במקום הרעש. הכמות בכפתור NOISE/EXT.","הרעש (מחליף אותו)","יציאת צליל של מכשיר אחר, כדי להעביר אותו במסנן של האדג׳."],
+ tempo:["TEMPO","in","קצב","משנה את מהירות הרצף, כמו יד על TEMPO.","הרצף","VELOCITY: כל צעד באורך אחר, סווינג."],
+ play:["PLAY/STOP","in","נגן / עצור","מתח מתחיל ועוצר את הרצף.","הרצף","יציאת שער ממכשיר אחר."],
+ vcfmod:["VCF MOD","in","אפנון מסנן","מה שנכנס מנענע את המסנן במקום הרעש. העומק בכפתור NOISE/VCF MOD.","המסנן (מחליף את הרעש)","OSC 1 או OSC 2: מסנן מתכתי."],
+ vcfdec:["VCF DECAY","in","דעיכת מסנן","משנה כמה זמן המסנן נסגר, כמו יד על DECAY של המסנן.","המסנן","VELOCITY: כל צעד באורך פתיחה אחר."],
+ vcacv:["VCA CV","in","עוצמה","משנה את העוצמה של הכל.","כל הצליל","מעטפת או מתח, לתנועה בעוצמה."],
+ vcadec:["VCA DECAY","in","אורך המכה","משנה כמה זמן כל מכה נשמעת, כמו יד על DECAY של OUTPUT.","כל הצליל","VELOCITY: מכות קצרות וארוכות ברצף אחד."],
+ pitchout:["PITCH","out","גובה הצעד","המיקום של כפתור PITCH בצעד שמנגן עכשיו.","","OSC 1 CV, או כל כניסה אחרת שתזוז לפי שורת PITCH."],
+ vcfeg:["VCF EG","out","מעטפת המסנן","מתח שקופץ ויורד בכל מכה, באורך של DECAY של המסנן.","","1-2 FM AMT או NOISE LEVEL."],
+ vca:["VCA","out","יציאה ראשית","היציאה הראשית של הצליל. כבל מונו למיקסר. VOLUME שולט בה.","","ערוץ במיקסר. זה החיבור לעוצמה מלאה."],
+ vcaeg:["VCA EG","out","מעטפת העוצמה","מתח שקופץ ויורד בכל מכה, באורך של DECAY של OUTPUT.","","כניסה של מכשיר אחר, כדי שיזוז יחד עם המכות."]
+};
+const TOP=["osc1cv","osc2cv","oscdec","adv","trigin","velin","noisein","osc1","osc2","osceg","trigout","velout","phones"];
+const BOT=["fmin","ext","tempo","play","vcfmod","vcfdec","vcacv","vcadec","pitchout","vcfeg","vca","vcaeg"];
+const SHORT={osc1cv:"OSC 1\nCV",osc2cv:"OSC 2\nCV",oscdec:"OSC\nDECAY",adv:"ADV/\nCLOCK",noisein:"NOISE\nLEVEL",fmin:"1-2 FM\nAMT",ext:"EXT\nAUDIO",play:"PLAY/\nSTOP",vcfdec:"VCF\nDECAY",vcadec:"VCA\nDECAY"};
+const L22="lesson-22.html", L27="lesson-27.html";
+const T=[
+ {id:"rules",tab:"איך קוראים"},
+ {id:"map",tab:"המפה"},
+ {id:"ins",tab:"כניסות",lab:"INPUTS",title:"כניסות: מקבלים מתח",intro:"כל כניסה היא כמו יד שמסובבת כפתור במקומך. רוב הכניסות מתאימות לכפתור על הלוח."},
+ {id:"outs",tab:"יציאות",lab:"OUTPUTS",title:"יציאות: שולחים",intro:"יציאות שולחות צליל, מעטפת או ערך מהרצף. מכאן הכבל מתחיל."},
+ {id:"patch",tab:"מה לחבר"}
+];
+function chip(k){const j=J[k];return `<span class="chip ${j[1]}">${j[0]}</span>`}
+function rules(){return `<section><div class="ghead"><span class="label">HOW IT WORKS</span><h2>איך קוראים את השקעים</h2></div>
+<div class="legend"><span class="lg"><span class="chip in">VELOCITY</span> מסגרת = כניסה</span><span class="lg"><span class="chip out">VELOCITY</span> מלא = יציאה</span></div>
+<div class="card"><div class="rule"><span class="n">1</span><p>כבל הולך תמיד <b>מיציאה לכניסה</b>. היציאה שולחת, הכניסה מקבלת.</p></div></div>
+<div class="card"><div class="rule"><span class="n">2</span><p>כניסה היא כמו <b>יד שמסובבת כפתור</b>. כבל ל-VCF DECAY עושה מה שהיית עושה עם כפתור DECAY של המסנן, רק לבד ובכל צעד אחרת.</p></div></div>
+<div class="card"><div class="rule"><span class="n">3</span><p>האדג׳ עובד גם <b>בלי כבלים</b>. חלק מהחיבורים כבר קיימים בפנים. כשמכניסים כבל לכניסה כמו VCF MOD או EXT AUDIO, הוא <b>מחליף</b> את החיבור הפנימי (את הרעש).</p></div></div>
+<div class="card"><div class="rule"><span class="n">4</span><p>הכפתור שליד כמעט תמיד עדיין עובד: הוא קובע את נקודת ההתחלה, והכבל מזיז ממנה.</p></div></div>
+<div class="card"><div class="rule"><span class="n">5</span><p>אין מה לשבור. מחברים, מקשיבים, ואם לא אוהבים פשוט שולפים.</p></div></div>
+<div class="who"><strong>לעוצמה מלאה</strong><p>היציאה ${chip("vca")} היא היציאה הראשית, לערוץ במיקסר. ${chip("phones")} היא רק לאוזניות, וחלשה יותר.</p></div>
+${nextBtn(0)}</section>`}
+function mapv(){
+ const cell=k=>{const j=J[k];return `<button class="j ${j[1]}" data-k="${k}" aria-label="${j[0]}"><i></i><span>${(SHORT[k]||j[0]).replace("\\n","\n")}</span></button>`};
+ return `<section><div class="ghead"><span class="label">PATCH BAY</span><h2>המפה, כמו על הלוח</h2></div>
+<p class="hint">נוגעים בשקע כדי לראות מה הוא עושה. אפשר לגלול את המפה הצידה.</p>
+<div class="legend"><span class="lg"><span class="chip in">ABC</span> כניסה</span><span class="lg"><span class="chip out">ABC</span> יציאה</span></div>
+<div class="mapbox"><div class="bay">${TOP.map(cell).join("")}${BOT.map(cell).join("")}</div></div>
+<div class="card"><p>משמאל, <b>שקעים עם מסגרת</b>: כניסות, שבע למעלה ושמונה למטה. מימין, <b>שקעים עם רקע כהה</b>: יציאות, שש למעלה וארבע למטה. ${chip("vca")} בשורה התחתונה, שלישי מהסוף, זו היציאה הראשית.</p></div>
+${nextBtn(1)}</section>`}
+function cardJ(k){const j=J[k];return `<div class="card" id="c-${k}"><div class="top"><span class="en">${j[0]}</span><span class="io ${j[1]}">${j[1]=="in"?"כניסה":"יציאה"}</span></div><div class="he">${j[2]}</div><p>${j[3]}</p>${j[4]?`<div class="row2"><b>משפיע על:</b><span>${j[4]}</span></div>`:""}<div class="row2"><b>${j[1]=="in"?"מחברים אליו:":"שולחים אל:"}</b><span>${j[5]}</span></div></div>`}
+function list(t,keys){return `<section><div class="ghead"><span class="label">${t.lab}</span><h2>${t.title}</h2></div><p class="intro">${t.intro}</p>${keys.map(cardJ).join("")}${nextBtn(T.indexOf(t))}</section>`}
+function patch(){
+ const p=(t,a,b,what,href)=>`<div class="card"><div class="he">${t}</div><div class="row2">${chip(a)} <span>←</span> ${chip(b)}</div><p>${what}</p>${href?`<a class="go" href="${href}">לכרטיס שמלמד צעד צעד ←</a>`:""}</div>`;
+ return `<section><div class="ghead"><span class="label">FIRST PATCHES</span><h2>מה לחבר לאן</h2></div>
+<p class="intro">חיבורים ראשונים. כל אחד מתחיל ביציאה ונגמר בכניסה.</p>
+${p("רעש רק בצעדים החזקים","velout","noisein","כפתורי VEL קובעים עכשיו גם כמה רעש יש בכל צעד.",L22+"#l22-2-1")}
+${p("שורה של אורכים","velout","vcfdec","כל צעד נפתח במסנן לאורך אחר, לפי ה-VEL שלו.",L22+"#l22-2-2")}
+${p("מתנד שמנענע את המסנן","osc2","vcfmod","מתנד 2 מנענע את המסנן במקום הרעש. מסובבים NOISE/VCF MOD לעומק.",L22+"#l22-2-3")}
+${p("מתכת שנעלמת בכל מכה","vcfeg","fmin","אפנון התדר חזק בתחילת המכה ונעלם, כמו מצילה.",L22+"#l22-2-4")}
+${p("רצף רק למתנד 1","pitchout","osc1cv","מעבירים את SEQ PITCH MOD ל-OFF, ושורת PITCH שולטת רק במתנד 1.","")}
+${p("סווינג מהעוצמה","velout","tempo","כל צעד באורך זמן אחר. מקבלים קצב שמתנדנד.",L27+"#l27-3-2")}
+${p("עוצמה מלאה","vca","vca","מהיציאה הראשית לערוץ במיקסר, בכבל מונו.","")}
+</section>`.replace(`${chip("vca")} <span>←</span> ${chip("vca")}`,`${chip("vca")} <span>←</span> <span class="chip in">מיקסר</span>`)}
+function nextBtn(i){return i<T.length-1?`<button class="nextbtn" data-next="${i+1}">הבא: ${T[i+1].tab} ←</button>`:""}
+const tabs=document.getElementById("tabs"),main=document.getElementById("main");
+T.forEach((t,i)=>{const b=document.createElement("button");b.className="tab";b.setAttribute("role","tab");b.textContent=t.tab;b.onclick=()=>show(i,true);tabs.appendChild(b)});
+function show(i,user,focus){
+ const t=T[i];[...tabs.children].forEach((b,j)=>b.setAttribute("aria-selected",j===i));
+ main.innerHTML=t.id=="rules"?rules():t.id=="map"?mapv():t.id=="ins"?list(t,[...TOP,...BOT].filter(k=>J[k][1]=="in")):t.id=="outs"?list(t,[...TOP,...BOT].filter(k=>J[k][1]=="out")):patch();
+ main.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>show(+b.dataset.next,true));
+ main.querySelectorAll(".j").forEach(b=>b.onclick=()=>{const k=b.dataset.k;show(J[k][1]=="in"?2:3,true,k)});
+ if(user){tabs.children[i].scrollIntoView({inline:"center",block:"nearest"});
+  if(focus){const c=document.getElementById("c-"+focus);c.classList.add("flash");c.scrollIntoView({block:"center"})}else window.scrollTo({top:0})}
+ try{localStorage.setItem("edge-patch-tab",i)}catch(e){}
+}
+let s=0;try{const v=+localStorage.getItem("edge-patch-tab");if(v>=0&&v<T.length)s=v}catch(e){}
+show(s,false);
+</script>
+</body>
+</html>
