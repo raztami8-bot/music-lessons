@@ -454,7 +454,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <li><a class="tile ref" href="settings.html"><span class="bub">💾</span><div class="tx"><span class="kind">דף עזר</span><h3>מה נשמר ומה נמחק</h3><p>לכל הגדרה: האם היא נשמרת עם התבנית, האם מחיקה מוחקת אותה, ומה נשאר תמיד. בדוק מול המדריך.</p></div></a></li>
 """
         if dev == "together":
-            tiles += """<li><a class="tile ref" href="connections.html"><span class="bub">🔌</span><div class="tx"><span class="kind">דף עזר</span><h3>חיבורים</h3><p>כל החיבורים במקום אחד: הטי־8 לבד, עם וולקה, במיקסר, ושרשרת המידי.</p></div></a></li>
+            tiles += """<li><a class="tile ref" href="connections.html"><span class="bub">🔌</span><div class="tx"><span class="kind">דף עזר</span><h3>חיבורים</h3><p>כל החיבורים במקום אחד: הטי־8 לבד, עם וולקה, במיקסר, ושרשרת המידי.</p></div></a></li><li><a class="tile ref" href="mixer-guide.html"><span class="bub">🎚️</span><div class="tx"><span class="kind">דף עזר</span><h3>המיקסר: כל כפתור וכל נורה</h3><p>ציור של הלוח שנוגעים בו, מה כל נורה אומרת, הדרך של הצליל, וכיוון בסיסי בשמונה צעדים.</p></div></a></li>
 """
         if dev == "volca":
             tiles += f"""<li><a class="tile ref" href="vb-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות בוולקה בס</h3><p>{vbtotal} דברים שהבס יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>

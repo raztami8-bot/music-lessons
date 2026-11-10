@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a1d22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="המיקסר">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>המיקסר, כל כפתור וכל נורה · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one-thumb phone page, same family as edge-guide.html. A drawn panel you tap, tabs per area of the mixer, a card per control. Dark grey like the Xenyx, cyan accent. */
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#131518; --panel:#1a1d22; --card:#22262c; --line:#353b44;
+  --fg:#eef1f4; --muted:#a6afba; --acc:#3fb4d6; --acc-soft:#173039;
+  --red:#ff4b4b; --yel:#ffc23d; --grn:#52d66b; --org:#f28a3c;
+  --display:"Secular One","Assistant",system-ui,sans-serif;
+  --body:"Assistant",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;direction:rtl}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--panel);border-bottom:3px solid var(--acc)}
+header .wrap{padding-block:18px 14px}
+h1{font-family:var(--display);font-weight:400;font-size:1.7rem;margin:0;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.95rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .95rem/1 var(--body);padding:10px 14px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:#06232c}
+.tab:focus-visible,.nextbtn:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+main .wrap{padding-block:18px 40px;max-width:640px;margin:0 auto}
+section{display:flex;flex-direction:column;gap:12px}
+.ghead{display:flex;flex-direction:column;gap:2px}
+.label{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;color:var(--acc);text-transform:uppercase}
+h2{font-family:var(--display);font-weight:400;font-size:1.4rem;margin:0;line-height:1.25}
+.intro{color:var(--muted);margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;scroll-margin-top:80px}
+.card.hit{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.en{font-family:var(--mono);font-weight:600;font-size:1.02rem;direction:ltr;unicode-bidi:isolate}
+.he{color:var(--acc);font-weight:700}
+.kind{font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+.card p{margin:0}
+.opts{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.opts li{display:flex;gap:10px;align-items:baseline;font-size:.97rem}
+.opts b{font-family:var(--mono);font-weight:600;font-size:.82rem;background:var(--acc-soft);color:#c9f0fb;border-radius:5px;padding:1px 7px;direction:ltr;unicode-bidi:isolate;flex:0 0 auto;min-width:3.6em;text-align:center}
+.mine{font-size:.95rem;background:#1d2a1f;border:1px solid #2f5a37;border-radius:8px;padding:6px 10px}
+.mine::before{content:"אצלך: ";font-weight:700;color:var(--grn)}
+.warn{font-size:.95rem;background:#33221a;border:1px solid #6a3d22;border-radius:8px;padding:6px 10px}
+.warn::before{content:"⚠️ "}
+.unsure{font-size:.92rem;color:var(--muted)}
+.unsure::before{content:"🔍 לבדוק על המכשיר: "}
+.who{background:var(--acc-soft);border:1px solid var(--acc);border-radius:12px;padding:12px 16px}
+.who strong{display:block;font-family:var(--display);font-weight:400;font-size:1.05rem;margin-bottom:2px}
+.who p{margin:0}
+.flow{display:flex;flex-direction:column;gap:8px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.step .en{font-size:.85rem;color:var(--muted)}
+.arrow{text-align:center;color:var(--acc);font-size:1.2rem;line-height:1}
+ol.ex{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:8px}
+.led{display:inline-block;width:.65em;height:.65em;border-radius:50%;vertical-align:middle;margin-inline:2px}
+.led.r{background:var(--red);box-shadow:0 0 6px var(--red)}
+.led.y{background:var(--yel);box-shadow:0 0 6px var(--yel)}
+.led.g{background:var(--grn);box-shadow:0 0 6px var(--grn)}
+.led.o{background:var(--org);box-shadow:0 0 6px var(--org)}
+.nextbtn{align-self:flex-start;margin-top:6px;background:none;border:1px solid var(--acc);color:var(--fg);font:600 .95rem var(--body);padding:10px 16px;border-radius:999px;cursor:pointer}
+.home{display:inline-block;color:var(--muted);text-decoration:none;font-size:.9rem;margin-bottom:6px}
+a{color:var(--acc)}
+table.plan{width:100%;border-collapse:collapse;font-size:.95rem}
+table.plan td{border-top:1px solid var(--line);padding:7px 4px;vertical-align:top}
+table.plan td:first-child{white-space:nowrap;color:var(--acc);font-weight:700;width:6.5em}
+/* the drawn panel */
+.mapbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px}
+svg.mx{display:block;width:100%;height:auto;max-height:78vh;direction:ltr}
+svg.mx text{font-family:var(--mono);fill:#c7ced8;font-size:8.5px;text-anchor:middle;pointer-events:none}
+svg.mx .lbl{fill:#e9eef4;font-weight:600}
+svg.mx .t{cursor:pointer}
+svg.mx .t:hover>*:first-child, svg.mx .t.on>*:first-child{stroke:var(--acc);stroke-width:2.2}
+svg.mx .t.on .hl{opacity:1}
+.hint{color:var(--muted);font-size:.92rem;margin:0}
+#pick:empty{display:none}
+@media (prefers-reduced-motion:no-preference){section{animation:in .18s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <a class="home" href="index.html">⌂ הבית</a>
+  <h1>המיקסר: כל כפתור וכל נורה</h1>
+  <p class="sub"><span class="en">Behringer Xenyx 802S</span> · נוגעים בכפתור בציור, או עוברים לפי האזורים</p>
+</div></header>
+
+<nav><div class="wrap"><div class="tabs" id="tabs" role="tablist"></div></div></nav>
+
+<main><div class="wrap" id="main"></div></main>
+
+<script>
+/* Every control once: [key, name on the panel, Hebrew, kind, what it does, options, extra lines]
+   extra: {mine:"...", warn:"...", unsure:"..."} */
+const C={
+mic:["MIC 1 / MIC 2","כניסת מיקרופון","שקע XLR","שקע עגול עם שלושה חורים, למיקרופון בלבד. בכל ערוץ משתמשים או במיקרופון או בכניסת הקו, לא בשניהם.",null,{mine:"לא צריך אותו. הסינתים נכנסים בשקע הג׳ק שמתחתיו."}],
+line12:["LINE IN (1, 2)","כניסת קו, ערוצים 1 ו־2","שקע ג׳ק 6.3","כניסה לכלי עם יציאה אחת (מונו). מה שנכנס כאן עובר דרך GAIN, ולכן אפשר לכוון בדיוק כמה חזק הוא נכנס. הסימון ‎-20dB ליד השקע אומר שכניסת הקו חלשה ב־20 דציבל מהמיקרופון, כדי שסינת חזק לא יעוות.",null,{mine:"ערוץ 1 הקרייב, ערוץ 2 האדג׳."}],
+gain:["GAIN","הגברה","כפתור, ערוצים 1-2","כמה חזק האות נכנס לערוץ. זה השלב הראשון, לפני כל השאר. גבוה מדי: נדלקת CLIP והצליל נשבר. נמוך מדי: צריך להגביר בסוף ושומעים רעש.",[["+10…+60","הטווח למיקרופון"],["‎-10…+40","הטווח לכניסת הקו (אצלך)"]],{warn:"לפני שמחברים או מנתקים כבל בערוץ: GAIN עד הסוף שמאלה. כך כתוב במדריך, וכך חוסכים ״פופ״ חזק."}],
+clip:["CLIP","נורית עיוות","נורית אדומה ליד PAN, ערוצים 1-2","נדלקת כשהאות שנכנס חזק מדי, והצליל מתחיל להישבר. מה עושים: מנמיכים GAIN של אותו ערוץ עד שהיא לא נדלקת, גם ברגעים הכי חזקים. הבהוב נדיר ומהיר עוד בסדר, דלוקה הרבה זה לא.",null,null],
+high:["HIGH 12kHz","גבוהים","כפתור EQ","מגביר או מחליש את הצלילים הכי גבוהים: צלצול, רחש, ״אוויר״. באמצע (0) לא משנה כלום.",[["0","לא משנה"],["‎-15…+15","כמה להחליש או להגביר"]],null],
+mid:["MID 2.5kHz","אמצע","כפתור EQ","האזור שבו הצליל ״נוכח״ וחד. הורדה קטנה מרככת צליל צורם, הגברה מוציאה אותו קדימה בערבוב.",[["0","לא משנה"]],null],
+low:["LOW 80Hz","בס","כפתור EQ","העומק והבס. כשהקיק והבס מתנגשים, מורידים קצת LOW בכלי שלא אמור להיות הבס, והערבוב מתנקה.",[["0","לא משנה"]],null],
+fx:["FX","שליחה לאפקט","כפתור כתום","שולח עותק של הערוץ לשקע FX SEND, אל מכשיר אפקט חיצוני (הד, ריוורב). למיקסר הזה אין אפקטים פנימיים.",null,{mine:"אין אפקט מחובר, אז הכפתור לא עושה כלום. אפשר להשאיר אותו עד הסוף שמאלה."}],
+pan:["PAN","ימין ושמאל","כפתור, ערוצים 1-2","איפה הצליל יושב בין האוזן השמאלית לימנית. באמצע: בשתיהן באותה עוצמה.",null,{mine:"אפשר להזיז את הקרייב קצת שמאלה ואת האדג׳ קצת ימינה, וכל אחד נשמע ברור יותר."}],
+bal:["BAL","איזון","כפתור, ערוצים 3/4 ו־5/6","כמו PAN, אבל לכלי סטריאו: מחליש צד אחד ומשאיר את השני. באמצע: שני הצדדים כמו שהם.",null,null],
+level:["LEVEL","עוצמת הערוץ","כפתור לבן","כמה חזק הערוץ בתוך הערבוב. הסימון 0 הוא המצב התקני. בזה מאזנים בין הכלים, לא ב־GAIN.",[["0","תקני, מתחילים מכאן"],["‎-∞","שקט"]],null],
+line34:["LINE IN 3/4, 5/6","כניסות סטריאו","שני שקעי ג׳ק לכל ערוץ","כלי עם יציאה שמאל וימין נכנס בשני השקעים. לכלי עם יציאה אחת: רק לשקע <span class=\"en\">L (MONO)</span>, והוא יישמע בשני הצדדים. אין כאן GAIN, אז את העוצמה שנכנסת קובעים בכפתור העוצמה של המכשיר עצמו.",null,{mine:"3/4 הטי־8 (עם וולקה ב־MIX IN שלו), 5/6 הוולקה השנייה. ראה <a href=\"connections.html#con-mixer\">חיבורים</a>."}],
+line78:["LINE IN 7/8","כניסת סטריאו נוספת","שני שקעי ג׳ק","עוד כניסה לכלי סטריאו. בלי EQ ובלי FX, רק עוצמה, בכפתור LEVEL 7/8.",null,{unsure:"האם השקעים האלה והכניסה מהמחשב נשמעים יחד, או שאחד מבטל את השני."}],
+monout:["MONITOR L / R","יציאה לרמקולי האזנה","שני שקעי ג׳ק","יציאה לזוג רמקולים אקטיביים ליד השולחן. העוצמה שלה בכפתור PHONES/MONITOR, לא ב־MAIN MIX.",null,null],
+phonesjack:["PHONES","אוזניות","שקע ג׳ק 6.3","האוזניות. תקע 3.5 מ״מ נכנס עם מתאם. העוצמה בכפתור PHONES/MONITOR.",null,{mine:"האוזניות מחוברות כאן."}],
+fxsend:["FX SEND","יציאה לאפקט","שקע ג׳ק","יוצא ממנו מה שכפתורי FX שולחים, אל מכשיר אפקט. את הצליל שחוזר מהאפקט מכניסים לערוץ פנוי, למשל 7/8.",null,null],
+mainout:["MAIN OUT L / R","היציאה הראשית","שני שקעי ג׳ק","הערבוב הסופי, לרמקולים או למגבר. העוצמה ב־MAIN MIX.",null,{warn:"מדליקים את הרמקולים אחרונים ומכבים אותם ראשונים."}],
+rca:["STREAM USB/RCA","חיבור למחשב או לטלפון","ארבעה שקעי RCA, וחיבור USB","שני כיוונים. OUT: הערבוב יוצא להקלטה. IN: צליל מהמחשב או מהטלפון נכנס למיקסר. ב־USB זה אותו דבר, ישר למחשב.",[["OUT","מה שהמיקסר מנגן, החוצה להקלטה"],["IN","צליל מבחוץ, פנימה"]],null],
+s2mon:["STREAM TO MONITOR","מהמחשב לאוזניות בלבד","לחצן","מה שנכנס מה־USB או מ־RCA IN נשמע רק באוזניות וברמקולי ההאזנה. לא נכנס לערבוב ולא להקלטה.",null,null],
+s2mix:["STREAM TO MIX","מהמחשב לתוך הערבוב","לחצן","מה שנכנס מה־USB או מ־RCA IN נכנס לערבוב הראשי, כמו עוד ערוץ. ככה מנגנים יחד עם שיר מהטלפון.",null,{warn:"מקליטים למחשב וגם משמיעים ממנו בחזרה? עם הלחצן הזה הצליל חוזר לעצמו, ויכול להיווצר הד או שריקה. אז STREAM TO MONITOR במקום."}],
+lvl78:["LEVEL 7/8","עוצמת הכניסה מבחוץ","כפתור לבן עם סימן USB","העוצמה של מה שנכנס מה־USB, מ־RCA IN ומשקעי 7/8.",null,null],
+phones:["PHONES/MONITOR","עוצמת האוזניות","כפתור לבן","כמה חזק שומעים באוזניות וברמקולי ההאזנה. לא משנה את ההקלטה ולא את MAIN OUT.",null,{mine:"אם צריך לסובב אותו כמעט עד הסוף כדי לשמוע, הערבוב חלש מדי. מתקנים ב־GAIN ובמד, לא כאן."}],
+mainmix:["MAIN MIX","עוצמה ראשית","כפתור ירוק","העוצמה של הערבוב כולו, ל־MAIN OUT ולהקלטה. המד מראה מה שיוצא ממנו.",[["0","תקני"]],null],
+meter:["CLIP · 6 · 0 · 20","מד העוצמה","שני טורי נוריות, שמאל וימין","כמה חזק הערבוב כולו. קוראים מלמטה: 20 (מינוס 20) ירוק, 0 ירוק, 6 צהוב, CLIP אדום. המטרה: שה־0 יהבהב בחלקים החזקים.",[["20","חלש מדי, שומעים בעיקר רעש"],["0","בדיוק נכון"],["6","חזק, עוד בסדר לרגע"],["CLIP","יותר מדי, הצליל נשבר"]],null],
+power:["POWER","חשמל","נורית כתומה","המיקסר דלוק.",null,null],
+phantom:["PHANTOM +48V","חשמל למיקרופון","לחצן ונורית אדומה","שולח חשמל דרך שקעי המיקרופון, למיקרופון קבל בלבד. לא עובר לשקעי הג׳ק, ולכן לא מזיק לסינתים, אבל אין לו שום תפקיד אצלך.",null,{mine:"צריך להיות כבוי. מכבים כשה־MAIN MIX והאוזניות למטה, כדי לחסוך ״פופ״."}]
+};
+
+/* the drawn panel: one shape per control, data-k = key in C */
+function panel(){
+  const knob=(x,y,k,lab,col)=>`<g class="t" data-k="${k}"><circle cx="${x}" cy="${y}" r="11" fill="${col||'#2d3138'}" stroke="#555d68" stroke-width="1"/><line x1="${x}" y1="${y}" x2="${x}" y2="${y-9}" stroke="#eef1f4" stroke-width="1.6"/><text x="${x}" y="${y+19}">${lab}</text></g>`;
+  const jack=(x,y,k,lab)=>`<g class="t" data-k="${k}"><circle cx="${x}" cy="${y}" r="9" fill="#9aa3ad" stroke="#555d68" stroke-width="1"/><circle cx="${x}" cy="${y}" r="4" fill="#0e1013"/>${lab?`<text x="${x}" y="${y+17}">${lab}</text>`:""}</g>`;
+  const led=(x,y,k,c,lab)=>`<g class="t" data-k="${k}"><circle cx="${x}" cy="${y}" r="4.5" fill="${c}" stroke="#555d68" stroke-width=".8"/>${lab?`<text x="${x}" y="${y+12}" style="font-size:7px">${lab}</text>`:""}</g>`;
+  const btn=(x,y,w,k,lab,c)=>`<g class="t" data-k="${k}"><rect x="${x}" y="${y}" width="${w}" height="13" rx="2" fill="${c||'#0e1013'}" stroke="#555d68" stroke-width="1"/><text x="${x+w/2}" y="${y+23}" style="font-size:7px">${lab}</text></g>`;
+  let s=`<svg class="mx" viewBox="0 0 360 500" role="img" aria-label="ציור של לוח המיקסר. נגיעה בכפתור פותחת את ההסבר שלו">
+  <rect x="2" y="2" width="356" height="496" rx="10" fill="#2a2e35" stroke="#454c56"/>
+  <rect x="8" y="8" width="344" height="168" rx="6" fill="#23272d"/>`;
+  /* top: inputs 1-2 */
+  [[45,"1"],[110,"2"]].forEach(([x,n])=>{
+    s+=`<text x="${x}" y="20" class="lbl">MIC ${n}</text>`;
+    s+=`<g class="t" data-k="mic"><circle cx="${x}" cy="42" r="15" fill="#0e1013" stroke="#555d68" stroke-width="1"/><circle cx="${x-5}" cy="38" r="2" fill="#555"/><circle cx="${x+5}" cy="38" r="2" fill="#555"/><circle cx="${x}" cy="47" r="2" fill="#555"/></g>`;
+    s+=jack(x,88,"line12","LINE IN");
+    s+=knob(x,132,"gain","GAIN");
+  });
+  /* top right block: outputs and stereo inputs */
+  s+=`<text x="198" y="20" class="lbl">MONITOR</text>`+jack(183,38,"monout","L")+jack(213,38,"monout","R");
+  s+=`<text x="250" y="20" class="lbl">PHONES</text>`+jack(250,38,"phonesjack","");
+  s+=`<text x="300" y="20" class="lbl">FX SEND</text>`+jack(300,38,"fxsend","");
+  s+=`<text x="190" y="78" class="lbl">3/4</text><text x="240" y="78" class="lbl">5/6</text><text x="290" y="78" class="lbl">7/8</text><text x="333" y="78" class="lbl">MAIN</text>`;
+  [[190,"line34"],[240,"line34"],[290,"line78"],[333,"mainout"]].forEach(([x,k])=>{s+=jack(x,98,k,"L")+jack(x,140,k,"R")});
+  /* channel strips */
+  const strips=[[45,"1",1],[110,"2",1],[175,"3/4",0],[235,"5/6",0]];
+  strips.forEach(([x,n,mono])=>{
+    s+=knob(x,205,"high","HIGH")+knob(x,245,"mid","MID")+knob(x,285,"low","LOW")+knob(x,325,"fx","FX","#f28a3c");
+    s+=mono?knob(x,365,"pan","PAN"):knob(x,365,"bal","BAL");
+    if(mono)s+=led(x+20,358,"clip","#ff4b4b","CLIP");
+    s+=knob(x,425,"level","LEVEL","#e9edf1");
+    s+=`<text x="${x}" y="482" class="lbl" style="font-size:9px">${n}</text>`;
+  });
+  /* master section */
+  s+=`<rect x="263" y="184" width="89" height="306" rx="5" fill="#262a31"/>`;
+  s+=`<text x="307" y="196" class="lbl" style="font-size:7.5px">STREAM USB/RCA</text>`;
+  s+=`<g class="t" data-k="rca"><rect x="276" y="200" width="62" height="40" rx="4" fill="#2d3138" stroke="#555d68"/><circle cx="294" cy="211" r="5" fill="#ddd"/><circle cx="318" cy="211" r="5" fill="#d33"/><circle cx="294" cy="229" r="5" fill="#ddd"/><circle cx="318" cy="229" r="5" fill="#d33"/><text x="332" y="213" style="font-size:5px">OUT</text><text x="332" y="231" style="font-size:5px">IN</text></g>`;
+  s+=knob(285,268,"phones","PHONES","#e9edf1");
+  s+=btn(313,258,26,"phantom","PHANTOM","#7a2430");
+  s+=led(311,300,"power","#f28a3c","POWER")+led(338,300,"phantom","#ff4b4b","+48V");
+  s+=btn(272,318,26,"s2mon","TO MONITOR")+btn(272,358,26,"s2mix","TO MIX");
+  [["#ff4b4b","CLIP",322],["#ffc23d","6",336],["#52d66b","0",350],["#52d66b","20",364]].forEach(([c,l,y])=>{
+    s+=`<g class="t" data-k="meter"><rect x="306" y="${y-6}" width="40" height="12" fill="transparent"/><circle cx="312" cy="${y}" r="3.6" fill="${c}"/><circle cx="340" cy="${y}" r="3.6" fill="${c}"/><text x="326" y="${y+2.5}" style="font-size:6.5px">${l}</text></g>`;
+  });
+  s+=knob(285,425,"lvl78","7/8 USB","#e9edf1")+knob(328,425,"mainmix","MAIN MIX","#b9e7b9");
+  return s+`</svg>`;
+}
+
+const G=[
+{id:"map",tab:"הציור",lab:"PANEL",title:"נוגעים בכפתור",custom:"map"},
+{id:"lights",tab:"הנורות",lab:"LEDS",title:"מה כל נורה אומרת",intro:"ארבעה סוגים של נורות. רק שתיים מהן ״מדברות״ אליך תוך כדי נגינה: CLIP של הערוץ, והמד.",keys:["clip","meter","power","phantom"],who:"<strong>הכלל</strong><p><span class=\"led r\"></span> אדום בערוץ: GAIN של הערוץ למטה. <span class=\"led r\"></span> אדום במד: MAIN MIX למטה, או כמה ערוצים יחד. המד תקוע על <span class=\"led g\"></span> 20: הערבוב חלש מדי.</p>"},
+{id:"flow",tab:"הדרך",lab:"SIGNAL FLOW",title:"איך הצליל עובר במיקסר",custom:"flow"},
+{id:"mono",tab:"ערוצים 1-2",lab:"CH 1 · 2",title:"ערוצי המונו",intro:"לכלי עם יציאה אחת. רק להם יש GAIN ונורית CLIP.",keys:["line12","gain","clip","high","mid","low","fx","pan","level","mic"]},
+{id:"stereo",tab:"ערוצים 3/4, 5/6",lab:"CH 3/4 · 5/6",title:"ערוצי הסטריאו",intro:"לכלי עם יציאה שמאל וימין. אין GAIN: את העוצמה שנכנסת קובע הכלי עצמו.",keys:["line34","high","mid","low","fx","bal","level"]},
+{id:"master",tab:"צד ימין",lab:"MASTER",title:"האזור הימני",intro:"מה שמשפיע על הכל: אוזניות, עוצמה ראשית, ומחשב.",keys:["mainmix","phones","meter","rca","s2mon","s2mix","lvl78","phantom","power"]},
+{id:"jacks",tab:"השקעים",lab:"JACKS",title:"השורה העליונה",intro:"כניסות ויציאות. כניסה מקבלת צליל מכלי, יציאה שולחת אותו החוצה.",keys:["line12","line34","line78","phonesjack","monout","mainout","fxsend","mic"]},
+{id:"setup",tab:"כיוון בסיסי",lab:"SETUP",title:"כיוון בסיסי, פעם אחת",custom:"setup"}
+];
+
+function card(k){
+  const [en,he,kind,what,opts,x]=C[k];
+  let h=`<div class="card" id="c-${k}"><div class="top"><span class="en">${en}</span><span class="kind">${kind}</span></div><div class="he">${he}</div>`;
+  if(what)h+=`<p>${what}</p>`;
+  if(opts)h+=`<ul class="opts">${opts.map(o=>`<li><b>${o[0]}</b><span>${o[1]}</span></li>`).join("")}</ul>`;
+  if(x&&x.mine)h+=`<div class="mine">${x.mine}</div>`;
+  if(x&&x.warn)h+=`<div class="warn">${x.warn}</div>`;
+  if(x&&x.unsure)h+=`<div class="unsure">${x.unsure}</div>`;
+  return h+`</div>`;
+}
+function flow(){
+  const s=(he,en)=>`<div class="step"><span class="he">${he}</span><span class="en">${en}</span></div>`;
+  return `<p class="intro">כל ערוץ עובר את אותה דרך, מלמעלה למטה, כמו הסדר של הכפתורים על הלוח.</p>
+  ${s("הכלי נכנס","LINE IN")}<div class="arrow">↓</div>${s("כמה חזק נכנס (רק 1-2)","GAIN")}<div class="arrow">↓</div>${s("צבע הצליל","HIGH · MID · LOW")}<div class="arrow">↓</div>${s("ימין ושמאל","PAN / BAL")}<div class="arrow">↓</div>${s("עוצמת הערוץ","LEVEL")}<div class="arrow">↓</div>${s("כל הערוצים יחד","MAIN MIX")}<div class="arrow">↓</div>
+  <div class="flow">${s("רמקולים","MAIN OUT")}${s("הקלטה במחשב","USB · RCA OUT")}${s("אוזניות, בעוצמה משלהן","PHONES")}</div>
+  <div class="who"><strong>למה זה חשוב</strong><p>כל בעיה נפתרת בשלב שבו היא נוצרה. עיוות נוצר בכניסה, ולכן מתקנים ב־GAIN. ערבוב חלש מתקנים לפני הסוף, ולא באוזניות. הכפתורים האחרונים בדרך (PHONES, MAIN MIX) הם רק ״כמה חזק אני שומע״.</p></div>`;
+}
+function setup(){
+  return `<div class="card"><div class="he">מה מחובר לאן</div><table class="plan">
+  <tr><td>ערוץ 1</td><td>הקרייב</td></tr><tr><td>ערוץ 2</td><td>האדג׳</td></tr>
+  <tr><td>ערוץ 3/4</td><td>הטי־8, עם וולקה ב־MIX IN שלו</td></tr><tr><td>ערוץ 5/6</td><td>הוולקה השנייה</td></tr>
+  <tr><td>PHONES</td><td>האוזניות</td></tr></table>
+  <p>הכבלים עצמם: <a href="connections.html#con-mixer">חיבורים, הכל במיקסר</a>.</p></div>
+  <div class="card"><div class="he">שמונה צעדים, פעם אחת</div><ol class="ex">
+  <li>לפני שמחברים: <span class="en">GAIN</span> של 1 ו־2, <span class="en">MAIN MIX</span> ו־<span class="en">PHONES</span> עד הסוף שמאלה.</li>
+  <li><span class="en">PHANTOM</span> כבוי. <span class="led r"></span> של <span class="en">+48V</span> לא דולקת.</li>
+  <li>בכל הערוצים: <span class="en">HIGH</span>, <span class="en">MID</span>, <span class="en">LOW</span> על 0 (אמצע). <span class="en">FX</span> עד הסוף שמאלה. <span class="en">PAN</span> ו־<span class="en">BAL</span> באמצע.</li>
+  <li><span class="en">LEVEL</span> של כל ערוץ ו־<span class="en">MAIN MIX</span> על הסימון 0.</li>
+  <li><span class="en">PHONES</span> לשעה 9 בערך, נמוך ובטוח.</li>
+  <li>ערוצים 1 ו־2, אחד אחד: מנגנים את החלק הכי חזק, ומעלים <span class="en">GAIN</span> עד שהמד מגיע ל־<span class="led g"></span> 0. אם <span class="led r"></span> <span class="en">CLIP</span> נדלקת, קצת אחורה.</li>
+  <li>ערוצים 3/4 ו־5/6: אותו דבר, אבל עם כפתור העוצמה של הטי־8 ושל הוולקה עצמם, עד שהמד ב־0.</li>
+  <li>עכשיו הכל יחד: מאזנים בין הכלים רק ב־<span class="en">LEVEL</span>, ואת הנוחות באוזניות ב־<span class="en">PHONES</span>.</li></ol></div>
+  <div class="card"><div class="he">כשמשהו לא נשמע טוב</div><ul class="opts">
+  <li><b>CLIP</b><span>אדומה בערוץ: <span class="en">GAIN</span> של הערוץ למטה.</span></li>
+  <li><b>20</b><span>המד רק על 20, והאוזניות כמעט בסוף: חסר <span class="en">GAIN</span> או עוצמה בכלי. לא להגביר באוזניות.</span></li>
+  <li><b>רעש</b><span>אותה סיבה: הכניסה חלשה וההגברה בסוף חזקה.</span></li>
+  <li><b>צד אחד</b><span>כלי מונו בשקע R של ערוץ סטריאו. מעבירים ל־<span class="en">L (MONO)</span>.</span></li>
+  <li><b>בוץ</b><span>הקיק והבס מתנגשים: קצת <span class="en">LOW</span> למטה בכלי שלא אמור לתת את הבס.</span></li>
+  <li><b>הד</b><span>בהקלטה למחשב: <span class="en">STREAM TO MIX</span> לחוץ. לעבור ל־<span class="en">TO MONITOR</span>.</span></li></ul></div>`;
+}
+function mapView(){
+  return `<p class="hint">נוגעים בכפתור, בשקע או בנורה, וההסבר נפתח מתחת לציור. הציור מסודר כמו הלוח, לא מדויק במידות.</p>
+  <div class="mapbox">${panel()}</div><div id="pick"></div>`;
+}
+
+const tabs=document.getElementById("tabs"),main=document.getElementById("main");
+G.forEach((g,i)=>{const b=document.createElement("button");b.className="tab";b.setAttribute("role","tab");b.textContent=g.tab;b.onclick=()=>show(i,true);tabs.appendChild(b)});
+function show(i,user){
+  const g=G[i];
+  [...tabs.children].forEach((b,j)=>b.setAttribute("aria-selected",j===i));
+  let h=`<section><div class="ghead"><span class="label">${g.lab}</span><h2>${g.title}</h2></div>`;
+  if(g.custom==="map")h+=mapView();
+  else if(g.custom==="flow")h+=flow();
+  else if(g.custom==="setup")h+=setup();
+  else{ if(g.intro)h+=`<p class="intro">${g.intro}</p>`; h+=g.keys.map(card).join(""); if(g.who)h+=`<div class="who">${g.who}</div>`;}
+  if(i<G.length-1)h+=`<button class="nextbtn" id="next">הבא: ${G[i+1].tab} ←</button>`;
+  h+=`</section>`;
+  main.innerHTML=h;
+  const n=document.getElementById("next"); if(n)n.onclick=()=>show(i+1,true);
+  if(g.custom==="map")wireMap();
+  if(user){window.scrollTo({top:0});tabs.children[i].scrollIntoView({inline:"center",block:"nearest"});}
+  try{localStorage.setItem("mixer-tab",i)}catch(e){}
+}
+function wireMap(){
+  const pick=document.getElementById("pick"),svg=main.querySelector("svg.mx");
+  svg.querySelectorAll(".t").forEach(t=>t.addEventListener("click",()=>{
+    const k=t.dataset.k;
+    svg.querySelectorAll(".t").forEach(e=>e.classList.toggle("on",e.dataset.k===k));
+    pick.innerHTML=card(k);
+    const c=pick.firstElementChild;c.classList.add("hit");
+    c.scrollIntoView({behavior:"smooth",block:"nearest"});
+  }));
+}
+let start=0;try{const v=+localStorage.getItem("mixer-tab");if(v>=0&&v<G.length)start=v}catch(e){}
+show(start,false);
+</script>
+
+</body>
+</html>
