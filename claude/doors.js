@@ -210,7 +210,9 @@ function go(v){st.tab=v;save();
   if(v==="learn")drawLearn();else if(v==="find")drawFind();else drawPlay();
 }
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
-go(/^#(learn|find|play)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
-window.addEventListener("hashchange",()=>{if(/^#(learn|find|play)$/.test(location.hash))go(location.hash.slice(1))});
+/* #play-<cat> opens the missions on one group (week.html links here) */
+const hashCat=()=>{const m=/^#play-(\w+)$/.exec(location.hash);if(!m||!D.cats.some(c=>c[0]===m[1]))return false;cat=m[1];st.cat=cat;bag=[];return true};
+go(hashCat()?"play":/^#(learn|find|play)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
+window.addEventListener("hashchange",()=>{if(hashCat())go("play");else if(/^#(learn|find|play)$/.test(location.hash))go(location.hash.slice(1))});
 window.DOORS_TEST={M:M,L:L,show:i=>{mi=i;cat="all";drawPlay()},card:i=>{li=i;drawLearn()}};
 })();

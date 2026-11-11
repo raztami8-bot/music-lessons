@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b1a26">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="האימון השבועי">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>האימון השבועי · כלי אחד, זוג, סט מוקלט · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="doors.css?v=3">
+<style>
+/* The weekly practice: three short sessions (one device, a pair, a recorded full set) around one musical idea.
+   Same shell as the device pages (doors.css): top bar, one card per tab, three tabs at the bottom. Violet, the "together" family.
+   Standalone page, not built by build.py. All content is in the script below. */
+:root{--bg:#131219;--panel:#1b1a26;--card:#232231;--line:#383650;
+  --magenta:#7d6bf2;--magenta-soft:#28244d;--chipline:#4a4390;--chipfg:#dcd8ff}
+.newbtn{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:700;font-size:.9rem}
+.strip{flex:0 0 auto;background:var(--panel);border-bottom:1px solid var(--line);padding:8px 14px}
+.strip .in{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
+.ideabtn{display:flex;align-items:center;gap:10px;width:100%;text-align:start;background:var(--magenta-soft);border:1px solid var(--magenta);border-radius:14px;padding:9px 12px}
+.ideabtn .t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.ideabtn small{color:var(--muted);font-size:.8rem;font-weight:600}
+.ideabtn b{font-family:var(--display);font-weight:400;font-size:1.15rem}
+.ideabtn .wk{flex:none;font-family:var(--mono);font-size:.78rem;color:var(--chipfg)}
+.focus{margin:0;font-size:.92rem;color:var(--gold)}
+.dev{display:flex;align-items:center;gap:12px}
+.dev .ic{flex:none;width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:1.8rem;background:var(--c);
+  box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000);transform:rotate(-4deg)}
+.dev .ic+.ic{margin-inline-start:-18px;transform:rotate(5deg)}
+.rule{font-size:1.06rem;margin:0}
+.role{display:flex;gap:10px;align-items:baseline}
+.role b{flex:none;font-size:.82rem;border-radius:999px;padding:1px 10px;border:1px solid var(--line);background:var(--panel)}
+.role.mv b{border-color:var(--gold);color:var(--gold)}
+.roles{display:flex;flex-direction:column;gap:7px}
+a.big{display:block;text-align:center;text-decoration:none}
+a.ghost{display:inline-block;color:var(--fg);text-decoration:none}
+.parts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.parts li{display:flex;gap:10px;align-items:baseline;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px}
+.parts .m{flex:none;font-family:var(--mono);font-size:.8rem;color:var(--muted);min-width:3.2em}
+.parts b{flex:none;min-width:3.4em}
+.parts span{color:var(--muted);font-size:.95rem}
+.parts li.now{border-color:var(--gold);background:#2e2a1c}
+.parts li.now span{color:var(--fg)}
+.parts li.past{opacity:.45}
+textarea{width:100%;min-height:74px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--fg);font:inherit;resize:vertical}
+.saved{color:var(--green);font-size:.88rem;margin:4px 0 0;min-height:1.3em}
+.tabs button.done span::after{content:"✓";font-size:.8rem;color:var(--green);margin-inline-start:2px;vertical-align:top}
+.tabs button[aria-selected="true"].done span::after{color:#fff}
+.sheet p{margin:0}
+.sheet .rowbtn{display:flex;gap:8px;flex-wrap:wrap}
+.sheet .rowbtn button{flex:1;border-radius:999px;padding:12px 10px;font-weight:700;border:1px solid var(--line);background:var(--card)}
+.sheet .rowbtn .go{background:var(--magenta);border-color:var(--magenta);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="index.html">→ הבית</a>
+  <h1>האימון השבועי</h1>
+  <button class="newbtn" id="newbtn">🎲 שבוע חדש</button>
+</div>
+<div class="strip"><div class="in">
+  <button class="ideabtn" id="ideabtn"><span aria-hidden="true">💡</span><span class="t"><small>הרעיון של השבוע</small><b id="ideaname"></b></span><span class="wk" id="wk"></span></button>
+  <p class="focus" id="focus" hidden></p>
+</div></div>
+
+<main>
+  <section class="view" id="v-solo"><div class="scroll"><div class="inner" id="solo"></div></div>
+    <div class="playrow"><button class="timer" data-t="solo"></button><button class="ok" data-ok="solo"></button><button class="dice" id="dice-solo">🎲 נושא אחר</button></div></section>
+  <section class="view" id="v-pair"><div class="scroll"><div class="inner" id="pair"></div></div>
+    <div class="playrow"><button class="timer" data-t="pair"></button><button class="ok" data-ok="pair"></button><button class="dice" id="dice-pair">🎲 זוג אחר</button></div></section>
+  <section class="view" id="v-set"><div class="scroll"><div class="inner" id="set"></div></div>
+    <div class="playrow"><button class="timer" data-t="set"></button><button class="ok" data-ok="set"></button></div></section>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-v="solo"><span>🎯</span>כלי אחד</button>
+  <button data-v="pair"><span>🤝</span>זוג</button>
+  <button data-v="set"><span>🔴</span>סט מוקלט</button>
+</nav>
+
+<div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
+
+<script>
+"use strict";
+/* ---------- content ---------- */
+/* The four devices, in the order the weeks walk through them. cats: the mission groups that exist on each device page
+   (same keys as cats in t8.html, vb.html, crave.html, edge.html, so the link lands on that group). */
+const DEV={
+ t8:{n:"הטי־8",e:"🥁",c:"#d9482b",href:"t8.html",cats:{
+   drum:["🥁 תופים","רק התופים, הבס שותק. ביט אחד, ושלוש גרסאות שלו."],
+   bass:["🎸 בס","קיק פשוט, וכל תשומת הלב לבס. שלושה קווים שונים."],
+   live:["⚡ לייב","תבנית אחת רצה. לא כותבים צעדים: רק משתיקים, מחזירים ומסובבים."],
+   style:["🌍 סגנונות","מקצב אחד מעולם אחר, עד שהוא יושב ביד."]}},
+ vb:{n:"הוולקה בס",e:"🎛️",c:"#12907f",href:"vb.html",cats:{
+   sound:["🔊 צליל","קו אחד רץ, ולא נוגעים בתווים. שלושה צלילים שונים מאותו קו."],
+   line:["🎼 קו","צליל אחד, ולא נוגעים בכפתורי הצליל. שלושה קווים שונים."],
+   live:["⚡ לייב","קו אחד רץ, ומשנים אותו רק ביד, בלי לעצור."]}},
+ crave:{n:"הקרייב",e:"🧡",c:"#d97706",href:"crave.html",cats:{
+   sound:["🔊 צליל","קו אחד רץ, ולא נוגעים בתווים. שלושה צלילים שונים מאותו קו."],
+   line:["🎼 קו","צליל אחד, ולא נוגעים בכפתורי הצליל. שלושה קווים שונים."],
+   live:["⚡ לייב","קו אחד רץ, ומשנים אותו רק ביד, בלי לעצור."],
+   cable:["🔌 כבל","כבל אחד בלבד. שלושה חיבורים שונים, ומה כל אחד עושה."]}},
+ edge:{n:"האדג׳",e:"💗",c:"#b5179e",href:"edge.html",cats:{
+   sound:["🔊 צליל","קצב אחד רץ, ולא נוגעים בצעדים. שלושה צלילי הקשה שונים."],
+   beat:["🥁 קצב","צליל אחד, ולא נוגעים בכפתורי הצליל. שלושה קצבים שונים."],
+   live:["⚡ לייב","קצב אחד רץ, ומשנים אותו רק ביד, בלי לעצור."],
+   cable:["🔌 כבל","כבל אחד בלבד. שלושה חיבורים שונים, ומה כל אחד עושה."]}}
+};
+const ORDER=["t8","vb","crave","edge"];
+/* Pairs: [holder, its part, mover, its part, what to listen for]. Half way through, they swap. */
+const PAIRS=[
+ ["t8","תופים","crave","קו בס","איפה הבס נכנס מול הקיק: יחד איתו, או ברווח שאחריו?"],
+ ["t8","תופים","vb","בס","האם הקיק והבס נשמעים שניהם? אם אחד מסתיר, מורידים לו עוצמה במיקסר."],
+ ["edge","הקשה","crave","קו","מי ממלא ומי משאיר מקום? כשהקו עמוס, ההקשה מתרוקנת."],
+ ["edge","הקשה","vb","בס","האם ההקשה והבס נוגעים באותם רגעים, או עונים זה לזה?"],
+ ["vb","בס נמוך","crave","קו גבוה","מי נמוך ומי גבוה. אם שניהם באותו גובה, אחד עולה אוקטבה."],
+ ["t8","רק הבס","edge","תופים","האדג׳ הוא המתופף הפעם. האם הבס של הטי־8 יושב עליו?"],
+ ["crave","קו קבוע","edge","הקשה","הקו לא זז. כמה אפשר לשנות את ההרגשה רק מההקשה?"]
+];
+/* Ideas: [name, what it is, alone, as a pair, in the full set]. */
+const IDEAS=[
+ ["שאלה ותשובה","משפט קצר, ואחריו תשובה. לא מנגנים יחד, מדברים בתור.",
+  "החצי הראשון של הרצף שואל, החצי השני עונה.","כלי אחד מנגן תיבה, והשני עונה בתיבה הבאה.","בשיא: שני כלים מדברים בתור, והשאר מחזיקים."],
+ ["מתח ושחרור","בונים ציפייה, ואז נותנים את מה שחיכו לו.",
+  "סוגרים את הצליל לאט, במשך 8 תיבות, ופותחים בבת אחת.","אחד נעלם לשתי תיבות, וחוזר בדיוק על ה־1.","בשבירה הקיק יורד. בחזרה הוא נכנס על ה־1."],
+ ["פחות זה יותר","מה שמורידים נשמע חזק יותר ממה שמוסיפים.",
+  "בונים קו מלא, ואז מכבים חצי מהצעדים.","כל 8 תיבות אחד מכם מוריד משהו. לא מוסיפים.","הפתיחה עם שני כלים בלבד, והם נשארים לבד דקה שלמה."],
+ ["שינוי אחד כל 8 תיבות","סופרים 8 תיבות, משנים דבר אחד, וסופרים שוב.",
+  "כפתור אחד בכל פעם. בין שינוי לשינוי הידיים באוויר.","מתחלפים: פעם המחזיק משנה, פעם הזז.","לכל חלק בסט שינוי אחד שמסמן שהוא התחיל."],
+ ["ההדגשה זזה","אותם תווים, הדגשה במקום אחר, והגרוב משתנה.",
+  "מזיזים את ההדגשה לצעד אחר, ולא נוגעים בשום דבר אחר.","ההדגשות של כלי אחד נופלות ברווחים של השני.","בבנייה: ההדגשות מתרבות מתיבה לתיבה."],
+ ["קיק ובס לא מתנגשים","הבס נכנס ברווח שבין הקיקים, או שהקיק דוחף אותו למטה.",
+  "כותבים בס רק בצעדים שאין בהם קיק.","אחד מחזיק קיק, והשני מחפש לבס שלושה מקומות שונים.","בשיא: בודקים שהקיק עדיין בועט כשהכל בפנים."],
+ ["שלוש פעמים ואז הפתעה","שלוש פעמים אותו דבר, ובפעם הרביעית שינוי קטן.",
+  "תיבה רביעית: תו אחד אחר, או צעד אחד שותק.","הזז מפתיע רק בתיבה הרביעית. בשלוש הראשונות הוא קבוע.","כל חלק בסט נגמר בהפתעה קטנה לפני המעבר."],
+ ["רק אחד זז","בכל רגע רק דבר אחד משתנה. כל השאר לולאה קבועה.",
+  "יד אחת בכיס. כפתור אחד, לאט, עד הסוף ובחזרה.","הזז משנה רק כפתור אחד בכל פעם. המחזיק לא נוגע בכלום.","בכל חלק בסט בוחרים כלי אחד שמוביל."],
+ ["אורכים שונים","קו אחד קצר מהשאר, ולכן הוא נוחת כל פעם במקום אחר.",
+  "מקצרים קו אחד, ומקשיבים איך הוא מסתובב מול הקצב.","אחד באורך מלא, והשני קצר ממנו בצעד אחד.","בבנייה: קו קצר אחד מסתובב מעל הכל."]
+];
+/* The recorded set: [name, minutes, one line]. 12 minutes. */
+const PARTS=[["פתיחה",2,"שני כלים בלבד."],["בנייה",3,"כל 8 תיבות נכנס דבר אחד."],["שיא",3,"הכל בפנים. כאן הרעיון של השבוע."],
+ ["שבירה",2,"יורד הקיק, או יורד הבס."],["חזרה",2,"הכל חוזר על ה־1, ואז סוגרים."]];
+const MIN={solo:20,pair:20,set:PARTS.reduce((a,p)=>a+p[1],0)};
+
+/* ---------- state ---------- */
+const KEY="week1",$=s=>document.querySelector(s);
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=(n,not)=>{const o=[];for(let i=0;i<n;i++)if(not.indexOf(i)<0)o.push(i);return o.length?o[rnd(o.length)]:rnd(n)};
+let st;try{st=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+function newCat(){const k=Object.keys(DEV[st.dev].cats),last=(st.lastCat||{})[st.dev];let c;do{c=k[rnd(k.length)]}while(k.length>1&&(c===st.cat||c===last));return c}
+function newWeek(first){
+  if(first)st={n:1,dev:ORDER[0],seen:[],tab:"solo"};
+  else{st.n++;st.lastCat=st.lastCat||{};st.lastCat[st.dev]=st.cat;st.dev=ORDER[(ORDER.indexOf(st.dev)+1)%ORDER.length];
+    st.focus=(st.note||"").trim()||st.focus||"";st.note=""}
+  st.cat=undefined;st.cat=newCat();
+  st.pair=pick(PAIRS.length,st.pair===undefined?[]:[st.pair]);
+  st.idea=pick(IDEAS.length,st.seen);st.seen=st.seen.concat(st.idea).slice(-5);
+  st.done={};save();
+}
+if(!st||!DEV[st.dev]||!IDEAS[st.idea]||!PAIRS[st.pair])newWeek(true);
+
+/* ---------- drawing ---------- */
+const ic=k=>`<span class="ic" style="--c:${DEV[k].c}" aria-hidden="true">${DEV[k].e}</span>`;
+const ideaBox=i=>`<div class="box hear"><strong class="h">💡 ${IDEAS[st.idea][0]}</strong>${IDEAS[st.idea][i]}</div>`;
+function drawStrip(){
+  $("#ideaname").textContent=IDEAS[st.idea][0];$("#wk").textContent="שבוע "+st.n;
+  const f=$("#focus");f.hidden=!st.focus;f.textContent=st.focus?"📌 מהג׳אם הקודם: "+st.focus:"";
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("done",!!st.done[b.dataset.v]));
+  document.querySelectorAll("[data-ok]").forEach(b=>{const on=!!st.done[b.dataset.ok];b.classList.toggle("on",on);b.textContent=on?"✓ נעשה":"✓ עשיתי"});
+}
+function drawSolo(){
+  const d=DEV[st.dev],c=d.cats[st.cat];
+  $("#solo").innerHTML=`<span class="tag">מפגש 1 · כלי אחד · ${MIN.solo} דקות</span>
+<div class="dev">${ic(st.dev)}<h2>רק ${d.n}</h2></div>
+<p class="lead">שאר המכשירים שקטים. משימה צרה אחת.</p>
+<div class="box"><strong class="h">${c[0]}</strong><p class="rule">${c[1]}</p></div>
+${ideaBox(2)}
+<a class="big" href="${d.href}#play-${st.cat}">משימות ${c[0]} של ${d.n} ←</a>
+<p class="back">מטרה אחת. כשהיא הושגה, שאר הזמן משחק חופשי.</p>`;
+}
+function drawPair(){
+  const p=PAIRS[st.pair],a=DEV[p[0]],b=DEV[p[2]];
+  $("#pair").innerHTML=`<span class="tag">מפגש 2 · זוג · ${MIN.pair} דקות</span>
+<div class="dev">${ic(p[0])}${ic(p[2])}<h2>${a.n} + ${b.n}</h2></div>
+<div class="box roles">
+<div class="role"><b>🧱 מחזיק</b><span>${a.n} (${p[1]}). לולאה אחת, ולא נוגעים בה.</span></div>
+<div class="role mv"><b>🌊 זז</b><span>${b.n} (${p[3]}). כל השינויים קורים כאן.</span></div>
+</div>
+<div class="box"><strong class="h">👂 להקשיב ל</strong>${p[4]}</div>
+${ideaBox(3)}
+<p class="back">🔁 באמצע הזמן מתחלפים: מי שהחזיק זז, ומי שזז מחזיק.</p>
+<a class="ghost" href="connections.html">🔌 איך מחברים אותם</a>`;
+}
+function drawSet(){
+  $("#set").innerHTML=`<span class="tag">מפגש 3 · סט מלא, מוקלט · ${MIN.set} דקות</span>
+<h2>ג׳אם אחד, מההתחלה עד הסוף</h2>
+<div class="box"><strong class="h">🔴 לפני שמתחילים</strong>מקליטים בטלפון. באוזניות: מניחים אוזנייה אחת על המיקרופון של הטלפון. האיכות לא חשובה, רק לשמוע מה קרה.</div>
+<ol class="parts" id="parts">${PARTS.map(p=>`<li><span class="m">${p[1]} דק׳</span><b>${p[0]}</b><span>${p[2]}</span></li>`).join("")}</ol>
+${ideaBox(4)}
+<div class="box"><strong class="h">📌 למחרת: מקשיבים, ורושמים דבר אחד</strong>
+<textarea id="note" placeholder="מה הפריע לי? למשל: נתקעתי אחרי השיא, הבס הסתיר את הקיק" aria-label="דבר אחד שהפריע לי בהקלטה"></textarea>
+<p class="saved" id="saved" role="status"></p>
+<p class="back">זה יהיה הנושא של השבוע הבא, ויופיע למעלה.</p></div>`;
+  const n=$("#note");n.value=st.note||"";let t=null;
+  n.oninput=()=>{st.note=n.value;save();$("#saved").textContent="";clearTimeout(t);t=setTimeout(()=>{$("#saved").textContent=n.value.trim()?"✓ נשמר":""},600)};
+}
+function drawAll(){drawStrip();drawSolo();drawPair();drawSet();resetTimers()}
+
+/* ---------- timers: one runs at a time, counted from the clock so a sleeping tab does not drift ---------- */
+let tick=null,run=null,lock=null;
+const label=k=>"⏱ "+MIN[k]+":00";
+function resetTimers(){clearInterval(tick);tick=null;run=null;if(lock){try{lock.release()}catch(e){}lock=null}
+  document.querySelectorAll("[data-t]").forEach(b=>{b.className="timer";b.textContent=label(b.dataset.t)});
+  document.querySelectorAll("#parts li").forEach(li=>li.className="")}
+function showParts(el){let a=0;document.querySelectorAll("#parts li").forEach((li,i)=>{const e=a+PARTS[i][1]*60;li.className=el>=e?"past":el>=a?"now":"";a=e})}
+document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.t;if(run===k||b.classList.contains("end")){resetTimers();return}
+  resetTimers();run=k;const total=MIN[k]*60,t0=Date.now();b.classList.add("run");
+  if(navigator.wakeLock)navigator.wakeLock.request("screen").then(l=>{if(run===k)lock=l;else l.release()}).catch(()=>{});
+  const show=()=>{const el=Math.floor((Date.now()-t0)/1000),s=total-el;
+    if(s<=0){clearInterval(tick);tick=null;run=null;b.className="timer end";b.textContent="✓ נגמר הזמן";if(k==="set")showParts(total);return}
+    const mm=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+    b.textContent=k==="pair"&&el>=total/2&&el<total/2+20?"🔁 מתחלפים":"⏱ "+mm;
+    if(k==="set")showParts(el)};
+  show();tick=setInterval(show,500)});
+
+/* ---------- buttons ---------- */
+document.querySelectorAll("[data-ok]").forEach(b=>b.onclick=()=>{const k=b.dataset.ok;if(st.done[k])delete st.done[k];else st.done[k]=1;save();drawStrip()});
+$("#dice-solo").onclick=()=>{st.cat=newCat();save();drawSolo()};
+$("#dice-pair").onclick=()=>{st.pair=pick(PAIRS.length,[st.pair]);save();drawPair()};
+function go(v){st.tab=v;save();
+  document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v))}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+
+const shade=$("#shade"),sheet=$("#sheet");
+const closeSheet=()=>shade.classList.remove("on");
+shade.onclick=e=>{if(e.target===shade)closeSheet()};
+$("#ideabtn").onclick=()=>{const i=IDEAS[st.idea];
+  sheet.innerHTML=`<button class="x">✕ סגור</button><h2>💡 ${i[0]}</h2><p class="lead">${i[1]}</p>
+<div class="box"><strong class="h">🎯 כלי אחד</strong>${i[2]}</div><div class="box"><strong class="h">🤝 זוג</strong>${i[3]}</div><div class="box"><strong class="h">🔴 סט</strong>${i[4]}</div>
+<p class="back">רעיון אחד לכל השבוע, בשלושת המפגשים.</p>
+<div class="rowbtn"><button id="otheridea">🎲 רעיון אחר</button></div>`;
+  sheet.querySelector(".x").onclick=closeSheet;
+  $("#otheridea").onclick=()=>{st.idea=pick(IDEAS.length,st.seen);st.seen=st.seen.concat(st.idea).slice(-5);save();drawStrip();drawSolo();drawPair();drawSet();$("#ideabtn").onclick()};
+  shade.classList.add("on")};
+$("#newbtn").onclick=()=>{
+  const nx=DEV[ORDER[(ORDER.indexOf(st.dev)+1)%ORDER.length]],n=Object.keys(st.done).length,note=(st.note||"").trim();
+  sheet.innerHTML=`<button class="x">✕ סגור</button><h2>להתחיל שבוע חדש?</h2>
+<p class="lead">עשית ${n} מתוך 3 מפגשים השבוע.</p>
+<div class="box"><strong class="h">מה ישתנה</strong><ul><li>הכלי הבא בתור: ${nx.e} ${nx.n}</li><li>זוג חדש ורעיון חדש</li>
+<li>${note?"מה שרשמת מההקלטה יופיע למעלה":"לא רשמת כלום מההקלטה, אז אין נושא שעובר הלאה"}</li></ul></div>
+<div class="rowbtn"><button class="go" id="yes">כן, שבוע חדש</button><button id="no">עוד לא</button></div>`;
+  sheet.querySelector(".x").onclick=closeSheet;$("#no").onclick=closeSheet;
+  $("#yes").onclick=()=>{newWeek(false);drawAll();go("solo");closeSheet()};
+  shade.classList.add("on")};
+
+drawAll();go(/^(solo|pair|set)$/.test(st.tab)?st.tab:"solo");
+window.WEEK_TEST={st:()=>st,newWeek:()=>{newWeek(false);drawAll()},DEV:DEV,PAIRS:PAIRS,IDEAS:IDEAS};
+</script>
+</body>
+</html>

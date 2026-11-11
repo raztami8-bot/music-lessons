@@ -556,6 +556,14 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 .dbtn b{{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.2}}
 .dbtn small{{opacity:.9;font-weight:600;font-size:.88rem;line-height:1.35}}
 .dbtn .pg{{margin-top:auto;padding-top:6px;font-size:.8rem;font-weight:700;opacity:.95}}
+.wkbtn{{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;text-decoration:none;color:#fff;
+  background:linear-gradient(145deg,#7d6bf2,#4a3fb0);box-shadow:0 5px 0 #2f2878;transition:transform .08s}}
+.wkbtn:active{{transform:translateY(3px)}}
+.wkbtn .e{{font-size:1.9rem;line-height:1}}
+.wkbtn .t{{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}}
+.wkbtn b{{font-family:var(--f-display);font-weight:400;font-size:1.3rem}}
+.wkbtn small{{opacity:.92;font-weight:600;font-size:.88rem}}
+.wkbtn .go{{font-size:1.3rem;font-weight:700}}
 .more{{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
 .more a{{--dev:var(--together);display:block;padding:13px 14px;border-radius:16px;text-decoration:none;color:var(--fg);font-weight:700;
   background:color-mix(in srgb,var(--dev) 12%,var(--surface));border:2px solid color-mix(in srgb,var(--dev) 35%,transparent)}}
@@ -592,6 +600,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <a class="dbtn crave" href="crave.html" data-k="crave2"><span class="e" aria-hidden="true">🧡</span><b>הקרייב</b><small>קול אחד שמנגן קווים</small></a>
 <a class="dbtn edge" href="edge.html" data-k="edge2"><span class="e" aria-hidden="true">💗</span><b>האדג׳</b><small>תופים מסינתזה</small></a>
 </nav>
+<a class="wkbtn" href="week.html" id="wkbtn"><span class="e" aria-hidden="true">📅</span><span class="t"><b>האימון השבועי</b><small id="wkbtn-t">כלי אחד, זוג, וסט מוקלט</small></span><span class="go" aria-hidden="true">←</span></a>
 <nav class="more" aria-label="עוד">
 <a class="together" href="#together">🔗 ביחד</a><a class="live" href="#live">🌊 לייב מתפתח</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
 </nav>
@@ -620,6 +629,10 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
   if(n) t.push(n+" משימות");
   if(t.length){{ var s=document.createElement("span"); s.className="pg"; s.textContent=t.join(" · "); a.appendChild(s); }}
 }});
+(function(){{
+  var w=null; try{{ w=JSON.parse(localStorage.getItem("week1")); }}catch(e){{}}
+  if(w&&w.n) document.getElementById("wkbtn-t").textContent="שבוע "+w.n+" · עשית "+(w.done?Object.keys(w.done).length:0)+" מתוך 3";
+}})();
 function openTo(){{
   var id=location.hash.slice(1), el=id&&document.getElementById(id), box=document.getElementById("allbox");
   if(el&&box&&box.contains(el)){{ box.open=true; setTimeout(function(){{ el.scrollIntoView(); }},60); }}
