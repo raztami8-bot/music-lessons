@@ -50,6 +50,11 @@ function clusters(ids){
   /* two groups that sit one above the other (the two knobs of a step, a knob and the switch under it) share one picture */
   for(let i=0;i<out.length;i++)for(let j=i+1;j<out.length;j++){const a=union(out[i]),b=union(out[j]);
     if(Math.abs(a[0]-b[0])<30&&Math.abs(a[2]-b[2])<30&&Math.abs(a[1]-b[1])<200){out[i]=out[i].concat(out[j]);out.splice(j,1);j--}}
+  /* too many pictures: join the two groups that make the smallest picture together, as long as it stays readable on a phone */
+  while(out.length>3){let bi=-1,bj=-1,ba=1e12;
+    for(let i=0;i<out.length;i++)for(let j=i+1;j<out.length;j++){const u=union(out[i].concat(out[j])),w=u[2]-u[0],h=u[3]-u[1];
+      if(w<=470&&h<=340&&w*h<ba){ba=w*h;bi=i;bj=j}}
+    if(bi<0)break;out[bi]=out[bi].concat(out[bj]);out.splice(bj,1)}
   return out;
 }
 function setKnobs(svg,set){svg.querySelectorAll(".ptr").forEach(l=>{const id=l.closest(".ctl").dataset.id,h=set&&set[id];l.style.transform=h?`rotate(${(h%12)*30}deg)`:""})}
@@ -65,7 +70,7 @@ function crops(ids,set){
   const box=document.createElement("div");box.className="crops";
   const add=s=>{const d=document.createElement("div");d.className="crop";d.appendChild(s);box.appendChild(d)};
   const cl=clusters(ids);
-  if(cl.length>3){const s=BASE.cloneNode(true);s.classList.add("dim");mark(s,ids);setKnobs(s,set);add(s);return box}
+  if(cl.length>4){const s=BASE.cloneNode(true);s.classList.add("dim");mark(s,ids);setKnobs(s,set);add(s);return box}
   cl.forEach(g=>add(cropSvg(g,set)));
   return box;
 }
@@ -206,5 +211,6 @@ function go(v){st.tab=v;save();
 }
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 go(/^#(learn|find|play)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
+window.addEventListener("hashchange",()=>{if(/^#(learn|find|play)$/.test(location.hash))go(location.hash.slice(1))});
 window.DOORS_TEST={M:M,L:L,show:i=>{mi=i;cat="all";drawPlay()},card:i=>{li=i;drawLearn()}};
 })();

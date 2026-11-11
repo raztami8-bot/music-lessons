@@ -449,6 +449,9 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
         if dev == "t8":
             tiles += """<li><a class="tile hero" href="t8.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הטי־8: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־18 כרטיסים קצרים עם ציור גדול, כל צירוף וכל שם בתצוגה בשליפה מהירה, ו־52 משימות קצרות למשחק על המכשיר.</p></div></a></li>
 """
+        if dev == "volca":
+            tiles += """<li><a class="tile hero" href="vb.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הוולקה בס: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־17 כרטיסים קצרים עם ציור גדול, כל צירוף עם FUNC בשליפה מהירה, ו־35 משימות קצרות למשחק על המכשיר.</p></div></a></li>
+"""
         if dev == "crave":
             tiles += """<li><a class="tile hero" href="crave.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הקרייב: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־19 כרטיסים קצרים עם ציור גדול, כל כפתור וכל צירוף בשליפה מהירה, ו־51 משימות קצרות למשחק על המכשיר.</p></div></a></li>
 """
@@ -544,6 +547,23 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 .tx .progress span{{display:block;height:100%;border-radius:99px;background:var(--dev)}}
 .tx small{{color:var(--muted);font-size:.85rem}}
 .tile.done small{{color:var(--ok);font-weight:700}}
+.devs{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
+.dbtn{{--dev:var(--t8);display:flex;flex-direction:column;gap:2px;min-height:132px;padding:16px;border-radius:24px;text-decoration:none;color:#fff;
+  background:linear-gradient(145deg,var(--dev),color-mix(in srgb,var(--dev) 68%,#000));box-shadow:0 6px 0 color-mix(in srgb,var(--dev) 55%,#000);transition:transform .08s}}
+.dbtn:active{{transform:translateY(3px)}}
+.dbtn.volca{{--dev:#12907f}}.dbtn.crave{{--dev:#d97706}}.dbtn.edge{{--dev:#b5179e}}.dbtn.t8{{--dev:#d9482b}}
+.dbtn .e{{font-size:2rem;line-height:1.2}}
+.dbtn b{{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.2}}
+.dbtn small{{opacity:.9;font-weight:600;font-size:.88rem;line-height:1.35}}
+.dbtn .pg{{margin-top:auto;padding-top:6px;font-size:.8rem;font-weight:700;opacity:.95}}
+.more{{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.more a{{--dev:var(--together);display:block;padding:13px 14px;border-radius:16px;text-decoration:none;color:var(--fg);font-weight:700;
+  background:color-mix(in srgb,var(--dev) 12%,var(--surface));border:2px solid color-mix(in srgb,var(--dev) 35%,transparent)}}
+.more a.live{{--dev:var(--live)}}
+@media (min-width:700px){{.devs{{grid-template-columns:repeat(4,1fr)}}.more{{grid-template-columns:repeat(4,1fr)}}}}
+.allbox{{border:1px solid var(--line);border-radius:18px;background:var(--surface)}}
+.allbox>summary{{cursor:pointer;font-weight:700;padding:14px 16px;color:var(--fg)}}
+.allin{{display:flex;flex-direction:column;gap:18px;padding:4px 10px 14px}}
 .install{{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;color:var(--muted)}}
 .install summary{{cursor:pointer;font-weight:700;color:var(--fg)}}
 .install ol{{margin:10px 0 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}}
@@ -565,9 +585,21 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <div class="wrap">
 <div class="verrow"><span class="upd" id="upd"><b>עודכן</b><small>{STAMP_TXT}</small></span><button class="refresh" id="refresh" type="button">↻ רענון</button></div>
 <button class="newver" id="newver" type="button" hidden><span class="t"><b>יש עדכון חדש</b><small id="newver-t"></small></span><span class="go">גע כדי לרענן ↻</span></button>
-<header class="hello"><h1>מה מנגנים היום?</h1><p>בוחרים מכשיר ושיעור. ההתקדמות נשמרת באייפד, ובכל דף יש כפתור חזרה למטה.</p></header>
-<a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך מאיפה שעצרת</small><b id="resume-t"></b></span></a>
-{secs}<details class="install"><summary>לשמור את העמוד הזה במסך הבית</summary>
+<header class="hello"><h1>מה מנגנים היום?</h1><p>בוחרים מכשיר. בכל אחד שלוש לשוניות: להכיר, לשלוף, לשחק.</p></header>
+<nav class="devs" aria-label="המכשירים">
+<a class="dbtn t8" href="t8.html" data-k="t8d"><span class="e" aria-hidden="true">🥁</span><b>הטי־8</b><small>תופים ובס</small></a>
+<a class="dbtn volca" href="vb.html" data-k="vbd"><span class="e" aria-hidden="true">🎛️</span><b>הוולקה בס</b><small>בס של שלושה מתנדים</small></a>
+<a class="dbtn crave" href="crave.html" data-k="crave2"><span class="e" aria-hidden="true">🧡</span><b>הקרייב</b><small>קול אחד שמנגן קווים</small></a>
+<a class="dbtn edge" href="edge.html" data-k="edge2"><span class="e" aria-hidden="true">💗</span><b>האדג׳</b><small>תופים מסינתזה</small></a>
+</nav>
+<nav class="more" aria-label="עוד">
+<a class="together" href="#together">🔗 ביחד</a><a class="live" href="#live">🌊 לייב מתפתח</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
+</nav>
+<a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך שיעור מאיפה שעצרת</small><b id="resume-t"></b></span></a>
+<details class="allbox" id="allbox"><summary>כל השיעורים ודפי העזר</summary>
+<div class="allin">
+{secs}</div></details>
+<details class="install"><summary>לשמור את העמוד הזה במסך הבית</summary>
 <ol>
 <li>פתח את העמוד הזה בספארי.</li>
 <li>גע בכפתור השיתוף, הריבוע עם החץ למעלה.</li>
@@ -579,6 +611,21 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <script src="app.js"></script>
 <script src="extras.js"></script>
 <script>
+(function(){{
+[].forEach.call(document.querySelectorAll(".dbtn[data-k]"),function(a){{
+  var st=null; try{{ st=JSON.parse(localStorage.getItem(a.dataset.k)); }}catch(e){{}}
+  if(!st) return;
+  var n=st.done?Object.keys(st.done).length:0, t=[];
+  if(st.learn) t.push("כרטיס "+(st.learn+1));
+  if(n) t.push(n+" משימות");
+  if(t.length){{ var s=document.createElement("span"); s.className="pg"; s.textContent=t.join(" · "); a.appendChild(s); }}
+}});
+function openTo(){{
+  var id=location.hash.slice(1), el=id&&document.getElementById(id), box=document.getElementById("allbox");
+  if(el&&box&&box.contains(el)){{ box.open=true; setTimeout(function(){{ el.scrollIntoView(); }},60); }}
+}}
+window.addEventListener("hashchange",openTo); openTo();
+}})();
 (function(){{
 var L={{{", ".join(f'"{n}":["{label(n)}","{LESSONS[n][0]}","{DEV[n][0]}"]' for n in LESSONS)}}};
 function get(k,d){{ try{{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }}catch(e){{ return d; }} }}
