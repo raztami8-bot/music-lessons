@@ -9,13 +9,16 @@
      find     [{id, tab, y:[y0,y1], ids, intro} | {id, tab, hint, rows:[[title,text]]} | {id, tab, hint, links:[[href,title,note]]}]
      rowKey   optional: id on the board -> id of the row that explains it (the 8 steps share one row)
      rowText  optional: {id:{name, he, info}} to override a row
+     names    optional: {id:name} to replace names from the panel (when the board prints the same word on several knobs)
+     find tabs with a board may also give x:[x0,x1]: a column of the board instead of a full row
      cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
      setup    optional function(BASE, BOX), runs once on the board before anything is drawn
    In any text: {id} becomes the control's name as a button that opens it, [TEXT] becomes a label as printed on the board.
    Hours: 7 = all the way left, 5 = all the way right. */
 (function(){
 "use strict";
-const D=window.DOORS, E=D.panel, $=s=>document.querySelector(s);
+const D=window.DOORS, $=s=>document.querySelector(s);
+const E=Object.assign({},D.panel,{names:Object.assign({},D.panel.names,D.names||{})});
 const st=(()=>{try{return JSON.parse(localStorage.getItem(D.key))||{}}catch(e){return {}}})();
 const save=()=>{try{localStorage.setItem(D.key,JSON.stringify(st))}catch(e){}};
 const HOME=D.home.knobs, HOMESW=D.home.sw||{};
@@ -148,10 +151,12 @@ function drawFind(q){
   if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));$("#findScroll").scrollTop=0;return}
   if(f.links){el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);$("#findScroll").scrollTop=0;return}
   const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=f.y[1]-f.y[0];
-  sv.setAttribute("viewBox",`0 ${f.y[0]} ${W} ${h}`);sv.setAttribute("width",W);sv.setAttribute("height",h);
-  if(window.innerWidth>=W+40){sv.removeAttribute("width");sv.removeAttribute("height");sv.style.width="100%"}
+  const x0=f.x?f.x[0]:0,w=f.x?f.x[1]-f.x[0]:W;
+  sv.setAttribute("viewBox",`${x0} ${f.y[0]} ${w} ${h}`);sv.setAttribute("width",w);sv.setAttribute("height",h);
+  const fit=w<=460||window.innerWidth>=w+40;
+  if(fit){sv.removeAttribute("width");sv.removeAttribute("height");sv.style.width="100%"}
   setKnobs(sv,HOME);bd.appendChild(sv);el.appendChild(bd);
-  el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.intro)} גוללים הצידה, ונוגעים בכפתור.</p>`);
+  el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.intro)} ${fit?"נוגעים בכפתור.":"גוללים הצידה, ונוגעים בכפתור."}</p>`);
   const rows={};
   f.ids.forEach(i=>{const r=document.createElement("div");r.className="row";r.innerHTML=ctlHtml(i);rows[i]=r;el.appendChild(r)});
   sv.addEventListener("click",e=>{const g=e.target.closest(".ctl");if(!g)return;const id=g.dataset.id;
