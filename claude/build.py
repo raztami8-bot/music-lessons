@@ -442,6 +442,10 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
     icons = {"t8": "🥁", "volca": "🎛️", "crave": "🧡", "edge": "💗", "together": "🔗", "live": "🌊"}
     for dev, (name, code, sub, nums) in DEVICES.items():
         tiles = ""
+        if dev == "edge":
+            # the trial of the new format (2026-11-11): one page, three doors. The lessons under it stay as the deep version.
+            tiles += """<li><a class="tile hero" href="edge.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>האדג׳: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־16 כרטיסים קצרים עם ציור גדול, כל כפתור בשליפה מהירה, ו־43 משימות קצרות למשחק על המכשיר.</p></div></a></li>
+"""
         for n in nums:
             title, desc = LESSONS[n]
             k = DEV[n][1]
@@ -524,6 +528,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 .tile.done .bub{{background:var(--ok);font-size:1.4rem}}
 .tile.ref{{border:2px dashed color-mix(in srgb,var(--dev) 55%,transparent);box-shadow:none;background:color-mix(in srgb,var(--dev) 5%,var(--surface))}}
 .tile.ref .bub{{background:var(--fg);color:var(--dev)}}
+.tile.hero{{border:3px solid var(--dev);background:color-mix(in srgb,var(--dev) 14%,var(--surface))}}
 .tx{{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}}
 .kind{{font-weight:700;font-size:.82rem;color:var(--dev);letter-spacing:.02em}}
 .tx h3{{font-size:1.25rem}}
