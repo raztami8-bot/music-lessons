@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d1920">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="הקרייב">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>הקרייב · להכיר, לשלוף, לשחק · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="doors.css?v=2">
+<style>:root{--magenta:#e07a12;--magenta-soft:#3a2914;--board:#ef8a1f;--chipline:#7a5426;--chipfg:#ffe3c4}</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="index.html">→ כל המכשירים</a>
+  <h1>הקרייב</h1>
+  <button class="homebtn" id="homebtn">🏠 הבית</button>
+</div>
+
+<main>
+  <section class="view" id="v-learn">
+    <div class="prog" id="prog"></div>
+    <div class="scroll" id="learnScroll"><div class="inner" id="learn"></div></div>
+    <div class="navrow"><button id="prev">→ הקודם</button><button class="next" id="next">הבא ←</button></div>
+  </section>
+  <section class="view" id="v-find">
+    <div class="chips" id="chips" role="tablist"></div>
+    <div class="scroll" id="findScroll"><div class="inner" id="find"></div></div>
+  </section>
+  <section class="view" id="v-play">
+    <div class="chips" id="cats" role="tablist"></div>
+    <div class="scroll" id="playScroll"><div class="inner" id="play"></div></div>
+    <div class="playrow"><button class="timer" id="timer">⏱ דקה</button><button class="ok" id="ok">✓ עשיתי</button><button class="dice" id="dice">🎲 עוד משימה</button></div>
+  </section>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-v="learn"><span>🌱</span>להכיר</button>
+  <button data-v="find"><span>🔎</span>לשלוף</button>
+  <button data-v="play"><span>🎲</span>לשחק</button>
+</nav>
+
+<div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
+
+<script src="crave-data.js"></script>
+<script>
+"use strict";
+/* The Crave, for doors.js. Everything here is content; the engine and the look are in doors.js and doors.css.
+   Sources: lessons 24, 17, 18, 19, 26 (written from the official manual). "+" between buttons: hold the first ones, tap the last, release. */
+const E=window.CRAVE;
+/* the home: lesson 24, card 5.1. 7 = all the way left */
+const HOME={freq:12,pw:12,oscmod:7,mix:7,cutoff:12,reso:7,vcfmod:7,volume:9,attack:7,decay:12,sustain:7,lforate:12,glide:7};
+const HOMESW={shape:"SAW",vcfmode:"LP",vcfsrc:"ENV",vcfpol:"+",vcamode:"ENV",susw:"OFF"};
+const H=(o)=>Object.assign({},HOME,o||{});
+const ACID=H({cutoff:9,reso:1,vcfmod:2});
+const HE={
+ freq:["גובה וכוונון","כפתור"],pw:["רוחב הפולס","כפתור"],oscmod:["כמה המתנד זז","כפתור"],mix:["מתנד מול רעש","כפתור"],
+ shape:["צורת הגל","מתג",[["PULSE","חלול"],["SAW","בהיר ומזמזם: הגל של האסיד"]]],
+ oscsrc:["מי מזיז את המתנד","מתג",[["ENV","המעטפת: ״זאפ״ בכל תו"],["LFO","הגל האיטי: רעד"]]],
+ oscdest:["מה זז במתנד","מתג",[["WIDTH","רוחב הפולס"],["FREQ","הגובה"]]],
+ cutoff:["כמה המסנן פתוח","כפתור"],reso:["שריקה","כפתור"],vcfmod:["כמה המסנן זז","כפתור"],
+ vcfmode:["סוג המסנן","מתג",[["LP","חותך גבוהים: בס ואסיד"],["HP","חותך נמוכים: דק, בלי גוף"]]],
+ vcfsrc:["מי מזיז את המסנן","מתג",[["ENV","המעטפת: כל תו נפתח ונסגר"],["LFO","הגל האיטי: נשימה"]]],
+ vcfpol:["כיוון התנועה","מתג",[["+","פותחת את המסנן"],["−","סוגרת אותו"]]],
+ volume:["עוצמה","כפתור"],
+ vcamode:["מתי שומעים","מתג",[["ENV","רק כשתו מנגן"],["ON","מזמזם בלי הפסקה"]]],
+ attack:["כניסת התו","כפתור"],decay:["נפילת התו","כפתור"],sustain:["עוצמת ההחזקה","כפתור"],
+ susw:["החזקה","מתג",[["ON","התו מחזיק כל עוד לוחצים"],["OFF","התו נופל לבד"]]],
+ lforate:["מהירות הגל האיטי","כפתור"],
+ lfoshape:["צורת הגל האיטי","מתג",[["SQU","קופץ בין שני מצבים"],["TRI","עולה ויורד חלק"]]],
+ glide:["גלישה","כפתור"],vcmix:["מערבב לכבלים","כפתור"],tempo:["קצב","כפתור"],
+ holdrest:["הקפאה / שקט","לחצן"],resetacc:["להתחלה / הדגשה","לחצן"],arp:["ארפג׳יו / סוף הרצף","לחצן"],pattern:["רצף / בנק","לחצן"],
+ shift:["התפקיד השני","לחצן"],page:["עמוד","לחצן"],play:["נגן / עצור","לחצן"],rec:["הקלטה","לחצן"],
+ leds:["שמונה נורות","נורות"],kybd:["אוקטבה למטה","לחצן"],step:["אוקטבה למעלה","לחצן"],
+ s1:["שמונה קלידים לבנים","קלידים"],b1:["חמישה קלידים שחורים","קלידים"],
+ midiin:["כניסת מידי","שקע עגול"],midithru:["מעביר הלאה","שקע עגול"],lfoled:["נורית","נורית"],power:["נורית","נורית"]
+};
+const KEYS=["s1","s2","s3","s4","s5","s6","s7","s8"];
+const L=[
+ {t:"מה יש לך ביד",b:"שלושה דברים בקופסה אחת: סינתי של קול אחד, סיקוונסר שזוכר קו, ולוח שקעים לכבלים. אין תצוגה ואין תפריטים.",
+  hear:"הכתום הוא הזמר. הסיקוונסר זוכר את התווים, ואתה מנגן את הצליל.",hearT:"💡 הרעיון",all:1},
+ {t:"הלוח בארבעה אזורים",b:"מלמעלה למטה: השקעים, שורה 1 (מתנד, מסנן, עוצמה), שורה 2 (מעטפת, תנועה, גלישה), ולמטה הסיקוונסר עם 13 קלידים.",
+  hear:"רוצים לשנות צליל: למעלה. רוצים לשנות את הקו: למטה.",hearT:"💡 הרעיון",all:1},
+ {t:"צליל ראשון",ids:["volume","kybd","step"],set:HOME,
+  tr:["לחץ על כמה קלידים.","סובב {volume} לאט עד שנעים.","{step} פעמיים: הכל גבוה יותר. {kybd} פעמיים: חוזרים."],
+  hear:"כל קליד נותן תו, והנורה האדומה זזה עם האוקטבה.",back:"מזמזם בלי הפסקה? מתג {vcamode} על [ENV]. שקט? פתח את 🏠 הבית למעלה."},
+ {t:"הבית",b:"הקרייב לא שומר מיקומים של כפתורים. לכן יש בית: מיקום קבוע לכל כפתור ומתג. משם מתחילים כל ניסוי, ולשם חוזרים.",
+  ids:["cutoff","reso","vcfmod"],set:HOME,hear:"כל קליד נותן צליל קצר ומזמזם, שנעלם לבד.",btn:["🏠 לפתוח את הבית","home"],back:"מצאת צליל טוב? צלם את הלוח. הצילום הוא השמירה."},
+ {t:"המסע של הצליל",b:"כמו מים בצינור: המתנד יוצר, המסנן מצר את הצינור, המעטפת פותחת וסוגרת את הברז בכל תו, והמגבר קובע כמה יוצא.",
+  ids:["freq","cutoff","decay","volume"],set:HOME,hear:"הכל כבר מחובר מבפנים. לכן הוא מנגן בלי כבל אחד.",hearT:"💡 הרעיון"},
+ {t:"המתנד: מקור הצליל",ids:["freq","pw","mix","shape"],set:HOME,
+  tr:["{freq} לאט: הגובה עולה ויורד. זה גם הכוונון.","מתג {shape}: [SAW] בהיר, [PULSE] חלול.","על [PULSE], סובב {pw}.","{mix} לשעה 12: רעש נוסף לצליל."],
+  hear:"בהיר, חלול, מחוספס.",back:"חזרה: {shape} על [SAW], {freq} ו־{pw} 12, {mix} לאפס."},
+ {t:"המסנן: הכפתור של הג׳אם",ids:["cutoff","reso","vcfmode"],set:H({reso:2}),
+  tr:["לחץ שוב ושוב על קליד. {cutoff} שמאלה: עמום. ימינה: בהיר.","{reso} לשעה 2, ושוב {cutoff}: שורק ומצייץ.","מתג {vcfmode} על [HP]: הבס נעלם."],
+  hear:"״ווווו״.",back:"חזרה: {cutoff} 12, {reso} לאפס, {vcfmode} על [LP]. קרוב לסוף {reso} שורק חזק: עוצמה נמוכה."},
+ {t:"הצליל של האסיד",b:"המעטפת פותחת את המסנן בכל תו.",ids:["cutoff","reso","vcfmod","decay"],set:ACID,
+  tr:["{cutoff} לשעה 9, {reso} לשעה 1, {vcfmod} לשעה 2.","לחץ על קלידים.","{decay}: קצר זה ״פיו״, ארוך זה ״יאאאו״."],
+  hear:"כל תו ״מדבר״, כמו ״יאו״.",back:"שווה לצלם. חזרה: {cutoff} ו־{decay} 12, {reso} ו־{vcfmod} לאפס."},
+ {t:"הצורה של כל תו",ids:["attack","decay","sustain","susw"],set:H({attack:12}),
+  tr:["{attack} לשעה 12: התו נכנס לאט, כמו נשימה.","{attack} לאפס. {decay} לשעה 9: נוקשני. לשעה 3: ארוך.","מתג {susw} על [ON], {sustain} לשעה 2: התו מחכה כל עוד מחזיקים."],
+  hear:"תו שמתנפח, תו שנוקש, תו שמחזיק.",back:"חזרה: {attack} ו־{sustain} לאפס, {decay} 12, {susw} על [OFF]."},
+ {t:"צליל שלא נגמר",ids:["vcamode","cutoff"],set:HOME,
+  tr:["מתג {vcamode} על [ON]: זמזום בלי הפסקה.","{cutoff} לאט: זה דרון."],
+  hear:"זמזום רציף, בגובה של הקליד האחרון.",back:"כשהקרייב מזמזם ולא מפסיק, זה המתג. חזרה: {vcamode} על [ENV]."},
+ {t:"תנועה: הגל האיטי",b:"ל־LFO אין צליל משלו. הוא מסובב כפתור בשבילך.",ids:["vcamode","vcfsrc","vcfmod","reso","lforate","lfoshape"],set:H({reso:1,vcfmod:12}),
+  tr:["{vcamode} על [ON], כדי לשמוע צליל רציף.","מתג {vcfsrc} על [LFO]. {reso} לשעה 1, {vcfmod} לשעה 12.","{lforate}: לאט זו נשימה, מהר זה ״וואוואו״."],
+  hear:"המסנן זז בלי שנוגעים בו.",back:"חזרה: {vcamode} ו־{vcfsrc} על [ENV], {vcfmod} ו־{reso} לאפס, {lforate} 12."},
+ {t:"גלישה",ids:["glide"],set:H({glide:11}),tr:["{glide} לשעה 11.","קליד נמוך, ומיד קליד גבוה."],hear:"״ויוּ״ בין שני תווים.",back:"חזרה: {glide} לאפס."},
+ {t:"לחצן אחד, שני תפקידים",b:"לרוב הלחצנים יש תפקיד שני, עם {shift}. הסדר תמיד: מחזיקים {shift}, לוחצים על השני, ורק אז עוזבים. מכאן זה כתוב עם ״+״.",
+  ids:["shift","kybd","step","leds"],
+  tr:["{shift} + {kybd}: מצב קלידים. הנורה ירוקה.","{shift} + {step}: מצב צעדים. הנורה צהובה.","חזור למצב קלידים."],
+  hear:"אדום: האוקטבה. ירוק: מצב קלידים. צהוב: מצב צעדים.",hearT:"💡 הנורות מדברות בצבעים"},
+ {t:"מקליטים קו ראשון",ids:["rec","holdrest","play"].concat(KEYS),
+  tr:["מצב קלידים, נורה ירוקה.","{rec}: הנורה של צעד 1 מהבהבת.","קליד לכל צעד: 1, 1, שקט, 8, 1, 5, שקט, 4. שקט הוא {holdrest}.","{rec} שוב. ואז {play}."],
+  hear:"קו של 8 צעדים, עם שני רווחים.",back:"מנגן יותר מ־8 צעדים? {shift} + {arp} + [STEP 8] קובע שהרצף נגמר ב־8."},
+ {t:"הקו רץ, אתה מנגן",b:"הקו קבוע, הידיים חופשיות.",ids:["tempo","cutoff","decay"],set:ACID,
+  tr:["{tempo}: המהירות.","דקה רק {cutoff}, בין שעה 8 לשעה 12.","דקה רק {decay}: קצר קופץ, ארוך זורם."],hear:"אותו קו, כל פעם אחר."},
+ {t:"לשמור, לפני שמכבים",b:"קו שלא נשמר נעלם בכיבוי. יש 64 מקומות: 8 בנקים של 8.",ids:["shift","play","rec","pattern"].concat(KEYS),
+  tr:["{shift} + {play}, מחזיקים שתי שניות. נורה ירוקה מהבהבת לאט.","לוחצים על מקום, למשל [STEP 2].","{shift} + {rec}: נשמר.","לטעון: מחזיקים {pattern} ולוחצים [STEP 2]."],
+  hear:"התווים נשמרים. הכפתורים לא: להם יש צילום.",hearT:"💡 מה נשמר",back:"שמירה על מקום תפוס מחליפה את מה שהיה בו."},
+ {t:"הלכת לאיבוד? ״מה מהבהב?״",b:"בקרייב יש מצבים, ובכל אחד הקלידים עושים משהו אחר. כשמשהו לא מגיב, עוברים לפי הסדר, עד שהקלידים מנגנים:",ids:["play","rec","arp","shift","holdrest"],
+  tr:["{play} דולק? לוחצים עליו.","נורה 1 מהבהבת בצהוב? אלה ההגדרות: {shift} + {holdrest} + [STEP 8].","צעד אחד מהבהב? {shift} + אותו צעד.","{rec} דולק? לוחצים עליו.","תווים מתגלגלים לבד? {arp}."],
+  hear:"כל קליד מנגן תו אחד, ושום דבר לא מהבהב.",hearT:"✓ יצאת"},
+ {t:"השקעים, במשפט אחד",b:"שם בתוך מסגרת: כניסה. שם על רקע שחור: יציאה. כבל הולך תמיד מיציאה לכניסה, ואין בזה סכנה. לא צריך אף כבל כדי לנגן.",
+  ids:["j_lfotri","j_vcfcut"],hear:"כל כבל אומר: ״החלק הזה יזיז את הכפתור ההוא, בשבילי״.",hearT:"💡 הרעיון",back:"שלפת את כל הכבלים? הקרייב חזר בדיוק למה שהיה."},
+ {t:"זה הבסיס. עכשיו לשחק",b:"מכאן לומדים בידיים. בלשונית 🎲 יש משימות קצרות: דבר אחד לנסות. ובלשונית 🔎 כל כפתור וכל צירוף, כשצריך.",btn:["🎲 תן לי משימה","play"],all:1}
+];
+const COMBO=[
+ ["מצב קלידים (נורה ירוקה)","{shift} + {kybd}"],["מצב צעדים (נורה צהובה)","{shift} + {step}"],
+ ["להקליט","{rec}, קליד לכל צעד, {rec}. שקט: {holdrest}. הדגשה: {resetacc}."],
+ ["איפה הרצף נגמר","{shift} + {arp} + הצעד האחרון. בעמודים הבאים: קודם {page}."],
+ ["לנקות את הרצף הפתוח","{shift} + {resetacc} + {pattern}. מוחק. אם הוא חשוב, לשמור קודם."],
+ ["לפתוח צעד לעריכה","{shift} + הצעד. הוא מהבהב. אותו צירוף שוב סוגר."],
+ ["בצעד פתוח","{glide}: גלישה. {resetacc}: הדגשה. {tempo}: אורך התו, 1 עד 8. {shift} ומסובבים {glide}: חזרות מהירות, 1 עד 4. {holdrest}: שקט."],
+ ["להחליף תו של צעד","עצור. {rec}, {shift} + הצעד, קליד חדש, {rec}."],
+ ["לשמור","{shift} + {play} שתי שניות, לוחצים על מקום 1 עד 8, ואז {shift} + {rec}."],
+ ["לטעון רצף","מחזיקים {pattern} ולוחצים 1 עד 8."],["לבחור בנק","{shift} + {pattern} + 1 עד 8."],
+ ["לבטל מה שלא נשמר","{pattern} + {resetacc}"],
+ ["להקפיא צעד, כמו גמגום","מחזיקים {holdrest}."],["חזרה לצעד 1","{resetacc}"],
+ ["להשתיק את הקו","{shift} + {holdrest}"],["הכל מודגש","{shift} + {resetacc}"],
+ ["לנגן הפוך","{shift} + {play}, לחיצה קצרה."],["סווינג","מחזיקים {shift} ומסובבים {tempo}. באמצע: ישר."],
+ ["חזרות מהירות על כל הקו","מחזיקים {shift} ומסובבים {glide}."],
+ ["אוקטבה","{kybd} למטה, {step} למעלה."],["עמוד הבא (8 צעדים)","{page}"],
+ ["ארפג׳יו","{arp}, ומחזיקים כמה קלידים. {holdrest} מחזיק אותו."],
+ ["הגדרות, כניסה ויציאה","{shift} + {holdrest} + [STEP 8]. נורה 1 מהבהבת בצהוב."]
+];
+const REC=[
+ ["האסיד","{cutoff} לשעה 9, {reso} לשעה 1, {vcfmod} לשעה 2. {decay} לפי הטעם."],
+ ["דרון","{vcamode} על [ON], ו־{cutoff} לאט."],
+ ["מסנן שנושם","{vcfsrc} על [LFO]. {reso} לשעה 1, {vcfmod} לשעה 12. {lforate} קובע את המהירות."],
+ ["היי־האט מרעש","{mix} עד הסוף ימינה. {vcfmode} על [HP]. {decay} לשעה 9."],
+ ["תו רך וארוך","{attack} לשעה 12. {susw} על [ON], {sustain} לשעה 2."],
+ ["רעד וסירנה","{oscsrc} על [LFO], {oscdest} על [FREQ]. {oscmod} לאט, עד שעה 9."],
+ ["״זאפ״ בכל תו","{oscsrc} על [ENV], {oscdest} על [FREQ]. {oscmod} לאט."],
+ ["טריל, כמו ארפג׳יו","{oscsrc} על [LFO], {oscdest} על [FREQ], {lfoshape} על [SQU]. {oscmod} לאט מאפס, עד שהקפיצה נשמעת טוב. {lforate}: כמה מהר."],
+ ["פולס שנושם","{shape} על [PULSE]. {oscsrc} על [LFO], {oscdest} על [WIDTH], {lfoshape} על [TRI]. {lforate} לשעה 9, {oscmod} לשעה 12."],
+ ["גלישה על כל התווים","{glide} לשעה 11."],
+ ["רוח לפני הדרופ","עוצרים את הקו. {vcamode} על [ON], {mix} עד הסוף ימינה, {cutoff} סגור. פותחים את {cutoff} לאט, לאורך ארבע תיבות."]
+];
+const FIX=[
+ ["מזמזם בלי הפסקה","מתג {vcamode} על [ON]. מחזירים ל־[ENV]."],
+ ["שקט לגמרי","{volume}. אחר כך: שולפים את כל הכבלים, וחוזרים ל־🏠 הבית."],
+ ["הקלידים לא מנגנים, או משהו מהבהב","לפי הסדר: {play} דולק? לוחצים. נורה 1 מהבהבת בצהוב? {shift} + {holdrest} + [STEP 8]. צעד מהבהב? {shift} + אותו צעד. {rec} דולק? לוחצים. תווים מתגלגלים? {arp}."],
+ ["TEMPO לא משנה את המהירות","צעד פתוח לעריכה, ושם {tempo} משנה את אורך התו. סוגרים את הצעד: {shift} + אותו צעד."],
+ ["הקו נעלם אחרי כיבוי","הוא לא נשמר. שמירה: {shift} + {play} שתי שניות, מקום, {shift} + {rec}."],
+ ["נשמע מזויף מול כלי אחר","{freq} הוא הכוונון. בדקות הראשונות המתנד מתחמם, והכיוון זז קצת."],
+ ["PULSE WIDTH לא עושה כלום","הוא עובד רק כשמתג {shape} על [PULSE]."],
+ ["SUSTAIN לא עושה כלום","מתג {susw} על [OFF]."],
+ ["VC MIX לא עושה כלום","הוא עובד רק עם כבלים ב־{j_mix1} וב־{j_mix2}."]
+];
+const MORE=[
+ ["lesson-24.html","שיעור 1 · היכרות","המלא"],["lesson-17.html","שיעור 2 · איך הצליל בנוי","כל כפתור, לאט"],
+ ["lesson-18.html","שיעור 3 · הסיקוונסר","הקלטה, עריכה, שמירה"],["lesson-19.html","שיעור 4 · הכבלים","חיבורים ראשונים"],
+ ["lesson-26.html","שיעור 5 · ארגז טריקים","לג׳אם"],["crave-map.html","מה אפשר לעשות","לפי מטרה"],
+ ["lesson-23.html","ביחד · שיעור 3","עם הטי־8 והאדג׳"]
+];
+const LINE="קו שמנגן";
+const M=[
+ {c:"sound",t:"רק כפתור אחד",d:["דקה שלמה רק על {cutoff}. לאט, מהר, בקפיצות."],ids:["cutoff"],set:HOME,from:LINE},
+ {c:"sound",t:"שריקה",d:["{reso} לשעה 2.","{cutoff} מקצה לקצה, לאט."],ids:["cutoff","reso"],set:H({reso:2}),back:"{reso} לאפס. קרוב לסוף הוא שורק חזק: עוצמה נמוכה."},
+ {c:"sound",t:"הצליל של האסיד",d:["{cutoff} לשעה 9, {reso} לשעה 1.","{vcfmod} לשעה 2.","לחץ על קלידים: כל תו ״מדבר״."],ids:["cutoff","reso","vcfmod"],set:ACID},
+ {c:"sound",t:"״פיו״ מול ״יאאאו״",d:["רק {decay}.","קצר: ״פיו״. ארוך: ״יאאאו״."],ids:["decay"],set:H({cutoff:9,reso:1,vcfmod:2,decay:3}),from:"הצליל של האסיד (🔎 מתכונים)",back:"{decay} לשעה 12."},
+ {c:"sound",t:"מסנן הפוך",d:["מתג {vcfpol} על [−]: המעטפת סוגרת את המסנן במקום לפתוח.","{cutoff} ימינה עד שזה נשמע טוב."],ids:["vcfpol","cutoff","vcfmod"],set:ACID,from:"הצליל של האסיד (🔎 מתכונים)",back:"{vcfpol} על [+]."},
+ {c:"sound",t:"מסור מול פולס",d:["מתג {shape}: [SAW], ואז [PULSE].","על [PULSE], סובב {pw}: באמצע חלול, בקצוות דק ומאנפף."],ids:["shape","pw"],set:HOME,back:"{shape} על [SAW], {pw} לשעה 12."},
+ {c:"sound",t:"חספוס",d:["{mix} לשעה 12: מתנד ורעש יחד.","{mix} עד הסוף ימינה: רק רעש."],ids:["mix"],set:H({mix:12}),back:"{mix} לאפס."},
+ {c:"sound",t:"רעד וסירנה",d:["{oscsrc} על [LFO], {oscdest} על [FREQ].","מחזיקים קליד, ו־{oscmod} לאט עד שעה 9. עוד קצת: סירנה."],ids:["oscmod","oscsrc","oscdest"],set:H({oscmod:9}),back:"{oscmod} לאפס."},
+ {c:"sound",t:"״זאפ״ בכל תו",d:["{oscsrc} על [ENV], {oscdest} על [FREQ].","{oscmod} לאט. כל תו מתחיל בצניחה של גובה."],ids:["oscmod","oscsrc","oscdest"],set:H({oscmod:10}),back:"{oscmod} לאפס."},
+ {c:"sound",t:"תו שמתנפח",d:["{attack} לשעה 12.","נגן לאט. כל תו נכנס כמו נשימה."],ids:["attack"],set:H({attack:12}),back:"{attack} לאפס."},
+ {c:"sound",t:"להחזיק תו",d:["מתג {susw} על [ON], {sustain} לשעה 2.","מחזיקים קליד: התו מחכה. משחררים: נופל לפי {decay}."],ids:["sustain","susw","decay"],set:H({sustain:2}),back:"{susw} על [OFF], {sustain} לאפס."},
+ {c:"sound",t:"דרון",d:["מתג {vcamode} על [ON].","{cutoff} לאט מאוד, דקה שלמה.","הוסף {reso} לשעה 12."],ids:["vcamode","cutoff","reso"],set:H({reso:12}),back:"{vcamode} על [ENV], {reso} לאפס."},
+ {c:"sound",t:"מסנן שנושם",d:["{vcamode} על [ON], {vcfsrc} על [LFO].","{reso} לשעה 1, {vcfmod} לשעה 12.","{lforate} לאט ומהר. ואז מתג {lfoshape}."],ids:["vcfsrc","vcfmod","reso","lforate","lfoshape","vcamode"],set:H({reso:1,vcfmod:12}),back:"{vcamode} ו־{vcfsrc} על [ENV], {vcfmod} ו־{reso} לאפס."},
+ {c:"sound",t:"בלי גוף",d:["מתג {vcfmode} על [HP].","{cutoff} ימינה: הצליל נהיה דק עוד יותר."],ids:["vcfmode","cutoff"],set:HOME,back:"{vcfmode} על [LP], {cutoff} לשעה 12."},
+ {c:"sound",t:"היי־האט מרעש",d:["{mix} עד הסוף ימינה.","מתג {vcfmode} על [HP].","{decay} לשעה 9. לחץ על קליד בקצב."],ids:["mix","vcfmode","decay"],set:H({mix:5,decay:9}),back:"{mix} לאפס, {vcfmode} על [LP], {decay} 12."},
+ {c:"sound",t:"טריל",d:["{oscsrc} על [LFO], {oscdest} על [FREQ], {lfoshape} על [SQU].","{oscmod} לאט מאפס, עד שהקפיצה היא תו שנשמע טוב.","{lforate}: כמה מהר."],ids:["oscmod","oscsrc","oscdest","lforate","lfoshape"],from:LINE,back:"{oscmod} לאפס."},
+ {c:"sound",t:"פולס שנושם",d:["{shape} על [PULSE]. {oscsrc} על [LFO], {oscdest} על [WIDTH], {lfoshape} על [TRI].","{lforate} לשעה 9, {oscmod} לשעה 12."],ids:["shape","oscsrc","oscdest","oscmod","lforate","lfoshape"],set:H({lforate:9,oscmod:12}),from:LINE,back:"{oscmod} לאפס, {shape} על [SAW]."},
+ {c:"line",t:"קו ראשון",d:["מצב קלידים: {shift} + {kybd}.","{rec}, ואז: 1, 1, שקט, 8, 1, 5, שקט, 4. שקט הוא {holdrest}.","{rec}, ואז {play}."],ids:["rec","holdrest","play"].concat(KEYS),from:"הסיקוונסר עצור",min:3},
+ {c:"line",t:"קו משלך",d:["{rec}, ושמונה צעדים שאתה בוחר.","חובה: לפחות שני שקטים, עם {holdrest}.","{rec}, {play}. לא טוב? עוד פעם."],ids:["rec","holdrest","play"],from:"הסיקוונסר עצור",min:3},
+ {c:"line",t:"קו של 7 צעדים",d:["{shift} + {arp} + [STEP 7].","הקו חוזר אחרי 7 צעדים במקום 8.","נסה גם 5, וגם 3."],ids:["shift","arp","s7"],from:LINE,back:"{shift} + {arp} + [STEP 8]."},
+ {c:"line",t:"קו שמתקצר",d:["{shift} + {arp} + [STEP 4]: חצי קו שחוזר, כמו לפני דרופ.","אחרי כמה סיבובים: {shift} + {arp} + [STEP 8]."],ids:["shift","arp","s4","s8"],from:LINE},
+ {c:"line",t:"גלישה לצעד אחד",d:["{shift} + [STEP 4]: הצעד מהבהב.","{glide} מעט ימינה. נורה 5 נדלקת.","{shift} + [STEP 4] שוב, לסגור."],ids:["shift","s4","glide"],from:LINE},
+ {c:"line",t:"הדגשה לצעד אחד",d:["{shift} + [STEP 6]: הצעד מהבהב.","{resetacc}. נורה 7 נדלקת.","{shift} + [STEP 6] שוב. עכשיו {vcfmod} גבוה: ההדגשה צועקת."],ids:["shift","s6","resetacc","vcfmod"],from:LINE},
+ {c:"line",t:"״דה־דה״",d:["{shift} + [STEP 1]: הצעד פתוח.","מחזיקים {shift} ומסובבים {glide}: הנורות בצהוב, 1 עד 4. עוצרים ב־2.","{shift} + [STEP 1], לסגור."],ids:["shift","s1","glide"],from:LINE},
+ {c:"line",t:"תו קצר, תו ארוך",d:["{shift} + [STEP 1]: הצעד פתוח.","{tempo}: הנורות באדום, 1 עד 8. 1 קצר מאוד, 8 מתחבר לצעד הבא.","{shift} + [STEP 1], לסגור. רק אז {tempo} חוזר להיות מהירות."],ids:["shift","s1","tempo"],from:LINE},
+ {c:"line",t:"להחליף תו אחד",d:["{play}: עוצרים.","{rec}, ואז {shift} + [STEP 8], וקליד חדש.","{rec}, ו־{play}."],ids:["play","rec","shift","s8"],from:"קו כלשהו"},
+ {c:"line",t:"שתי גרסאות",d:["שמור את הקו במקום 2, ושוב במקום 3.","במקום 3, החלף צעד אחד.","בזמן נגינה: מחזיקים {pattern} ולוחצים 2, ואז 3. ההחלפה מיידית, או בסוף הרצף? ספר לי."],ids:["pattern","shift","play","rec","s2","s3"],from:"קו שבנית",min:3},
+ {c:"live",t:"גמגום",d:["מחזיקים {holdrest}: הקו נתקע על צעד אחד.","משחררים בדיוק על הפעמה."],ids:["holdrest"],from:LINE},
+ {c:"live",t:"שבירה",d:["{shift} + {holdrest}: הקו שותק.","סופרים 4 פעמות, ומחזירים על ה־1.","אותו צירוף אמור להחזיר. אם לא, ספר לי מה כן."],ids:["shift","holdrest"],from:LINE},
+ {c:"live",t:"הכל מודגש",d:["{shift} + {resetacc}: כל הצעדים מודגשים.","{vcfmod} בין שעה 12 לשעה 3."],ids:["shift","resetacc","vcfmod"],from:LINE},
+ {c:"live",t:"הקו הפוך",d:["{shift} + {play}, לחיצה קצרה.","הקו מנגן מהסוף להתחלה. שוב: חוזר."],ids:["shift","play"],from:LINE,back:"החזקה של שתי שניות פותחת שמירה, לא הפוך."},
+ {c:"live",t:"אוקטבה למטה, וקפיצה",d:["{kybd}: כל הקו יורד אוקטבה. שקט ומאיים.","אחרי 4 תיבות, על הפעמה: {step}."],ids:["kybd","step"],from:LINE},
+ {c:"live",t:"סווינג",d:["מחזיקים {shift} ומסובבים {tempo}.","באמצע: ישר. מצא את המקום שבו הקו ״מתנדנד״."],ids:["shift","tempo"],from:LINE},
+ {c:"live",t:"גלגול על כל הקו",d:["מחזיקים {shift} ומסובבים {glide}: חזרות מהירות על כל הצעדים.","תיבה אחת, וחזרה."],ids:["shift","glide"],from:LINE},
+ {c:"live",t:"להתחיל מחדש",d:["{resetacc}: הקו קופץ לצעד 1.","לחץ באמצע הקו, שוב ושוב, בקצב משלך."],ids:["resetacc"],from:LINE},
+ {c:"live",t:"רוח לפני הדרופ",d:["{play}: עוצרים. {vcamode} על [ON], {mix} עד הסוף ימינה, {cutoff} סגור.","פותחים את {cutoff} לאט, ארבע תיבות.","על הדרופ: {vcamode} על [ENV], {mix} שמאלה, ו־{play}."],ids:["vcamode","mix","cutoff","play"],set:H({mix:5,cutoff:8}),from:LINE,min:2},
+ {c:"live",t:"ארפג׳יו",d:["{arp}, ומחזיקים שלושה קלידים: 1, 3, 5.","{holdrest}: ממשיך גם אחרי שעוזבים.","איך יוצאים מזה? נסה {arp} שוב, וספר לי."],ids:["arp","holdrest","s1","s3","s5"],from:"הסיקוונסר עצור"},
+ {c:"live",t:"מה קליד עושה באמצע?",d:["בזמן שהקו רץ: לחץ על קליד אחר.","הקו עבר לגובה אחר? ספר לי מה קרה."],ids:KEYS,from:LINE},
+ {c:"live",t:"ג׳אם של חמש דקות",d:["1 ו־2: רק {cutoff}, בין שעה 8 לשעה 12.","3: רק {decay}.","4: {reso} עולה, והכל מודגש.","5: הקו מתקצר ל־4, וחוזר ל־8."],ids:["cutoff","decay","reso"],set:ACID,from:LINE,min:5},
+ {c:"cable",t:"שתי ידיים על המסנן",d:["כבל: {j_lfotri} אל {j_vcfcut}.","{lforate} לשעה 9: נשימה ארוכה.","כל תו עדיין ״מדבר״, וכל הקו נפתח ונסגר לאט."],ids:["j_lfotri","j_vcfcut","lforate"],from:"קו שמנגן, עם הצליל של האסיד"},
+ {c:"cable",t:"המסנן עוקב אחרי התווים",d:["כבל: {j_kbcv} אל {j_vcfcut}.","הגבוהים בהירים, הנמוכים עמומים. בהיר מדי? {cutoff} למטה."],ids:["j_kbcv","j_vcfcut"],from:LINE},
+ {c:"cable",t:"לכלוך",d:["כבל: {j_noise} אל {j_vcfcut}.","{reso} לשעה 1. מחוספס, כמו רמקול קרוע."],ids:["j_noise","j_vcfcut","reso"],from:LINE},
+ {c:"cable",t:"צפצוף בכל תו",d:["{reso} לשעה 9.","כבל: {j_env} אל {j_vcfres}.","{decay} בין שעה 9 ל־12."],ids:["j_env","j_vcfres","decay"],from:LINE},
+ {c:"cable",t:"מקור אחד, שני יעדים",d:["כבל: {j_lfotri} אל {j_multin}.","כבל: {j_mult1} אל {j_vcfcut}.","כבל: {j_mult2} אל {j_vcfres}. המסנן נפתח ושורק יחד."],ids:["j_lfotri","j_multin","j_mult1","j_mult2","j_vcfcut","j_vcfres"],from:LINE,min:3},
+ {c:"cable",t:"הקו נתקע לבד",d:["כבל: {j_lfosqu} אל {j_hold}.","{lforate}: לאט זה תקיעות ארוכות, מהר זה גמגום.","זה עבד? ספר לי. שולפים את הכבל, והקו נקי."],ids:["j_lfosqu","j_hold","lforate"],from:LINE},
+ {c:"free",t:"צליל שלא שמעת אף פעם",d:["אין הוראות. סובב עד שיוצא משהו שמפתיע אותך.","מצאת? צלם את הלוח."],min:3},
+ {c:"free",t:"שתי ידיים, שני כפתורים",d:["יד אחת על {cutoff}, יד שנייה על {decay}.","שתיהן זזות כל הזמן. דקה."],ids:["cutoff","decay"],from:LINE},
+ {c:"free",t:"עיניים עצומות",d:["בחר כפתור אחד בלי להסתכל, וסובב.","נחש לפי האוזן איזה כפתור זה. ואז תבדוק."],from:LINE},
+ {c:"free",t:"מהבית, שלושה שינויים",d:["חזור ל־🏠 הבית.","שלושה שינויים בלבד, לא יותר.","כמה רחוק הגעת?"]},
+ {c:"free",t:"מתגים בלבד",d:["דקה שלמה בלי לסובב שום כפתור.","רק המתגים: {shape}, {vcfmode}, {vcfsrc}, {vcfpol}, {vcamode}, {lfoshape}."],ids:["shape","vcfmode","vcfsrc","vcfpol","vcamode","lfoshape"],from:LINE},
+ {c:"free",t:"קו של שני תווים",d:["הקלט קו של 8 צעדים, רק עם שני קלידים ושקטים.","עכשיו כל העניין הוא בצליל: {cutoff}, {decay}, {reso}."],ids:["cutoff","decay","reso"],from:"הסיקוונסר עצור",min:3}
+];
+window.DOORS={
+ key:"crave2",panel:E,bands:[150,335,455],he:HE,
+ home:{knobs:HOME,sw:HOMESW,title:"הבית: צליל קצר ומזמזם",
+  lead:"הקרייב לא שומר מיקומים של כפתורים. הבית הוא מיקום קבוע לכל כפתור ומתג. הולכים לאיבוד? חוזרים לכאן.",
+  quick:["לאפס: {reso}, {vcfmod}, {oscmod}, {mix}, {attack}, {glide}.","{cutoff} ו־{decay} לשעה 12. מתג {shape} על [SAW].","מתג {vcamode} על [ENV], ומתג {vcfmode} על [LP]."],
+  note:"בלי כבלים חוץ מהשמע. כל קליד נותן צליל קצר ומזמזם, שנעלם לבד. הכפתורים בציור מצביעים לאן שצריך.",
+  groups:[
+   ["המתנד","מתג {shape} על [SAW]. שני המתגים האחרים לא משנים כרגע.",["freq","pw","oscmod","mix","shape"]],
+   ["המסנן והעוצמה","{vcfmode} על [LP]. {vcfsrc} על [ENV]. {vcfpol} על [+]. {vcamode} על [ENV].",["cutoff","reso","vcfmod","vcfmode","vcfsrc","vcfpol","volume","vcamode"]],
+   ["המעטפת והתנועה","מתג {susw} על [OFF].",["attack","decay","sustain","susw","lforate","glide"]],
+   ["הסיקוונסר","עצור, ושום דבר לא מהבהב. מצב קלידים: {shift} + {kybd}, והנורה ירוקה.",["shift","kybd","leds"]]]},
+ learn:L,
+ find:[
+  {id:"r1",tab:"שורה 1",y:[150,336],ids:E.areas[1][1].concat(E.areas[2][1]),intro:"מתנד, מסנן ועוצמה. משמאל לימין, כמו על הלוח."},
+  {id:"r2",tab:"שורה 2",y:[330,456],ids:E.areas[3][1].filter(i=>i!=="lfoled"),intro:"מעטפת, הגל האיטי, גלישה, ומערבב לכבלים."},
+  {id:"seq",tab:"סיקוונסר",y:[452,650],ids:E.areas[4][1].filter(i=>i!=="power").concat(["s1","b1"]),intro:"שמונה לחצנים, נורות, ו־13 קלידים."},
+  {id:"combo",tab:"צירופים",hint:"״+״: מחזיקים את הראשונים, לוחצים על האחרון, ומשחררים.",rows:COMBO},
+  {id:"jack",tab:"שקעים",y:[14,150],ids:E.areas[0][1],intro:"מסגרת: כניסה. רקע שחור: יציאה. כבל הולך מיציאה לכניסה."},
+  {id:"rec",tab:"מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. רשום רק מה שמשנים.",rows:REC},
+  {id:"fix",tab:"לא מנגן?",hint:"השאלה הראשונה: מה מהבהב?",rows:FIX},
+  {id:"more",tab:"להעמיק",hint:"השיעורים המלאים ודפי העזר. לא חובה.",links:MORE}],
+ rowKey:id=>/^s\d$/.test(id)?"s1":/^b\d$/.test(id)?"b1":id,noRow:{lfoled:1,power:1},
+ rowText:{s1:{name:"STEP 1-8",info:"קליד מנגן תו: C, D, E, F, G, A, B, C. הם גם STEP 1 עד 8: בעריכה בוחרים צעד, עם PATTERN/BANK בוחרים רצף, ובהגדרות בוחרים ערך. הנורית מראה את הצעד שמנגן."},
+          b1:{name:"C# D# F# G# A#",info:"חמשת חצאי הטונים."}},
+ cats:[["all","הכל"],["sound","🔊 צליל"],["line","🎼 קו"],["live","⚡ לייב"],["cable","🔌 כבל"],["free","🌀 חופשי"]],
+ catName:{sound:"🔊 צליל",line:"🎼 קו",live:"⚡ לייב",cable:"🔌 כבלים",free:"🌀 חופשי"},
+ play:M
+};
+</script>
+<script src="doors.js?v=2"></script>
+</body>
+</html>

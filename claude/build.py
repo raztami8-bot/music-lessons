@@ -446,6 +446,9 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
             # the trial of the new format (2026-11-11): one page, three doors. The lessons under it stay as the deep version.
             tiles += """<li><a class="tile hero" href="edge.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>האדג׳: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־16 כרטיסים קצרים עם ציור גדול, כל כפתור בשליפה מהירה, ו־43 משימות קצרות למשחק על המכשיר.</p></div></a></li>
 """
+        if dev == "crave":
+            tiles += """<li><a class="tile hero" href="crave.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הקרייב: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־19 כרטיסים קצרים עם ציור גדול, כל כפתור וכל צירוף בשליפה מהירה, ו־51 משימות קצרות למשחק על המכשיר.</p></div></a></li>
+"""
         for n in nums:
             title, desc = LESSONS[n]
             k = DEV[n][1]
