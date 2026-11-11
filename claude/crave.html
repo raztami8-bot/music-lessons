@@ -160,6 +160,7 @@ const REC=[
  ["״זאפ״ בכל תו","{oscsrc} על [ENV], {oscdest} על [FREQ]. {oscmod} לאט."],
  ["טריל, כמו ארפג׳יו","{oscsrc} על [LFO], {oscdest} על [FREQ], {lfoshape} על [SQU]. {oscmod} לאט מאפס, עד שהקפיצה נשמעת טוב. {lforate}: כמה מהר."],
  ["פולס שנושם","{shape} על [PULSE]. {oscsrc} על [LFO], {oscdest} על [WIDTH], {lfoshape} על [TRI]. {lforate} לשעה 9, {oscmod} לשעה 12."],
+ ["בס פסי","{kybd} פעם אחת: אוקטבה למטה. {shape} על [SAW]. {cutoff} לשעה 9, {reso} נמוך, {vcfmod} לשעה 1. {decay} לשעה 9 עד 10, {glide} לאפס. קו של 8: שקט, 1, 1, 1, שקט, 1, 1, 1. השקט יושב על הקיק. {tempo} סביב 142, או סנכרון."],
  ["נהמה נמוכה","{kybd} פעם אחת: אוקטבה למטה. {shape} על [PULSE]. {cutoff} לשעה 9, {reso} ו־{vcfmod} לאפס. {attack} לשעה 9, {decay} לשעה 2, {glide} לשעה 10. קו של 8: שקט, 1, 1, 1, שקט, 1, 1, 1. השקט יושב על הקיק. בקרייב אין דרך לפנות מקום לקיק חוץ מהשקטים."],
  ["גלישה על כל התווים","{glide} לשעה 11."],
  ["רוח לפני הדרופ","עוצרים את הקו. {vcamode} על [ON], {mix} עד הסוף ימינה, {cutoff} סגור. פותחים את {cutoff} לאט, לאורך ארבע תיבות."]
@@ -202,6 +203,7 @@ const M=[
  {c:"sound",t:"פולס שנושם",d:["{shape} על [PULSE]. {oscsrc} על [LFO], {oscdest} על [WIDTH], {lfoshape} על [TRI].","{lforate} לשעה 9, {oscmod} לשעה 12."],ids:["shape","oscsrc","oscdest","oscmod","lforate","lfoshape"],set:H({lforate:9,oscmod:12}),from:LINE,back:"{oscmod} לאפס, {shape} על [SAW]."},
  {c:"line",t:"קו ראשון",d:["מצב קלידים: {shift} + {kybd}.","{rec}, ואז: 1, 1, שקט, 8, 1, 5, שקט, 4. שקט הוא {holdrest}.","{rec}, ואז {play}."],ids:["rec","holdrest","play"].concat(KEYS),from:"הסיקוונסר עצור",min:3},
  {c:"line",t:"קו משלך",d:["{rec}, ושמונה צעדים שאתה בוחר.","חובה: לפחות שני שקטים, עם {holdrest}.","{rec}, {play}. לא טוב? עוד פעם."],ids:["rec","holdrest","play"],from:"הסיקוונסר עצור",min:3},
+ {c:"line",t:"בס פסי",d:["{kybd} פעם אחת. {cutoff} לשעה 9, {vcfmod} לשעה 1, {decay} לשעה 9 עד 10.","{rec}, ואז: שקט, 1, 1, 1, שקט, 1, 1, 1. {rec}, {play}. השקט הוא {holdrest}.","שקט על הקיק, ושלושה תווים אחריו. עכשיו רק {cutoff} ו־{decay}."],ids:["kybd","cutoff","vcfmod","decay","rec","holdrest"],set:H({cutoff:9,vcfmod:1,decay:9}),from:"הסיקוונסר עצור",min:3,back:"{step} פעם אחת, {cutoff} ו־{decay} 12, {vcfmod} לאפס."},
  {c:"line",t:"נהמה נמוכה",d:["{kybd} פעם אחת. {shape} על [PULSE]. {cutoff} לשעה 9, {reso} ו־{vcfmod} לאפס.","{attack} לשעה 9, {decay} לשעה 2, {glide} לשעה 10.","{rec}, ואז: שקט, 1, 1, 1, שקט, 1, 1, 1. {rec}, {play}. השקט הוא {holdrest}, והוא יושב על הקיק."],ids:["kybd","shape","cutoff","attack","decay","glide","rec","holdrest"],set:H({cutoff:9,attack:9,decay:2,glide:10}),from:"הסיקוונסר עצור",min:3,back:"{step} פעם אחת, {shape} על [SAW], {attack} ו־{glide} לאפס, {cutoff} ו־{decay} 12."},
  {c:"line",t:"קו של 7 צעדים",d:["{shift} + {arp} + [STEP 7].","הקו חוזר אחרי 7 צעדים במקום 8.","נסה גם 5, וגם 3."],ids:["shift","arp","s7"],from:LINE,back:"{shift} + {arp} + [STEP 8]."},
  {c:"line",t:"קו שמתקצר",d:["{shift} + {arp} + [STEP 4]: חצי קו שחוזר, כמו לפני דרופ.","אחרי כמה סיבובים: {shift} + {arp} + [STEP 8]."],ids:["shift","arp","s4","s8"],from:LINE},
