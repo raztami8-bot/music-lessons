@@ -436,32 +436,12 @@ def page(n):
     return total
 
 
-# Devices whose old lessons and help pages left the home list (2026-11-13). The pages are still built;
-# they open from the archive button in the device's own page (deep.archive in edge.html).
-ARCHIVED = {"edge"}
-
-
 def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
     icons = {"t8": "🥁", "volca": "🎛️", "crave": "🧡", "edge": "💗", "together": "🔗", "live": "🌊"}
     for dev, (name, code, sub, nums) in DEVICES.items():
-        if dev in ARCHIVED:
-            continue
         tiles = ""
-        if dev == "edge":
-            # the trial of the new format (2026-11-11): one page, three doors. The lessons under it stay as the deep version.
-            tiles += """<li><a class="tile hero" href="edge.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>האדג׳: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־16 כרטיסים קצרים עם ציור גדול, כל כפתור בשליפה מהירה, ו־43 משימות קצרות למשחק על המכשיר.</p></div></a></li>
-"""
-        if dev == "t8":
-            tiles += """<li><a class="tile hero" href="t8.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הטי־8: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־18 כרטיסים קצרים עם ציור גדול, כל צירוף וכל שם בתצוגה בשליפה מהירה, ו־52 משימות קצרות למשחק על המכשיר.</p></div></a></li>
-"""
-        if dev == "volca":
-            tiles += """<li><a class="tile hero" href="vb.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הוולקה בס: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־17 כרטיסים קצרים עם ציור גדול, כל צירוף עם FUNC בשליפה מהירה, ו־35 משימות קצרות למשחק על המכשיר.</p></div></a></li>
-"""
-        if dev == "crave":
-            tiles += """<li><a class="tile hero" href="crave.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · מתחילים כאן</span><h3>הקרייב: להכיר, לשלוף, לשחק</h3><p>הבסיס ב־19 כרטיסים קצרים עם ציור גדול, כל כפתור וכל צירוף בשליפה מהירה, ו־51 משימות קצרות למשחק על המכשיר.</p></div></a></li>
-"""
         for n in nums:
             title, desc = LESSONS[n]
             k = DEV[n][1]
@@ -472,13 +452,6 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
             tiles += f"""<li><a class="tile ref" href="map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות</h3><p>{mtotal} דברים שהטי־8 יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
 <li><a class="tile ref" href="menus.html"><span class="bub">📖</span><div class="tx"><span class="kind">דף עזר</span><h3>מה זה? כל השמות בטי־8</h3><p>{ntotal} שמות, כמו שהם כתובים על המכשיר ובתצוגה. לכל אחד: מה זה, מה הרעיון, ולמה נכנסים.</p></div></a></li>
 <li><a class="tile ref" href="settings.html"><span class="bub">💾</span><div class="tx"><span class="kind">דף עזר</span><h3>מה נשמר ומה נמחק</h3><p>לכל הגדרה: האם היא נשמרת עם התבנית, האם מחיקה מוחקת אותה, ומה נשאר תמיד. בדוק מול המדריך.</p></div></a></li>
-"""
-        if dev == "together":
-            # the doors format for a pair (2026-11-12): the Crave and the Edge, cables between them
-            tiles += """<li><a class="tile hero" href="pair.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · שילובים</span><h3>הקרייב 🧡 והאדג׳ 💗 יחד</h3><p>8 כרטיסים קצרים, כל השקעים של שניהם בשליפה, ו־23 משימות: סנכרון, התופים מזיזים את הבס, הבס מזיז את התופים, אורכים ולייב.</p></div></a></li>
-"""
-        if dev == "together":
-            tiles += """<li><a class="tile ref" href="connections.html"><span class="bub">🔌</span><div class="tx"><span class="kind">דף עזר</span><h3>חיבורים</h3><p>כל החיבורים במקום אחד: הטי־8 לבד, עם וולקה, במיקסר, ושרשרת המידי.</p></div></a></li><li><a class="tile ref" href="mixer-guide.html"><span class="bub">🎚️</span><div class="tx"><span class="kind">דף עזר</span><h3>המיקסר: כל כפתור וכל נורה</h3><p>ציור של הלוח שנוגעים בו, מה כל נורה אומרת, הדרך של הצליל, וכיוון בסיסי בשמונה צעדים.</p></div></a></li>
 """
         if dev == "volca":
             tiles += f"""<li><a class="tile ref" href="vb-map.html"><span class="bub">▦</span><div class="tx"><span class="kind">דף עזר</span><h3>מה אפשר לעשות בוולקה בס</h3><p>{vbtotal} דברים שהבס יודע לעשות. מחפשים לפי מה שרוצים או לפי כפתור, ונכנסים לכרטיס שמלמד.</p></div></a></li>
@@ -579,9 +552,11 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 .more a{{--dev:var(--together);display:block;padding:13px 14px;border-radius:16px;text-decoration:none;color:var(--fg);font-weight:700;
   background:color-mix(in srgb,var(--dev) 12%,var(--surface));border:2px solid color-mix(in srgb,var(--dev) 35%,transparent)}}
 .more a.live{{--dev:var(--live)}}
-@media (min-width:700px){{.devs{{grid-template-columns:repeat(4,1fr)}}.more{{grid-template-columns:repeat(4,1fr)}}}}
+@media (min-width:700px){{.devs{{grid-template-columns:repeat(4,1fr)}}.more{{grid-template-columns:repeat(3,1fr)}}}}
 .allbox{{border:1px solid var(--line);border-radius:18px;background:var(--surface)}}
-.allbox>summary{{cursor:pointer;font-weight:700;padding:14px 16px;color:var(--fg)}}
+.allbox>summary{{cursor:pointer;font-weight:600;padding:12px 16px;color:var(--muted);font-size:.95rem}}
+.archnote{{color:var(--muted);font-size:.92rem;padding:0 6px}}
+.tog{{font-size:1.25rem;margin-bottom:-12px}}
 .allin{{display:flex;flex-direction:column;gap:18px;padding:4px 10px 14px}}
 .install{{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;color:var(--muted)}}
 .install summary{{cursor:pointer;font-weight:700;color:var(--fg)}}
@@ -604,7 +579,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <div class="wrap">
 <div class="verrow"><span class="upd" id="upd"><b>עודכן</b><small>{STAMP_TXT}</small></span><button class="refresh" id="refresh" type="button">↻ רענון</button></div>
 <button class="newver" id="newver" type="button" hidden><span class="t"><b>יש עדכון חדש</b><small id="newver-t"></small></span><span class="go">גע כדי לרענן ↻</span></button>
-<header class="hello"><h1>מה מנגנים היום?</h1><p>בוחרים מכשיר. בכל אחד שלוש לשוניות: להכיר, לשלוף, לשחק.</p></header>
+<header class="hello"><h1>מה מנגנים היום?</h1><p>בוחרים מכשיר. בכל מכשיר אותן לשוניות: להכיר, לשלוף, לשחק.</p></header>
 <nav class="devs" aria-label="המכשירים">
 <a class="dbtn t8" href="t8.html" data-k="t8d"><span class="e" aria-hidden="true">🥁</span><b>הטי־8</b><small>תופים ובס</small></a>
 <a class="dbtn volca" href="vb.html" data-k="vbd"><span class="e" aria-hidden="true">🎛️</span><b>הוולקה בס</b><small>בס של שלושה מתנדים</small></a>
@@ -612,13 +587,10 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <a class="dbtn edge" href="edge.html" data-k="edge2"><span class="e" aria-hidden="true">💗</span><b>האדג׳</b><small>תופים מסינתזה</small></a>
 </nav>
 <a class="wkbtn" href="week.html" id="wkbtn"><span class="e" aria-hidden="true">📅</span><span class="t"><b>האימון השבועי</b><small id="wkbtn-t">כלי אחד, זוג, וסט מוקלט</small></span><span class="go" aria-hidden="true">←</span></a>
-<nav class="more" aria-label="עוד">
-<a class="together" href="#together">🔗 ביחד</a><a class="live" href="#live">🌊 לייב מתפתח</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a><a class="together" href="pair.html">🧡💗 קרייב + אדג׳</a>
+<h2 class="tog">🔗 ביחד</h2>
+<nav class="more" aria-label="ביחד">
+<a class="together" href="pair.html">🧡💗 קרייב + אדג׳</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
 </nav>
-<a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך שיעור מאיפה שעצרת</small><b id="resume-t"></b></span></a>
-<details class="allbox" id="allbox"><summary>כל השיעורים ודפי העזר</summary>
-<div class="allin">
-{secs}</div></details>
 <details class="install"><summary>לשמור את העמוד הזה במסך הבית</summary>
 <ol>
 <li>פתח את העמוד הזה בספארי.</li>
@@ -627,6 +599,11 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <li>את האייקון הישן אפשר למחוק: לוחצים עליו לחיצה ארוכה, ״הסר״.</li>
 </ol>
 </details>
+<details class="allbox" id="allbox"><summary>🗄 ארכיון: השיעורים והדפים הישנים</summary>
+<div class="allin">
+<p class="archnote">הגרסה הקודמת של האתר. הכל נשאר כאן, אבל המקום המסודר הוא הכפתורים למעלה.</p>
+<a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך שיעור מאיפה שעצרת</small><b id="resume-t"></b></span></a>
+{secs}</div></details>
 </div>
 <script src="app.js"></script>
 <script src="extras.js"></script>

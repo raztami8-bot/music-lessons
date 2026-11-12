@@ -183,12 +183,14 @@ window.DOORS={
    ["האדג׳ 💗: קיק פשוט","כל [VEL] לשעה 2, {e_seqpitch} על [OFF].",["e_osc1freq","e_osc1env","e_osc1lvl","e_osc2lvl","e_fm","e_noise","e_cutoff","e_vcadec","e_volume"]],
    ["הכבל ביניהם","{c_j_assign} אל {e_j_adv}. רק הוא, בלי כבלים אחרים.",["c_j_assign","e_j_adv"]]]},
  learn:L,
+ /* three questions, the same in every device (2026-11-13): where is it (the whole board, top to bottom), how to do it, what went wrong */
  find:[
-  {id:"jc",tab:"שקעי הקרייב 🧡",y:[14,150],ids:CR.areas[0][1].map(i=>"c_"+i),intro:"היציאות של הקרייב הולכות אל הכניסות של האדג׳, ולהפך. רקע שחור: יציאה. מסגרת: כניסה."},
-  {id:"je",tab:"שקעי האדג׳ 💗",y:[OFF+14,OFF+150],ids:ED.areas[0][1].map(i=>"e_"+i),intro:"רקע שחור: יציאה. מסגרת: כניסה."},
-  {id:"rec",tab:"מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. החץ הולך מהיציאה אל הכניסה.",rows:REC},
-  {id:"fix",tab:"לא מנגן?",hint:"בודקים לפי הסדר: סנכרון, כבלים, כפתורים.",rows:FIX},
-  {id:"more",tab:"להעמיק",hint:"השיעור המלא ודפי המכשירים. לא חובה.",links:MORE}],
+  {id:"board",tab:"🎛 השקעים",bands:[
+   {t:"הקרייב 🧡",y:[14,150],ids:CR.areas[0][1].map(i=>"c_"+i),intro:"היציאות של הקרייב הולכות אל הכניסות של האדג׳, ולהפך. רקע שחור: יציאה. מסגרת: כניסה."},
+   {t:"האדג׳ 💗",y:[OFF+14,OFF+150],ids:ED.areas[0][1].map(i=>"e_"+i),intro:"רקע שחור: יציאה. מסגרת: כניסה."}]},
+  {id:"rec",tab:"🍳 מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. החץ הולך מהיציאה אל הכניסה.",rows:REC},
+  {id:"fix",tab:"🛠 לא מנגן?",hint:"בודקים לפי הסדר: סנכרון, כבלים, כפתורים.",rows:FIX}],
+ archive:{label:"🗄 ארכיון: השיעור הישן, ודפי המכשירים",title:"ארכיון וקישורים",hint:"השיעור המלא מהגרסה הקודמת, והדפים של כל מכשיר לבד.",links:MORE},
  rowKey:id=>/^e_p\d$/.test(id)?"e_p1":/^e_v\d$/.test(id)?"e_v1":id,noRow:{e_led:1,c_lfoled:1,c_leds:1,c_power:1},
  rowText:{e_p1:{name:"PITCH 1-8 💗",he:"גובה לכל צעד, באדג׳",info:"הגובה של כל צעד. כשמחובר כבל ל־PITCH, אותם כפתורים מזיזים גם את מה שבקצה השני."},
           e_v1:{name:"VEL 1-8 💗",he:"עוצמה לכל צעד, באדג׳",info:"העוצמה של כל צעד. עד הסוף שמאלה: הצעד שותק. כשמחובר כבל ל־VELOCITY, אותם כפתורים מזיזים גם את מה שבקצה השני."}},
@@ -203,6 +205,6 @@ window.DOORS={
    Object.keys(BOX).forEach(k=>{if(k.indexOf("e_")===0)BOX[k][1]+=OFF})}
 };
 </script>
-<script src="doors.js?v=8"></script>
+<script src="doors.js?v=9"></script>
 </body>
 </html>

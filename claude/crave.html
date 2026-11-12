@@ -250,15 +250,18 @@ window.DOORS={
    ["המעטפת והתנועה","מתג {susw} על [OFF].",["attack","decay","sustain","susw","lforate","glide"]],
    ["הסיקוונסר","עצור, ושום דבר לא מהבהב. מצב קלידים: {shift} + {kybd}, והנורה ירוקה.",["shift","kybd","leds"]]]},
  learn:L,
+ /* three questions, the same in every device (2026-11-13): where is it (the whole board, top to bottom), how to do it, what went wrong */
  find:[
-  {id:"r1",tab:"שורה 1",y:[150,336],ids:E.areas[1][1].concat(E.areas[2][1]),intro:"מתנד, מסנן ועוצמה. משמאל לימין, כמו על הלוח."},
-  {id:"r2",tab:"שורה 2",y:[330,456],ids:E.areas[3][1].filter(i=>i!=="lfoled"),intro:"מעטפת, הגל האיטי, גלישה, ומערבב לכבלים."},
-  {id:"seq",tab:"סיקוונסר",y:[452,650],ids:E.areas[4][1].filter(i=>i!=="power").concat(["s1","b1"]),intro:"שמונה לחצנים, נורות, ו־13 קלידים."},
-  {id:"combo",tab:"צירופים",hint:"״+״: מחזיקים את הראשונים, לוחצים על האחרון, ומשחררים.",rows:COMBO},
-  {id:"jack",tab:"שקעים",y:[14,150],ids:E.areas[0][1],intro:"מסגרת: כניסה. רקע שחור: יציאה. כבל הולך מיציאה לכניסה."},
-  {id:"rec",tab:"מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. רשום רק מה שמשנים.",rows:REC},
-  {id:"fix",tab:"לא מנגן?",hint:"השאלה הראשונה: מה מהבהב?",rows:FIX},
-  {id:"more",tab:"להעמיק",hint:"השיעורים המלאים ודפי העזר. לא חובה.",links:MORE}],
+  {id:"board",tab:"🎛 הלוח",bands:[
+   {t:"שקעים",y:[14,150],ids:E.areas[0][1],intro:"מסגרת: כניסה. רקע שחור: יציאה. כבל הולך מיציאה לכניסה."},
+   {t:"שורה 1",y:[150,336],ids:E.areas[1][1].concat(E.areas[2][1]),intro:"מתנד, מסנן ועוצמה. משמאל לימין, כמו על הלוח."},
+   {t:"שורה 2",y:[330,456],ids:E.areas[3][1].filter(i=>i!=="lfoled"),intro:"מעטפת, הגל האיטי, גלישה, ומערבב לכבלים."},
+   {t:"סיקוונסר",y:[452,650],ids:E.areas[4][1].filter(i=>i!=="power").concat(["s1","b1"]),intro:"שמונה לחצנים, נורות, ו־13 קלידים."}]},
+  {id:"combo",tab:"⌨️ צירופים",hint:"״+״: מחזיקים את הראשונים, לוחצים על האחרון, ומשחררים.",rows:COMBO},
+  {id:"rec",tab:"🍳 מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. רשום רק מה שמשנים.",rows:REC},
+  {id:"fix",tab:"🛠 לא מנגן?",hint:"השאלה הראשונה: מה מהבהב?",rows:FIX}],
+ archive:{label:"🗄 ארכיון: השיעורים והדפים הישנים של הקרייב",title:"ארכיון הקרייב",
+   hint:"הגרסה הקודמת: שיעורים ארוכים ודפי עזר. הכל נשאר כאן, אבל המקום המסודר הוא הלשוניות למטה.",links:MORE},
  rowKey:id=>/^s\d$/.test(id)?"s1":/^b\d$/.test(id)?"b1":id,noRow:{lfoled:1,power:1},
  rowText:{s1:{name:"STEP 1-8",info:"קליד מנגן תו: C, D, E, F, G, A, B, C. הם גם STEP 1 עד 8: בעריכה בוחרים צעד, עם PATTERN/BANK בוחרים רצף, ובהגדרות בוחרים ערך. הנורית מראה את הצעד שמנגן."},
           b1:{name:"C# D# F# G# A#",info:"חמשת חצאי הטונים."}},
@@ -267,6 +270,6 @@ window.DOORS={
  play:M
 };
 </script>
-<script src="doors.js?v=8"></script>
+<script src="doors.js?v=9"></script>
 </body>
 </html>

@@ -15,6 +15,7 @@
        with prev/next and a list of topics; its links (if any) come on the last card
      a find tab may give bands:[{t, y:[y0,y1], x, ids, intro}] instead: several parts of the board one under the other in one tab,
        with a row of jump buttons that stays on top (the whole board as one tab: jacks, rows, sequencer)
+   archive  optional: {label, title, hint, links:[[href,title,note]]}: a quiet button at the end of every find tab (pages with three doors)
    deep     optional, with <section id="v-deep"> and a fourth tab button in the page: {cards:[...as in a deep find tab], archive:{label, title, hint, links:[[href,title,note]]}}
        a fourth door for the long explanations. The archive (older pages of this device) opens from a quiet button under every card.
    cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
@@ -166,7 +167,7 @@ function drawFind(q){
     ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
     return}
   if(f.deep){drawDeep(f,el);return}
-  if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));$("#findScroll").scrollTop=0;return}
+  if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));archBtn(el);$("#findScroll").scrollTop=0;return}
   if(f.links){el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);$("#findScroll").scrollTop=0;return}
   if(f.bands){
     const jump=document.createElement("div");jump.className="jump";el.appendChild(jump);const rows={};
@@ -174,8 +175,12 @@ function drawFind(q){
       const j=document.createElement("button");j.textContent=b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
       drawBand(b,el,rows)});
   }else drawBand(f,el,{});
-  $("#findScroll").scrollTop=0;
+  archBtn(el);$("#findScroll").scrollTop=0;
 }
+/* the archive (older pages of this device): a quiet button that opens a list */
+function archBtn(el,a){a=a||D.archive;if(!a)return;const b=document.createElement("button");b.className="arch";b.textContent=a.label;
+  b.onclick=()=>openSheet(sh=>sh.insertAdjacentHTML("beforeend",`<h2>${a.title}</h2><p class="lead">${a.hint}</p><div class="links">${a.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`));
+  el.appendChild(b)}
 /* one part of the board: the picture, and a row for every control in it */
 function drawBand(f,el,rows){
   const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=f.y[1]-f.y[0];
@@ -212,9 +217,7 @@ function drawDeep(f,el,again,scr){
   nv.innerHTML=`<button${k===0?" disabled":""}>→ הקודם</button><button class="next"${k===C.length-1?" disabled":""}>הבא ←</button>`;
   nv.children[0].onclick=()=>{st.deep=k-1;again()};nv.children[1].onclick=()=>{st.deep=k+1;again()};
   el.appendChild(nv);
-  if(f.archive){const a=f.archive,b=document.createElement("button");b.className="arch";b.textContent=a.label;
-    b.onclick=()=>openSheet(sh=>sh.insertAdjacentHTML("beforeend",`<h2>${a.title}</h2><p class="lead">${a.hint}</p><div class="links">${a.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`));
-    el.appendChild(b)}
+  if(f.archive)archBtn(el,f.archive);
   $(scr||"#findScroll").scrollTop=0;
 }
 /* the fourth door: the long explanations on their own */
