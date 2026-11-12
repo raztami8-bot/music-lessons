@@ -571,7 +571,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
   background:#f2c94c;color:#1d2433;font:inherit;font-size:1rem;text-align:start;box-shadow:0 4px 0 #b07800}}
 .newver[hidden]{{display:none}}
 .newver .t{{display:flex;flex-direction:column;gap:1px;min-width:0}}
-.newver small{{font-size:.85rem;font-weight:600;white-space:nowrap}}
+.newver small{{font-size:.85rem;font-weight:600}}
 .newver .go{{flex:none;font-weight:700;white-space:nowrap}}
 </style>
 </head>
@@ -648,12 +648,28 @@ function check(){{
   fetch("version.json?x="+Date.now(),{{cache:"no-store"}}).then(function(r){{ return r.ok?r.json():null; }}).then(function(j){{
     busy=false; if(!j || !j.v) return;
     var head=upd.querySelector("b");
-    if(j.v>mine){{ nv.hidden=false; document.getElementById("newver-t").textContent="מ"+j.t; upd.classList.remove("latest"); head.textContent="הדף הזה מ:"; }}
+    if(j.v>mine){{ nv.hidden=false; if(!tries) document.getElementById("newver-t").textContent="מ"+j.t; upd.classList.remove("latest"); head.textContent="הדף הזה מ:"; }}
     else {{ nv.hidden=true; upd.classList.add("latest"); head.textContent="✓ הגרסה האחרונה"; }}
   }}).catch(function(){{ busy=false; }});
 }}
 document.getElementById("refresh").addEventListener("click",fresh);
-nv.addEventListener("click",fresh);
+/* The yellow button (2026-11-13): the site's cache can still hand out the old page for a few minutes after version.json is new,
+   and a plain reload then lands on the same old page with the same yellow button. So: fetch the page first, and reload only
+   when the page that comes back is really newer. Until then say so, and try again every 15 seconds. */
+var waitT=null, tries=0;
+function getNew(){{
+  var go=nv.querySelector(".go"), b=nv.querySelector("b");
+  go.textContent="בודק…";
+  fetch(location.pathname+"?r="+Date.now(),{{cache:"no-store"}}).then(function(r){{ return r.ok?r.text():""; }}).then(function(t){{
+    var m=/data-v="(\d+)"/.exec(t);
+    if(m && +m[1]>mine){{ fresh(); return; }}
+    tries++; b.textContent="העדכון עוד בדרך לטלפון";
+    document.getElementById("newver-t").textContent="עד כמה דקות. הדף יתרענן לבד.";
+    go.textContent=tries>40?"נסה שוב ↻":"מחכה… ⏳";
+    if(tries<=40) waitT=setTimeout(getNew,15000);
+  }}).catch(function(){{ go.textContent="אין חיבור. נסה שוב ↻"; }});
+}}
+nv.addEventListener("click",function(){{ clearTimeout(waitT); if(!window.fetch){{ fresh(); return; }} getNew(); }});
 check();
 document.addEventListener("visibilitychange",function(){{ if(document.visibilityState==="visible") check(); }});
 window.addEventListener("pageshow",function(e){{ if(e.persisted) check(); }});
