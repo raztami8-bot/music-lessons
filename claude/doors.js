@@ -11,6 +11,8 @@
      rowText  optional: {id:{name, he, info}} to override a row
      names    optional: {id:name} to replace names from the panel (when the board prints the same word on several knobs)
      find tabs with a board may also give x:[x0,x1]: a column of the board instead of a full row
+     a find tab may give deep:[{sec, t, p:[paragraphs], ids, set, tr:[...], hear, rows:[[term,text]], back}] instead: one long explanation per screen,
+       with prev/next and a list of topics; its links (if any) come on the last card
      cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
      setup    optional function(BASE, BOX), runs once on the board before anything is drawn
    In any text: {id} becomes the control's name as a button that opens it, [TEXT] becomes a label as printed on the board.
@@ -151,8 +153,12 @@ function drawFind(q){
     let rc=[];F.forEach(x=>{if(x.rows)rc=rc.concat(x.rows.filter(r=>hit(r[0])||hit(plain(r[1]))))});
     if(!ids.length&&!rc.length)el.insertAdjacentHTML("beforeend",`<p class="hint">לא נמצא. אפשר לחפש באנגלית כמו על הלוח, או בעברית.</p>`);
     rc.forEach(r=>el.insertAdjacentHTML("beforeend",qa(r[0],r[1])));
+    F.forEach((x,xi)=>{if(x.deep)x.deep.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
+      const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>${x.tab}</p>`;
+      bt.onclick=()=>{st.deep=ci;fi=xi;drawFind()};el.appendChild(bt)}})});
     ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
     return}
+  if(f.deep){drawDeep(f,el);return}
   if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));$("#findScroll").scrollTop=0;return}
   if(f.links){el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);$("#findScroll").scrollTop=0;return}
   const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=f.y[1]-f.y[0];
@@ -172,6 +178,26 @@ function drawFind(q){
   $("#findScroll").scrollTop=0;
 }
 
+
+/* a deep tab: one long explanation per screen */
+function drawDeep(f,el){
+  const C=f.deep,k=Math.max(0,Math.min(st.deep||0,C.length-1)),c=C[k];st.deep=k;save();
+  const pick=document.createElement("select");pick.className="search";
+  pick.innerHTML=C.map((x,i)=>`<option value="${i}"${i===k?" selected":""}>${i+1}. ${x.t}</option>`).join("");
+  pick.onchange=()=>{st.deep=+pick.value;drawFind()};el.appendChild(pick);
+  el.insertAdjacentHTML("beforeend",`${c.sec?`<span class="tag">${c.sec}</span>`:""}<span class="count">${k+1} / ${C.length}</span><h2>${c.t}</h2>`);
+  if(c.ids)el.appendChild(crops(c.ids,c.set||HOME));
+  (c.p||[]).forEach(t=>el.insertAdjacentHTML("beforeend",`<p class="lead">${tx(t)}</p>`));
+  if(c.rows)el.insertAdjacentHTML("beforeend",c.rows.map(r=>qa(r[0],r[1])).join(""));
+  if(c.tr)el.insertAdjacentHTML("beforeend",`<div class="box"><strong class="h">👆 נסה</strong><ol>${c.tr.map(x=>`<li>${tx(x)}</li>`).join("")}</ol></div>`);
+  if(c.hear)el.insertAdjacentHTML("beforeend",`<div class="box hear"><strong class="h">👂 שומעים</strong>${tx(c.hear)}</div>`);
+  if(c.back)el.insertAdjacentHTML("beforeend",`<p class="back">${tx(c.back)}</p>`);
+  if(k===C.length-1&&f.links)el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);
+  const nv=document.createElement("div");nv.className="navrow";nv.style.padding="4px 0 8px";
+  nv.innerHTML=`<button${k===0?" disabled":""}>→ הקודם</button><button class="next"${k===C.length-1?" disabled":""}>הבא ←</button>`;
+  nv.children[0].onclick=()=>{st.deep=k-1;drawFind()};nv.children[1].onclick=()=>{st.deep=k+1;drawFind()};
+  el.appendChild(nv);$("#findScroll").scrollTop=0;
+}
 /* ---------- 3. play ---------- */
 const M=D.play,CN=D.catName;
 st.done=st.done||{};let cat=st.cat||"all",mi=st.mi,bag=[];
