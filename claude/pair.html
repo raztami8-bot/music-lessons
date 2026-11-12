@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d1a26">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="קרייב + אדג׳">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>הקרייב והאדג׳ יחד · להכיר, לשלוף, לשחק · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="doors.css?v=3">
+<style>:root{--magenta:#8b6ae0;--magenta-soft:#2a2340;--board:#9b7cf0;--chipline:#5a4a8a;--chipfg:#e6dcff}</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="index.html">→ כל המכשירים</a>
+  <h1>קרייב + אדג׳</h1>
+  <button class="homebtn" id="homebtn">🏠 הבית: מסונכרנים</button>
+</div>
+
+<main>
+  <section class="view" id="v-learn">
+    <div class="prog" id="prog"></div>
+    <div class="scroll" id="learnScroll"><div class="inner" id="learn"></div></div>
+    <div class="navrow"><button id="prev">→ הקודם</button><button class="next" id="next">הבא ←</button></div>
+  </section>
+  <section class="view" id="v-find">
+    <div class="chips" id="chips" role="tablist"></div>
+    <div class="scroll" id="findScroll"><div class="inner" id="find"></div></div>
+  </section>
+  <section class="view" id="v-play">
+    <div class="chips" id="cats" role="tablist"></div>
+    <div class="scroll" id="playScroll"><div class="inner" id="play"></div></div>
+    <div class="playrow"><button class="timer" id="timer">⏱ דקה</button><button class="ok" id="ok">✓ עשיתי</button><button class="dice" id="dice">🎲 עוד משימה</button></div>
+  </section>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-v="learn"><span>🌱</span>להכיר</button>
+  <button data-v="find"><span>🔎</span>לשלוף</button>
+  <button data-v="play"><span>🎲</span>לשחק</button>
+</nav>
+
+<div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
+
+<script src="crave-data.js"></script>
+<script src="edge-data.js"></script>
+<script>
+"use strict";
+/* The Crave and the Edge together, for doors.js. Both boards are drawn as one picture: the Crave on top, the Edge under it.
+   Every id gets a prefix: c_ for the Crave, e_ for the Edge. The facts come from lesson 23 (stage 3 and 4) and from the two data files.
+   What the manuals don't say is marked 🔍. */
+const CR=window.CRAVE, ED=window.EDGE, CH=660, OFF=680, EH=640;
+const MARK={c:" 🧡",e:" 💗"}, WHO={c:"בקרייב 🧡",e:"באדג׳ 💗"};
+const P={names:{},info:{},areas:[]};
+[["c",CR],["e",ED]].forEach(([p,X])=>{
+  for(const k in X.names)P.names[p+"_"+k]=X.names[k]+MARK[p];
+  for(const k in X.info)P.info[p+"_"+k]=X.info[k];
+  X.areas.forEach(a=>P.areas.push([a[0],a[1].map(i=>p+"_"+i)]));
+});
+const inner=(s,p,y,h)=>s.replace(/data-id="/g,'data-id="'+p+'_').replace("<svg ",`<svg x="0" y="${y}" width="1000" height="${h}" `);
+P.svg=`<svg viewBox="0 0 1000 ${OFF+EH}" direction="ltr" role="img" aria-label="הקרייב למעלה, האדג׳ למטה">`+
+  inner(CR.svg,"c",0,CH)+
+  `<text x="500" y="${CH+15}" style="font:800 14px Assistant,Arial,sans-serif;fill:#cbbcff;text-anchor:middle">▲ הקרייב 🧡 · האדג׳ 💗 ▼</text>`+
+  inner(ED.svg,"e",OFF,EH)+`</svg>`;
+
+/* who is what, for the sheet that opens on every name */
+const SW={c:["shape","oscsrc","oscdest","vcfmode","vcfsrc","vcfpol","vcamode","susw","lfoshape"],e:["osc1shape","seqpitch","noisecolor","vcamode","osc2shape","hardsync","vcfsel","clock","scale"]};
+const HE={};
+Object.keys(P.names).forEach(id=>{const p=id[0],k=id.slice(2),inf=P.info[id]||"";
+  HE[id]=[ /^j_/.test(k)?(inf.indexOf("יציאה")===0||/^היציאה/.test(inf)?"יציאה ":"כניסה ")+WHO[p]:WHO[p], /^j_|midi/.test(k)?"שקע":SW[p].indexOf(k)>=0?"מתג":"כפתור"]});
+
+/* the home: each one at its own home (crave.html and edge.html), and one cable between them */
+const CHOME={freq:12,pw:12,oscmod:7,mix:7,cutoff:12,reso:7,vcfmod:7,volume:9,attack:7,decay:12,sustain:7,lforate:12,glide:7};
+const EHOME={osc1freq:9,osc1env:2,osc1lvl:3,egdec:10,osc2freq:12,osc2env:12,osc2lvl:7,fm:7,noise:7,cutoff:2,reso:7,vcfdec:12,vcfenv:12,noisevcf:7,vcadec:11,volume:9};
+for(let i=1;i<=8;i++){EHOME["p"+i]=12;EHOME["v"+i]=2}
+const HOME={},HOMESW={};
+for(const k in CHOME)HOME["c_"+k]=CHOME[k];
+for(const k in EHOME)HOME["e_"+k]=EHOME[k];
+Object.entries({shape:"SAW",vcfmode:"LP",vcfsrc:"ENV",vcfpol:"+",vcamode:"ENV",susw:"OFF"}).forEach(([k,v])=>HOMESW["c_"+k]=v);
+Object.entries({osc1shape:"TRI",seqpitch:"OFF",hardsync:"OFF",vcfsel:"LP",vcamode:"FAST",clock:"INT/EXT"}).forEach(([k,v])=>HOMESW["e_"+k]=v);
+const H=o=>Object.assign({},HOME,o||{});
+
+/* the setting that makes ASSIGN a clock, from lesson 23, card 4.1 */
+const SETIN="{c_shift} + {c_holdrest} + {c_s8}, עוזבים. נורית 1 מהבהבת בצהוב: עמוד ההגדרות הראשון.";
+const SYNC=["c_j_assign","e_j_adv","e_clock"];
+
+const L=[
+ {t:"שני מכשירים, להקה אחת",all:true,
+  b:"הקרייב 🧡 הוא הבס: תו, מסנן, ו־LFO שזז לאט. האדג׳ 💗 הוא התופים: מכה, מתכת ושמונה צעדים. לבד כל אחד מנגן את שלו. עם כבלים קטנים ביניהם, כל אחד משנה את השני, והג׳אם מתחיל לחיות לבד.",
+  hear:"בציור: הקרייב למעלה, האדג׳ למטה. כל שם על כפתור מסומן בלב של המכשיר שלו, 🧡 או 💗, כי הרבה שמות חוזרים בשניהם."},
+ {t:"שלושה דברים עוברים בכבל",ids:["c_j_gate","e_j_vcaeg","c_j_saw"],
+  b:"<b>״עכשיו!״</b>: דפיקה שאומרת מתי, כמו {c_j_gate} או {e_j_trigout}. <b>הוראה שזזה</b>: כמו יד שמסובבת כפתור, כמו {e_j_vcaeg}, {c_j_lfotri} או {e_j_pitchout}. <b>צליל</b>: מה ששומעים, כמו {c_j_saw}.",
+  tr:["כבל הולך תמיד מיציאה לכניסה.","על הלוח: רקע שחור הוא יציאה, מסגרת היא כניסה.","הכבל: קצר, 3.5 מ״מ מונו, כמו בכבלים של כל אחד לבד."],
+  back:"כל שילוב בדף הזה הוא אחד משלושת אלה, ממכשיר אחד לשני."},
+ {t:"מנצח אחד: הקרייב נותן את הקצב",ids:SYNC,set:HOME,
+  tr:[SETIN,"{c_step} פעם אחת: עמוד 2. {c_s2}: ״שעון הסיקוונסר״. יוצאים באותו צירוף, וזה נשמר.","כבל: {c_j_assign} אל {e_j_adv}.","מתג {e_clock} על [INT/EXT], ואז {c_play}."],
+  hear:"מסובבים {c_tempo}: שניהם מאיצים יחד. {e_tempo} כבר לא עושה כלום.",
+  back:"🔍 אם צעד 1 של האדג׳ לא נוחת עם התו הראשון של הקרייב: {e_advance} תוך כדי נגינה עד שהם מתיישרים. עדיין לא יציב? עוצרים את האדג׳ ב־{e_play}, כדי שרק הכבל יקדם אותו."},
+ {t:"כשהטי־8 בג׳אם: מידי במקום כבל",ids:["c_midiin","c_midithru","e_midiin","e_clock"],
+  b:"הטי־8 הוא המנצח, והכבל של ASSIGN יורד. מידי מהטי־8 אל {c_midiin}, ומ־{c_midithru} אל {e_midiin}. המתג {e_clock} על [MIDI].",
+  back:"את השרשרת המלאה, עם ההגדרה של הקרייב, יש בדף <a href=\"lesson-23.html#s2\">ביחד · שיעור 3, שלב 2</a>. כל הכבלים האחרים בדף הזה עובדים גם ככה."},
+ {t:"כיוון אחד: התופים מזיזים את הבס",ids:["e_j_vcaeg","c_j_vcfcut","c_cutoff"],set:H({c_cutoff:9}),
+  b:"מהיציאות של האדג׳ ({e_j_vcaeg}, {e_j_pitchout}, {e_j_velout}, {e_j_trigout}) אל הכניסות של הקרייב. הבס מתחיל לזוז לפי המכות.",
+  tr:["כבל: {e_j_vcaeg} אל {c_j_vcfcut}.","{c_cutoff} נמוך, לשעה 9."],
+  hear:"בכל מכה של האדג׳ הבס נפתח לרגע ונסגר.",
+  back:"שים לב: זה ההפך מסייד־צ׳יין. הבס נפתח במכה, הוא לא נחלש בה. את ה״נשימה״ ההפוכה, שהבס נעלם בכל קיק, הכבל הזה לא נותן."},
+ {t:"כיוון שני: הבס מזיז את התופים",ids:["c_j_lfotri","e_j_vcadec","c_lforate"],set:H({c_lforate:9}),
+  b:"מהיציאות של הקרייב ({c_j_lfotri}, {c_j_env}, {c_j_kbcv}, {c_j_gate}) אל הכניסות של האדג׳. הכי מעניין: ה־LFO, כי הוא זז לבד גם כשלא נוגעים.",
+  tr:["כבל: {c_j_lfotri} אל {e_j_vcadec}.","{c_lforate} לאט, לשעה 9."],
+  hear:"הקיק מתארך ומתקצר לאט, לבד. אותם שמונה צעדים, ובכל זאת זה לא נשמע קפוא."},
+ {t:"אורכים שלא נפגשים",ids:["c_shift","c_arp","c_s7"],
+  b:"האדג׳ תמיד 8 צעדים. אם הרצף של הקרייב נגמר ב־7, צעד 1 של האדג׳ נוחת כל סיבוב על תו אחר. הדפוס המלא חוזר רק אחרי 56 צעדים.",
+  tr:["{c_shift} + {c_arp} + {c_s7}, עוזבים. הרצף של הקרייב נגמר בצעד 7.","חזרה לרגיל: אותו צירוף עם {c_s8}."],
+  hear:"שני קווים קצרים שנשמעים כמו קטע ארוך שלא חוזר על עצמו. 5 ו־6 נותנים תחושה אחרת."},
+ {t:"עכשיו לשחק",b:"בלשונית לשחק יש משימות קצרות לכל כיוון: סנכרון, התופים מזיזים את הבס, הבס מזיז את התופים, אורכים, ולייב. כל משימה: כבל אחד או שניים.",
+  back:"לפני כל משימה: שניהם בבית, ומסונכרנים. 🏠 למעלה מראה איך.",btn:["🎲 למשימה הראשונה","play"]}
+];
+
+const REC=[
+ ["סנכרון","{c_j_assign} ← {e_j_adv}. הקרייב מנצח, האדג׳ הולך אחריו."],
+ ["הבס נפתח בכל מכה","{e_j_vcaeg} ← {c_j_vcfcut}."],
+ ["שורת PITCH מנגנת את המסנן","{e_j_pitchout} ← {c_j_vcfcut}, {e_seqpitch} על [OFF]."],
+ ["האדג׳ מנגן קו בס","{e_j_pitchout} ← {c_j_osccv}, וגם {e_j_trigout} ← {c_j_envgate}. הסיקוונסר של הקרייב עצור."],
+ ["הבס עובר דרך התופים","{c_j_saw} ← {e_j_ext}, ו־{e_noise} למעלה."],
+ ["התופים שרים עם הבס","{c_j_kbcv} ← {e_j_osc2cv}."],
+ ["התופים מכים בקצב של הבס","{c_j_gate} ← {e_j_trigin}, האדג׳ עצור."],
+ ["קיק שנושם","{c_j_lfotri} ← {e_j_vcadec}, LFO לאט."],
+ ["מתכת שזזה לאט","{c_j_lfotri} ← {e_j_fmin}."],
+ ["הבס מדליק את התופים","{c_j_gate} ← {e_j_play}. לא סנכרון, טריק לגיוון."]];
+const FIX=[
+ ["האדג׳ לא זז","כבל ב־{e_j_adv}? המתג {e_clock} על [INT/EXT]? הקרייב באמת מנגן?"],
+ ["האדג׳ רץ מהר מדי או לא אחיד","הסיקוונסר שלו רץ גם לבד. עוצרים ב־{e_play}, ורק הכבל מקדם."],
+ ["ASSIGN לא שולח כלום","ההגדרה בעמוד 2 של הקרייב אולי לא נשמרה. שוב: "+SETIN+" {c_step}, {c_s2}, ויוצאים."],
+ ["הקרייב לא זז לפי השעון שלו","בהגדרות, עמוד 3, השעון צריך להיות ערך 1 (הקרייב עצמו). אם שינית ל־2 בשביל הטי־8, מחזירים."],
+ ["כבל ולא קורה כלום","מיציאה (רקע שחור) לכניסה (מסגרת)? והכפתור שהכניסה מוסיפה אליו לא בקצה? למשל {c_cutoff} עד הסוף ימינה לא משאיר מקום להיפתח."],
+ ["הכל נשמע בלגן","מוציאים את כל הכבלים חוץ מהסנכרון, וחוזרים ל־🏠 הבית. מוסיפים כבל אחד בכל פעם."]];
+const MORE=[["lesson-23.html#s3","ביחד · שיעור 3","הקרייב, האדג׳ והטי־8, עם כל הצעדים"],["crave.html","הקרייב 🧡","להכיר, לשלוף, לשחק"],["edge.html","האדג׳ 💗","להכיר, לשלוף, לשחק"],["connections.html","חיבורים","מיקסר ושרשרת מידי"]];
+
+const M=[
+ /* sync */
+ {c:"sync",t:"מנצח אחד",d:["{c_j_assign} אל {e_j_adv}, מתג {e_clock} על [INT/EXT].","{c_play}. מסובבים {c_tempo} לאט מקצה לקצה.","מוצאים יחד מהירות שבה שניהם נשמעים הכי טוב."],ids:["c_j_assign","e_j_adv","e_clock","c_tempo"],from:"שניהם בבית, ASSIGN כבר על שעון"},
+ {c:"sync",t:"התופים בחצי מהירות",d:[SETIN,"{c_step} פעם אחת, ואז {c_s3}: דפיקה כל שני צעדים. יוצאים.","{c_play}: האדג׳ מנגן לאט, מתחת לקו של הקרייב.","חזרה: אותה דרך, עם {c_s2}."],ids:["c_shift","c_holdrest","c_s8","c_step","c_s3"],from:"🏠 הבית, מסונכרנים",min:2},
+ {c:"sync",t:"הבס מדליק את התופים",d:["כבל: {c_j_gate} אל {e_j_play}. כבל הסנכרון יוצא.","{e_tempo} לקצב שנשמע טוב מול הקרייב.","תווים ארוכים בקרייב נותנים לאדג׳ לרוץ יותר.","🔍 האם הוא רץ כל זמן שהתו מחזיק, או נדלק ונכבה לסירוגין? ספר לי."],ids:["c_j_gate","e_j_play","e_tempo"],from:"הקרייב מנגן רצף עם שקטים"},
+ /* edge moves the crave */
+ {c:"e2c",t:"הבס נפתח בכל מכה",d:["כבל: {e_j_vcaeg} אל {c_j_vcfcut}.","{c_cutoff} לשעה 9.","שחק ב־{e_vcadec}: מכה ארוכה פותחת את הבס לאורך זמן."],ids:["e_j_vcaeg","c_j_vcfcut","c_cutoff","e_vcadec"],set:H({c_cutoff:9}),from:"🏠 הבית, מסונכרנים"},
+ {c:"e2c",t:"שורת PITCH מנגנת את המסנן",d:["{e_seqpitch} על [OFF].","כבל: {e_j_pitchout} אל {c_j_vcfcut}. {c_cutoff} לשעה 9.","כל כפתור PITCH של האדג׳ הוא עכשיו המסנן של הבס בצעד הזה. סובב כמה."],ids:["e_seqpitch","e_j_pitchout","c_j_vcfcut","e_p1","e_p2","e_p3","e_p4"],set:H({c_cutoff:9}),from:"🏠 הבית, מסונכרנים"},
+ {c:"e2c",t:"VEL מזיז את השריקה",d:["כבל: {e_j_velout} אל {c_j_vcfres}.","{c_cutoff} לשעה 10.","סובב את כפתורי VEL של האדג׳: כל צעד נותן לבס שריקה אחרת.","מה שמעת? ספר לי."],ids:["e_j_velout","c_j_vcfres","e_v1","e_v2","e_v3","e_v4"],set:H({c_cutoff:10}),from:"🏠 הבית, מסונכרנים"},
+ {c:"e2c",t:"האדג׳ מנגן את הבס",d:["{c_play}: הסיקוונסר של הקרייב עוצר. {e_seqpitch} על [OFF].","כבל: {e_j_pitchout} אל {c_j_osccv}.","כבל שני: {e_j_trigout} אל {c_j_envgate}. כבל הסנכרון יוצא.","עכשיו כל צעד של האדג׳ מנגן תו בקרייב. סובב את כפתורי PITCH: קו בס של 8 צעדים.","🔍 עובד? ספר לי."],ids:["e_j_pitchout","c_j_osccv","e_j_trigout","c_j_envgate","e_seqpitch"],from:"🏠 הבית",min:3},
+ {c:"e2c",t:"הבס עובר דרך התופים",d:["כבל: {c_j_saw} אל {e_j_ext}.","{e_noise} לאט למעלה, ו־{e_osc1lvl} עד הסוף שמאלה.","הבס של הקרייב נחתך בכל מכה של האדג׳. שחק ב־{e_vcadec} וב־{e_cutoff}."],ids:["c_j_saw","e_j_ext","e_noise","e_osc1lvl","e_vcadec","e_cutoff"],set:H({e_osc1lvl:7}),from:"🏠 הבית, מסונכרנים"},
+ {c:"e2c",t:"ציוץ בכל מכה",d:["כבל: {e_j_vcfeg} אל {c_j_oscfm}.","{e_vcfdec} קצר: ציוץ קטן. ארוך: גלישה.","מה שמעת? ספר לי."],ids:["e_j_vcfeg","c_j_oscfm","e_vcfdec"],from:"🏠 הבית, מסונכרנים"},
+ /* crave moves the edge */
+ {c:"c2e",t:"התופים שרים עם הבס",d:["{e_seqpitch} על [OFF], {e_osc2lvl} לשעה 12.","כבל: {c_j_kbcv} אל {e_j_osc2cv}.","הצלצול של האדג׳ עולה ויורד עם התווים של הקרייב."],ids:["c_j_kbcv","e_j_osc2cv","e_osc2lvl","e_seqpitch"],set:H({e_osc2lvl:12}),from:"🏠 הבית, מסונכרנים"},
+ {c:"c2e",t:"התופים מכים בקצב של הבס",d:["{e_play}: הסיקוונסר של האדג׳ עוצר.","כבל: {c_j_gate} אל {e_j_trigin}.","האדג׳ מכה בכל תו של הקרייב, ושותק בשקטים שלו. מכה אחרת? {e_advance} לצעד אחר."],ids:["c_j_gate","e_j_trigin","e_play","e_advance"],from:"הקרייב מנגן רצף"},
+ {c:"c2e",t:"קיק שנושם",d:["כבל: {c_j_lfotri} אל {e_j_vcadec}.","{c_lforate} לשעה 9.","הקיק מתארך ומתקצר לבד. נסה גם את {c_j_lfosqu}: קופץ בין קצר לארוך."],ids:["c_j_lfotri","c_j_lfosqu","e_j_vcadec","c_lforate"],set:H({c_lforate:9}),from:"🏠 הבית, מסונכרנים"},
+ {c:"c2e",t:"מתכת שזזה לאט",d:["{e_osc2lvl} לשעה 12, {e_fm} עד הסוף שמאלה.","כבל: {c_j_lfotri} אל {e_j_fmin}.","{c_lforate} לאט: המתכת נכנסת ויוצאת לבד."],ids:["c_j_lfotri","e_j_fmin","e_osc2lvl","e_fm","c_lforate"],set:H({e_osc2lvl:12,e_fm:7,c_lforate:9}),from:"🏠 הבית, מסונכרנים"},
+ {c:"c2e",t:"הבס פותח את המסנן של התופים",d:["כבל: {c_j_env} אל {e_j_vcfmod}.","{e_noisevcf} לאט למעלה: זה העומק.","כל תו של הקרייב פותח את האדג׳. שחק ב־{c_decay}."],ids:["c_j_env","e_j_vcfmod","e_noisevcf","c_decay"],from:"🏠 הבית, מסונכרנים"},
+ {c:"c2e",t:"קיק עם שני גבהים",d:["כבל: {c_j_lfosqu} אל {e_j_osc1cv}.","{c_lforate} לאט מאוד, לשעה 8.","הקיק קופץ בין שני גבהים כל כמה תיבות. מהיר יותר: מקצב בתוך מקצב."],ids:["c_j_lfosqu","e_j_osc1cv","c_lforate"],set:H({c_lforate:8}),from:"🏠 הבית, מסונכרנים"},
+ /* lengths */
+ {c:"len",t:"7 מול 8",d:["{c_shift} + {c_arp} + {c_s7}, עוזבים.","{c_play}. מקשיבים לצעד 1 של האדג׳: בכל סיבוב הוא נוחת על תו אחר.","חזרה: אותו צירוף עם {c_s8}."],ids:["c_shift","c_arp","c_s7"],from:"🏠 הבית, מסונכרנים, שניהם עצורים",min:2},
+ {c:"len",t:"5 מול 8",d:["{c_shift} + {c_arp} + {c_s5}, עוזבים.","{c_play}. חוזר רק אחרי 40 צעדים.","מרגיש שונה מ־7? ספר לי."],ids:["c_shift","c_arp","c_s5"],from:"🏠 הבית, מסונכרנים, שניהם עצורים",min:2},
+ {c:"len",t:"6 מול 8",d:["{c_shift} + {c_arp} + {c_s6}, עוזבים.","{c_play}. חוזר אחרי 24 צעדים: הכי קרוב לגרוב קבוע, ועדיין זז."],ids:["c_shift","c_arp","c_s6"],from:"🏠 הבית, מסונכרנים, שניהם עצורים",min:2},
+ /* live */
+ {c:"live",t:"שתי ידיים, שני מכשירים",d:["יד אחת על {c_cutoff}, יד שנייה על {e_vcadec}.","שתיהן זזות כל הזמן. דקה."],ids:["c_cutoff","e_vcadec"],from:"מסונכרנים ומנגנים"},
+ {c:"live",t:"כבל כמו מפסק",d:["מחברים: {e_j_vcaeg} אל {c_j_vcfcut}, {c_cutoff} לשעה 9.","שולפים את הכבל לארבע תיבות, ומחזירים בדיוק בתחילת תיבה.","הכבל עצמו הוא הדרופ."],ids:["e_j_vcaeg","c_j_vcfcut","c_cutoff"],set:H({c_cutoff:9}),from:"מסונכרנים ומנגנים",min:2},
+ {c:"live",t:"קטע של ארבע דקות",d:["דקה: רק האדג׳ (הקרייב ב־{c_volume} למטה).","דקה: הקרייב נכנס.","דקה: כבל {e_j_vcaeg} אל {c_j_vcfcut}.","דקה: כבל {c_j_lfotri} אל {e_j_vcadec}. ואז מוציאים הכל ועוצרים."],ids:["c_volume","e_j_vcaeg","c_j_vcfcut","c_j_lfotri","e_j_vcadec"],from:"מסונכרנים ומנגנים",min:4},
+ {c:"live",t:"שבירה",d:["{c_volume} למטה לשתי תיבות: רק התופים.","מחזירים בדיוק בתחילת תיבה.","ובפעם הבאה הפוך: {e_volume} למטה, והבס לבד."],ids:["c_volume","e_volume"],from:"מסונכרנים ומנגנים"},
+ {c:"live",t:"כבל חדש באמצע",d:["פותחים את לשונית לשלוף ← מתכונים.","בוחרים מתכון שלא ניסית, ומחברים אותו בזמן שהכל מנגן.","בלי לעצור. אם נשמע רע, מוציאים."],from:"מסונכרנים ומנגנים",min:2}
+];
+
+window.DOORS={
+ key:"pair1",panel:P,bands:[150,335,455,670,OFF+150,OFF+272,OFF+392,OFF+520],he:HE,
+ home:{knobs:HOME,sw:HOMESW,title:"הבית: שניהם בבית, ומסונכרנים",
+  lead:"כל אחד בבית שלו, כמו בדף שלו, ועוד כבל אחד ביניהם. הולכים לאיבוד? מוציאים את כל הכבלים חוץ מהזה, וחוזרים לכאן.",
+  quick:["הקרייב בבית שלו, והאדג׳ בבית שלו. הכפתורים בציור מצביעים לאן.","כבל: {c_j_assign} אל {e_j_adv}. מתג {e_clock} על [INT/EXT].","{c_play}: שניהם יוצאים לדרך."],
+  note:"ASSIGN צריך להיות על שעון, פעם אחת. איך: הכרטיס ״מנצח אחד״ בלשונית להכיר.",
+  groups:[
+   ["הקרייב 🧡: צליל קצר ומזמזם","המתגים: {c_vcamode} על [ENV], {c_susw} על [OFF].",["c_freq","c_pw","c_mix","c_cutoff","c_reso","c_vcfmod","c_attack","c_decay","c_sustain","c_volume"]],
+   ["האדג׳ 💗: קיק פשוט","כל [VEL] לשעה 2, {e_seqpitch} על [OFF].",["e_osc1freq","e_osc1env","e_osc1lvl","e_osc2lvl","e_fm","e_noise","e_cutoff","e_vcadec","e_volume"]],
+   ["הכבל ביניהם","{c_j_assign} אל {e_j_adv}. רק הוא, בלי כבלים אחרים.",["c_j_assign","e_j_adv"]]]},
+ learn:L,
+ find:[
+  {id:"jc",tab:"שקעי הקרייב 🧡",y:[14,150],ids:CR.areas[0][1].map(i=>"c_"+i),intro:"היציאות של הקרייב הולכות אל הכניסות של האדג׳, ולהפך. רקע שחור: יציאה. מסגרת: כניסה."},
+  {id:"je",tab:"שקעי האדג׳ 💗",y:[OFF+14,OFF+150],ids:ED.areas[0][1].map(i=>"e_"+i),intro:"רקע שחור: יציאה. מסגרת: כניסה."},
+  {id:"rec",tab:"מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. החץ הולך מהיציאה אל הכניסה.",rows:REC},
+  {id:"fix",tab:"לא מנגן?",hint:"בודקים לפי הסדר: סנכרון, כבלים, כפתורים.",rows:FIX},
+  {id:"more",tab:"להעמיק",hint:"השיעור המלא ודפי המכשירים. לא חובה.",links:MORE}],
+ rowKey:id=>/^e_p\d$/.test(id)?"e_p1":/^e_v\d$/.test(id)?"e_v1":id,noRow:{e_led:1,c_lfoled:1,c_leds:1,c_power:1},
+ rowText:{e_p1:{name:"PITCH 1-8 💗",he:"גובה לכל צעד, באדג׳",info:"הגובה של כל צעד. כשמחובר כבל ל־PITCH, אותם כפתורים מזיזים גם את מה שבקצה השני."},
+          e_v1:{name:"VEL 1-8 💗",he:"עוצמה לכל צעד, באדג׳",info:"העוצמה של כל צעד. עד הסוף שמאלה: הצעד שותק. כשמחובר כבל ל־VELOCITY, אותם כפתורים מזיזים גם את מה שבקצה השני."}},
+ cats:[["all","הכל"],["sync","🔗 סנכרון"],["e2c","💗→🧡 התופים מזיזים"],["c2e","🧡→💗 הבס מזיז"],["len","🔁 אורכים"],["live","⚡ לייב"]],
+ catName:{sync:"🔗 סנכרון",e2c:"💗→🧡 התופים מזיזים את הבס",c2e:"🧡→💗 הבס מזיז את התופים",len:"🔁 אורכים",live:"⚡ לייב"},
+ play:M,
+ /* the Edge is drawn 680 lower: move its boxes. Step numbers under every VEL, and the PITCH box grows up, as in edge.html */
+ setup:(BASE,BOX)=>{const es=BASE.querySelector("svg.edgei");
+   for(let i=1;i<=8;i++){const v=BOX["e_v"+i],p=BOX["e_p"+i],x=v[0]+v[2]/2;
+     es.insertAdjacentHTML("beforeend",`<text x="${x}" y="612" class="l" style="fill:#f2c94c;font-size:14px">${i}</text>`);
+     v[3]=618-v[1];const top=396;p[3]+=p[1]-top;p[1]=top}
+   Object.keys(BOX).forEach(k=>{if(k.indexOf("e_")===0)BOX[k][1]+=OFF})}
+};
+</script>
+<script src="doors.js?v=6"></script>
+</body>
+</html>

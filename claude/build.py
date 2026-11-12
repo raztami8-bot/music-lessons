@@ -467,6 +467,10 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <li><a class="tile ref" href="settings.html"><span class="bub">💾</span><div class="tx"><span class="kind">דף עזר</span><h3>מה נשמר ומה נמחק</h3><p>לכל הגדרה: האם היא נשמרת עם התבנית, האם מחיקה מוחקת אותה, ומה נשאר תמיד. בדוק מול המדריך.</p></div></a></li>
 """
         if dev == "together":
+            # the doors format for a pair (2026-11-12): the Crave and the Edge, cables between them
+            tiles += """<li><a class="tile hero" href="pair.html"><span class="bub">✨</span><div class="tx"><span class="kind">חדש · שילובים</span><h3>הקרייב 🧡 והאדג׳ 💗 יחד</h3><p>8 כרטיסים קצרים, כל השקעים של שניהם בשליפה, ו־23 משימות: סנכרון, התופים מזיזים את הבס, הבס מזיז את התופים, אורכים ולייב.</p></div></a></li>
+"""
+        if dev == "together":
             tiles += """<li><a class="tile ref" href="connections.html"><span class="bub">🔌</span><div class="tx"><span class="kind">דף עזר</span><h3>חיבורים</h3><p>כל החיבורים במקום אחד: הטי־8 לבד, עם וולקה, במיקסר, ושרשרת המידי.</p></div></a></li><li><a class="tile ref" href="mixer-guide.html"><span class="bub">🎚️</span><div class="tx"><span class="kind">דף עזר</span><h3>המיקסר: כל כפתור וכל נורה</h3><p>ציור של הלוח שנוגעים בו, מה כל נורה אומרת, הדרך של הצליל, וכיוון בסיסי בשמונה צעדים.</p></div></a></li>
 """
         if dev == "volca":
@@ -602,7 +606,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 </nav>
 <a class="wkbtn" href="week.html" id="wkbtn"><span class="e" aria-hidden="true">📅</span><span class="t"><b>האימון השבועי</b><small id="wkbtn-t">כלי אחד, זוג, וסט מוקלט</small></span><span class="go" aria-hidden="true">←</span></a>
 <nav class="more" aria-label="עוד">
-<a class="together" href="#together">🔗 ביחד</a><a class="live" href="#live">🌊 לייב מתפתח</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
+<a class="together" href="#together">🔗 ביחד</a><a class="live" href="#live">🌊 לייב מתפתח</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a><a class="together" href="pair.html">🧡💗 קרייב + אדג׳</a>
 </nav>
 <a class="resume" id="resume" href="#" hidden><span class="pl" aria-hidden="true">▶</span><span><small>להמשיך שיעור מאיפה שעצרת</small><b id="resume-t"></b></span></a>
 <details class="allbox" id="allbox"><summary>כל השיעורים ודפי העזר</summary>
