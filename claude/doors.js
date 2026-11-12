@@ -13,7 +13,11 @@
      find tabs with a board may also give x:[x0,x1]: a column of the board instead of a full row
      a find tab may give deep:[{sec, t, p:[paragraphs], ids, set, tr:[...], hear, rows:[[term,text]], back}] instead: one long explanation per screen,
        with prev/next and a list of topics; its links (if any) come on the last card
-     cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
+     a find tab may give bands:[{t, y:[y0,y1], x, ids, intro}] instead: several parts of the board one under the other in one tab,
+       with a row of jump buttons that stays on top (the whole board as one tab: jacks, rows, sequencer)
+   deep     optional, with <section id="v-deep"> and a fourth tab button in the page: {cards:[...as in a deep find tab], archive:{label, title, hint, links:[[href,title,note]]}}
+       a fourth door for the long explanations. The archive (older pages of this device) opens from a quiet button under every card.
+   cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
      setup    optional function(BASE, BOX), runs once on the board before anything is drawn
    In any text: {id} becomes the control's name as a button that opens it, [TEXT] becomes a label as printed on the board.
    Hours: 7 = all the way left, 5 = all the way right. */
@@ -109,7 +113,7 @@ function openHome(){const h=D.home;openSheet(el=>{
     el.appendChild(d)});
 })}
 $("#homebtn").onclick=openHome;
-const act={home:openHome,play:()=>go("play"),find:()=>go("find")};
+const act={home:openHome,play:()=>go("play"),find:()=>go("find"),deep:()=>go("deep")};
 
 /* ---------- 1. learn ---------- */
 const L=D.learn;
@@ -156,11 +160,24 @@ function drawFind(q){
     F.forEach((x,xi)=>{if(x.deep)x.deep.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
       const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>${x.tab}</p>`;
       bt.onclick=()=>{st.deep=ci;fi=xi;drawFind()};el.appendChild(bt)}})});
+    if(D.deep)D.deep.cards.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
+      const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>להעמיק</p>`;
+      bt.onclick=()=>{st.deep=ci;go("deep")};el.appendChild(bt)}});
     ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
     return}
   if(f.deep){drawDeep(f,el);return}
   if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));$("#findScroll").scrollTop=0;return}
   if(f.links){el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);$("#findScroll").scrollTop=0;return}
+  if(f.bands){
+    const jump=document.createElement("div");jump.className="jump";el.appendChild(jump);const rows={};
+    f.bands.forEach(b=>{const h=document.createElement("h3");h.textContent=b.t;el.appendChild(h);
+      const j=document.createElement("button");j.textContent=b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
+      drawBand(b,el,rows)});
+  }else drawBand(f,el,{});
+  $("#findScroll").scrollTop=0;
+}
+/* one part of the board: the picture, and a row for every control in it */
+function drawBand(f,el,rows){
   const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=f.y[1]-f.y[0];
   const x0=f.x?f.x[0]:0,w=f.x?f.x[1]-f.x[0]:W;
   sv.setAttribute("viewBox",`${x0} ${f.y[0]} ${w} ${h}`);sv.setAttribute("width",w);sv.setAttribute("height",h);
@@ -168,23 +185,21 @@ function drawFind(q){
   if(fit){sv.removeAttribute("width");sv.removeAttribute("height");sv.style.width="100%"}
   setKnobs(sv,HOME);bd.appendChild(sv);el.appendChild(bd);
   el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.intro)} ${fit?"נוגעים בכפתור.":"גוללים הצידה, ונוגעים בכפתור."}</p>`);
-  const rows={};
   f.ids.forEach(i=>{const r=document.createElement("div");r.className="row";r.innerHTML=ctlHtml(i);rows[i]=r;el.appendChild(r)});
   sv.addEventListener("click",e=>{const g=e.target.closest(".ctl");if(!g)return;const id=g.dataset.id;
-    sv.querySelectorAll(".pick").forEach(x=>x.classList.remove("pick"));g.classList.add("pick");
+    el.querySelectorAll(".band .pick").forEach(x=>x.classList.remove("pick"));g.classList.add("pick");
     const r=rows[rowKey(id)];
     el.querySelectorAll(".row.pick").forEach(x=>x.classList.remove("pick"));
     if(r){r.classList.add("pick");r.scrollIntoView({block:"center",behavior:"smooth"})}else openCtl(id)});
-  $("#findScroll").scrollTop=0;
 }
 
 
 /* a deep tab: one long explanation per screen */
-function drawDeep(f,el){
-  const C=f.deep,k=Math.max(0,Math.min(st.deep||0,C.length-1)),c=C[k];st.deep=k;save();
+function drawDeep(f,el,again,scr){
+  again=again||drawFind;const C=f.deep||f.cards,k=Math.max(0,Math.min(st.deep||0,C.length-1)),c=C[k];st.deep=k;save();
   const pick=document.createElement("select");pick.className="search";
   pick.innerHTML=C.map((x,i)=>`<option value="${i}"${i===k?" selected":""}>${i+1}. ${x.t}</option>`).join("");
-  pick.onchange=()=>{st.deep=+pick.value;drawFind()};el.appendChild(pick);
+  pick.onchange=()=>{st.deep=+pick.value;again()};el.appendChild(pick);
   el.insertAdjacentHTML("beforeend",`${c.sec?`<span class="tag">${c.sec}</span>`:""}<span class="count">${k+1} / ${C.length}</span><h2>${c.t}</h2>`);
   if(c.ids)el.appendChild(crops(c.ids,c.set||HOME));
   (c.p||[]).forEach(t=>el.insertAdjacentHTML("beforeend",`<p class="lead">${tx(t)}</p>`));
@@ -195,9 +210,15 @@ function drawDeep(f,el){
   if(k===C.length-1&&f.links)el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);
   const nv=document.createElement("div");nv.className="navrow";nv.style.padding="4px 0 8px";
   nv.innerHTML=`<button${k===0?" disabled":""}>→ הקודם</button><button class="next"${k===C.length-1?" disabled":""}>הבא ←</button>`;
-  nv.children[0].onclick=()=>{st.deep=k-1;drawFind()};nv.children[1].onclick=()=>{st.deep=k+1;drawFind()};
-  el.appendChild(nv);$("#findScroll").scrollTop=0;
+  nv.children[0].onclick=()=>{st.deep=k-1;again()};nv.children[1].onclick=()=>{st.deep=k+1;again()};
+  el.appendChild(nv);
+  if(f.archive){const a=f.archive,b=document.createElement("button");b.className="arch";b.textContent=a.label;
+    b.onclick=()=>openSheet(sh=>sh.insertAdjacentHTML("beforeend",`<h2>${a.title}</h2><p class="lead">${a.hint}</p><div class="links">${a.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`));
+    el.appendChild(b)}
+  $(scr||"#findScroll").scrollTop=0;
 }
+/* the fourth door: the long explanations on their own */
+function drawDeepDoor(){const el=$("#deep");el.innerHTML="";drawDeep(D.deep,el,drawDeepDoor,"#deepScroll")}
 /* ---------- 3. play ---------- */
 const M=D.play,CN=D.catName;
 st.done=st.done||{};let cat=st.cat||"all",mi=st.mi,bag=[];
@@ -230,15 +251,16 @@ function drawPlay(keep){
 }
 
 /* ---------- tabs ---------- */
-function go(v){st.tab=v;save();
+const HASDEEP=!!(D.deep&&$("#v-deep"));
+function go(v){if(v==="deep"&&!HASDEEP)v="learn";st.tab=v;save();
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v));
-  if(v==="learn")drawLearn();else if(v==="find")drawFind();else drawPlay();
+  if(v==="learn")drawLearn();else if(v==="find")drawFind();else if(v==="deep")drawDeepDoor();else drawPlay();
 }
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 /* #play-<cat> opens the missions on one group (week.html links here) */
 const hashCat=()=>{const m=/^#play-(\w+)$/.exec(location.hash);if(!m||!D.cats.some(c=>c[0]===m[1]))return false;cat=m[1];st.cat=cat;bag=[];return true};
-go(hashCat()?"play":/^#(learn|find|play)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
-window.addEventListener("hashchange",()=>{if(hashCat())go("play");else if(/^#(learn|find|play)$/.test(location.hash))go(location.hash.slice(1))});
+go(hashCat()?"play":/^#(learn|find|play|deep)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
+window.addEventListener("hashchange",()=>{if(hashCat())go("play");else if(/^#(learn|find|play|deep)$/.test(location.hash))go(location.hash.slice(1))});
 window.DOORS_TEST={M:M,L:L,show:i=>{mi=i;cat="all";drawPlay()},card:i=>{li=i;drawLearn()}};
 })();

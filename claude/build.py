@@ -436,11 +436,18 @@ def page(n):
     return total
 
 
+# Devices whose old lessons and help pages left the home list (2026-11-13). The pages are still built;
+# they open from the archive button in the device's own page (deep.archive in edge.html).
+ARCHIVED = {"edge"}
+
+
 def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
     """index.html: Claude's home. Grouped by device; each device numbers its own lessons from 1."""
     secs = ""
     icons = {"t8": "🥁", "volca": "🎛️", "crave": "🧡", "edge": "💗", "together": "🔗", "live": "🌊"}
     for dev, (name, code, sub, nums) in DEVICES.items():
+        if dev in ARCHIVED:
+            continue
         tiles = ""
         if dev == "edge":
             # the trial of the new format (2026-11-11): one page, three doors. The lessons under it stay as the deep version.

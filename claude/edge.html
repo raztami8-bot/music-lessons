@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="האדג׳">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>האדג׳ · להכיר, לשלוף, לשחק · גרסת קלוד</title>
+<title>האדג׳ · להכיר, לשלוף, לשחק, להעמיק · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="doors.css?v=3">
+<link rel="stylesheet" href="doors.css?v=4">
 </head>
 <body>
 
@@ -36,12 +36,16 @@
     <div class="scroll" id="playScroll"><div class="inner" id="play"></div></div>
     <div class="playrow"><button class="timer" id="timer">⏱ דקה</button><button class="ok" id="ok">✓ עשיתי</button><button class="dice" id="dice">🎲 עוד משימה</button></div>
   </section>
+  <section class="view" id="v-deep">
+    <div class="scroll" id="deepScroll"><div class="inner" id="deep"></div></div>
+  </section>
 </main>
 
 <nav class="tabs" role="tablist">
   <button data-v="learn"><span>🌱</span>להכיר</button>
   <button data-v="find"><span>🔎</span>לשלוף</button>
   <button data-v="play"><span>🎲</span>לשחק</button>
+  <button data-v="deep"><span>📚</span>להעמיק</button>
 </nav>
 
 <div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
@@ -131,8 +135,8 @@ const L=[
   tr:["[INT/EXT]: האדג׳ עצמו, ו־{tempo} עובד.","[MIDI]: מכשיר אחר קובע, למשל הטי־8. {scale} על 1/16."],
   hear:"{tempo} לא עושה כלום? מישהו אחר קובע את הקצב.",back:"הנורות לא זזות? להוריד את {clock} ל־[INT/EXT]."},
  {t:"השקעים, במשפט אחד",b:"שם בתוך מסגרת: כניסה. שם על רקע שחור: יציאה. כבל הולך תמיד מיציאה לכניסה. לא צריך אף כבל כדי לנגן.",
-  ids:["j_velout","j_noisein"],hear:"כבל הוא חיבור נוסף, מעל מה שהלוח כבר עושה.",back:"הכל על השקעים: לשונית 🔎 לשלוף, ״שקעים״."},
- {t:"זה הבסיס. עכשיו לשחק",b:"מכאן לומדים בידיים. בלשונית 🎲 יש משימות קצרות: דבר אחד לנסות, דקה אחת. ובלשונית 🔎 כל כפתור, כשצריך.",
+  ids:["j_velout","j_noisein"],hear:"כבל הוא חיבור נוסף, מעל מה שהלוח כבר עושה.",back:"הכל על השקעים: לשונית 🔎 לשלוף, ״הלוח״, למעלה."},
+ {t:"זה הבסיס. עכשיו לשחק",b:"מכאן לומדים בידיים. בלשונית 🎲 יש משימות קצרות: דבר אחד לנסות, דקה אחת. ובלשונית 🔎 כל כפתור, כשצריך. רוצה להבין למה זה נשמע ככה? לשונית 📚.",
   btn:["🎲 תן לי משימה","play"],all:1}
 ];
 const J=E.areas[0][1];
@@ -344,7 +348,7 @@ const DEEP=[
    ["Sequencer · סיקוונסר","מנגן רצף צעדים לבד, שוב ושוב."],
    ["Velocity","כמה חזקה המכה. באדג׳: שורת [VEL]."],
    ["Polymeter · פולימטר","שני רצפים באורכים שונים, שנפגשים כל פעם במקום אחר."]],
-  back:"שכחת מילה בזמן נגינה? חיפוש למעלה בלשונית הזו מוצא גם כאן."}
+  back:"שכחת מילה בזמן נגינה? החיפוש בלשונית 🔎 לשלוף מוצא גם כאן."}
 ];
 window.DOORS={
  key:"edge2",panel:E,bands:[150,272,392,520],he:HE,
@@ -353,14 +357,18 @@ window.DOORS={
   quick:["לאפס: {osc2lvl}, {fm}, {noise}, {noisevcf}.","כל [VEL] לשעה 2, ומתג {seqpitch} על [OFF].","{osc1freq} לשעה 9, {osc1env} לשעה 2, {vcadec} לשעה 11."],
   note:"בלי כבלים חוץ מהשמע. מתג {clock} על [INT/EXT]. הכפתורים בציור מצביעים לאן שצריך.",groups:HOMEGROUPS},
  learn:L,
+ /* three questions, the same in every device: where is it (the whole board, top to bottom as on the device), how to make it, why is it silent */
  find:[
-  {id:"r1",tab:"שורה 1",y:[150,272],ids:E.areas[1][1].filter(i=>i!=="led"),intro:"מתנד 1, רעש ועוצמה. משמאל לימין, כמו על הלוח."},
-  {id:"r2",tab:"שורה 2",y:[270,392],ids:E.areas[2][1],intro:"מתנד 2 והמסנן."},
-  {id:"seq",tab:"סיקוונסר",y:[392,632],ids:E.areas[3][1].concat(["p1","v1"]),intro:"קצב, שעון, שלושה לחצנים, ושמונה צעדים."},
-  {id:"jack",tab:"שקעים",y:[14,150],ids:J,intro:"מסגרת: כניסה. רקע שחור: יציאה. כבל הולך מיציאה לכניסה."},
-  {id:"rec",tab:"מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. רשום רק מה שמשנים.",rows:REC},
-  {id:"fix",tab:"לא מנגן?",hint:"בודקים לפי הסדר: שעון, כבלים, עוצמות.",rows:FIX},
-  {id:"more",tab:"להעמיק",deep:DEEP,hint:"ועוד: השיעורים המלאים ודפי העזר.",links:MORE}],
+  {id:"board",tab:"🎛 הלוח",bands:[
+   {t:"שקעים",y:[14,150],ids:J,intro:"מסגרת: כניסה. רקע שחור: יציאה. כבל הולך מיציאה לכניסה."},
+   {t:"שורה 1",y:[150,272],ids:E.areas[1][1].filter(i=>i!=="led"),intro:"מתנד 1, רעש ועוצמה. משמאל לימין, כמו על הלוח."},
+   {t:"שורה 2",y:[270,392],ids:E.areas[2][1],intro:"מתנד 2 והמסנן."},
+   {t:"סיקוונסר",y:[392,632],ids:E.areas[3][1].concat(["p1","v1"]),intro:"קצב, שעון, שלושה לחצנים, ושמונה צעדים."}]},
+  {id:"rec",tab:"🍳 מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. רשום רק מה שמשנים.",rows:REC},
+  {id:"fix",tab:"🛠 לא מנגן?",hint:"בודקים לפי הסדר: שעון, כבלים, עוצמות.",rows:FIX}],
+ /* the fourth door (2026-11-13): the long explanations left the find tab. The older lessons and help pages are the archive. */
+ deep:{cards:DEEP,archive:{label:"🗄 ארכיון: השיעורים והדפים הישנים של האדג׳",title:"ארכיון האדג׳",
+   hint:"הגרסה הקודמת: שיעורים ארוכים ודפי עזר. הכל נשאר כאן, אבל המקום המסודר הוא ארבע הלשוניות.",links:MORE}},
  rowKey:id=>/^p\d$/.test(id)?"p1":/^v\d$/.test(id)?"v1":id,noRow:{led:1},
  rowText:{p1:{name:"PITCH 1-8",he:"גובה לכל צעד",info:"הגובה של כל צעד. שעה 12: כלום. ימינה גבוה, שמאלה נמוך. עובד רק כש־SEQ PITCH MOD לא על OFF."},
           v1:{name:"VEL 1-8",he:"עוצמה לכל צעד",info:"העוצמה של כל צעד. עד הסוף שמאלה: הצעד שותק. גבוה: חזק, וגם ארוך יותר."}},
@@ -373,6 +381,6 @@ window.DOORS={
    v[3]=618-v[1];const top=396;p[3]+=p[1]-top;p[1]=top}}
 };
 </script>
-<script src="doors.js?v=7"></script>
+<script src="doors.js?v=8"></script>
 </body>
 </html>

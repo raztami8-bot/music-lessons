@@ -34,7 +34,7 @@ main{flex:1 1 auto;min-height:0;position:relative}
 .inner{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 
 /* bottom tabs */
-.tabs{flex:0 0 auto;display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel);border-top:1px solid var(--line);
+.tabs{flex:0 0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--panel);border-top:1px solid var(--line);
   padding:6px 8px calc(var(--sb) + 6px)}
 .tabs button{background:none;border:0;border-radius:12px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--muted);font-weight:700;font-size:.92rem}
 .tabs button span{font-size:1.35rem;line-height:1.1}
@@ -120,3 +120,10 @@ h3{font-family:var(--display);font-weight:400;font-size:1.15rem;margin:6px 0 0}
 :focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 @media (min-width:700px){body{font-size:18px}.crops{flex-direction:row;flex-wrap:wrap}.crops .crop{flex:1 1 260px;max-width:460px}.sheet .crops .crop{max-width:none}}
 @media (prefers-reduced-motion:reduce){.pnl .ptr{transition:none}}
+
+/* a find tab made of several parts of the board: jump buttons that stay on top */
+.jump{position:sticky;top:-14px;z-index:3;display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:-4px 0;background:var(--bg);scrollbar-width:none}
+.jump::-webkit-scrollbar{display:none}
+.jump button{flex:1 0 auto;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px;font-weight:600;font-size:.88rem}
+/* the archive: a quiet button under the long explanations */
+.arch{align-self:center;background:none;border:0;color:var(--muted);font-size:.88rem;text-decoration:underline;padding:10px}
