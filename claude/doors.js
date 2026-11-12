@@ -16,6 +16,8 @@
      a find tab may give bands:[{t, y:[y0,y1], x, ids, intro}] instead: several parts of the board one under the other in one tab,
        with a row of jump buttons that stays on top (the whole board as one tab: jacks, rows, sequencer)
    archive  optional: {label, title, hint, links:[[href,title,note]]}: a quiet button at the end of every find tab (pages with three doors)
+   The learn door has a "☰ all the cards" button (a list in a sheet); the deep door opens on a menu of all its topics by subject (sec),
+       and each card has "☰ all the topics" to come back. Prev/next stay as a shortcut only. (Raz, 2026-11-13: "not like a computer game where I press next".)
    deep     optional, with <section id="v-deep"> and a fourth tab button in the page: {cards:[...as in a deep find tab], archive:{label, title, hint, links:[[href,title,note]]}}
        a fourth door for the long explanations. The archive (older pages of this device) opens from a quiet button under every card.
    cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
@@ -122,7 +124,11 @@ let li=Math.min(st.learn||0,L.length-1);
 function drawLearn(){
   const c=L[li],el=$("#learn");el.innerHTML="";
   $("#prog").innerHTML=L.map((x,i)=>`<i class="${i<=li?"d":""}"></i>`).join("");
-  el.insertAdjacentHTML("beforeend",`<span class="count">${li+1} / ${L.length}</span><h2>${c.t}</h2>`);
+  const mb=document.createElement("button");mb.className="menubtn";mb.textContent=`☰ כל הכרטיסים · ${li+1} / ${L.length}`;
+  mb.onclick=()=>openSheet(sh=>{sh.insertAdjacentHTML("beforeend",`<h2>${D.learnTitle||"הבסיס: כל הכרטיסים"}</h2><p class="lead">נוגעים בכרטיס וקופצים אליו. אין חובה ללכת לפי הסדר.</p>`);
+    L.forEach((x,i)=>{const b=document.createElement("button");b.className="row pickrow"+(i===li?" cur":"");b.innerHTML=`<span class="n">${i+1}</span><span>${x.t}</span>`;
+      b.onclick=()=>{shade.classList.remove("on");li=i;drawLearn()};sh.appendChild(b)})});
+  el.appendChild(mb);el.insertAdjacentHTML("beforeend",`<h2>${c.t}</h2>`);
   if(c.all){const d=document.createElement("div");d.className="crop";d.appendChild(BASE.cloneNode(true));el.appendChild(d)}
   else if(c.ids)el.appendChild(crops(c.ids,c.set));
   if(c.b)el.insertAdjacentHTML("beforeend",`<p class="lead">${tx(c.b)}</p>`);
@@ -163,7 +169,7 @@ function drawFind(q){
       bt.onclick=()=>{st.deep=ci;fi=xi;drawFind()};el.appendChild(bt)}})});
     if(D.deep)D.deep.cards.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
       const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>להעמיק</p>`;
-      bt.onclick=()=>{st.deep=ci;go("deep")};el.appendChild(bt)}});
+      bt.onclick=()=>{st.deep=ci;deepMenu=false;go("deep")};el.appendChild(bt)}});
     ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
     return}
   if(f.deep){drawDeep(f,el);return}
@@ -202,9 +208,11 @@ function drawBand(f,el,rows){
 /* a deep tab: one long explanation per screen */
 function drawDeep(f,el,again,scr){
   again=again||drawFind;const C=f.deep||f.cards,k=Math.max(0,Math.min(st.deep||0,C.length-1)),c=C[k];st.deep=k;save();
-  const pick=document.createElement("select");pick.className="search";
+  if(scr){const mb=document.createElement("button");mb.className="menubtn";mb.textContent="☰ כל הנושאים";mb.onclick=()=>{deepMenu=true;again()};el.appendChild(mb);
+    st.seen=st.seen||{};st.seen[k]=1;save()}
+  else{const pick=document.createElement("select");pick.className="search";
   pick.innerHTML=C.map((x,i)=>`<option value="${i}"${i===k?" selected":""}>${i+1}. ${x.t}</option>`).join("");
-  pick.onchange=()=>{st.deep=+pick.value;again()};el.appendChild(pick);
+  pick.onchange=()=>{st.deep=+pick.value;again()};el.appendChild(pick)}
   el.insertAdjacentHTML("beforeend",`${c.sec?`<span class="tag">${c.sec}</span>`:""}<span class="count">${k+1} / ${C.length}</span><h2>${c.t}</h2>`);
   if(c.ids)el.appendChild(crops(c.ids,c.set||HOME));
   (c.p||[]).forEach(t=>el.insertAdjacentHTML("beforeend",`<p class="lead">${tx(t)}</p>`));
@@ -221,7 +229,16 @@ function drawDeep(f,el,again,scr){
   $(scr||"#findScroll").scrollTop=0;
 }
 /* the fourth door: the long explanations on their own */
-function drawDeepDoor(){const el=$("#deep");el.innerHTML="";drawDeep(D.deep,el,drawDeepDoor,"#deepScroll")}
+let deepMenu=true;
+function drawDeepDoor(){const el=$("#deep");el.innerHTML="";
+  if(!deepMenu){drawDeep(D.deep,el,drawDeepDoor,"#deepScroll");return}
+  /* the menu: every topic on one screen, by subject. You choose what to read. */
+  const C=D.deep.cards,seen=st.seen||{};let sec=null;
+  el.insertAdjacentHTML("beforeend",`<h2>${D.deep.title||"במה בא לך להתעמק?"}</h2><p class="lead">${D.deep.lead||"נוגעים בנושא ונכנסים. אין סדר ואין חובה: כל כרטיס עומד בפני עצמו."}</p>`);
+  C.forEach((c,i)=>{if(c.sec!==sec){sec=c.sec;el.insertAdjacentHTML("beforeend",`<h3>${sec||""}</h3>`)}
+    const b=document.createElement("button");b.className="row pickrow"+(seen[i]?" seen":"");b.innerHTML=`<span>${c.t}</span><span class="n">${seen[i]?"✓":"←"}</span>`;
+    b.onclick=()=>{st.deep=i;deepMenu=false;drawDeepDoor()};el.appendChild(b)});
+  if(D.deep.archive)archBtn(el,D.deep.archive);$("#deepScroll").scrollTop=0}
 /* ---------- 3. play ---------- */
 const M=D.play,CN=D.catName;
 st.done=st.done||{};let cat=st.cat||"all",mi=st.mi,bag=[];
@@ -260,7 +277,7 @@ function go(v){if(v==="deep"&&!HASDEEP)v="learn";st.tab=v;save();
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v));
   if(v==="learn")drawLearn();else if(v==="find")drawFind();else if(v==="deep")drawDeepDoor();else drawPlay();
 }
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="deep")deepMenu=true;go(b.dataset.v)});
 /* #play-<cat> opens the missions on one group (week.html links here) */
 const hashCat=()=>{const m=/^#play-(\w+)$/.exec(location.hash);if(!m||!D.cats.some(c=>c[0]===m[1]))return false;cat=m[1];st.cat=cat;bag=[];return true};
 go(hashCat()?"play":/^#(learn|find|play|deep)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
