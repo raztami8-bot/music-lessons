@@ -20,6 +20,7 @@
    archive  optional: {label, title, hint, links:[[href,title,note]]}: a quiet button at the end of every find tab (pages with three doors)
    The learn door has a "☰ all the cards" button (a list in a sheet); the deep door opens on a menu of all its topics by subject (sec),
        and each card has "☰ all the topics" to come back. Prev/next stay as a shortcut only. (Raz, 2026-11-13: "not like a computer game where I press next".)
+   deep.top optional: the name of a group (sec) that the menu shows first
    deep     optional, with <section id="v-deep"> and a fourth tab button in the page: {cards:[...as in a deep find tab], archive:{label, title, hint, links:[[href,title,note]]}}
        a fourth door for the long explanations. The archive (older pages of this device) opens from a quiet button under every card.
    cats     [[key,label]], catName {key:label}, play [{c, t, d:[...], ids, set, from, back, min}]
@@ -345,7 +346,9 @@ function drawDeepDoor(){const el=$("#deep");el.innerHTML="";
   /* the menu: every topic on one screen, by subject. You choose what to read. */
   const C=D.deep.cards,seen=st.seen||{};let sec=null;
   el.insertAdjacentHTML("beforeend",`<h2>${D.deep.title||"במה בא לך להתעמק?"}</h2><p class="lead">${D.deep.lead||"נוגעים בנושא ונכנסים. אין סדר ואין חובה: כל כרטיס עומד בפני עצמו."}</p>`);
-  C.forEach((c,i)=>{if(c.sec!==sec){sec=c.sec;el.insertAdjacentHTML("beforeend",`<h3>${sec||""}</h3>`)}
+  /* deep.top: one group is shown first, though its cards sit at the end of the list (what was read is saved by index, so new cards are only added at the end) */
+  const order=C.map((c,i)=>i);if(D.deep.top)order.sort((a,b)=>(C[b].sec===D.deep.top)-(C[a].sec===D.deep.top)||a-b);
+  order.forEach(i=>{const c=C[i];if(c.sec!==sec){sec=c.sec;el.insertAdjacentHTML("beforeend",`<h3>${sec||""}</h3>`)}
     const b=document.createElement("button");b.className="row pickrow"+(seen[i]?" seen":"");b.innerHTML=`<span>${c.t}</span><span class="n">${seen[i]?"✓":"←"}</span>`;
     b.onclick=()=>{st.deep=i;deepMenu=false;drawDeepDoor()};el.appendChild(b)});
   if(D.deep.archive)archBtn(el,D.deep.archive);$("#deepScroll").scrollTop=0}
