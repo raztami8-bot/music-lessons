@@ -261,8 +261,9 @@ function drawPlay(keep){
   const m=M[mi],el=$("#play");el.innerHTML="";st.mi=mi;save();if(!keep)stopTimer();
   [...$("#cats").children].forEach(b=>b.setAttribute("aria-selected",b.dataset.k===cat));
   el.insertAdjacentHTML("beforeend",`<span class="tag">${CN[m.c]}</span><h2>${m.t}</h2><p class="from">מתחילים מ: ${tx(m.from||"🏠 הבית")}</p>`);
-  if(m.ids)el.appendChild(crops(m.ids,m.set));
+  /* the steps come before the picture: on a phone the picture used to push them below the screen (measured 2026-11-16) */
   el.insertAdjacentHTML("beforeend",`<div class="box"><ol>${m.d.map(x=>`<li>${tx(x)}</li>`).join("")}</ol></div>`);
+  if(m.ids)el.appendChild(crops(m.ids,m.set));
   if(m.back)el.insertAdjacentHTML("beforeend",`<p class="back">חזרה: ${tx(m.back)}</p>`);
   const p=pool(),n=p.filter(i=>st.done[i]).length;
   el.insertAdjacentHTML("beforeend",`<p class="tally">עשית ${n} מתוך ${p.length}</p>`);
@@ -282,5 +283,12 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset
 const hashCat=()=>{const m=/^#play-(\w+)$/.exec(location.hash);if(!m||!D.cats.some(c=>c[0]===m[1]))return false;cat=m[1];st.cat=cat;bag=[];return true};
 go(hashCat()?"play":/^#(learn|find|play|deep)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
 window.addEventListener("hashchange",()=>{if(hashCat())go("play");else if(/^#(learn|find|play|deep)$/.test(location.hash))go(location.hash.slice(1))});
+/* ---------- the screen stays on while the page is open (both hands are on the instrument) ---------- */
+(()=>{if(!("wakeLock" in navigator))return;let lock=null,busy=false;
+  const ask=()=>{if(lock||busy||document.visibilityState!=="visible")return;busy=true;
+    navigator.wakeLock.request("screen").then(l=>{busy=false;lock=l;l.addEventListener("release",()=>{lock=null})}).catch(()=>{busy=false})};
+  ask();document.addEventListener("visibilitychange",ask);
+  /* some browsers give the lock only after a touch, so every touch asks again if it is not held */
+  document.addEventListener("pointerdown",ask,{passive:true})})();
 window.DOORS_TEST={M:M,L:L,show:i=>{mi=i;cat="all";drawPlay()},card:i=>{li=i;drawLearn()}};
 })();
