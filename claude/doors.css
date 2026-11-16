@@ -154,3 +154,14 @@ h3{font-family:var(--display);font-weight:400;font-size:1.15rem;margin:6px 0 0}
 .pos.cur{border-color:var(--magenta);background:var(--magenta-soft)}
 /* a long sheet scrolls; its parts keep their height (the picture on top used to be squeezed by a long list) */
 .sheet>*{flex:none}
+
+/* checks: a question about something not yet tried on the device, answered on the card */
+.chk{border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;background:rgba(242,201,76,.07);display:flex;flex-direction:column;gap:8px}
+.chk .h{font-size:.82rem;color:var(--gold);letter-spacing:.02em}
+.chk p{margin:0}
+.chk.done{border-style:solid;border-color:var(--green);background:rgba(111,207,151,.07)}
+.chk.done .h{color:var(--green)}
+.chkrow{display:flex;gap:8px}
+.chkrow button{flex:1;border-radius:999px;padding:10px 6px;font-weight:700;font-size:.92rem;border:1px solid var(--line);background:var(--card)}
+.chkrow button.on{background:var(--gold);border-color:var(--gold);color:#1a1a1a}
+.chk .arch{align-self:flex-start;padding:2px 0}

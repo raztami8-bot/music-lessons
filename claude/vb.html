@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>הוולקה בס · להכיר, לשלוף, לשחק, להעמיק · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="doors.css?v=6">
+<link rel="stylesheet" href="doors.css?v=7">
 <style>:root{--magenta:#0e9482;--magenta-soft:#11302b;--board:#1fb8a3;--chipline:#1f6f64;--chipfg:#cffff6}</style>
 </head>
 <body>
@@ -194,9 +194,9 @@ const M=[
  {c:"line",t:"בס פסי",d:["{octave} עד [oct 2]. {func} + {rec}, ואז ארבע פעמים: ●, 1, 1, 1.","{func}, {play}. {decay} לשעה 9, {cutoff} לשעה 10, {egint} לשעה 1.","שתיקה בדיוק על הקיק, ושלושה תווים אחריו. עכשיו רק {cutoff}."],ids:["func","rec","s1","decay"],set:H({decay:9}),from:"עצור, רצף נקי",min:3},
  {c:"line",t:"פטיש טכנו",d:["{func} + {rec}, ואז שלוש פעמים: 1, ●, ●, ●. ואז: 1, ●, ●, 2.","{func}, {play}. {decay} לשעה 1.","עכשיו {cutoff} לאט."],ids:["func","rec","s1","s2","decay","cutoff"],set:H({decay:1}),from:"עצור, רצף נקי",min:3},
  {c:"line",t:"קו של 12",d:["{func} + {play}. קלידים 13, 14, 15, 16: כבים. {func}.","נסה גם קו של 7.","חזרה: מדליקים את כולם."],ids:["func","play"].concat(S([13,14,15,16])),from:LINE},
- {c:"line",t:"להקליט בזמן אמת",d:["{rec}, ומנגנים על הקלידים בזמן שהקו רץ.","מה שניגנת נכנס לרצף.","{rec} שוב ליציאה. מה קרה לתווים הישנים? ספר לי."],ids:["rec"],from:LINE},
+ {c:"line",t:"להקליט בזמן אמת",d:["{rec}, ומנגנים על הקלידים בזמן שהקו רץ.","מה שניגנת נכנס לרצף.","{rec} שוב ליציאה. מה קרה לתווים הישנים?"],ids:["rec"],from:LINE},
  {c:"line",t:"נגן שני",d:["{func} + {s1}. {vco2}, ו־{func} + {vco2} עד שהוא מואר.","{func} + {rec}: שלושה תווים גבוהים, רק ברווחים של הבס. כל השאר: {rec}.","{func}, {play}."],ids:["func","s1","vco2","rec"],from:"קו 3־3־2 שמנגן",min:5},
- {c:"line",t:"שומרים, טוענים, מחליפים",d:["{func} + {memory}, וקליד פנוי.","שנה את הקו, ושמור במקום אחר.","בזמן נגינה: {memory} והקליד. ההחלפה מיידית, או בסוף הסיבוב? ספר לי."],ids:["func","memory"],from:"קו שבנית",min:3},
+ {c:"line",t:"שומרים, טוענים, מחליפים",d:["{func} + {memory}, וקליד פנוי.","שנה את הקו, ושמור במקום אחר.","בזמן נגינה: {memory} והקליד. ההחלפה מיידית, או בסוף הסיבוב?"],ids:["func","memory"],from:"קו שבנית",min:3},
  {c:"live",t:"בילד",d:["{cutoff} משעה 10 לשעה 1, לאט, שמונה תיבות.","{peak} עולה איתו עד שעה 2.","וחזרה."],ids:["cutoff","peak"],set:H({cutoff:1,peak:2}),from:LINE,min:2},
  {c:"live",t:"להשתיק ולהחזיר",d:["{func} + {vco1}: הבס נעלם.","ארבע תיבות, ואז שוב: חוזר על ה־1."],ids:["func","vco1"],from:LINE},
  {c:"live",t:"שער",d:["החזק {func}: נורות 4 ו־7 דולקות, 5 ו־6 כבויות.","{lfoint} עד הסוף ימינה.","{rate} לאט, עד שהחיתוכים יושבים על הקצב."],ids:["func","s4","s7","rate","lfoint"],set:H({lfoint:5}),from:"תו ארוך, או קו שמנגן",back:"{lfoint} עד הסוף שמאלה."},
@@ -344,7 +344,17 @@ const DEEP=[
   tr:["בוחרים צליל אחד משיר שאוהבים, ומקשיבים רק לו, עשר שניות.","עונים על ארבע השאלות בקול, לפני שנוגעים במכשיר.","מתחילים מ־🏠 הבית, ומסובבים רק את הכפתורים של התשובות, לפי הסדר."],
   hear:"לא יוצא אותו צליל, ולא צריך. יוצא צליל משלך, מאותה משפחה."}
 ];
+/* not yet tried on the device (see "checks" at the top of doors.js). When Raz answers: fix the card, and remove the line from here and from HANDOFF.md. */
+const CHECKS=[
+ {k:"332",q:"הקו 3־3־2 נשמע ״רוקד״, בקבוצות לא שוות, כמו שכתוב?",at:["rec","3־3־2"]},
+ {k:"hammer",q:"״פטיש טכנו״ נשמע כמו ארבע מכות ישרות עם קפיצה קטנה בסוף?",at:["rec","פטיש טכנו"]},
+ {k:"rt-old",q:"בהקלטה בזמן אמת, התווים הישנים נשארים ברצף?",at:["play","להקליט בזמן אמת"]},
+ {k:"load-now",q:"טעינת רצף בזמן נגינה מחליפה מיד (ולא מחכה לסוף הסיבוב)?",at:["play","שומרים, טוענים, מחליפים"]},
+ {k:"long-note",q:"16 פעמים אותו תו עם גלישות נשמע כמו תו אחד ארוך?",at:["rec","תו אחד ארוך"]},
+ {k:"load-steps",q:"טעינה מהזיכרון מחזירה גם את אורך הקו (הצעדים הפעילים)?",at:["learn","לשמור ולטעון"]},
+ {k:"low-vol",q:"כשמנמיכים מאוד את האוזניות, הבס הנקי נעלם לפני הבס עם ההרמוניות?",at:["deep","כוח בלי ווליום"]}];
 window.DOORS={
+ checks:CHECKS,
  key:"vbd",panel:E,names:NAMES,bands:[140,300,410],he:HE,
  home:{knobs:HOME,sw:{},title:"הבית: בס קצר של אסיד",
   lead:"הוולקה לא שומרת מיקומים של כפתורים. הבית הוא מצב קבוע לכפתורים ולנורות. הולכים לאיבוד? חוזרים לכאן.",
@@ -373,6 +383,6 @@ window.DOORS={
  play:M
 };
 </script>
-<script src="doors.js?v=13"></script>
+<script src="doors.js?v=14"></script>
 </body>
 </html>

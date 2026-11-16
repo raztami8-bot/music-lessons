@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>האדג׳ · להכיר, לשלוף, לשחק, להעמיק · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="doors.css?v=6">
+<link rel="stylesheet" href="doors.css?v=7">
 </head>
 <body>
 
@@ -209,7 +209,7 @@ const M=[
  {c:"cable",t:"שורה של אורכים",d:["מתג {seqpitch} על [OFF].","כבל: {j_pitchout} אל {j_vcadec}.","עכשיו [PITCH] של כל צעד קובע כמה הוא ארוך."],ids:["j_pitchout","j_vcadec","seqpitch"],from:"קצב שמנגן"},
  {c:"cable",t:"מתנד שמנענע את המסנן",d:["{reso} לשעה 12.","כבל: {j_osc2} אל {j_vcfmod}.","{noisevcf} לאט מאפס, ואז {osc2freq} לאט: נהמה."],ids:["j_osc2","j_vcfmod","noisevcf","osc2freq"],from:"קצב שמנגן"},
  {c:"cable",t:"מתכת שנעלמת בכל מכה",d:["{osc2lvl} לשעה 12, {fm} עד הסוף שמאלה.","כבל: {j_vcaeg} אל {j_fmin}."],ids:["j_vcaeg","j_fmin","fm","osc2lvl"],from:"קצב שמנגן"},
- {c:"cable",t:"קצב שמתנדנד",d:["כבל: {j_velout} אל {j_tempo}.","שחק בשורת [VEL]: כל שינוי משנה גם את המרווחים.","מה קורה? ספר לי."],ids:["j_velout","j_tempo"],from:"קצב שמנגן, {clock} על [INT/EXT]"},
+ {c:"cable",t:"קצב שמתנדנד",d:["כבל: {j_velout} אל {j_tempo}.","שחק בשורת [VEL]: כל שינוי משנה גם את המרווחים."],ids:["j_velout","j_tempo"],from:"קצב שמנגן, {clock} על [INT/EXT]"},
  {c:"cable",t:"קיק שנוהם",d:["כבל: {j_osc2} אל {j_osc1cv}.","{osc2freq} לאט: כל גובה נותן נהמה אחרת."],ids:["j_osc2","j_osc1cv","osc2freq"],from:"קצב שמנגן"},
  {c:"free",t:"צליל שלא שמעת אף פעם",d:["אין הוראות. סובב עד שיוצא משהו שמפתיע אותך.","מצאת? שמור אותו ב־🔎 לשלוף, בלשונית ⭐ שלי."],min:3},
  {c:"free",t:"שתי ידיים, שני כפתורים",d:["יד אחת על {cutoff}, יד שנייה על {vcadec}.","שתיהן זזות כל הזמן. דקה."],ids:["cutoff","vcadec"],from:"קצב שמנגן"},
@@ -378,7 +378,16 @@ const DEEP=[
   tr:["בוחרים צליל אחד משיר שאוהבים, ומקשיבים רק לו, עשר שניות.","עונים על ארבע השאלות בקול, לפני שנוגעים במכשיר.","מתחילים מ־🏠 הבית, ומסובבים רק את הכפתורים של התשובות, לפי הסדר."],
   hear:"לא יוצא אותו צליל, ולא צריך. יוצא צליל משלך, מאותה משפחה.",back:"יצא משהו טוב? שומרים: 🔎 לשלוף, ⭐ שלי."}
 ];
+/* not yet tried on the device (see "checks" at the top of doors.js). When Raz answers: fix the card, and remove the line from here and from HANDOFF.md. */
+const CHECKS=[
+ {k:"advance",q:"לחיצה על {advance} בזמן שהקצב רץ מקפיצה צעד אחד קדימה?",at:["play","מה ADVANCE עושה באמצע?"]},
+ {k:"vel-tempo",q:"עם הכבל אל {j_tempo}, המרווחים בין המכות משתנים לפי שורת VEL?",at:["play","קצב שמתנדנד"]},
+ {k:"tune-lock",q:"יש נקודה ב־{osc1freq} שבה הנמוכים של הקיק ״ננעלים״ עם הבס?",at:["deep","לכוון את הקיק לתו של הבס"]},
+ {k:"hit-vary",q:"מול קיק ממכשיר אחר, הנמוכים משתנים ממכה למכה?",at:["deep","שני קיקים זה על זה"]},
+ {k:"low-vol",q:"כשמנמיכים מאוד את האוזניות, הבס הנקי נעלם לפני הבס עם ההרמוניות?",at:["deep","כוח בלי ווליום"]},
+ {k:"mine-hours",q:"ב״⭐ שלי״, שעות שלמות מספיקות כדי לחזור לצליל ששמרת?"}];
 window.DOORS={
+ checks:CHECKS,
  key:"edge2",panel:E,bands:[150,272,392,520],he:HE,
  home:{knobs:HOME,sw:HOMESW,title:"הבית: קיק פשוט",
   lead:"האדג׳ לא שומר כלום. הבית הוא מיקום קבוע לכל כפתור. הולכים לאיבוד? חוזרים לכאן.",
@@ -411,6 +420,6 @@ window.DOORS={
    v[3]=618-v[1];const top=396;p[3]+=p[1]-top;p[1]=top}}
 };
 </script>
-<script src="doors.js?v=13"></script>
+<script src="doors.js?v=14"></script>
 </body>
 </html>

@@ -573,6 +573,13 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 .newver .t{{display:flex;flex-direction:column;gap:1px;min-width:0}}
 .newver small{{font-size:.85rem;font-weight:600}}
 .newver .go{{flex:none;font-weight:700;white-space:nowrap}}
+.ckbtn{{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:13px 16px;border-radius:16px;cursor:pointer;
+  border:1px dashed #b07800;background:#fff7dc;color:#1d2433;font:inherit;font-size:1rem;text-align:start}}
+.ckbtn[hidden]{{display:none}}
+.ckbtn small{{display:block;font-size:.85rem;font-weight:600;color:#6b5a1e}}
+.ckmsg{{margin:0;font-size:.9rem;font-weight:600;color:var(--muted)}}
+.ckmsg:empty{{display:none}}
+.cktxt{{width:100%;min-height:120px;font:inherit;font-size:.9rem;border-radius:12px;border:1px solid var(--line);padding:10px}}
 </style>
 </head>
 <body data-v="{STAMP}">
@@ -587,6 +594,8 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <a class="dbtn edge" href="edge.html" data-k="edge2"><span class="e" aria-hidden="true">💗</span><b>האדג׳</b><small>תופים מסינתזה</small></a>
 </nav>
 <a class="wkbtn" href="week.html" id="wkbtn"><span class="e" aria-hidden="true">📅</span><span class="t"><b>האימון השבועי</b><small id="wkbtn-t">כלי אחד, זוג, וסט מוקלט</small></span><span class="go" aria-hidden="true">←</span></a>
+<button class="ckbtn" id="ckbtn" type="button" hidden><span><b id="ckbtn-t"></b><small>מה שסימנת ב״🔍 לבדוק״. נוגעים, ומדביקים בשיחה עם קלוד.</small></span><span aria-hidden="true">📋</span></button>
+<p class="ckmsg" id="ckmsg" aria-live="polite"></p>
 <h2 class="tog">🔗 ביחד</h2>
 <nav class="more" aria-label="ביחד">
 <a class="together" href="pair.html">🧡💗 קרייב + אדג׳</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
@@ -620,6 +629,30 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 (function(){{
   var w=null; try{{ w=JSON.parse(localStorage.getItem("week1")); }}catch(e){{}}
   if(w&&w.n) document.getElementById("wkbtn-t").textContent="שבוע "+w.n+" · עשית "+(w.done?Object.keys(w.done).length:0)+" מתוך 3";
+}})();
+/* the answers Raz marked in the "🔍 לבדוק" boxes of the device pages (st.chk in doors.js), not yet copied: one button copies them all for Claude */
+(function(){{
+  var K={{t8d:"הטי־8",vbd:"הוולקה בס",crave2:"הקרייב",edge2:"האדג׳",pair1:"קרייב + אדג׳"}}, b=document.getElementById("ckbtn"), m=document.getElementById("ckmsg");
+  function collect(mark){{
+    var out=[], n=0;
+    Object.keys(K).forEach(function(k){{
+      var st=null, rows=[]; try{{ st=JSON.parse(localStorage.getItem(k)); }}catch(e){{}}
+      if(!st||!st.chk) return;
+      Object.keys(st.chk).forEach(function(c){{ var r=st.chk[c]; if(!(r.a||r.t)||r.s) return;
+        rows.push("- ["+k+":"+c+"] "+r.q+" "+(r.a==="y"?"כן":r.a==="n"?"לא":"")+(r.t?" | מה ראיתי: "+r.t:"")); if(mark) r.s=Date.now(); }});
+      if(rows.length){{ out.push(K[k]+":\\n"+rows.join("\\n")); n+=rows.length; if(mark) try{{ localStorage.setItem(k,JSON.stringify(st)); }}catch(e){{}} }}
+    }});
+    return {{n:n, t:out.length?"בדיקות מהאתר:\\n"+out.join("\\n"):""}};
+  }}
+  var c=collect(false); if(!c.n) return;
+  b.hidden=false; document.getElementById("ckbtn-t").textContent=c.n===1?"תשובה אחת מחכה לקלוד":c.n+" תשובות מחכות לקלוד";
+  b.onclick=function(){{
+    var c=collect(false); if(!c.n) return;
+    function ok(){{ collect(true); b.hidden=true; m.textContent="✓ הועתק. מדביקים בשיחה עם קלוד."; }}
+    function no(){{ m.textContent="ההעתקה לא עבדה כאן. מסמנים את הטקסט ומעתיקים:"; var ta=document.createElement("textarea"); ta.className="cktxt"; ta.readOnly=true; ta.value=c.t;
+      m.parentNode.insertBefore(ta,m.nextSibling); ta.focus(); ta.select(); }}
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(c.t).then(ok,no); else no();
+  }};
 }})();
 function openTo(){{
   var id=location.hash.slice(1), el=id&&document.getElementById(id), box=document.getElementById("allbox");

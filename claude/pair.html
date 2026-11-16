@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>הקרייב והאדג׳ יחד · להכיר, לשלוף, לשחק · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="doors.css?v=6">
+<link rel="stylesheet" href="doors.css?v=7">
 <style>:root{--magenta:#8b6ae0;--magenta-soft:#2a2340;--board:#9b7cf0;--chipline:#5a4a8a;--chipfg:#e6dcff}</style>
 </head>
 <body>
@@ -149,10 +149,10 @@ const M=[
  /* edge moves the crave */
  {c:"e2c",t:"הבס נפתח בכל מכה",d:["כבל: {e_j_vcaeg} אל {c_j_vcfcut}.","{c_cutoff} לשעה 9.","שחק ב־{e_vcadec}: מכה ארוכה פותחת את הבס לאורך זמן."],ids:["e_j_vcaeg","c_j_vcfcut","c_cutoff","e_vcadec"],set:H({c_cutoff:9}),from:"🏠 הבית, מסונכרנים"},
  {c:"e2c",t:"שורת PITCH מנגנת את המסנן",d:["{e_seqpitch} על [OFF].","כבל: {e_j_pitchout} אל {c_j_vcfcut}. {c_cutoff} לשעה 9.","כל כפתור PITCH של האדג׳ הוא עכשיו המסנן של הבס בצעד הזה. סובב כמה."],ids:["e_seqpitch","e_j_pitchout","c_j_vcfcut","e_p1","e_p2","e_p3","e_p4"],set:H({c_cutoff:9}),from:"🏠 הבית, מסונכרנים"},
- {c:"e2c",t:"VEL מזיז את השריקה",d:["כבל: {e_j_velout} אל {c_j_vcfres}.","{c_cutoff} לשעה 10.","סובב את כפתורי VEL של האדג׳: כל צעד נותן לבס שריקה אחרת.","מה שמעת? ספר לי."],ids:["e_j_velout","c_j_vcfres","e_v1","e_v2","e_v3","e_v4"],set:H({c_cutoff:10}),from:"🏠 הבית, מסונכרנים"},
- {c:"e2c",t:"האדג׳ מנגן את הבס",d:["{c_play}: הסיקוונסר של הקרייב עוצר. {e_seqpitch} על [OFF].","כבל: {e_j_pitchout} אל {c_j_osccv}.","כבל שני: {e_j_trigout} אל {c_j_envgate}. כבל הסנכרון יוצא.","עכשיו כל צעד של האדג׳ מנגן תו בקרייב. סובב את כפתורי PITCH: קו בס של 8 צעדים.","🔍 עובד? ספר לי."],ids:["e_j_pitchout","c_j_osccv","e_j_trigout","c_j_envgate","e_seqpitch"],from:"🏠 הבית",min:3},
+ {c:"e2c",t:"VEL מזיז את השריקה",d:["כבל: {e_j_velout} אל {c_j_vcfres}.","{c_cutoff} לשעה 10.","סובב את כפתורי VEL של האדג׳: כל צעד נותן לבס שריקה אחרת."],ids:["e_j_velout","c_j_vcfres","e_v1","e_v2","e_v3","e_v4"],set:H({c_cutoff:10}),from:"🏠 הבית, מסונכרנים"},
+ {c:"e2c",t:"האדג׳ מנגן את הבס",d:["{c_play}: הסיקוונסר של הקרייב עוצר. {e_seqpitch} על [OFF].","כבל: {e_j_pitchout} אל {c_j_osccv}.","כבל שני: {e_j_trigout} אל {c_j_envgate}. כבל הסנכרון יוצא.","עכשיו כל צעד של האדג׳ מנגן תו בקרייב. סובב את כפתורי PITCH: קו בס של 8 צעדים."],ids:["e_j_pitchout","c_j_osccv","e_j_trigout","c_j_envgate","e_seqpitch"],from:"🏠 הבית",min:3},
  {c:"e2c",t:"הבס עובר דרך התופים",d:["כבל: {c_j_saw} אל {e_j_ext}.","{e_noise} לאט למעלה, ו־{e_osc1lvl} עד הסוף שמאלה.","הבס של הקרייב נחתך בכל מכה של האדג׳. שחק ב־{e_vcadec} וב־{e_cutoff}."],ids:["c_j_saw","e_j_ext","e_noise","e_osc1lvl","e_vcadec","e_cutoff"],set:H({e_osc1lvl:7}),from:"🏠 הבית, מסונכרנים"},
- {c:"e2c",t:"ציוץ בכל מכה",d:["כבל: {e_j_vcfeg} אל {c_j_oscfm}.","{e_vcfdec} קצר: ציוץ קטן. ארוך: גלישה.","מה שמעת? ספר לי."],ids:["e_j_vcfeg","c_j_oscfm","e_vcfdec"],from:"🏠 הבית, מסונכרנים"},
+ {c:"e2c",t:"ציוץ בכל מכה",d:["כבל: {e_j_vcfeg} אל {c_j_oscfm}.","{e_vcfdec} קצר: ציוץ קטן. ארוך: גלישה."],ids:["e_j_vcfeg","c_j_oscfm","e_vcfdec"],from:"🏠 הבית, מסונכרנים"},
  /* crave moves the edge */
  {c:"c2e",t:"התופים שרים עם הבס",d:["{e_seqpitch} על [OFF], {e_osc2lvl} לשעה 12.","כבל: {c_j_kbcv} אל {e_j_osc2cv}.","הצלצול של האדג׳ עולה ויורד עם התווים של הקרייב."],ids:["c_j_kbcv","e_j_osc2cv","e_osc2lvl","e_seqpitch"],set:H({e_osc2lvl:12}),from:"🏠 הבית, מסונכרנים"},
  {c:"c2e",t:"התופים מכים בקצב של הבס",d:["{e_play}: הסיקוונסר של האדג׳ עוצר.","כבל: {c_j_gate} אל {e_j_trigin}.","האדג׳ מכה בכל תו של הקרייב, ושותק בשקטים שלו. מכה אחרת? {e_advance} לצעד אחר."],ids:["c_j_gate","e_j_trigin","e_play","e_advance"],from:"הקרייב מנגן רצף"},
@@ -172,7 +172,14 @@ const M=[
  {c:"live",t:"כבל חדש באמצע",d:["פותחים את לשונית לשלוף ← מתכונים.","בוחרים מתכון שלא ניסית, ומחברים אותו בזמן שהכל מנגן.","בלי לעצור. אם נשמע רע, מוציאים."],from:"מסונכרנים ומנגנים",min:2}
 ];
 
+/* not yet tried on the device (see "checks" at the top of doors.js). When Raz answers: fix the card, and remove the line from here and from HANDOFF.md. */
+const CHECKS=[
+ {k:"step1",q:"בסנכרון בכבל, צעד 1 של האדג׳ נופל יחד עם צעד 1 של הקרייב?",at:["play","מנצח אחד"]},
+ {k:"edge-bass",q:"כל צעד של האדג׳ מנגן תו בקרייב, וכפתורי PITCH משנים את התווים?",at:["play","האדג׳ מנגן את הבס"]},
+ {k:"vel-whistle",q:"כל צעד נותן לבס שריקה אחרת, לפי כפתור ה־VEL שלו?",at:["play","VEL מזיז את השריקה"]},
+ {k:"chirp",q:"שומעים ציוץ קטן בתחילת כל מכה?",at:["play","ציוץ בכל מכה"]}];
 window.DOORS={
+ checks:CHECKS,
  key:"pair1",panel:P,bands:[150,335,455,670,OFF+150,OFF+272,OFF+392,OFF+520],he:HE,
  home:{knobs:HOME,sw:HOMESW,title:"הבית: שניהם בבית, ומסונכרנים",
   lead:"כל אחד בבית שלו, כמו בדף שלו, ועוד כבל אחד ביניהם. הולכים לאיבוד? מוציאים את כל הכבלים חוץ מהזה, וחוזרים לכאן.",
@@ -205,6 +212,6 @@ window.DOORS={
    Object.keys(BOX).forEach(k=>{if(k.indexOf("e_")===0)BOX[k][1]+=OFF})}
 };
 </script>
-<script src="doors.js?v=13"></script>
+<script src="doors.js?v=14"></script>
 </body>
 </html>

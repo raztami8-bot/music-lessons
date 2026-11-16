@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>הקרייב · להכיר, לשלוף, לשחק, להעמיק · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="doors.css?v=6">
+<link rel="stylesheet" href="doors.css?v=7">
 <style>:root{--magenta:#e07a12;--magenta-soft:#3a2914;--board:#ef8a1f;--chipline:#7a5426;--chipfg:#ffe3c4}</style>
 </head>
 <body>
@@ -226,15 +226,15 @@ const M=[
  {c:"live",t:"גלגול על כל הקו",d:["מחזיקים {shift} ומסובבים {glide}: חזרות מהירות על כל הצעדים.","תיבה אחת, וחזרה."],ids:["shift","glide"],from:LINE},
  {c:"live",t:"להתחיל מחדש",d:["{resetacc}: הקו קופץ לצעד 1.","לחץ באמצע הקו, שוב ושוב, בקצב משלך."],ids:["resetacc"],from:LINE},
  {c:"live",t:"רוח לפני הדרופ",d:["{play}: עוצרים. {vcamode} על [ON], {mix} עד הסוף ימינה, {cutoff} סגור.","פותחים את {cutoff} לאט, ארבע תיבות.","על הדרופ: {vcamode} על [ENV], {mix} שמאלה, ו־{play}."],ids:["vcamode","mix","cutoff","play"],set:H({mix:5,cutoff:8}),from:LINE,min:2},
- {c:"live",t:"ארפג׳יו",d:["{arp}, ומחזיקים שלושה קלידים: 1, 3, 5.","{holdrest}: ממשיך גם אחרי שעוזבים.","איך יוצאים מזה? נסה {arp} שוב, וספר לי."],ids:["arp","holdrest","s1","s3","s5"],from:"הסיקוונסר עצור"},
- {c:"live",t:"מה קליד עושה באמצע?",d:["בזמן שהקו רץ: לחץ על קליד אחר.","הקו עבר לגובה אחר? ספר לי מה קרה."],ids:KEYS,from:LINE},
+ {c:"live",t:"ארפג׳יו",d:["{arp}, ומחזיקים שלושה קלידים: 1, 3, 5.","{holdrest}: ממשיך גם אחרי שעוזבים.","יציאה: נסה {arp} שוב."],ids:["arp","holdrest","s1","s3","s5"],from:"הסיקוונסר עצור"},
+ {c:"live",t:"מה קליד עושה באמצע?",d:["בזמן שהקו רץ: לחץ על קליד אחר.","הקו עבר לגובה אחר?"],ids:KEYS,from:LINE},
  {c:"live",t:"ג׳אם של חמש דקות",d:["1 ו־2: רק {cutoff}, בין שעה 8 לשעה 12.","3: רק {decay}.","4: {reso} עולה, והכל מודגש.","5: הקו מתקצר ל־4, וחוזר ל־8."],ids:["cutoff","decay","reso"],set:ACID,from:LINE,min:5},
  {c:"cable",t:"שתי ידיים על המסנן",d:["כבל: {j_lfotri} אל {j_vcfcut}.","{lforate} לשעה 9: נשימה ארוכה.","כל תו עדיין ״מדבר״, וכל הקו נפתח ונסגר לאט."],ids:["j_lfotri","j_vcfcut","lforate"],from:"קו שמנגן, עם הצליל של האסיד"},
  {c:"cable",t:"המסנן עוקב אחרי התווים",d:["כבל: {j_kbcv} אל {j_vcfcut}.","הגבוהים בהירים, הנמוכים עמומים. בהיר מדי? {cutoff} למטה."],ids:["j_kbcv","j_vcfcut"],from:LINE},
  {c:"cable",t:"לכלוך",d:["כבל: {j_noise} אל {j_vcfcut}.","{reso} לשעה 1. מחוספס, כמו רמקול קרוע."],ids:["j_noise","j_vcfcut","reso"],from:LINE},
  {c:"cable",t:"צפצוף בכל תו",d:["{reso} לשעה 9.","כבל: {j_env} אל {j_vcfres}.","{decay} בין שעה 9 ל־12."],ids:["j_env","j_vcfres","decay"],from:LINE},
  {c:"cable",t:"מקור אחד, שני יעדים",d:["כבל: {j_lfotri} אל {j_multin}.","כבל: {j_mult1} אל {j_vcfcut}.","כבל: {j_mult2} אל {j_vcfres}. המסנן נפתח ושורק יחד."],ids:["j_lfotri","j_multin","j_mult1","j_mult2","j_vcfcut","j_vcfres"],from:LINE,min:3},
- {c:"cable",t:"הקו נתקע לבד",d:["כבל: {j_lfosqu} אל {j_hold}.","{lforate}: לאט זה תקיעות ארוכות, מהר זה גמגום.","זה עבד? ספר לי. שולפים את הכבל, והקו נקי."],ids:["j_lfosqu","j_hold","lforate"],from:LINE},
+ {c:"cable",t:"הקו נתקע לבד",d:["כבל: {j_lfosqu} אל {j_hold}.","{lforate}: לאט זה תקיעות ארוכות, מהר זה גמגום.","שולפים את הכבל, והקו נקי."],ids:["j_lfosqu","j_hold","lforate"],from:LINE},
  {c:"free",t:"צליל שלא שמעת אף פעם",d:["אין הוראות. סובב עד שיוצא משהו שמפתיע אותך.","מצאת? צלם את הלוח."],min:3},
  {c:"free",t:"שתי ידיים, שני כפתורים",d:["יד אחת על {cutoff}, יד שנייה על {decay}.","שתיהן זזות כל הזמן. דקה."],ids:["cutoff","decay"],from:LINE},
  {c:"free",t:"עיניים עצומות",d:["בחר כפתור אחד בלי להסתכל, וסובב.","נחש לפי האוזן איזה כפתור זה. ואז תבדוק."],from:LINE},
@@ -393,7 +393,18 @@ const DEEP=[
   tr:["בוחרים צליל אחד משיר שאוהבים, ומקשיבים רק לו, עשר שניות.","עונים על ארבע השאלות בקול, לפני שנוגעים במכשיר.","מתחילים מ־🏠 הבית, ומסובבים רק את הכפתורים של התשובות, לפי הסדר."],
   hear:"לא יוצא אותו צליל, ולא צריך. יוצא צליל משלך, מאותה משפחה."}
 ];
+/* not yet tried on the device (see "checks" at the top of doors.js). When Raz answers: fix the card, and remove the line from here and from HANDOFF.md. */
+const CHECKS=[
+ {k:"arp-exit",q:"לחיצה שנייה על {arp} יוצאת מהארפג׳יו?",at:["play","ארפג׳יו"]},
+ {k:"key-mid",q:"קליד בזמן שהקו רץ מעביר את כל הקו לגובה אחר?",at:["play","מה קליד עושה באמצע?"]},
+ {k:"seq-now",q:"טעינת רצף בזמן נגינה מחליפה מיד (ולא מחכה לסוף הסיבוב)?",at:["combo","לטעון רצף"]},
+ {k:"mute-off",q:"אותו צירוף שמשתיק את הקו גם מחזיר אותו?",at:["combo","להשתיק את הקו"]},
+ {k:"acc-off",q:"אותו צירוף שמדגיש הכל גם מבטל את זה?",at:["play","הכל מודגש"]},
+ {k:"hold-freeze",q:"הכבל אל {j_hold} באמת תוקע את הקו לפי הקצב של {lforate}?",at:["play","הקו נתקע לבד"]},
+ {k:"swing-saved",q:"הסווינג נשמר יחד עם הרצף, וחוזר כשטוענים אותו?",at:["combo","סווינג"]},
+ {k:"low-vol",q:"כשמנמיכים מאוד את האוזניות, הבס הנקי נעלם לפני הבס עם ההרמוניות?",at:["deep","כוח בלי ווליום"]}];
 window.DOORS={
+ checks:CHECKS,
  key:"crave2",panel:E,bands:[150,335,455],he:HE,
  home:{knobs:HOME,sw:HOMESW,title:"הבית: צליל קצר ומזמזם",
   lead:"הקרייב לא שומר מיקומים של כפתורים. הבית הוא מיקום קבוע לכל כפתור ומתג. הולכים לאיבוד? חוזרים לכאן.",
@@ -426,6 +437,6 @@ window.DOORS={
  play:M
 };
 </script>
-<script src="doors.js?v=13"></script>
+<script src="doors.js?v=14"></script>
 </body>
 </html>

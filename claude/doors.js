@@ -17,6 +17,11 @@
        with a row of jump buttons that stays on top (the whole board as one tab: jacks, rows, sequencer)
      a find tab may give mine:true (and a hint) instead: "my sounds", for a device with no memory. A sound is a name, and only what differs
        from the home: knob hours, switch positions, cables, a note. Touch a control on the board and choose. Saved under st.mine (a draft under st.draft).
+   checks   optional: [{k, q, at:[door, title]}]: things written from the manual and not yet tried on the device. q is a yes/no question.
+       Each shows as a small box in its card (door = "learn" | "play" | "deep" | the id of a find tab with rows; title = the card's t, or the row's title),
+       with three buttons: yes, no, what I saw. All of them are also listed in a find tab that the engine adds, "🔍 לבדוק", with a button that
+       copies the answers as text for Claude. Saved under st.chk[k] = {a:"y"|"n", t:note, q, d, s:when it was copied}. The home page copies the same answers
+       from all the devices (hub() in build.py reads st.chk). When Raz reports, fix the card and remove the check from the page.
    archive  optional: {label, title, hint, links:[[href,title,note]]}: a quiet button at the end of every find tab (pages with three doors)
    The learn door has a "☰ all the cards" button (a list in a sheet); the deep door opens on a menu of all its topics by subject (sec),
        and each card has "☰ all the topics" to come back. Prev/next stay as a shortcut only. (Raz, 2026-11-13: "not like a computer game where I press next".)
@@ -139,6 +144,7 @@ function drawLearn(){
   if(c.hear)el.insertAdjacentHTML("beforeend",`<div class="box hear"><strong class="h">${c.hearT||"👂 שומעים"}</strong>${tx(c.hear)}</div>`);
   if(c.btn){const b=document.createElement("button");b.className="big";b.textContent=c.btn[0];b.onclick=act[c.btn[1]];el.appendChild(b)}
   if(c.back)el.insertAdjacentHTML("beforeend",`<p class="back">${tx(c.back)}</p>`);
+  addChk(el,"learn",c.t);
   $("#prev").disabled=li===0;$("#next").disabled=li===L.length-1;
   $("#learnScroll").scrollTop=0;st.learn=li;save();
 }
@@ -151,6 +157,7 @@ $("#prev").onclick=()=>step(-1);$("#next").onclick=()=>step(1);
 
 /* ---------- 2. find ---------- */
 const F=D.find;
+if(D.checks&&D.checks.length)F.push({id:"chk",tab:"🔍 לבדוק",chk:true});
 let fi=Math.max(0,F.findIndex(f=>f.id===st.find));
 F.forEach((f,i)=>{const b=document.createElement("button");b.className="chip";b.textContent=f.tab;b.onclick=()=>{fi=i;drawFind()};$("#chips").appendChild(b)});
 const qa=(t,a)=>`<div class="row"><div class="he">${t}</div><p>${tx(a)}</p></div>`;
@@ -178,9 +185,10 @@ function drawFind(q){
       bt.onclick=()=>{st.deep=ci;deepMenu=false;go("deep")};el.appendChild(bt)}});
     ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
     return}
+  if(f.chk){drawChk(el);return}
   if(f.mine){drawMine(f,el);return}
   if(f.deep){drawDeep(f,el);return}
-  if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));archBtn(el);$("#findScroll").scrollTop=0;return}
+  if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`);f.rows.forEach(r=>{el.insertAdjacentHTML("beforeend",qa(r[0],r[1]));addChk(el,f.id,r[0])});archBtn(el);$("#findScroll").scrollTop=0;return}
   if(f.links){el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);$("#findScroll").scrollTop=0;return}
   if(f.bands){
     const jump=document.createElement("div");jump.className="jump";el.appendChild(jump);const rows={};
@@ -211,6 +219,48 @@ function drawBand(f,el,rows){
     if(r){r.classList.add("pick");r.scrollIntoView({block:"center",behavior:"smooth"})}else openCtl(id)});
 }
 
+
+/* ---------- checks: written from the manual, not yet tried on the device. Raz answers on the card; one button copies the answers for Claude ---------- */
+const CK=D.checks||[],CKAT={};
+CK.forEach(c=>{if(c.at){const k=c.at[0]+"|"+c.at[1];(CKAT[k]=CKAT[k]||[]).push(c)}});
+st.chk=st.chk||{};
+const ckHas=k=>{const r=st.chk[k];return !!(r&&(r.a||r.t))};
+function ckChip(){const i=F.findIndex(f=>f.chk),b=i>=0&&$("#chips").children[i],n=CK.filter(c=>!ckHas(c.k)).length;if(b)b.textContent="🔍 לבדוק"+(n?" · "+n:" ✓")}
+function ckBox(c,link){
+  const d=document.createElement("div");let note=false;
+  const set=o=>{const r=st.chk[c.k]=Object.assign(st.chk[c.k]||{},o);if(!r.a)delete r.a;if(!r.t)delete r.t;r.q=plain(c.q);r.d=Date.now();delete r.s;save();ckChip()};
+  const head=()=>{d.className="chk"+(ckHas(c.k)?" done":"");d.querySelector(".h").textContent=ckHas(c.k)?"✓ נרשם. אפשר לשנות":"🔍 עוד לא נבדק על המכשיר"};
+  const draw=()=>{const r=st.chk[c.k]||{};
+    d.innerHTML=`<strong class="h"></strong><p>${tx(c.q)}</p><div class="chkrow"><button data-a="y" class="${r.a==="y"?"on":""}">✓ כן</button><button data-a="n" class="${r.a==="n"?"on":""}">✗ לא</button><button data-a="t" class="${r.t?"on":""}">✏️ מה ראיתי</button></div>`;
+    if(note||r.t){const ta=document.createElement("textarea");ta.className="search ta";ta.placeholder="מה קרה בפועל, במילים שלך";ta.maxLength=300;ta.value=r.t||"";
+      ta.oninput=()=>{set({t:ta.value});head();d.querySelector('[data-a="t"]').classList.toggle("on",!!ta.value)};d.appendChild(ta)}
+    if(link&&c.at){const b=document.createElement("button");b.className="arch";b.textContent="לכרטיס ←";b.onclick=()=>ckJump(c.at);d.appendChild(b)}
+    head()};
+  d.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a;
+    if(a==="t"){note=true;draw();d.querySelector("textarea").focus();return}
+    set({a:(st.chk[c.k]||{}).a===a?"":a});draw()});
+  draw();return d}
+const addChk=(el,door,title)=>(CKAT[door+"|"+title]||[]).forEach(c=>el.appendChild(ckBox(c)));
+function ckJump(at){const door=at[0],t=at[1];
+  if(door==="learn"){const i=L.findIndex(x=>x.t===t);if(i>=0){li=i;go("learn")}}
+  else if(door==="play"){const i=M.findIndex(x=>x.t===t);if(i>=0){mi=i;cat="all";st.cat=cat;go("play")}}
+  else if(door==="deep"){const i=D.deep.cards.findIndex(x=>x.t===t);if(i>=0){st.deep=i;deepMenu=false;go("deep")}}
+  else{const i=F.findIndex(f=>f.id===door);if(i<0)return;fi=i;drawFind();
+    const r=[...document.querySelectorAll("#find .row .he")].find(x=>x.textContent===t);if(r)r.scrollIntoView({block:"center"})}}
+function ckText(){const rows=CK.filter(c=>ckHas(c.k));if(!rows.length)return "";
+  return "בדיקות מהאתר, "+document.querySelector(".bar h1").textContent+":\n"+rows.map(c=>{const r=st.chk[c.k];
+    return `- [${D.key}:${c.k}] ${plain(c.q)} ${r.a==="y"?"כן":r.a==="n"?"לא":""}${r.t?" | מה ראיתי: "+r.t:""}`}).join("\n")}
+function drawChk(el){
+  const q0=el.querySelector(".search");if(q0)q0.remove();
+  el.insertAdjacentHTML("beforeend",`<p class="hint">דברים שנכתבו לפי המדריך ועוד לא נבדקו על המכשיר. עונים כשיוצא, בלי סדר. כל שאלה מופיעה גם בכרטיס שלה.</p>`);
+  CK.forEach(c=>el.appendChild(ckBox(c,true)));
+  const b=document.createElement("button");b.className="big";b.textContent="📋 להעתיק את התשובות לקלוד";
+  const msg=document.createElement("p");msg.className="hint";msg.style.margin="0";
+  b.onclick=()=>{const t=ckText();if(!t){msg.textContent="עוד אין תשובות להעתיק.";return}
+    const ok=()=>{CK.forEach(c=>{if(ckHas(c.k))st.chk[c.k].s=Date.now()});save();msg.textContent="✓ הועתק. מדביקים בשיחה עם קלוד."};
+    const no=()=>{msg.textContent="ההעתקה לא עבדה כאן. מסמנים את הטקסט ומעתיקים:";const ta=document.createElement("textarea");ta.className="search ta";ta.value=t;ta.readOnly=true;el.appendChild(ta);ta.focus();ta.select()};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,no);else no()};
+  el.appendChild(b);el.appendChild(msg);$("#findScroll").scrollTop=0}
 
 /* ---------- my sounds (a find tab with mine:true): what differs from the home, by touching the board ---------- */
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -330,6 +380,7 @@ function drawDeep(f,el,again,scr){
   if(c.rows)el.insertAdjacentHTML("beforeend",c.rows.map(r=>qa(r[0],r[1])).join(""));
   if(c.tr)el.insertAdjacentHTML("beforeend",`<div class="box"><strong class="h">👆 נסה</strong><ol>${c.tr.map(x=>`<li>${tx(x)}</li>`).join("")}</ol></div>`);
   if(c.hear)el.insertAdjacentHTML("beforeend",`<div class="box hear"><strong class="h">👂 שומעים</strong>${tx(c.hear)}</div>`);
+  addChk(el,"deep",c.t);
   if(c.back)el.insertAdjacentHTML("beforeend",`<p class="back">${tx(c.back)}</p>`);
   if(k===C.length-1&&f.links)el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);
   const nv=document.createElement("div");nv.className="navrow";nv.style.padding="4px 0 8px";
@@ -376,6 +427,7 @@ function drawPlay(keep){
   el.insertAdjacentHTML("beforeend",`<span class="tag">${CN[m.c]}</span><h2>${m.t}</h2><p class="from">מתחילים מ: ${tx(m.from||"🏠 הבית")}</p>`);
   /* the steps come before the picture: on a phone the picture used to push them below the screen (measured 2026-11-16) */
   el.insertAdjacentHTML("beforeend",`<div class="box"><ol>${m.d.map(x=>`<li>${tx(x)}</li>`).join("")}</ol></div>`);
+  addChk(el,"play",m.t);
   if(m.ids)el.appendChild(crops(m.ids,m.set));
   if(m.back)el.insertAdjacentHTML("beforeend",`<p class="back">חזרה: ${tx(m.back)}</p>`);
   const p=pool(),n=p.filter(i=>st.done[i]).length;
@@ -395,6 +447,7 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset
 /* #play-<cat> opens the missions on one group (week.html links here) */
 const hashCat=()=>{const m=/^#play-(\w+)$/.exec(location.hash);if(!m||!D.cats.some(c=>c[0]===m[1]))return false;cat=m[1];st.cat=cat;bag=[];return true};
 go(hashCat()?"play":/^#(learn|find|play|deep)$/.test(location.hash)?location.hash.slice(1):(st.tab||"learn"));
+ckChip();
 window.addEventListener("hashchange",()=>{if(hashCat())go("play");else if(/^#(learn|find|play|deep)$/.test(location.hash))go(location.hash.slice(1))});
 /* ---------- the screen stays on while the page is open (both hands are on the instrument) ---------- */
 (()=>{if(!("wakeLock" in navigator))return;let lock=null,busy=false;
