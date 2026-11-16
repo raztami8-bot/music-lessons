@@ -535,7 +535,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 .dbtn{{--dev:var(--t8);display:flex;flex-direction:column;gap:2px;min-height:132px;padding:16px;border-radius:24px;text-decoration:none;color:#fff;
   background:linear-gradient(145deg,var(--dev),color-mix(in srgb,var(--dev) 68%,#000));box-shadow:0 6px 0 color-mix(in srgb,var(--dev) 55%,#000);transition:transform .08s}}
 .dbtn:active{{transform:translateY(3px)}}
-.dbtn.volca{{--dev:#12907f}}.dbtn.crave{{--dev:#d97706}}.dbtn.edge{{--dev:#b5179e}}.dbtn.t8{{--dev:#d9482b}}
+.dbtn.volca{{--dev:#12907f}}.dbtn.crave{{--dev:#d97706}}.dbtn.edge{{--dev:#b5179e}}.dbtn.t8{{--dev:#d9482b}}.dbtn.impact{{--dev:#4a5fd6;grid-column:1/-1;min-height:96px}}
 .dbtn .e{{font-size:2rem;line-height:1.2}}
 .dbtn b{{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.2}}
 .dbtn small{{opacity:.9;font-weight:600;font-size:.88rem;line-height:1.35}}
@@ -592,6 +592,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <a class="dbtn volca" href="vb.html" data-k="vbd"><span class="e" aria-hidden="true">🎛️</span><b>הוולקה בס</b><small>בס של שלושה מתנדים</small></a>
 <a class="dbtn crave" href="crave.html" data-k="crave2"><span class="e" aria-hidden="true">🧡</span><b>הקרייב</b><small>קול אחד שמנגן קווים</small></a>
 <a class="dbtn edge" href="edge.html" data-k="edge2"><span class="e" aria-hidden="true">💗</span><b>האדג׳</b><small>תופים מסינתזה</small></a>
+<a class="dbtn impact" href="impact.html" data-k="impact1"><span class="e" aria-hidden="true">💥</span><b>האימפקט</b><small>עשרה תופים אנלוגיים · לפני שהגיע</small></a>
 </nav>
 <a class="wkbtn" href="week.html" id="wkbtn"><span class="e" aria-hidden="true">📅</span><span class="t"><b>האימון השבועי</b><small id="wkbtn-t">כלי אחד, זוג, וסט מוקלט</small></span><span class="go" aria-hidden="true">←</span></a>
 <button class="ckbtn" id="ckbtn" type="button" hidden><span><b id="ckbtn-t"></b><small>מה שסימנת ב״🔍 לבדוק״. נוגעים, ומדביקים בשיחה עם קלוד.</small></span><span aria-hidden="true">📋</span></button>
@@ -632,7 +633,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 }})();
 /* the answers Raz marked in the "🔍 לבדוק" boxes of the device pages (st.chk in doors.js), not yet copied: one button copies them all for Claude */
 (function(){{
-  var K={{t8d:"הטי־8",vbd:"הוולקה בס",crave2:"הקרייב",edge2:"האדג׳",pair1:"קרייב + אדג׳"}}, b=document.getElementById("ckbtn"), m=document.getElementById("ckmsg");
+  var K={{t8d:"הטי־8",vbd:"הוולקה בס",crave2:"הקרייב",edge2:"האדג׳",impact1:"האימפקט",pair1:"קרייב + אדג׳"}}, b=document.getElementById("ckbtn"), m=document.getElementById("ckmsg");
   function collect(mark){{
     var out=[], n=0;
     Object.keys(K).forEach(function(k){{
@@ -1134,6 +1135,8 @@ if __name__ == "__main__":
     import cravemap, edgemap
     cravemap.build()
     edgemap.build()
+    import impactmap  # the DrumBrute Impact: tour data only (impact-data.js), for impact.html
+    impactmap.build()
     PHOTOS.extend(cravemap.P.photos(CRCAP))
     PHOTOS.extend(edgemap.P.photos(EDCAP))
 
