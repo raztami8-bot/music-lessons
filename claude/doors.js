@@ -15,6 +15,8 @@
        with prev/next and a list of topics; its links (if any) come on the last card
      a find tab may give bands:[{t, y:[y0,y1], x, ids, intro}] instead: several parts of the board one under the other in one tab,
        with a row of jump buttons that stays on top (the whole board as one tab: jacks, rows, sequencer)
+     a find tab may give mine:true (and a hint) instead: "my sounds", for a device with no memory. A sound is a name, and only what differs
+       from the home: knob hours, switch positions, cables, a note. Touch a control on the board and choose. Saved under st.mine (a draft under st.draft).
    archive  optional: {label, title, hint, links:[[href,title,note]]}: a quiet button at the end of every find tab (pages with three doors)
    The learn door has a "☰ all the cards" button (a list in a sheet); the deep door opens on a menu of all its topics by subject (sec),
        and each card has "☰ all the topics" to come back. Prev/next stay as a shortcut only. (Raz, 2026-11-13: "not like a computer game where I press next".)
@@ -167,11 +169,15 @@ function drawFind(q){
     F.forEach((x,xi)=>{if(x.deep)x.deep.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
       const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>${x.tab}</p>`;
       bt.onclick=()=>{st.deep=ci;fi=xi;drawFind()};el.appendChild(bt)}})});
+    F.forEach((x,xi)=>{if(x.mine)(st.mine||[]).forEach((pt,pi)=>{if(hit(pt.n)||hit(pt.t||"")){
+      const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">⭐ ${esc(pt.n)}</div><p>${x.tab}</p>`;
+      bt.onclick=()=>{mineView=pi;ed=null;fi=xi;drawFind()};el.appendChild(bt)}})});
     if(D.deep)D.deep.cards.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
       const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>להעמיק</p>`;
       bt.onclick=()=>{st.deep=ci;deepMenu=false;go("deep")};el.appendChild(bt)}});
     ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
     return}
+  if(f.mine){drawMine(f,el);return}
   if(f.deep){drawDeep(f,el);return}
   if(f.rows){el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`+f.rows.map(r=>qa(r[0],r[1])).join(""));archBtn(el);$("#findScroll").scrollTop=0;return}
   if(f.links){el.insertAdjacentHTML("beforeend",`<p class="hint">${f.hint||""}</p><div class="links">${f.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`);$("#findScroll").scrollTop=0;return}
@@ -204,6 +210,110 @@ function drawBand(f,el,rows){
     if(r){r.classList.add("pick");r.scrollIntoView({block:"center",behavior:"smooth"})}else openCtl(id)});
 }
 
+
+/* ---------- my sounds (a find tab with mine:true): what differs from the home, by touching the board ---------- */
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const isKnob=id=>!!BASE.querySelector(`.ctl[data-id="${id}"] .ptr`);
+const isJack=id=>he(id)[1]==="שקע", isOut=id=>(E.info[id]||"").indexOf("יציאה")===0;
+const HRS=[7,8,9,10,11,12,1,2,3,4,5];
+let mineView=null,ed=st.draft||null;
+const pk=p=>Object.assign({},HOME,p.k);
+const pIds=p=>Object.keys(E.names).filter(i=>p.k[i]!==undefined||p.s[i]!==undefined||p.c.some(c=>c[0]===i||c[1]===i));
+const sum=p=>{const n=Object.keys(p.k).length+Object.keys(p.s).length,c=p.c.length;
+  return (n===1?"שינוי אחד":n+" שינויים")+(c?" · "+(c===1?"כבל אחד":c+" כבלים"):"")};
+/* the lines of a sound, in the order of the board. name(id) draws the control's name */
+function pLines(p,name){const a=[];
+  Object.keys(E.names).forEach(i=>{if(p.k[i]!==undefined)a.push([i,`${name(i)} <b class="hr">${hour(p.k[i])}</b>`]);
+    if(p.s[i]!==undefined)a.push([i,`מתג ${name(i)} על <span class="en">${esc(p.s[i])}</span>`])});
+  p.c.forEach((c,n)=>a.push(["c"+n,`🔌 כבל מ־${name(c[0])} אל ${name(c[1])}`]));return a}
+function drawMine(f,el){
+  const P=st.mine=st.mine||[],sc=$("#findScroll");
+  if(ed){drawEdit(f,el);return}
+  if(mineView!==null&&P[mineView]){const p=P[mineView];
+    const mb=document.createElement("button");mb.className="menubtn";mb.textContent="☰ כל הצלילים שלי";mb.onclick=()=>{mineView=null;drawFind()};el.appendChild(mb);
+    el.insertAdjacentHTML("beforeend",`<h2>${esc(p.n)}</h2><p class="from">מתחילים מ: 🏠 הבית, ומשנים רק את זה:</p>`);
+    const L2=pLines(p,nm);
+    el.insertAdjacentHTML("beforeend",L2.length?`<div class="box"><ol>${L2.map(x=>`<li>${x[1]}</li>`).join("")}</ol></div>`:`<p class="hint">בדיוק כמו הבית.</p>`);
+    if(p.t)el.insertAdjacentHTML("beforeend",`<div class="box hear"><strong class="h">📝 ההערה שלך</strong>${esc(p.t)}</div>`);
+    const ids=pIds(p);if(ids.length)el.appendChild(crops(ids,pk(p)));
+    const r=document.createElement("div");r.className="btnrow";r.innerHTML=`<button class="soft">✏️ לערוך</button><button class="soft del">🗑 למחוק</button>`;
+    r.children[0].onclick=()=>{ed=JSON.parse(JSON.stringify(p));ed.i=mineView;st.draft=ed;save();drawFind()};
+    r.children[1].onclick=e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent="בטוח? עוד נגיעה מוחקת";return}
+      P.splice(mineView,1);mineView=null;save();drawFind()};
+    el.appendChild(r);sc.scrollTop=0;return}
+  mineView=null;
+  el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.hint||"")}</p>`);
+  const nb=document.createElement("button");nb.className="big";nb.textContent="＋ צליל חדש";
+  nb.onclick=()=>{ed={i:-1,n:"",k:{},s:{},c:[],t:""};st.draft=ed;save();drawFind()};el.appendChild(nb);
+  if(!P.length)el.insertAdjacentHTML("beforeend",`<p class="lead">עוד אין כאן צלילים. מצאת משהו טוב? שומרים אותו כאן, לפני שמסובבים הלאה.</p>`);
+  P.forEach((p,i)=>{const b=document.createElement("button");b.className="row pickrow";b.innerHTML=`<span>⭐ ${esc(p.n)}</span><span class="n">${sum(p)}</span>`;
+    b.onclick=()=>{mineView=i;drawFind()};el.appendChild(b)});
+  archBtn(el);sc.scrollTop=0;
+}
+function drawEdit(f,el){
+  const P=st.mine,keep=()=>{st.draft=ed;save()};
+  const q0=el.querySelector(".search");if(q0)q0.remove(); /* no search box while editing: the first field is the name */
+  el.insertAdjacentHTML("beforeend",`<h2>${ed.i<0?"צליל חדש":"עריכה"}</h2>`);
+  const nmI=document.createElement("input");nmI.className="search";nmI.placeholder="שם לצליל, למשל: קיק עגול";nmI.value=ed.n;nmI.maxLength=40;
+  nmI.oninput=()=>{ed.n=nmI.value;keep()};el.appendChild(nmI);
+  el.insertAdjacentHTML("beforeend",`<p class="hint">נוגעים בציור בכפתור, במתג או בשקע, ובוחרים. מסמנים רק מה ששונה מ־🏠 הבית.</p>`);
+  const jump=document.createElement("div");jump.className="jump";el.appendChild(jump);
+  const B=(F.find(x=>x.bands)||{bands:[{t:"הלוח",y:[0,HH]}]}).bands,svgs=[];
+  B.forEach(b=>{const h3=document.createElement("h3");h3.textContent=b.t;el.appendChild(h3);
+    const j=document.createElement("button");j.textContent=b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h3.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
+    const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=b.y[1]-b.y[0],x0=b.x?b.x[0]:0,w=b.x?b.x[1]-b.x[0]:W;
+    sv.setAttribute("viewBox",`${x0} ${b.y[0]} ${w} ${h}`);sv.setAttribute("width",w);sv.setAttribute("height",h);
+    if(w<=460||window.innerWidth>=w+40){sv.removeAttribute("width");sv.removeAttribute("height");sv.style.width="100%"}
+    sv.addEventListener("click",e=>{const g=e.target.closest(".ctl");if(g)editCtl(g.dataset.id)});
+    svgs.push(sv);bd.appendChild(sv);el.appendChild(bd)});
+  el.insertAdjacentHTML("beforeend",`<h3>מה שונה מהבית</h3>`);
+  const list=document.createElement("div");list.className="chgs";el.appendChild(list);
+  const plainName=i=>`<span class="en">${E.names[i]}</span>`;
+  function refresh(){
+    const ids=pIds(ed);
+    svgs.forEach(sv=>{setKnobs(sv,pk(ed));sv.querySelectorAll(".ctl").forEach(g=>g.classList.toggle("on",ids.indexOf(g.dataset.id)>=0))});
+    const L2=pLines(ed,plainName);list.innerHTML=L2.length?"":`<p class="hint">עוד כלום. נגע בכפתור בציור.</p>`;
+    L2.forEach(x=>{const r=document.createElement("div");r.className="row chg";r.innerHTML=`<span>${x[1]}</span><button class="rm" aria-label="להסיר">✕</button>`;
+      r.querySelector(".rm").onclick=()=>{if(x[0][0]==="c"&&/^c\d+$/.test(x[0]))ed.c.splice(+x[0].slice(1),1);else{delete ed.k[x[0]];delete ed.s[x[0]]}keep();refresh()};
+      if(!/^c\d+$/.test(x[0]))r.firstChild.onclick=()=>editCtl(x[0]);list.appendChild(r)});
+  }
+  const done=()=>{keep();shade.classList.remove("on");refresh()};
+  function editCtl(id){if(!E.names[id])return;openSheet(sh=>{
+    const d=document.createElement("div");d.className="crop";d.appendChild(cropSvg([id],pk(ed),300));sh.appendChild(d);
+    const h=he(id),o=(D.rowText||{})[rowKey(id)]||{};
+    sh.insertAdjacentHTML("beforeend",`<div class="row"><div class="top"><span class="en">${E.names[id]}</span><span class="kind">${h[1]}</span></div><div class="he">${h[0]}</div><p>${o.info||E.info[id]||""}</p></div>`);
+    if(h[2]){/* a switch */
+      const cur=ed.s[id]||HOMESW[id];
+      h[2].forEach(x=>{const b=document.createElement("button");b.className="row pickrow pos"+(x[0]===cur?" cur":"");
+        b.innerHTML=`<span><span class="en">${x[0]}</span> ${x[1]}</span><span class="n">${x[0]===HOMESW[id]?"🏠":""}</span>`;
+        b.onclick=()=>{if(x[0]===HOMESW[id])delete ed.s[id];else ed.s[id]=x[0];done()};sh.appendChild(b)});
+    }else if(isJack(id)&&id.indexOf("midi")!==0){/* a jack: one cable, from an output to an input */
+      const out=isOut(id),old=ed.c.findIndex(c=>c[0]===id||c[1]===id);
+      if(old>=0){const c=ed.c[old],b=document.createElement("button");b.className="soft del";b.innerHTML=`✕ להוציא את הכבל (${out?"אל":"מ־"} <span class="en">${E.names[out?c[1]:c[0]]}</span>)`;
+        b.onclick=()=>{ed.c.splice(old,1);done()};sh.appendChild(b)}
+      sh.insertAdjacentHTML("beforeend",`<h3>${out?"לאן הכבל הולך?":"מאיפה הכבל מגיע?"}</h3>`);
+      Object.keys(E.names).filter(i=>i!==id&&isJack(i)&&i.indexOf("midi")!==0&&isOut(i)!==out&&he(i)[1]==="שקע").forEach(i=>{
+        const b=document.createElement("button");b.className="row pickrow";b.innerHTML=`<span><span class="en">${E.names[i]}</span></span><span class="n">${he(i)[0]}</span>`;
+        b.onclick=()=>{const pair=out?[id,i]:[i,id];ed.c=ed.c.filter(c=>c[0]!==pair[0]&&c[1]!==pair[1]);ed.c.push(pair);done()};sh.appendChild(b)});
+    }else if(isKnob(id)){
+      const cur=ed.k[id]!==undefined?ed.k[id]:HOME[id];
+      sh.insertAdjacentHTML("beforeend",`<h3>לאיזו שעה הכפתור מצביע?</h3>`);
+      const g=document.createElement("div");g.className="hours";
+      HRS.forEach(hh=>{const b=document.createElement("button");b.textContent=hh;if(hh===cur)b.className="cur";if(hh===HOME[id])b.classList.add("hm");
+        b.onclick=()=>{if(hh===HOME[id])delete ed.k[id];else ed.k[id]=hh;done()};g.appendChild(b)});
+      sh.appendChild(g);
+      sh.insertAdjacentHTML("beforeend",`<p class="hint">7 זה עד הסוף שמאלה, 12 למעלה, 5 עד הסוף ימינה.${HOME[id]!==undefined?" המסגרת הצהובה: איפה הוא ב־🏠 הבית.":""}</p>`);
+    }else sh.insertAdjacentHTML("beforeend",`<p class="hint">כאן אין מה לשמור.</p>`);
+  })}
+  const ta=document.createElement("textarea");ta.className="search ta";ta.placeholder="הערה: מה מיוחד בצליל, עם מה הוא יושב טוב";ta.value=ed.t||"";ta.maxLength=300;
+  ta.oninput=()=>{ed.t=ta.value;keep()};el.appendChild(ta);
+  const r=document.createElement("div");r.className="btnrow";r.innerHTML=`<button class="soft">ביטול</button><button class="big">✓ לשמור</button>`;
+  r.children[0].onclick=()=>{mineView=ed.i>=0?ed.i:null;ed=null;delete st.draft;save();drawFind()};
+  r.children[1].onclick=()=>{const p={n:(ed.n||"").trim()||"צליל "+(P.length+(ed.i<0?1:0)),k:ed.k,s:ed.s,c:ed.c,t:(ed.t||"").trim(),d:Date.now()};
+    if(ed.i>=0&&P[ed.i]){P[ed.i]=p;mineView=ed.i}else{P.unshift(p);mineView=0}
+    ed=null;delete st.draft;save();drawFind()};
+  el.appendChild(r);refresh();$("#findScroll").scrollTop=0;
+}
 
 /* a deep tab: one long explanation per screen */
 function drawDeep(f,el,again,scr){

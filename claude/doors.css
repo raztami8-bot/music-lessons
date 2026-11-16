@@ -135,3 +135,22 @@ h3{font-family:var(--display);font-weight:400;font-size:1.15rem;margin:6px 0 0}
 .pickrow.cur{border-color:var(--magenta);background:var(--magenta-soft)}
 .pickrow.seen .n{color:var(--green)}
 .sheet .pickrow{justify-content:flex-start}
+
+/* my sounds: the hours of a knob, the list of changes, and two buttons side by side */
+.hours{direction:ltr;display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.hours button{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:13px 0;font-family:var(--mono);font-weight:600;font-size:1.1rem}
+.hours button.hm{border-color:var(--gold)}
+.hours button.cur{background:var(--magenta);border-color:var(--magenta);color:#fff}
+.hr{color:var(--gold);font-weight:700}
+.chgs{display:flex;flex-direction:column;gap:8px}
+.chg{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 14px}
+.chg .rm{flex:none;width:40px;height:40px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:700}
+.ta{min-height:76px;resize:vertical;font-family:var(--body)}
+.btnrow{display:flex;gap:10px}
+.btnrow>*{flex:1}
+.btnrow .big{flex:2}
+.soft{border-radius:14px;padding:13px 10px;font-weight:700;border:1px solid var(--line);background:var(--card)}
+.soft.del{color:#ff9d9d}
+.pos.cur{border-color:var(--magenta);background:var(--magenta-soft)}
+/* a long sheet scrolls; its parts keep their height (the picture on top used to be squeezed by a long list) */
+.sheet>*{flex:none}

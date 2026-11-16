@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>האדג׳ · להכיר, לשלוף, לשחק, להעמיק · גרסת קלוד</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="doors.css?v=5">
+<link rel="stylesheet" href="doors.css?v=6">
 </head>
 <body>
 
@@ -101,7 +101,7 @@ const L=[
   tr:["מתג {clock} למטה, על [INT/EXT].","לחץ {play}: הנורות של הצעדים רצות.","סובב {volume} לאט עד שנעים.","סובב {tempo}: הקצב מאיץ ומאט."],
   hear:"מכה בכל צעד, בקצב.",back:"שקט והנורות רצות? פתח את 🏠 הבית למעלה."},
  {t:"הבית",b:"אין מה לשמור, אז יש בית: מיקום קבוע לכל כפתור, שנותן קיק פשוט. משם מתחילים כל ניסוי, ולשם חוזרים כשהולכים לאיבוד.",
-  hear:"קיקים זהים, אחד בכל צעד.",btn:["🏠 לפתוח את הבית","home"],ids:["osc1freq","osc1env","vcadec"],set:HOME,back:"מצאת משהו טוב? צלם את הלוח. הצילום הוא השמירה."},
+  hear:"קיקים זהים, אחד בכל צעד.",btn:["🏠 לפתוח את הבית","home"],ids:["osc1freq","osc1env","vcadec"],set:HOME,back:"מצאת משהו טוב? שומרים אותו ב־🔎 לשלוף, בלשונית ⭐ שלי."},
  {t:"הסוד: שלוש דעיכות",b:"בכל מכה שלושה דברים נופלים יחד: הגובה צונח, המסנן נסגר, והעוצמה דועכת. זה מה שהופך תו לתוף.",
   ids:["egdec","vcfdec","vcadec"],set:HOME,tr:["סובב כל אחד משלושת ה־[DECAY] לאט, ותקשיב מה הוא מאריך."],
   hear:"שלושה כפתורים בשם DECAY, שלוש דעיכות.",back:"חזרה: {egdec} לשעה 10, {vcfdec} לשעה 12, {vcadec} לשעה 11."},
@@ -211,7 +211,7 @@ const M=[
  {c:"cable",t:"מתכת שנעלמת בכל מכה",d:["{osc2lvl} לשעה 12, {fm} עד הסוף שמאלה.","כבל: {j_vcaeg} אל {j_fmin}."],ids:["j_vcaeg","j_fmin","fm","osc2lvl"],from:"קצב שמנגן"},
  {c:"cable",t:"קצב שמתנדנד",d:["כבל: {j_velout} אל {j_tempo}.","שחק בשורת [VEL]: כל שינוי משנה גם את המרווחים.","מה קורה? ספר לי."],ids:["j_velout","j_tempo"],from:"קצב שמנגן, {clock} על [INT/EXT]"},
  {c:"cable",t:"קיק שנוהם",d:["כבל: {j_osc2} אל {j_osc1cv}.","{osc2freq} לאט: כל גובה נותן נהמה אחרת."],ids:["j_osc2","j_osc1cv","osc2freq"],from:"קצב שמנגן"},
- {c:"free",t:"צליל שלא שמעת אף פעם",d:["אין הוראות. סובב עד שיוצא משהו שמפתיע אותך.","מצאת? צלם את הלוח."],min:3},
+ {c:"free",t:"צליל שלא שמעת אף פעם",d:["אין הוראות. סובב עד שיוצא משהו שמפתיע אותך.","מצאת? שמור אותו ב־🔎 לשלוף, בלשונית ⭐ שלי."],min:3},
  {c:"free",t:"שתי ידיים, שני כפתורים",d:["יד אחת על {cutoff}, יד שנייה על {vcadec}.","שתיהן זזות כל הזמן. דקה."],ids:["cutoff","vcadec"],from:"קצב שמנגן"},
  {c:"free",t:"עיניים עצומות",d:["בחר כפתור אחד בלי להסתכל, וסובב.","נחש לפי האוזן איזה כפתור זה. ואז תבדוק."],from:"קצב שמנגן"},
  {c:"free",t:"מהבית, שלושה שינויים",d:["חזור ל־🏠 הבית.","שלושה שינויים בלבד, לא יותר.","כמה רחוק מהקיק הגעת?"]},
@@ -365,6 +365,8 @@ window.DOORS={
    {t:"שורה 2",y:[270,392],ids:E.areas[2][1],intro:"מתנד 2 והמסנן."},
    {t:"סיקוונסר",y:[392,632],ids:E.areas[3][1].concat(["p1","v1"]),intro:"קצב, שעון, שלושה לחצנים, ושמונה צעדים."}]},
   {id:"rec",tab:"🍳 מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. רשום רק מה שמשנים.",rows:REC},
+  /* my sounds (2026-11-16, a trial on the Edge first): the Edge has no memory, so a good sound is saved here by touching the board */
+  {id:"mine",tab:"⭐ שלי",mine:true,hint:"האדג׳ לא שומר כלום, וצליל טוב נעלם כשמסובבים הלאה. כאן שומרים אותו: שם, ורק מה ששונה מ־🏠 הבית."},
   {id:"fix",tab:"🛠 לא מנגן?",hint:"בודקים לפי הסדר: שעון, כבלים, עוצמות.",rows:FIX}],
  /* the fourth door (2026-11-13): the long explanations left the find tab. The older lessons and help pages are the archive. */
  deep:{cards:DEEP,archive:{label:"🗄 ארכיון: השיעורים והדפים הישנים של האדג׳",title:"ארכיון האדג׳",
@@ -381,6 +383,6 @@ window.DOORS={
    v[3]=618-v[1];const top=396;p[3]+=p[1]-top;p[1]=top}}
 };
 </script>
-<script src="doors.js?v=11"></script>
+<script src="doors.js?v=12"></script>
 </body>
 </html>
