@@ -22,6 +22,8 @@
        with three buttons: yes, no, what I saw. All of them are also listed in a find tab that the engine adds, "🔍 לבדוק", with a button that
        copies the answers as text for Claude. Saved under st.chk[k] = {a:"y"|"n", t:note, q, d, s:when it was copied}. The home page copies the same answers
        from all the devices (hub() in build.py reads st.chk). When Raz reports, fix the card and remove the check from the page.
+   chkOnCards optional, false: the check boxes stay off the cards and live only in the "🔍 לבדוק" tab (the Impact, before Raz has it)
+   textFirst optional, true: in the learn door the lead and the steps come before the board pictures (the Impact: 2 to 4 pictures a card)
    archive  optional: {label, title, hint, links:[[href,title,note]]}: a quiet button at the end of every find tab (pages with three doors)
    The learn door has a "☰ all the cards" button (a list in a sheet); the deep door opens on a menu of all its topics by subject (sec),
        and each card has "☰ all the topics" to come back. Prev/next stay as a shortcut only. (Raz, 2026-11-13: "not like a computer game where I press next".)
@@ -137,10 +139,13 @@ function drawLearn(){
     L.forEach((x,i)=>{const b=document.createElement("button");b.className="row pickrow"+(i===li?" cur":"");b.innerHTML=`<span class="n">${i+1}</span><span>${x.t}</span>`;
       b.onclick=()=>{shade.classList.remove("on");li=i;drawLearn()};sh.appendChild(b)})});
   el.appendChild(mb);el.insertAdjacentHTML("beforeend",`<h2>${c.t}</h2>`);
-  if(c.all){const d=document.createElement("div");d.className="crop";d.appendChild(BASE.cloneNode(true));el.appendChild(d)}
-  else if(c.ids)el.appendChild(crops(c.ids,c.set));
+  const pic=()=>{if(c.all){const d=document.createElement("div");d.className="crop";d.appendChild(BASE.cloneNode(true));el.appendChild(d)}
+    else if(c.ids)el.appendChild(crops(c.ids,c.set))};
+  const first=D.textFirst&&!c.all; /* textFirst: what to press comes before the pictures (a board with far-apart controls gives 2 to 4 of them) */
+  if(!first)pic();
   if(c.b)el.insertAdjacentHTML("beforeend",`<p class="lead">${tx(c.b)}</p>`);
   if(c.tr)el.insertAdjacentHTML("beforeend",`<div class="box"><strong class="h">👆 נסה</strong><ol>${c.tr.map(x=>`<li>${tx(x)}</li>`).join("")}</ol></div>`);
+  if(first)pic();
   if(c.hear)el.insertAdjacentHTML("beforeend",`<div class="box hear"><strong class="h">${c.hearT||"👂 שומעים"}</strong>${tx(c.hear)}</div>`);
   if(c.btn){const b=document.createElement("button");b.className="big";b.textContent=c.btn[0];b.onclick=act[c.btn[1]];el.appendChild(b)}
   if(c.back)el.insertAdjacentHTML("beforeend",`<p class="back">${tx(c.back)}</p>`);
@@ -240,7 +245,7 @@ function ckBox(c,link){
     if(a==="t"){note=true;draw();d.querySelector("textarea").focus();return}
     set({a:(st.chk[c.k]||{}).a===a?"":a});draw()});
   draw();return d}
-const addChk=(el,door,title)=>(CKAT[door+"|"+title]||[]).forEach(c=>el.appendChild(ckBox(c)));
+const addChk=(el,door,title)=>{if(D.chkOnCards!==false)(CKAT[door+"|"+title]||[]).forEach(c=>el.appendChild(ckBox(c)))}; /* chkOnCards:false: only in the "🔍 לבדוק" tab (a device Raz does not have yet) */
 function ckJump(at){const door=at[0],t=at[1];
   if(door==="learn"){const i=L.findIndex(x=>x.t===t);if(i>=0){li=i;go("learn")}}
   else if(door==="play"){const i=M.findIndex(x=>x.t===t);if(i>=0){mi=i;cat="all";st.cat=cat;go("play")}}
@@ -252,7 +257,7 @@ function ckText(){const rows=CK.filter(c=>ckHas(c.k));if(!rows.length)return "";
     return `- [${D.key}:${c.k}] ${plain(c.q)} ${r.a==="y"?"כן":r.a==="n"?"לא":""}${r.t?" | מה ראיתי: "+r.t:""}`}).join("\n")}
 function drawChk(el){
   const q0=el.querySelector(".search");if(q0)q0.remove();
-  el.insertAdjacentHTML("beforeend",`<p class="hint">דברים שנכתבו לפי המדריך ועוד לא נבדקו על המכשיר. עונים כשיוצא, בלי סדר. כל שאלה מופיעה גם בכרטיס שלה.</p>`);
+  el.insertAdjacentHTML("beforeend",`<p class="hint">דברים שנכתבו לפי המדריך ועוד לא נבדקו על המכשיר. עונים כשיוצא, בלי סדר.${D.chkOnCards!==false?" כל שאלה מופיעה גם בכרטיס שלה.":""}</p>`);
   CK.forEach(c=>el.appendChild(ckBox(c,true)));
   const b=document.createElement("button");b.className="big";b.textContent="📋 להעתיק את התשובות לקלוד";
   const msg=document.createElement("p");msg.className="hint";msg.style.margin="0";
