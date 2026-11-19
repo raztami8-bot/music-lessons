@@ -599,7 +599,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 <p class="ckmsg" id="ckmsg" aria-live="polite"></p>
 <h2 class="tog">🔗 ביחד</h2>
 <nav class="more" aria-label="ביחד">
-<a class="together" href="pair.html">🧡💗 קרייב + אדג׳</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
+<a class="together" href="pair.html">🧡💗 קרייב + אדג׳</a><a class="together" href="senders.html">📤 טי־8 ווולקה אל הכתום והסגול</a><a class="together" href="mixer-guide.html">🎚️ המיקסר</a><a class="together" href="connections.html">🔌 חיבורים</a>
 </nav>
 <details class="install"><summary>לשמור את העמוד הזה במסך הבית</summary>
 <ol>
@@ -633,7 +633,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 }})();
 /* the answers Raz marked in the "🔍 לבדוק" boxes of the device pages (st.chk in doors.js), not yet copied: one button copies them all for Claude */
 (function(){{
-  var K={{t8d:"הטי־8",vbd:"הוולקה בס",crave2:"הקרייב",edge2:"האדג׳",impact1:"האימפקט",pair1:"קרייב + אדג׳"}}, b=document.getElementById("ckbtn"), m=document.getElementById("ckmsg");
+  var K={{t8d:"הטי־8",vbd:"הוולקה בס",crave2:"הקרייב",edge2:"האדג׳",impact1:"האימפקט",pair1:"קרייב + אדג׳",send1:"שולחים ומקבלים"}}, b=document.getElementById("ckbtn"), m=document.getElementById("ckmsg");
   function collect(mark){{
     var out=[], n=0;
     Object.keys(K).forEach(function(k){{

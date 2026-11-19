@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d1a26">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="שולחים ומקבלים">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>הטי־8 והוולקה אל הכתום והסגול · להכיר, לשלוף, לשחק · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="doors.css?v=7">
+<style>:root{--magenta:#8b6ae0;--magenta-soft:#2a2340;--board:#9b7cf0;--chipline:#5a4a8a;--chipfg:#e6dcff}</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="index.html">→ כל המכשירים</a>
+  <h1>📤 שולחים</h1>
+  <button class="homebtn" id="homebtn">🏠 הבית</button>
+</div>
+
+<main>
+  <section class="view" id="v-learn">
+    <div class="prog" id="prog"></div>
+    <div class="scroll" id="learnScroll"><div class="inner" id="learn"></div></div>
+    <div class="navrow"><button id="prev">→ הקודם</button><button class="next" id="next">הבא ←</button></div>
+  </section>
+  <section class="view" id="v-find">
+    <div class="chips" id="chips" role="tablist"></div>
+    <div class="scroll" id="findScroll"><div class="inner" id="find"></div></div>
+  </section>
+  <section class="view" id="v-play">
+    <div class="chips" id="cats" role="tablist"></div>
+    <div class="scroll" id="playScroll"><div class="inner" id="play"></div></div>
+    <div class="playrow"><button class="timer" id="timer">⏱ דקה</button><button class="ok" id="ok">✓ עשיתי</button><button class="dice" id="dice">🎲 עוד משימה</button></div>
+  </section>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-v="learn"><span>🌱</span>להכיר</button>
+  <button data-v="find"><span>🔎</span>לשלוף</button>
+  <button data-v="play"><span>🎲</span>לשחק</button>
+</nav>
+
+<div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
+
+<script src="crave-data.js"></script>
+<script src="edge-data.js"></script>
+<script>
+"use strict";
+/* The T-8 and the Volca Bass send, the Crave (״הכתום״) and the Edge (״הסגול״) receive. For doors.js, built like pair.html:
+   only the two receivers are drawn (the Crave on top, the Edge under it), because the inputs are there. The senders' jacks are written as [LABELS].
+   Every id gets a prefix: c_ for the Crave, e_ for the Edge. Facts: the two data files, the T-8 manual 1.02 (MIX IN/OUT need stereo cables,
+   no audio device into SYNC OUT, S.cLk), and the Volca sync from lesson 13 (a tick every two steps). What was not tried on a device is in CHECKS. */
+const CR=window.CRAVE, ED=window.EDGE, CH=660, OFF=680, EH=640;
+const MARK={c:" 🧡",e:" 💗"}, WHO={c:"בכתום 🧡",e:"בסגול 💗"};
+const P={names:{},info:{},areas:[]};
+[["c",CR],["e",ED]].forEach(([p,X])=>{
+  for(const k in X.names)P.names[p+"_"+k]=X.names[k]+MARK[p];
+  for(const k in X.info)P.info[p+"_"+k]=X.info[k];
+  X.areas.forEach(a=>P.areas.push([a[0],a[1].map(i=>p+"_"+i)]));
+});
+const inner=(s,p,y,h)=>s.replace(/data-id="/g,'data-id="'+p+'_').replace("<svg ",`<svg x="0" y="${y}" width="1000" height="${h}" `);
+P.svg=`<svg viewBox="0 0 1000 ${OFF+EH}" direction="ltr" role="img" aria-label="הכתום למעלה, הסגול למטה">`+
+  inner(CR.svg,"c",0,CH)+
+  `<text x="500" y="${CH+15}" style="font:800 14px Assistant,Arial,sans-serif;fill:#cbbcff;text-anchor:middle">▲ הכתום 🧡 · הסגול 💗 ▼</text>`+
+  inner(ED.svg,"e",OFF,EH)+`</svg>`;
+
+/* who is what, for the sheet that opens on every name */
+const SW={c:["shape","oscsrc","oscdest","vcfmode","vcfsrc","vcfpol","vcamode","susw","lfoshape"],e:["osc1shape","seqpitch","noisecolor","vcamode","osc2shape","hardsync","vcfsel","clock","scale"]};
+const HE={};
+Object.keys(P.names).forEach(id=>{const p=id[0],k=id.slice(2),inf=P.info[id]||"";
+  HE[id]=[ /^j_/.test(k)?(inf.indexOf("יציאה")===0||/^היציאה/.test(inf)?"יציאה ":"כניסה ")+WHO[p]:WHO[p], /^j_|midi/.test(k)?"שקע":SW[p].indexOf(k)>=0?"מתג":"כפתור"]});
+
+/* the home: each one at its own home (crave.html and edge.html), as in pair.html, and no cables at all */
+const CHOME={freq:12,pw:12,oscmod:7,mix:7,cutoff:12,reso:7,vcfmod:7,volume:9,attack:7,decay:12,sustain:7,lforate:12,glide:7};
+const EHOME={osc1freq:9,osc1env:2,osc1lvl:3,egdec:10,osc2freq:12,osc2env:12,osc2lvl:7,fm:7,noise:7,cutoff:2,reso:7,vcfdec:12,vcfenv:12,noisevcf:7,vcadec:11,volume:9};
+for(let i=1;i<=8;i++){EHOME["p"+i]=12;EHOME["v"+i]=2}
+const HOME={},HOMESW={};
+for(const k in CHOME)HOME["c_"+k]=CHOME[k];
+for(const k in EHOME)HOME["e_"+k]=EHOME[k];
+Object.entries({shape:"SAW",vcfmode:"LP",vcfsrc:"ENV",vcfpol:"+",vcamode:"ENV",susw:"OFF"}).forEach(([k,v])=>HOMESW["c_"+k]=v);
+Object.entries({osc1shape:"TRI",seqpitch:"OFF",hardsync:"OFF",vcfsel:"LP",vcamode:"FAST",clock:"INT/EXT"}).forEach(([k,v])=>HOMESW["e_"+k]=v);
+const H=o=>Object.assign({},HOME,o||{});
+
+/* the senders, in words */
+const T8S="[SYNC OUT] של הטי־8", T8A="[MIX OUT] של הטי־8", VBS="[SYNC OUT] של הוולקה", VBA="[PHONES] של הוולקה";
+const YC="כבל מפצל (רגל אחת)";
+
+const L=[
+ {t:"שני שולחים, שני מקבלים",all:true,
+  b:"הטי־8 והוולקה בס הם <b>השולחים</b>: יש להם יציאות. הכתום 🧡 והסגול 💗 הם <b>המקבלים</b>: יש להם הרבה כניסות. כבל אחד משולח למקבל, והמקבל מתחיל להגיב לשולח: מנגן בקצב שלו, מעביר את הצליל שלו דרך המסנן, או נוהם ומצלצל לפיו.",
+  hear:"בציור רק הכתום והסגול, כי הכניסות אצלם. השקעים של הטי־8 והוולקה כתובים במילים, כמו [SYNC OUT]."},
+ {t:"מה יוצא מכל שולח",ids:["c_j_envgate","c_j_ext","e_j_trigin","e_j_ext"],
+  b:"<b>הטי־8:</b> [SYNC OUT] שולח דפיקות, ו־[MIX OUT] את הצליל של כל התבנית, תופים ובס יחד. <b>הוולקה בס:</b> [SYNC OUT] שולח דפיקות, ו־[PHONES] את הצליל של הבס.",
+  tr:["<b>דפיקה</b> היא ״עכשיו!״. לא שומעים אותה, היא רק אומרת מתי.","<b>צליל</b> הוא מה ששומעים. הוא יכול לעבור דרך מקבל, או להזיז בו משהו."],
+  back:"הדפיקות יוצאות כל חצי פעמה: בוולקה תמיד, ובטי־8 כשהוא על 2 טיקים לפעמה, כמו שכיוונת בשביל הוולקה. 🔍 זה לא נבדק על המכשירים שלך."},
+ {t:"איזה כבל",ids:["c_j_ext","e_j_ext"],
+  b:"<b>לדפיקות:</b> כבל מונו קצר, כמו הכבלים של הכתום והסגול. <b>לצליל:</b> במדריך של הטי־8 כתוב שבשקעי [MIX] צריך כבל סטריאו, ושכבל מונו לא עובד. הכניסות של הכתום והסגול הן מונו.",
+  tr:["הפתרון: כבל מפצל, 3.5 סטריאו לשני 3.5 מונו.","הקצה הסטריאו נכנס ל־[MIX OUT] של הטי־8 או ל־[PHONES] של הוולקה.","רגל אחת לכתום או לסגול. את הרגל השנייה אפשר לחבר למיקסר, וככה ממשיכים לשמוע גם את הצליל הנקי."],
+  back:"בלי מפצל, [MIX OUT] הוא היציאה היחידה של הטי־8: אם הוא הולך לכתום, הוא לא מגיע ישר למיקסר."},
+ {t:"דפיקות: לאן הן הולכות",ids:["c_j_envgate","c_j_reset","e_j_trigin","e_j_adv"],
+  b:"ארבע כניסות שמחכות ל״עכשיו!״:",
+  tr:["{c_j_envgate}: הכתום מנגן תו בכל דפיקה.","{e_j_trigin}: הסגול מכה בכל דפיקה, ונשאר על אותו צעד.","{e_j_adv}: הסגול מתקדם צעד בכל דפיקה.","{c_j_reset}: הכתום חוזר לצעד 1 בכל דפיקה."],
+  hear:"ככה הכתום והסגול מנגנים בדיוק בקצב של הטי־8, בלי שום הגדרה."},
+ {t:"צליל: דרך המסנן",ids:["c_j_ext","c_mix","c_vcamode","e_j_ext","e_noise"],set:H({c_mix:5,e_noise:12}),
+  b:"{c_j_ext} ו־{e_j_ext} הן כניסות צליל. מה שנכנס בהן תופס את המקום של הרעש, ועובר במסנן ובמגבר של המקבל.",
+  tr:["בכתום: {c_mix} עד הסוף ימינה. {c_vcamode} על [ON], אחרת שומעים רק כשהכתום מנגן תו.","בסגול: {e_noise} למעלה. המגבר של הסגול נפתח רק במכה, ולכן הצליל נחתך לפי המכות שלו."],
+  hear:"הטי־8 במסנן של הכתום: {c_cutoff} פותח וסוגר את כל התבנית, כמו דיג׳יי."},
+ {t:"צליל: בשקע שמזיז משהו",ids:["c_j_vcfcut","c_j_oscfm","e_j_vcfmod","e_j_fmin"],
+  b:"שקע כזה מצפה ליד שמסובבת לאט. צליל זז מאות פעמים בשנייה, ולכן המקבל לא נפתח אלא <b>רועד</b>: נהמה, חספוס, מתכת. מכאן מגיעים הצלילים שלא שמעת.",
+  tr:["{c_j_vcfcut}: הבס נוהם וקופץ בכל קיק.","{c_j_oscfm} או {e_j_fmin}: מתכת וצלצול.","{e_j_vcfmod}: חספוס. העומק ב־{e_noisevcf}."],
+  hear:"העומק הוא ה־[VOLUME] של השולח. מתחילים נמוך ומעלים לאט."},
+ {t:"מה אסור",ids:["c_j_vca","e_j_vca"],
+  b:"כמעט הכל מותר. רק שלושה דברים לא:",
+  tr:["לא מחברים יציאה ליציאה. תמיד יציאה אל כניסה. בציור: רקע שחור הוא יציאה, מסגרת היא כניסה.","לא מכניסים צליל לשקעי [SYNC] ו־[MIDI] של הטי־8 והוולקה. במדריך של הטי־8 כתוב במפורש לא לחבר מכשיר שמע ל־[SYNC OUT].","לא מחליפים ספקי כוח בין המכשירים."],
+  back:"ולפני כל חיבור מורידים את המיקסר, כדי שה״פוק״ לא יגיע לרמקולים ולאוזניים."},
+ {t:"עכשיו לשחק",b:"בלשונית לשחק יש משימות בארבע קבוצות: דפיקות, צליל דרך המסנן, צליל שמזיז, ולייב. כל משימה היא כבל אחד או שניים.",
+  back:"לפני כל משימה: הכתום והסגול בבית, בלי כבלים. 🏠 למעלה מראה איך.",btn:["🎲 למשימה הראשונה","play"]}
+];
+
+const REC=[
+ ["הכתום מנגן בקצב","{T8S} ← {c_j_envgate}. הסיקוונסר של הכתום עצור."],
+ ["הסגול מכה בקצב","{VBS} ← {e_j_trigin}. הסגול עצור."],
+ ["הסגול צועד לאט","{T8S} ← {e_j_adv}. {e_clock} על [INT/EXT]."],
+ ["גמגום של שני צעדים","{VBS} ← {c_j_reset}. הכתום מנגן את הרצף שלו."],
+ ["הטי־8 במסנן של הכתום","{T8A} ב{YC} ← {c_j_ext}. {c_mix} ימינה, {c_vcamode} על [ON]."],
+ ["הוולקה במסנן של הכתום","{VBA} ב{YC} ← {c_j_ext}. {c_mix} ימינה, {c_vcamode} על [ON]."],
+ ["הטי־8 נחתך במכות של הסגול","{T8A} ב{YC} ← {e_j_ext}. {e_noise} למעלה, {e_osc1lvl} שמאלה."],
+ ["הבס נוהם בקצב התופים","{T8A} ב{YC} ← {c_j_vcfcut}."],
+ ["מתכת מהוולקה","{VBA} ב{YC} ← {c_j_oscfm}."],
+ ["קיק מחוספס","{T8A} ב{YC} ← {e_j_vcfmod}. {e_noisevcf} למעלה."],
+ ["פעמון שמנגן את הוולקה","{VBA} ב{YC} ← {e_j_fmin}. {e_osc2lvl} לשעה 12."]];
+const FIX=[
+ ["צליל נכנס ולא שומעים","בכתום: {c_mix} ימינה, ו־{c_vcamode} על [ON]. בסגול: {e_noise} למעלה, והסגול צריך להכות. ובשולח: ה־[VOLUME] למעלה?"],
+ ["דפיקות ולא קורה כלום","הכבל יוצא מ־[SYNC OUT] ולא מ־[MIX OUT] או [PHONES]? השולח באמת מנגן (▶)? 🔍 ייתכן שהטי־8 שולח דפיקות רק כשהוא מנגן."],
+ ["מהר מדי או לאט מדי","בטי־8 הפריט [S.cLk] בתפריט קובע כמה דפיקות בפעמה. שים לב: הוולקה צריכה 2, אז אם שינית, מחזירים כשמחזירים את הוולקה."],
+ ["הצליל מעוות מאוד","מורידים את ה־[VOLUME] של השולח. יציאת אוזניות חזקה בשביל חלק מהשקעים."],
+ ["הטי־8 נעלם מהמיקסר","[MIX OUT] הוא היציאה היחידה שלו. עם כבל מפצל: רגל אחת למקבל, רגל אחת למיקסר."],
+ ["פוק חזק בחיבור","המיקסר למטה לפני שמחברים או שולפים כבל."],
+ ["הכל נשמע בלגן","מוציאים את כל הכבלים וחוזרים ל־🏠 הבית. מוסיפים כבל אחד בכל פעם."]];
+const SENDROWS=[
+ ["[SYNC OUT] של הטי־8","דפיקות. כבל מונו. כמה דפיקות בפעמה: הפריט [S.cLk] בתפריט. לא מכניסים לכאן צליל."],
+ ["[MIX OUT] של הטי־8","הצליל של כל התבנית, תופים ובס. כבל סטריאו: אל הכתום והסגול בכבל מפצל. זו גם היציאה למיקסר."],
+ ["[SYNC OUT] של הוולקה","דפיקה כל שני צעדים, כלומר כל חצי פעמה. כבל מונו."],
+ ["[PHONES] של הוולקה","הצליל של הבס. אל הכתום והסגול בכבל מפצל. כשמחובר כאן כבל, הרמקול הקטן שותק."],
+ ["ה־[VOLUME] של השולח","בשקע שמזיז משהו, הוא העומק: כמה המקבל רועד. בכניסת צליל, הוא כמה חזק הצליל נכנס."]];
+const MORE=[["pair.html","קרייב + אדג׳","הכתום והסגול מזיזים זה את זה"],["connections.html","חיבורים","מיקסר, סנכרון ושרשרת מידי"],["menus.html#m-sclk","הטי־8 · מה זה? S.cLk","כמה דפיקות בפעמה"],["crave.html","הקרייב 🧡","להכיר, לשלוף, לשחק"],["edge.html","האדג׳ 💗","להכיר, לשלוף, לשחק"]];
+
+const M=[
+ /* pulses */
+ {c:"pulse",t:"הכתום מנגן בקצב של הטי־8",d:["{c_play}: הסיקוונסר של הכתום עוצר.","כבל: "+T8S+" אל {c_j_envgate}.","▶ בטי־8: הכתום מנגן תו בכל דפיקה. {c_freq} בוחר את התו.","{c_decay} קצר: נקישות. ארוך: התווים נדבקים זה לזה."],ids:["c_play","c_j_envgate","c_freq","c_decay"],from:"🏠 הבית, הטי־8 מנגן תבנית"},
+ {c:"pulse",t:"הסגול מכה בקצב של הוולקה",d:["{e_play}: הסגול עוצר.","כבל: "+VBS+" אל {e_j_trigin}.","▶ בוולקה: הסגול מכה בכל דפיקה, בצליל של הצעד שהוא עומד עליו.","{e_advance}: צעד אחר, מכה אחרת."],ids:["e_play","e_j_trigin","e_advance"],from:"🏠 הבית, הוולקה מנגנת"},
+ {c:"pulse",t:"הסגול צועד לפי הטי־8",d:["{e_clock} על [INT/EXT].","כבל: "+T8S+" אל {e_j_adv}.","▶ בטי־8 ו־{e_play} בסגול. כל דפיקה היא צעד, ו־{e_tempo} כבר לא עושה כלום.","צעד כל חצי פעמה: שמונת הצעדים של הסגול נמשכים תיבה שלמה, לאט מתחת לטי־8."],ids:["e_clock","e_j_adv","e_play","e_tempo"],from:"🏠 הבית, הטי־8 מנגן תבנית"},
+ {c:"pulse",t:"גמגום של שני צעדים",d:["הכתום מנגן רצף משלו, ב־{c_play}.","כבל: "+VBS+" אל {c_j_reset}.","בכל דפיקה הכתום חוזר לצעד 1: רק שני הצעדים הראשונים מתנגנים.","שולפים את הכבל: הרצף המלא חוזר. מחזירים: גמגום."],ids:["c_play","c_j_reset"],from:"הכתום מנגן רצף, הוולקה מנגנת",min:2},
+ {c:"pulse",t:"שני שולחים, שני מקבלים",d:["{c_play} ו־{e_play}: שניהם עוצרים.","כבל: "+T8S+" אל {c_j_envgate}.","כבל: "+VBS+" אל {e_j_trigin}.","▶ בשניהם: הכתום והסגול מנגנים בדיוק בקצב. עכשיו רק הכפתורים: {c_freq}, {c_cutoff}, {e_vcadec}."],ids:["c_j_envgate","e_j_trigin","c_freq","c_cutoff","e_vcadec"],from:"🏠 הבית, הטי־8 והוולקה מסונכרנים",min:3},
+ /* sound through the filter */
+ {c:"thru",t:"התופים של הטי־8 דרך הכתום",d:["כבל: "+T8A+", "+YC+" אל {c_j_ext}.","{c_mix} עד הסוף ימינה, ו־{c_vcamode} על [ON].","{c_cutoff} מלמטה למעלה, לאט: התבנית נפתחת.","{c_reso} לשעה 12, ושוב {c_cutoff}: עכשיו היא שורקת."],ids:["c_j_ext","c_mix","c_vcamode","c_cutoff","c_reso"],set:H({c_mix:5,c_cutoff:8}),from:"🏠 הבית, הטי־8 מנגן תבנית"},
+ {c:"thru",t:"הבס של הוולקה עם גל",d:["כבל: "+VBA+", "+YC+" אל {c_j_ext}.","{c_mix} עד הסוף ימינה, {c_vcamode} על [ON].","{c_vcfsrc} על [LFO], {c_vcfmod} לשעה 12.","{c_lforate}: לאט זו נשימה, מהר ״וואו וואו״ על הבס של הוולקה."],ids:["c_j_ext","c_mix","c_vcamode","c_vcfsrc","c_vcfmod","c_lforate"],set:H({c_mix:5,c_vcfmod:12}),from:"🏠 הבית, הוולקה מנגנת"},
+ {c:"thru",t:"הטי־8 נחתך במכות של הסגול",d:["כבל: "+T8A+", "+YC+" אל {e_j_ext}.","{e_osc1lvl} עד הסוף שמאלה, {e_noise} לאט למעלה.","{e_play}: הטי־8 נשמע רק במכות של הסגול.","{e_vcadec}: קצר זה חיתוכים, ארוך זה גלים."],ids:["e_j_ext","e_osc1lvl","e_noise","e_play","e_vcadec"],set:H({e_osc1lvl:7,e_noise:12}),from:"🏠 הבית, הטי־8 מנגן תבנית"},
+ {c:"thru",t:"רק הגבוהים של הוולקה",d:["כבל: "+VBA+", "+YC+" אל {e_j_ext}.","{e_osc1lvl} שמאלה, {e_noise} למעלה, ו־{e_vcfsel} על [HP].","{e_cutoff} לאט: מבס עבה לזמזום דק."],ids:["e_j_ext","e_osc1lvl","e_noise","e_vcfsel","e_cutoff"],set:H({e_osc1lvl:7,e_noise:12}),from:"🏠 הבית, הוולקה מנגנת"},
+ /* sound that moves something */
+ {c:"shake",t:"הבס נוהם בקצב התופים",d:["הכתום מנגן את הרצף שלו.","כבל: "+T8A+", "+YC+" אל {c_j_vcfcut}.","ה־[VOLUME] של הטי־8 מלמטה, לאט: הבס של הכתום מתחיל לנהום ולקפוץ בכל קיק.","{c_cutoff} נמוך יותר: שומעים רק את הקפיצות."],ids:["c_j_vcfcut","c_cutoff"],from:"הכתום מנגן רצף, הטי־8 מנגן"},
+ {c:"shake",t:"מתכת מהוולקה",d:["כבל: "+VBA+", "+YC+" אל {c_j_oscfm}.","ה־[VOLUME] של הוולקה נמוך, ומעלים לאט.","הצליל של הכתום מתמלא מתכת, והיא משתנה עם כל תו של הוולקה."],ids:["c_j_oscfm"],from:"הכתום מנגן, הוולקה מנגנת"},
+ {c:"shake",t:"קיק מחוספס",d:["כבל: "+T8A+", "+YC+" אל {e_j_vcfmod}.","{e_noisevcf} לאט למעלה: זה העומק.","{e_reso} לשעה 12: החספוס שורק."],ids:["e_j_vcfmod","e_noisevcf","e_reso"],from:"🏠 הבית, הסגול והטי־8 מנגנים"},
+ {c:"shake",t:"פעמון שמנגן את הוולקה",d:["{e_osc2lvl} לשעה 12, {e_fm} עד הסוף שמאלה.","כבל: "+VBA+", "+YC+" אל {e_j_fmin}.","ה־[VOLUME] של הוולקה לאט למעלה: המכה של הסגול מצלצלת לפי הבס."],ids:["e_osc2lvl","e_fm","e_j_fmin"],set:H({e_osc2lvl:12}),from:"🏠 הבית, הסגול והוולקה מנגנים"},
+ {c:"shake",t:"מקום חדש",d:["בוחרים שקע כניסה של הכתום או הסגול שעוד לא ניסית.","כבל: "+T8A+" או "+VBA+", "+YC+", אליו.","ה־[VOLUME] של השולח מלמטה, לאט. מה השתנה? אהבת? שומרים ב־⭐ שלי בדף של המכשיר."],from:"🏠 הבית, הכל מנגן",min:2},
+ /* live */
+ {c:"live",t:"הווליום הוא הכפתור",d:["כבל: "+T8A+", "+YC+" אל {c_j_vcfcut}.","ארבע תיבות: ה־[VOLUME] של הטי־8 עולה לאט. זה הבילד.","בדרופ: יורד בבת אחת, והכתום חוזר להיות נקי."],ids:["c_j_vcfcut"],from:"הכתום מנגן רצף, הטי־8 מנגן",min:2},
+ {c:"live",t:"כבל כמו מפסק",d:["כבל: "+VBS+" אל {e_j_trigin}, {e_play} עצור.","שולפים את הכבל לארבע תיבות, ומחזירים בדיוק בתחילת תיבה.","הכבל עצמו הוא הכניסה של התופים."],ids:["e_j_trigin","e_play"],from:"הוולקה מנגנת",min:2},
+ {c:"live",t:"קטע של ארבע דקות",d:["דקה: הטי־8 והוולקה, נקי.","דקה: "+T8S+" אל {c_j_envgate}. הכתום נכנס בקצב.","דקה: "+VBA+" אל {e_j_ext}. הבס נחתך במכות של הסגול.","דקה: "+T8A+" אל {c_j_vcfcut}, הווליום עולה. ואז מוציאים הכל ועוצרים."],ids:["c_j_envgate","e_j_ext","c_j_vcfcut"],from:"הכל מנגן ומסונכרן",min:4}
+];
+
+/* not yet tried on the device (see "checks" at the top of doors.js). When Raz answers: fix the card, and remove the line from here and from HANDOFF.md. */
+const CHECKS=[
+ {k:"y-cable",q:"עם כבל המפצל, הצליל של הטי־8 נשמע דרך הכתום?",at:["play","התופים של הטי־8 דרך הכתום"]},
+ {k:"gate-pulse",q:"הכתום מנגן תו שנשמע בכל דפיקה מהטי־8?",at:["play","הכתום מנגן בקצב של הטי־8"]},
+ {k:"slave-out",q:"כשהטי־8 הולך אחרי האימפקט, עדיין יוצאות דפיקות מ־SYNC OUT שלו?",at:["play","הסגול צועד לפי הטי־8"]},
+ {k:"reset-stutter",q:"הכתום מגמגם על שני הצעדים הראשונים?",at:["play","גמגום של שני צעדים"]}];
+
+/* {T8S} and the like inside REC: the sender names, as labels */
+const SUB={T8S,T8A,VBS,VBA,YC};
+const sub=s=>s.replace(/\{(T8S|T8A|VBS|VBA|YC)\}/g,(m,k)=>SUB[k]);
+REC.forEach(r=>r[1]=sub(r[1]));
+
+window.DOORS={
+ checks:CHECKS,
+ key:"send1",panel:P,bands:[150,335,455,670,OFF+150,OFF+272,OFF+392,OFF+520],he:HE,
+ home:{knobs:HOME,sw:HOMESW,title:"הבית: שניהם בבית, בלי כבלים",
+  lead:"הכתום והסגול כל אחד בבית שלו, כמו בדף שלו, ואין אף כבל. הולכים לאיבוד? מוציאים את כל הכבלים, וחוזרים לכאן.",
+  quick:["הכתום בבית שלו, והסגול בבית שלו. הכפתורים בציור מצביעים לאן.","אין כבלים: לא ביניהם, ולא מהטי־8 או מהוולקה.","הטי־8 והוולקה מנגנים תבנית, כמו תמיד."],
+  note:"כל משימה מוסיפה כבל אחד או שניים מהבית הזה.",
+  groups:[
+   ["הכתום 🧡: צליל קצר ומזמזם","המתגים: {c_vcamode} על [ENV], {c_susw} על [OFF].",["c_freq","c_pw","c_mix","c_cutoff","c_reso","c_vcfmod","c_attack","c_decay","c_sustain","c_volume"]],
+   ["הסגול 💗: קיק פשוט","כל [VEL] לשעה 2, {e_seqpitch} על [OFF].",["e_osc1freq","e_osc1env","e_osc1lvl","e_osc2lvl","e_fm","e_noise","e_cutoff","e_vcadec","e_volume"]]]},
+ learn:L,
+ find:[
+  {id:"board",tab:"🎛 הכניסות",bands:[
+   {t:"הכתום 🧡",y:[14,150],ids:CR.areas[0][1].map(i=>"c_"+i),intro:"כל כניסה כאן יכולה לקבל דפיקה או צליל מהטי־8 ומהוולקה. מסגרת: כניסה. רקע שחור: יציאה, לא מחברים אליה שולח."},
+   {t:"הסגול 💗",y:[OFF+14,OFF+150],ids:ED.areas[0][1].map(i=>"e_"+i),intro:"מסגרת: כניסה. רקע שחור: יציאה."}]},
+  {id:"send",tab:"📤 השולחים",hint:"מה יוצא מהטי־8 ומהוולקה, ובאיזה כבל.",rows:SENDROWS},
+  {id:"rec",tab:"🍳 מתכונים",hint:"כל מתכון מתחיל מ־🏠 הבית. החץ הולך מהשולח אל הכניסה.",rows:REC},
+  {id:"fix",tab:"🛠 לא עובד?",hint:"בודקים לפי הסדר: הכבל, השולח, הכפתורים.",rows:FIX}],
+ archive:{label:"🗄 עוד דפים",title:"דפים קשורים",hint:"הכתום והסגול יחד, החיבורים הקבועים, ודפי המכשירים.",links:MORE},
+ rowKey:id=>/^e_p\d$/.test(id)?"e_p1":/^e_v\d$/.test(id)?"e_v1":id,noRow:{e_led:1,c_lfoled:1,c_leds:1,c_power:1},
+ rowText:{e_p1:{name:"PITCH 1-8 💗",he:"גובה לכל צעד, בסגול",info:"הגובה של כל צעד."},
+          e_v1:{name:"VEL 1-8 💗",he:"עוצמה לכל צעד, בסגול",info:"העוצמה של כל צעד. עד הסוף שמאלה: הצעד שותק."}},
+ cats:[["all","הכל"],["pulse","🥁 דפיקות"],["thru","🎚 דרך המסנן"],["shake","⚡ צליל שמזיז"],["live","🎛 לייב"]],
+ catName:{pulse:"🥁 דפיקות",thru:"🎚 צליל דרך המסנן",shake:"⚡ צליל שמזיז",live:"🎛 לייב"},
+ play:M,
+ /* the Edge is drawn 680 lower: move its boxes. Step numbers under every VEL, and the PITCH box grows up, as in edge.html */
+ setup:(BASE,BOX)=>{const es=BASE.querySelector("svg.edgei");
+   for(let i=1;i<=8;i++){const v=BOX["e_v"+i],p=BOX["e_p"+i],x=v[0]+v[2]/2;
+     es.insertAdjacentHTML("beforeend",`<text x="${x}" y="612" class="l" style="fill:#f2c94c;font-size:14px">${i}</text>`);
+     v[3]=618-v[1];const top=396;p[3]+=p[1]-top;p[1]=top}
+   Object.keys(BOX).forEach(k=>{if(k.indexOf("e_")===0)BOX[k][1]+=OFF})}
+};
+</script>
+<script src="doors.js?v=15"></script>
+</body>
+</html>
