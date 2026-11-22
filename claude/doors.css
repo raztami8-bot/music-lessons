@@ -7,7 +7,7 @@
   --gold:#f2c94c; --green:#6fcf97; --board:#d6299a; --chipline:#6d3359; --chipfg:#ffd9f1;
   --display:"Secular One","Assistant",system-ui,sans-serif;
   --body:"Assistant",system-ui,-apple-system,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --mono:"IBM Plex Mono","Assistant",ui-monospace,Menlo,monospace; /* Assistant: Hebrew inside a name, e.g. "(כניסה)", without monospace gaps */
   --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
   color-scheme:dark;
 }
@@ -85,6 +85,14 @@ h2{font-family:var(--display);font-weight:400;font-size:1.55rem;margin:0;line-he
 .row .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
 .row .he{color:var(--magenta);font-weight:700}
 .row .kind{font-size:.76rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 7px}
+.row .kind.out{background:#e9e4ea;border-color:#e9e4ea;color:#1a1a1a} /* like the board: framed = input, dark label = output; here light on the dark card */
+.row .sig{font-size:.86rem;color:var(--muted)}
+.wv{width:1.15em;height:.95em;vertical-align:-1px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.row .ex{display:flex;flex-direction:column;gap:0;margin-top:6px}
+.row .ex>b{font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.01em}
+.row .ex-t{background:var(--magenta-soft);border-radius:10px;padding:7px 10px}
+.row .ex-t>b{color:var(--chipfg)}
+.row .ex-n p{color:var(--muted);font-size:.94rem}
 .row p{margin:0}
 .opts{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
 .opts li{display:flex;gap:9px;align-items:baseline;font-size:.96rem}

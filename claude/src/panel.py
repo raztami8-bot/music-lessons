@@ -23,6 +23,17 @@ def flat(label):
     return out
 
 
+WAVES = {"⊓": "M0,0 v-8 h6 v8 h6 v-8", "∧": "M0,0 l6,-8 l6,8"}  # square and triangle, printed on the board as pictures, not words
+
+
+def _poslabel(x, y, t, anchor):
+    """a switch position: a word, or a small wave picture when the board prints a picture (⊓ square, ∧ triangle)"""
+    if t in WAVES:
+        x0 = x - 12 if anchor == "end" else x
+        return f'<path d="{WAVES[t]}" transform="translate({x0},{y})" fill="none" stroke="#bdbdbd" stroke-width="1.6" stroke-linejoin="round"/>'
+    return f'<text x="{x}" y="{y}" class="p" style="text-anchor:{anchor}">{html.escape(t)}</text>'
+
+
 class Panel:
     def __init__(self, key, var, name, W, H, frame, edge, title):
         self.slug, self.var, self.name, self.W, self.H = key, var, name, W, H
@@ -129,9 +140,9 @@ class Panel:
             top = y - 30 if "t" in pos else y - 18
             s += f'<text x="{x}" y="{top}" class="l">{html.escape(label)}</text>'
             if "l" in pos:
-                s += f'<text x="{x - 15}" y="{y + 4}" class="p" style="text-anchor:end">{html.escape(pos["l"])}</text>'
+                s += _poslabel(x - 15, y + 4, pos["l"], "end")
             if "r" in pos:
-                s += f'<text x="{x + 15}" y="{y + 4}" class="p" style="text-anchor:start">{html.escape(pos["r"])}</text>'
+                s += _poslabel(x + 15, y + 4, pos["r"], "start")
             if "t" in pos:
                 s += f'<text x="{x}" y="{y - 15}" class="p">{html.escape(pos["t"])}</text>'
             if "b" in pos:

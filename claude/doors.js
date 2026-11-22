@@ -8,12 +8,14 @@
      learn    [{t, b, tr:[...], hear, back, ids, set, all, btn:[label,"home"|"play"]}]
      find     [{id, tab, y:[y0,y1], ids, intro} | {id, tab, hint, rows:[[title,text]]} | {id, tab, hint, links:[[href,title,note]]}]
      rowKey   optional: id on the board -> id of the row that explains it (the 8 steps share one row)
-     rowText  optional: {id:{name, he, info}} to override a row
+     rowText  optional: {id:{name, he, info, kind}} to override a row
+     explain  optional: {id:{sig, w, h, t, n}}: a full explanation in the row: the signal, what it is, what you hear, try this, watch out.
+       The texts take {id} and [TEXT]. In search results only w shows. (Raz, 2026-11-23: the one-line rows were too short to understand.)
      names    optional: {id:name} to replace names from the panel (when the board prints the same word on several knobs)
      find tabs with a board may also give x:[x0,x1]: a column of the board instead of a full row
      a find tab may give deep:[{sec, t, p:[paragraphs], ids, set, tr:[...], hear, rows:[[term,text]], back}] instead: one long explanation per screen,
        with prev/next and a list of topics; its links (if any) come on the last card
-     a find tab may give bands:[{t, y:[y0,y1], x, ids, intro}] instead: several parts of the board one under the other in one tab,
+     a find tab may give bands:[{t, jt, y:[y0,y1], x, ids, intro}] instead (jt: a shorter name for its jump button): several parts of the board one under the other in one tab,
        with a row of jump buttons that stays on top (the whole board as one tab: jacks, rows, sequencer)
      a find tab may give mine:true (and a hint) instead: "my sounds", for a device with no memory. A sound is a name, and only what differs
        from the home: knob hours, switch positions, cables, a note. Touch a control on the board and choose. Saved under st.mine (a draft under st.draft).
@@ -44,7 +46,9 @@ const HOME=D.home.knobs, HOMESW=D.home.sw||{};
 const hour=h=>h===7?"עד הסוף שמאלה":h===5?"עד הסוף ימינה":"שעה "+h;
 const he=id=>D.he[id]||[E.info[id]&&E.info[id].indexOf("יציאה")===0?"יציאה":"כניסה","שקע"];
 const nm=id=>`<button class="en" data-c="${id}">${E.names[id]}</button>`;
-const tx=s=>s.replace(/\{(\w+)\}/g,(m,id)=>E.names[id]?nm(id):m).replace(/\[([^\]]+)\]/g,'<span class="en">$1</span>');
+/* a switch position the board prints as a picture, not a word: [⊓] square wave, [∧] triangle (the fonts draw ⊓ like a Hebrew letter) */
+const WAVE={"⊓":'<svg class="wv" viewBox="-2 -10 16 12" aria-label="ריבוע"><path d="M0,0 v-8 h6 v8 h6 v-8"/></svg>',"∧":'<svg class="wv" viewBox="-2 -10 16 12" aria-label="משולש"><path d="M0,0 l6,-8 l6,8"/></svg>'};
+const tx=s=>s.replace(/\{(\w+)\}/g,(m,id)=>E.names[id]?nm(id):m).replace(/\[([^\]]+)\]/g,(m,t)=>`<span class="en">${WAVE[t]||t}</span>`);
 
 /* ---------- the board, and crops of it ---------- */
 const tpl=document.createElement("template"); tpl.innerHTML=E.svg;
@@ -102,10 +106,16 @@ document.addEventListener("click",e=>{
 const shade=$("#shade"),sheet=$("#sheet");
 function openSheet(build){sheet.innerHTML='<button class="x">✕ סגור</button>';build(sheet);shade.classList.add("on");sheet.scrollTop=0}
 shade.addEventListener("click",e=>{if(e.target===shade||e.target.closest(".x"))shade.classList.remove("on")});
-function ctlHtml(id){
-  const h=he(id),o=(D.rowText||{})[id]||{};
-  let s=`<div class="top"><span class="en">${o.name||E.names[id]}</span><span class="kind">${h[1]}</span></div><div class="he">${o.he||h[0]}</div><p>${o.info||E.info[id]||""}</p>`;
-  if(h[2])s+=`<ul class="opts">${h[2].map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join("")}</ul>`;
+/* a row for one control. With D.explain[id] = {sig, w, h, t, n} the row explains it fully: what it is, what you hear, one thing to try, a warning.
+   short = true inside a button (search results): only "what it is", as plain text (a button can't hold the name buttons) */
+const EXL=[["w","💡 מה זה"],["h","👂 מה שומעים"],["t","👉 לנסות"],["n","⚠️ שים לב"]];
+function ctlHtml(id,short){
+  const h=he(id),o=(D.rowText||{})[id]||{},x=(D.explain||{})[id],kind=o.kind||h[1];
+  let s=`<div class="top"><span class="en">${o.name||E.names[id]}</span><span class="kind${/^יציא/.test(kind)?" out":""}">${kind}</span></div><div class="he">${o.he||h[0]}</div>`;
+  if(x&&short)s+=`<p>${plain(x.w)}</p>`;
+  else if(x){if(x.sig)s+=`<div class="sig">${tx(x.sig)}</div>`;EXL.forEach(k=>{if(x[k[0]])s+=`<div class="ex ex-${k[0]}"><b>${k[1]}</b><p>${tx(x[k[0]])}</p></div>`})}
+  else s+=`<p>${o.info||E.info[id]||""}</p>`;
+  if(h[2])s+=`<ul class="opts">${h[2].map(x=>`<li><b>${WAVE[x[0]]||x[0]}</b><span>${x[1]}</span></li>`).join("")}</ul>`;
   if(HOME[id]!==undefined)s+=`<span class="athome">🏠 בבית: ${hour(HOME[id])}</span>`;
   else if(HOMESW[id])s+=`<span class="athome">🏠 בבית: <span class="en">${HOMESW[id]}</span></span>`;
   return s;
@@ -175,7 +185,8 @@ function drawFind(q){
   el.appendChild(s);
   if(q){const k=q.toLowerCase(),hit=x=>x.toLowerCase().indexOf(k)>=0;
     const skip=D.noRow||{};
-    const ids=Object.keys(E.names).filter(i=>!skip[i]&&rowKey(i)===i&&(hit(E.names[i])||hit(he(i)[0])||hit(E.info[i]||"")));
+    const xw=i=>{const x=(D.explain||{})[i];return x?plain(x.w):""};
+    const ids=Object.keys(E.names).filter(i=>!skip[i]&&rowKey(i)===i&&(hit(E.names[i])||hit(he(i)[0])||hit(E.info[i]||"")||hit(xw(i))));
     let rc=[];F.forEach(x=>{if(x.rows)rc=rc.concat(x.rows.filter(r=>hit(r[0])||hit(plain(r[1]))))});
     if(!ids.length&&!rc.length)el.insertAdjacentHTML("beforeend",`<p class="hint">לא נמצא. אפשר לחפש באנגלית כמו על הלוח, או בעברית.</p>`);
     rc.forEach(r=>el.insertAdjacentHTML("beforeend",qa(r[0],r[1])));
@@ -188,7 +199,7 @@ function drawFind(q){
     if(D.deep)D.deep.cards.forEach((c,ci)=>{if(hit(c.t)||(c.p||[]).some(t=>hit(plain(t)))){
       const bt=document.createElement("button");bt.className="row";bt.innerHTML=`<div class="he">📚 ${c.t}</div><p>להעמיק</p>`;
       bt.onclick=()=>{st.deep=ci;deepMenu=false;go("deep")};el.appendChild(bt)}});
-    ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i);el.appendChild(b)});
+    ids.slice(0,30).forEach(i=>{const b=document.createElement("button");b.className="row";b.dataset.c=i;b.innerHTML=ctlHtml(i,true);el.appendChild(b)});
     return}
   if(f.chk){drawChk(el);return}
   if(f.mine){drawMine(f,el);return}
@@ -198,9 +209,9 @@ function drawFind(q){
   if(f.bands){
     const jump=document.createElement("div");jump.className="jump";el.appendChild(jump);const rows={};
     f.bands.forEach(b=>{const h=document.createElement("h3");h.textContent=b.t;el.appendChild(h);
-      const j=document.createElement("button");j.textContent=b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
-      drawBand(b,el,rows)});
-  }else drawBand(f,el,{});
+      const j=document.createElement("button");j.textContent=b.jt||b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
+      drawBand(b,el,rows,f.id)});
+  }else drawBand(f,el,{},f.id);
   archBtn(el);$("#findScroll").scrollTop=0;
 }
 /* the archive (older pages of this device): a quiet button that opens a list */
@@ -208,7 +219,7 @@ function archBtn(el,a){a=a||D.archive;if(!a)return;const b=document.createElemen
   b.onclick=()=>openSheet(sh=>sh.insertAdjacentHTML("beforeend",`<h2>${a.title}</h2><p class="lead">${a.hint}</p><div class="links">${a.links.map(m=>`<a href="${m[0]}"><span>${m[1]}</span><small>${m[2]}</small></a>`).join("")}</div>`));
   el.appendChild(b)}
 /* one part of the board: the picture, and a row for every control in it */
-function drawBand(f,el,rows){
+function drawBand(f,el,rows,tab){
   const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=f.y[1]-f.y[0];
   const x0=f.x?f.x[0]:0,w=f.x?f.x[1]-f.x[0]:W;
   sv.setAttribute("viewBox",`${x0} ${f.y[0]} ${w} ${h}`);sv.setAttribute("width",w);sv.setAttribute("height",h);
@@ -216,7 +227,8 @@ function drawBand(f,el,rows){
   if(fit){sv.removeAttribute("width");sv.removeAttribute("height");sv.style.width="100%"}
   setKnobs(sv,HOME);bd.appendChild(sv);el.appendChild(bd);
   el.insertAdjacentHTML("beforeend",`<p class="hint">${tx(f.intro)} ${fit?"נוגעים בכפתור.":"גוללים הצידה, ונוגעים בכפתור."}</p>`);
-  f.ids.forEach(i=>{const r=document.createElement("div");r.className="row";r.innerHTML=ctlHtml(i);rows[i]=r;el.appendChild(r)});
+  f.ids.forEach(i=>{const r=document.createElement("div");r.className="row";r.innerHTML=ctlHtml(i);rows[i]=r;el.appendChild(r);
+    if(tab)addChk(el,tab,((D.rowText||{})[i]||{}).he||he(i)[0])}); /* checks on a board row: at:[the find tab id, the row's Hebrew name] */
   sv.addEventListener("click",e=>{const g=e.target.closest(".ctl");if(!g)return;const id=g.dataset.id;
     el.querySelectorAll(".band .pick").forEach(x=>x.classList.remove("pick"));g.classList.add("pick");
     const r=rows[rowKey(id)];
@@ -316,7 +328,7 @@ function drawEdit(f,el){
   const jump=document.createElement("div");jump.className="jump";el.appendChild(jump);
   const B=(F.find(x=>x.bands)||{bands:[{t:"הלוח",y:[0,HH]}]}).bands,svgs=[];
   B.forEach(b=>{const h3=document.createElement("h3");h3.textContent=b.t;el.appendChild(h3);
-    const j=document.createElement("button");j.textContent=b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h3.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
+    const j=document.createElement("button");j.textContent=b.jt||b.t;j.onclick=()=>{$("#findScroll").scrollTop+=h3.getBoundingClientRect().top-jump.getBoundingClientRect().bottom-6};jump.appendChild(j);
     const bd=document.createElement("div");bd.className="band";const sv=BASE.cloneNode(true),h=b.y[1]-b.y[0],x0=b.x?b.x[0]:0,w=b.x?b.x[1]-b.x[0]:W;
     sv.setAttribute("viewBox",`${x0} ${b.y[0]} ${w} ${h}`);sv.setAttribute("width",w);sv.setAttribute("height",h);
     if(w<=460||window.innerWidth>=w+40){sv.removeAttribute("width");sv.removeAttribute("height");sv.style.width="100%"}

@@ -12,7 +12,7 @@ P.din("midithru", 108, 96, "MIDI THRU")
 TOP = [("j_osccv", "OSC\nCV", 0), ("j_oscfm", "OSC\nFM", 0), ("j_oscmod", "OSC\nMOD", 0), ("j_vcfcut", "VCF\nCUTOFF", 0),
        ("j_vcfres", "VCF\nRES", 0), ("j_mix1", "MIX 1", 0), ("j_mix2", "MIX 2", 0), ("j_vcmixin", "VC MIX", 0),
        ("j_multin", "MULTIPLE", 0), ("j_mult1", "MULTIPLE", 1), ("j_mult2", "MULTIPLE", 1), ("j_pulse", "OSC\nPULSE", 1),
-       ("j_saw", "OSC\nSAW", 1), ("j_env", "ENV", 1), ("j_noise", "NOISE", 1), ("j_vca", "VCA", 1), ("j_phones", "PHONES", 1)]
+       ("j_saw", "OSC\nSAW", 1), ("j_env", "ENV", 1), ("j_noise", "NOISE", 1), ("j_vca", "VCA/\nLINE", 1), ("j_phones", "PHONES", 1)]
 BOT = [("j_mixcv", "MIX CV", 0), ("j_ext", "EXT\nAUDIO", 0), ("j_tempo", "TEMPO", 0), ("j_play", "PLAY/\nSTOP", 0),
        ("j_reset", "RESET", 0), ("j_hold", "HOLD", 0), ("j_envgate", "ENV\nGATE", 0), ("j_vcacv", "VCA CV", 0),
        ("j_lforate", "LFO\nRATE", 0), ("j_lfotri", "LFO TRI", 1), ("j_lfosqu", "LFO SQU", 1), ("j_vcmixout", "VC MIX", 1),
@@ -37,21 +37,21 @@ P.knob("reso", 612, 230, 23, "RESONANCE")
 P.knob("vcfmod", 712, 230, 23, "VCF MOD")
 P.sw("vcfmode", 512, 300, "MODE", {"l": "LP", "r": "HP"})
 P.sw("vcfsrc", 612, 300, "MOD SOURCE", {"l": "ENV", "r": "LFO"})
-P.sw("vcfpol", 712, 300, "MOD POLARITY", {"l": "+", "r": "−"})
+P.sw("vcfpol", 712, 300, "MOD POLARITY", {"l": "POS", "r": "NEG"})
 P.knob("volume", 880, 230, 25, "VOLUME")
 P.sw("vcamode", 880, 300, "VCA MODE", {"l": "ENV", "r": "ON"})
 
 # ---------- row 2: envelope, modulation, utilities ----------
 P.bar(16, 444, 330, "ENVELOPE")
 P.bar(450, 668, 330, "MODULATION")
-P.bar(674, 984, 330, "UTILITIES")
+P.bar(674, 984, 330, "UTILITY")
 P.knob("attack", 75, 398, 23, "ATTACK")
 P.knob("decay", 180, 398, 23, "DECAY")
 P.knob("sustain", 285, 398, 23, "SUSTAIN")
 P.sw("susw", 392, 404, "SUSTAIN", {"l": "ON", "r": "OFF"})
 P.knob("lforate", 512, 398, 23, "LFO RATE")
 P.led("lfoled", 548, 372, "", "#ff4b3a")
-P.sw("lfoshape", 612, 404, "SHAPE", {"l": "SQU", "r": "TRI"})
+P.sw("lfoshape", 612, 404, "SHAPE", {"l": "⊓", "r": "∧"})  # pictures on the board (Raz's photo, 2026-11-23)
 P.knob("glide", 760, 398, 23, "GLIDE")
 P.knob("vcmix", 880, 398, 23, "VC MIX")
 P.text(858, 434, "MIX 1", "p")
@@ -93,7 +93,7 @@ P.NAMES.update({
     "lfoled": "נורית ה־LFO", "power": "נורית ההפעלה", "kybd": "◀ KYBD", "step": "STEP ▶",
     "j_oscmod": "OSC MOD (שקע)", "j_tempo": "TEMPO (שקע)", "j_play": "PLAY/STOP (שקע)", "j_lforate": "LFO RATE (שקע)",
     "j_vcmixin": "VC MIX (שקע כניסה)", "j_vcmixout": "VC MIX (שקע יציאה)", "j_multin": "MULTIPLE (כניסה)",
-    "j_mult1": "MULTIPLE (יציאה 1)", "j_mult2": "MULTIPLE (יציאה 2)", "j_vca": "VCA (יציאה ראשית)",
+    "j_mult1": "MULTIPLE (יציאה ראשונה)", "j_mult2": "MULTIPLE (יציאה שנייה)",  # no digits next to Hebrew: "(יציאה 1)" showed as "(1 יציאה)" "j_vca": "VCA/LINE",
 })
 for i in range(8):
     P.NAMES[f"s{i + 1}"] = f"STEP {i + 1}"
@@ -128,7 +128,7 @@ P.INFO.update({
     "j_saw": "יציאה: המתנד בגל מסור, לפני המסנן.",
     "j_env": "יציאה: המעטפת. עולה ויורדת בכל תו.",
     "j_noise": "יציאה: הרעש.",
-    "j_vca": "היציאה הראשית, למיקסר. כבל מונו. VOLUME שולט בה. במדריך: VCA/LINE.",
+    "j_vca": "היציאה הראשית, למיקסר. כבל מונו. VOLUME שולט בה.",
     "j_phones": "אוזניות. VOLUME שולט גם בה. מורידים עוצמה לפני שמחברים.",
     "j_mixcv": "כניסה: האיזון בין המתנד לרעש.",
     "j_ext": "כניסה: צליל מבחוץ. נכנס במקום הרעש, ועובר במסנן של הקרייב. הכמות ב־MIX.",
@@ -158,7 +158,7 @@ P.INFO.update({
     "vcfmod": "כמה המסנן זז מהמקור שבמתג MOD SOURCE שלו. עם המעטפת: ה״יאו״ של האסיד.",
     "vcfmode": "LP חותך את הגבוהים: הבית של בס ואסיד. HP חותך את הנמוכים.",
     "vcfsrc": "מי מזיז את המסנן: המעטפת, או ה־LFO.",
-    "vcfpol": "+: המודולציה פותחת את המסנן. −: סוגרת אותו.",
+    "vcfpol": "POS: המודולציה פותחת את המסנן. NEG: סוגרת אותו.",
     "volume": "העוצמה ביציאה הראשית ובאוזניות.",
     "vcamode": "ENV: שומעים רק כשתו מנגן. ON: הצליל מזמזם בלי הפסקה, בגובה של התו האחרון. כשהקרייב לא שותק, זה המתג.",
     "attack": "כמה מהר התו נכנס. עד הסוף שמאלה: מיד.",
@@ -167,7 +167,7 @@ P.INFO.update({
     "susw": "ON: התו מחזיק כל עוד לוחצים. OFF: נופל מיד אחרי הכניסה.",
     "lforate": "המהירות של ה־LFO, הגל האיטי שמזיז כפתורים בשבילך. הנורית לידו מהבהבת לפיו.",
     "lfoled": "מהבהבת במהירות של ה־LFO.",
-    "lfoshape": "צורת ה־LFO: ריבוע קופץ בין שני מצבים, משולש עולה ויורד חלק.",
+    "lfoshape": "צורת ה־LFO, מצוירת על הלוח: ריבוע (⊓) קופץ בין שני מצבים, משולש (∧) עולה ויורד חלק.",
     "glide": "גלישה בין תווים. בעריכת צעד: גלישה רק לצעד הזה. עם SHIFT: חזרות מהירות (ראצ׳ט).",
     "vcmix": "מערבב בין שני כבלים, MIX 1 ו־MIX 2. בלי כבלים הוא לא עושה כלום.",
     "tempo": "המהירות של הסיקוונסר. בעריכת צעד: אורך התו, 1 עד 8. עם SHIFT: סווינג.",
