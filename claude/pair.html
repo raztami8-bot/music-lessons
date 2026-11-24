@@ -81,8 +81,8 @@ for(let i=1;i<=8;i++){EHOME["p"+i]=12;EHOME["v"+i]=2}
 const HOME={},HOMESW={};
 for(const k in CHOME)HOME["c_"+k]=CHOME[k];
 for(const k in EHOME)HOME["e_"+k]=EHOME[k];
-Object.entries({shape:"SAW",vcfmode:"LP",vcfsrc:"ENV",vcfpol:"+",vcamode:"ENV",susw:"OFF"}).forEach(([k,v])=>HOMESW["c_"+k]=v);
-Object.entries({osc1shape:"TRI",seqpitch:"OFF",hardsync:"OFF",vcfsel:"LP",vcamode:"FAST",clock:"INT/EXT"}).forEach(([k,v])=>HOMESW["e_"+k]=v);
+Object.entries({shape:"⊿",vcfmode:"LO",vcfsrc:"ENV",vcfpol:"POS",vcamode:"ENV",susw:"OFF"}).forEach(([k,v])=>HOMESW["c_"+k]=v);
+Object.entries({osc1shape:"∧",seqpitch:"OFF",hardsync:"OFF",vcfsel:"LP",vcamode:"FAST",clock:"INT/EXT"}).forEach(([k,v])=>HOMESW["e_"+k]=v);
 const H=o=>Object.assign({},HOME,o||{});
 
 /* the setting that makes ASSIGN a clock, from lesson 23, card 4.1 */

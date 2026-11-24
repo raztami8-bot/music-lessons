@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b1a26">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="קטע 1 · אסיד">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>קטע 1 · אסיד · לבנות קטע שלם · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="doors.css?v=8">
+<style>
+/* A whole track, not a jam (Raz, 2026-11-24: "something that actually plays, not random jams"). Track 1: acid, 135, in A.
+   One loop on each device, and the track is built from what comes in and goes out, every 8 or 16 bars.
+   Three tabs: prepare (the loop on each device), the map (the five parts, bar by bar), play (a conductor that follows the bars).
+   Same shell as week.html (doors.css), violet: the "together" family. Standalone page, not built by build.py. All content is in the script. */
+:root{--bg:#131219;--panel:#1b1a26;--card:#232231;--line:#383650;
+  --magenta:#7d6bf2;--magenta-soft:#28244d;--chipline:#4a4390;--chipfg:#dcd8ff}
+.dv{display:inline-grid;place-items:center;flex:none;width:1.7em;height:1.7em;border-radius:.55em;background:color-mix(in srgb,var(--c) 30%,var(--card));
+  border:1px solid var(--c);font-size:.95em;line-height:1}
+.devhead{display:flex;align-items:center;gap:10px}
+.devhead .dv{width:2.3em;height:2.3em;font-size:1.25rem;border-radius:.7em}
+.devhead h2{margin:0}
+.devhead small{display:block;color:var(--muted);font-weight:600;font-size:.88rem}
+.steps{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:7px}
+.steps li{line-height:1.45}
+.ready{align-self:flex-start;border-radius:999px;padding:9px 16px;font-weight:700;background:var(--card);border:1px solid var(--line)}
+.ready.on{background:#1f3a2b;border-color:var(--green);color:var(--green)}
+.wv{width:1.15em;height:.95em;vertical-align:-1px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+/* step grids, left to right as on the devices */
+.grid{direction:ltr;display:flex;flex-direction:column;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px}
+.grow{display:flex;align-items:center;gap:8px}
+.grow .lb{flex:0 0 7.2em;font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cells{flex:1;display:grid;gap:3px}
+.cells.n16{grid-template-columns:repeat(4,1fr) 4px repeat(4,1fr) 4px repeat(4,1fr) 4px repeat(4,1fr)}
+.cells.n8{grid-template-columns:repeat(4,1fr) 4px repeat(4,1fr)}
+.cell{height:26px;border-radius:5px;background:#2c2a3d;display:grid;place-items:center;font-family:var(--mono);font-size:.72rem;font-weight:600;color:#fff;position:relative}
+.cell.on{background:var(--c)}
+.cell.num{height:auto;background:none;color:var(--muted);font-size:.62rem}
+.cell .m{position:absolute;top:-1px;right:2px;font-size:.6rem;line-height:1}
+.cell .s{position:absolute;bottom:0;left:2px;font-size:.58rem;line-height:1;opacity:.9}
+.cell i{display:block;border-radius:50%;background:#fff}
+.legend{font-size:.82rem;color:var(--muted);margin:2px 0 0;direction:rtl}
+/* the map: time runs left to right, like the steps on the devices */
+.map{direction:ltr;display:flex;flex-direction:column;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px}
+.mrow{display:flex;align-items:center;gap:6px}
+.mrow .lb{flex:0 0 6.3em;font-size:.7rem;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:rtl;text-align:right}
+.track{flex:1;position:relative;height:18px;background:#24223300;border-radius:4px}
+.track .sg{position:absolute;top:2px;bottom:2px;border-radius:3px;background:var(--c)}
+.track .sg.in{background:linear-gradient(90deg,transparent,var(--c))}
+.track .sg.out{background:linear-gradient(90deg,var(--c),transparent)}
+.track .sg.low{opacity:.45}
+.track .sg.rise{background:repeating-linear-gradient(135deg,var(--c) 0 4px,#fff 4px 6px)}
+.track .div{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--line)}
+.secs{flex:1;position:relative;height:30px}
+.secs button{position:absolute;top:0;bottom:0;border:0;border-radius:6px;background:var(--sc);color:#fff;font-weight:800;font-size:.66rem;padding:0 1px;overflow:hidden;white-space:nowrap;direction:rtl;letter-spacing:-.02em}
+.secs button small{display:block;font-weight:600;font-size:.62rem;opacity:.85;font-family:var(--mono)}
+.sec{border-inline-start:6px solid var(--sc)}
+.sec h2{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sec h2 small{font-family:var(--mono);font-size:.8rem;color:var(--muted);font-weight:600}
+.plays{display:flex;flex-wrap:wrap;gap:6px}
+.plays span{font-size:.8rem;font-weight:700;border-radius:999px;padding:2px 10px;background:color-mix(in srgb,var(--c) 28%,var(--card));border:1px solid var(--c)}
+.evs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.evs li{display:flex;gap:9px;align-items:flex-start;line-height:1.45}
+.evs .b{flex:none;font-family:var(--mono);font-size:.76rem;font-weight:600;color:var(--muted);min-width:4.4em;padding-top:3px}
+.evs li.free{color:var(--muted)}
+.why{background:var(--magenta-soft);border:1px solid var(--magenta);border-radius:12px;padding:9px 12px;margin:0}
+/* the conductor */
+.cond{display:flex;flex-direction:column;gap:10px}
+.prog5{direction:ltr;display:flex;gap:3px;height:34px}
+.prog5 div{position:relative;border-radius:7px;background:color-mix(in srgb,var(--sc) 25%,var(--card));overflow:hidden;display:grid;place-items:center;
+  font-size:.72rem;font-weight:800;color:#fff;direction:rtl}
+.prog5 div i{position:absolute;inset:0 auto 0 0;background:var(--sc);opacity:.85}
+.prog5 div span{position:relative}
+.prog5 div.cur{outline:2px solid #fff}
+.stage{background:var(--card);border:2px solid var(--sc,var(--line));border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s}
+.stage.flash{box-shadow:0 0 0 6px var(--gold)}
+.stage .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.stage .sn{font-family:var(--display);font-size:1.7rem;line-height:1.1}
+.stage .bars{font-family:var(--mono);font-size:1.05rem;color:var(--muted)}
+.stage .bars b{font-size:2.1rem;color:var(--fg)}
+.beats{direction:ltr;display:flex;gap:8px;justify-content:center}
+.beats i{width:16px;height:16px;border-radius:50%;background:var(--line)}
+.beats i:first-child{width:22px;height:22px;margin-top:-3px}
+.beats i.on{background:var(--gold)}
+.now{display:flex;flex-direction:column;gap:7px}
+.now .ev{display:flex;gap:10px;align-items:flex-start;font-size:1.22rem;line-height:1.4;background:#2e2a1c;border:1px solid var(--gold);border-radius:12px;padding:9px 12px}
+.now .ev.free{background:var(--panel);border-color:var(--line);font-size:1.05rem;color:var(--muted)}
+.now .ev .hr{display:block;font-size:1rem;font-weight:700;color:var(--gold);margin-top:2px}
+.now .idle{color:var(--muted);font-size:1.05rem;margin:0}
+.next{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:9px 12px;display:flex;flex-direction:column;gap:3px}
+.next .w{font-size:.85rem;font-weight:800;color:var(--magenta)}
+.next .w b{font-family:var(--mono);font-size:1.3rem;color:var(--gold);margin-inline-start:6px}
+.next .t{display:flex;gap:9px;align-items:flex-start;font-size:1.02rem}
+.bpm{display:flex;align-items:center;gap:10px;justify-content:center}
+.bpm button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:1.4rem;font-weight:700}
+.bpm b{font-family:var(--mono);font-size:1.8rem;min-width:3.2ch;text-align:center}
+.bpm small{color:var(--muted);font-size:.85rem}
+.ctl{display:flex;gap:8px}
+.ctl button{flex:1;border-radius:999px;padding:12px 8px;font-weight:700;border:1px solid var(--line);background:var(--card)}
+.go{align-self:stretch;border-radius:16px;padding:16px;font-weight:800;font-size:1.15rem;background:var(--magenta);border:0;color:#fff}
+.go small{display:block;font-weight:600;font-size:.85rem;opacity:.9}
+.startfrom{font-size:.9rem;color:var(--gold);margin:0;text-align:center}
+.check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.check li{display:flex;gap:9px;align-items:flex-start}
+textarea{width:100%;min-height:74px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--fg);font:inherit;resize:vertical}
+.saved{color:var(--green);font-size:.88rem;margin:4px 0 0;min-height:1.3em}
+.tabs button.done span::after{content:"✓";font-size:.8rem;color:var(--green);margin-inline-start:2px;vertical-align:top}
+a.ln{color:var(--chipfg)}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="index.html">→ הבית</a>
+  <h1>קטע 1 · אסיד</h1>
+  <span class="homebtn" aria-hidden="true" style="visibility:hidden">🏠</span>
+</div>
+
+<main>
+  <section class="view" id="v-prep"><div class="scroll"><div class="inner" id="prep"></div></div></section>
+  <section class="view" id="v-map"><div class="scroll" id="mapScroll"><div class="inner" id="map"></div></div></section>
+  <section class="view" id="v-play"><div class="scroll"><div class="inner" id="play"></div></div></section>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-v="prep"><span>🧰</span>הכנה</button>
+  <button data-v="map"><span>🗺️</span>המפה</button>
+  <button data-v="play"><span>🎬</span>לנגן</button>
+</nav>
+
+<script>
+"use strict";
+/* ---------- content ---------- */
+/* Facts and names come from the device pages: impact.html (COMBO, REC), t8.html (״קו האסיד״, COMBO), crave.html (recording, saving),
+   edge.html (״מתכת וזאפ״). Names in [ ] are written as printed on the device. Hours: 7 = all the way left, 5 = all the way right. */
+const DEV={
+ imp:{n:"האימפקט",e:"💥",c:"#4a5fd6",href:"impact.html"},
+ t8:{n:"הטי־8",e:"🥁",c:"#d9482b",href:"t8.html"},
+ cr:{n:"הכתום",e:"🧡",c:"#d97706",href:"crave.html"},
+ ed:{n:"הסגול",e:"💗",c:"#b5179e",href:"edge.html"}
+};
+const BPM0=135;
+
+/* the loop on each device */
+const PREP=[
+ {d:"imp",t:"התופים, והמנצח",sub:"הקצב של כולם בא ממנו",
+  grid:{n:16,rows:[["KICK",[1,5,9,13]],["CLOSED HAT",[2,4,6,8,10,12,14,16]],["OPEN HAT",[3,7,11,15]],["SNARE 2",[5,13]]]},
+  steps:["[RATE] על 135. [PTRN], ואז לחצן של מקום פנוי.",
+   "[STEP]. בוחרים כלי ב־[SHIFT] + הפד שלו, ונוגעים בצעדים שברשת. ככה לארבעת הכלים.",
+   "המחיאה: מחזיקים [COLOR] ונוגעים בפד [SNARE 2]. הוא נדלק בכתום, וסנר 2 נהיה מחיאה.",
+   "צליל: [PITCH] של הקיק לשעה 10, [DECAY] של הקיק לשעה 9: קיק טראנס קצר והדוק. [HATS TONE] לשעה 2, [OPEN HAT DECAY] לשעה 9. [TONE] של סנר 2 לשעה 1.",
+   "[LEVEL] של OPEN HAT ושל SNARE 2 עד הסוף שמאלה. הם בתבנית, ומחכים בשקט לתור שלהם.",
+   "[SHIFT] + [9]: לחצן 9 נדלק. זה מצב הגלגול, לסוף השבירה.",
+   "לשמור: מחזיקים [SAVE] ולוחצים [PTRN]."],
+  why:"קיק קצר משאיר רווח אחרי כל מכה. לשם נכנס הבס."},
+ {d:"t8",t:"בס האסיד",sub:"תו אחד, וכל העניין בכפתורים",
+  bass:true,
+  steps:["[BASS], ואז [KYBD], ואז [REC]. בתצוגה [St. 1].",
+   "בכל צעד לחצן 10, [A]. בצעדים 4, 7, 12, 15: לוחצים גם לחצן 15, [OCT+]. בצעדים 6, 14: גם לחצן 16, [SLIDE]. אחרי צעד 16: [REC].",
+   "הדגשה: מחזיקים את צעד 4 ולוחצים [ACCENT]: [A.On]. אותו דבר בצעד 12.",
+   "צליל: [CUTOFF] לשעה 8, סגור. [RESO] לשעה 12, [ENV MOD] לשעה 10, [DECAY] של הבס לשעה 10.",
+   "התופים של הטי־8 שותקים: ה־[LEVEL] של כל תוף עד הסוף שמאלה. הקיק בא מהאימפקט.",
+   "לפני ▶: [SHIFT] + [BASS]. הלחצן מהבהב: הבס מחכה בשקט.",
+   "לשמור: [SHIFT] + 16, [TEMPO/VALUE] עד [ALL], ואז לחצן 2."],
+  why:"אותו A כל הזמן, ובכל זאת הוא מדבר: [CUTOFF] ו־[ENV MOD] הופכים אותו לשיחה. זה הלב של אסיד."},
+ {d:"cr",t:"קו עליון קצר",sub:"ארבעה תווים, והרבה שקט",
+  line:true,
+  steps:["מתחילים מ־🏠 הבית של הכתום (הכפתור למעלה <a class=\"ln\" href=\"crave.html\">בדף שלו</a>).",
+   "צליל: מתג [SHAPE] על [⎍]. [PULSE WIDTH] לשעה 3, [CUTOFF] לשעה 1, [RESONANCE] לשעה 10, [VCF MOD] לשעה 11, [DECAY] לשעה 10, [GLIDE] לשעה 9.",
+   "אוקטבה: הלחצן ▶ פעמיים. ככה הקו יושב גבוה, מעל הבס.",
+   "הקלטה: מצב קלידים, נורה ירוקה. [REC], ואז קליד לכל צעד: 6, [HOLD/REST], [HOLD/REST], 8, [HOLD/REST], 6, 3, [HOLD/REST]. [REC] שוב.",
+   "כיוון: מנגנים הכל, ו־[VOLUME] של הכתום לשעה 12. מסובבים [FREQUENCY] מעט, עד שה־A של הכתום והבס של הטי־8 לא צורמים זה מול זה.",
+   "לשמור: [SHIFT] + [PLAY/STOP] שתי שניות, [STEP 3] (או מקום פנוי אחר), ואז [SHIFT] + [REC].",
+   "לפני ▶: [VOLUME] עד הסוף שמאלה."],
+  why:"הקו לא מתחרה בבס, הוא עונה לו. הרבה שקט, ותו גבוה כשהבס נח."},
+ {d:"ed",t:"הקשה מתגלגלת",sub:"רק ברווחים שבין המכות",
+  perc:true,
+  steps:["מתחילים מ־🏠 הבית של הסגול (הכפתור למעלה <a class=\"ln\" href=\"edge.html\">בדף שלו</a>).",
+   "צליל: מתג [SHAPE] של שני המתנדים על [⎍]. [FREQUENCY] של מתנד 1 לשעה 1. [LEVEL] של מתנד 2 לשעה 2, [1-2 FM AMT] לשעה 1. [DECAY] של EG (VCO 1&2) לשעה 9, ו־[DECAY] של OUTPUT (VCA) לשעה 9.",
+   "מתג [SEQ PITCH MOD] על [OSC 1 & 2]. [SCALE] על 1/16.",
+   "[VEL] לפי הרשת: 1, 3, 5 עד הסוף שמאלה, שקט. 2 ו־6 לשעה 11, 4 לשעה 2, 7 לשעה 9, 8 לשעה 3.",
+   "[PITCH] של צעד 4 לשעה 2, ושל צעד 8 לשעה 3. השאר בשעה 12.",
+   "מכוונים לפי האוזן, עד שזה ״טיק־טק״ קצר ומתכתי, לא מכה עגולה.",
+   "לפני ▶: [VOLUME] עד הסוף שמאלה."],
+  why:"בצעדים 1 ו־5 נוחת הקיק, ובצעד 3 ה״צ״. הסגול ממלא רק את מה שנשאר, ולכן הוא מגלגל ולא מתנגש."}
+];
+const BASS=[["A","",""],["A","",""],["A","",""],["A","↑","▲"],["A","",""],["A","S",""],["A","↑",""],["A","",""],
+  ["A","",""],["A","",""],["A","",""],["A","↑","▲"],["A","",""],["A","S",""],["A","↑",""],["A","",""]];
+const LINE=[["A","6"],["",""],["",""],["C","8"],["",""],["A","6"],["E","3"],["",""]];
+const PERC=[[0,""],[3,""],[0,""],[5,"↑"],[0,""],[3,""],[2,""],[4,"↑"]];  /* VEL size 0..5, PITCH mark */
+
+/* the five parts. Events: b = bar in the part (e = last bar, for something slow), d = device, t = text,
+   r = [from hour, to hour] for a knob that moves slowly, soft = free hands, no exact moment */
+const SEC=[
+ {k:"intro",n:"פתיחה",bars:16,c:"#3d7bd9",
+  why:"פתיחה משאירה מקום. 16 תיבות כמעט רק קיק, וככה כל מה שנכנס אחר כך נשמע.",
+  ev:[{b:1,d:"imp",t:"[PLAY/PAUSE] באימפקט, ובאותו רגע ▶ כאן. כולם מתחילים יחד."},
+   {b:1,e:8,d:"imp",t:"רק מקשיבים: הקיק יושב טוב? זה הזמן לכוון [PITCH] של הקיק.",soft:1},
+   {b:9,e:12,d:"ed",t:"[VOLUME] של הסגול עולה לאט",r:[7,12]}]},
+ {k:"build",n:"בנייה",bars:16,c:"#e08a1e",
+  why:"בבנייה דבר אחד נכנס, ודבר אחד נפתח לאט. האוזן מרגישה שמשהו מתקרב.",
+  ev:[{b:1,d:"t8",t:"[SHIFT] + [BASS]: הבס נכנס, עם [CUTOFF] סגור."},
+   {b:1,e:16,d:"t8",t:"[CUTOFF] של הטי־8 נפתח לאט",r:[8,11]},
+   {b:9,d:"imp",t:"[LEVEL] של OPEN HAT לשעה 1: ה״צ״ באוף־ביט נכנס."}]},
+ {k:"peak",n:"שיא",bars:32,c:"#d6336c",
+  why:"בשיא רק יד אחת עובדת באמת, על הבס. אם מזיזים הכל יחד, שום דבר לא בולט.",
+  ev:[{b:1,d:"imp",t:"[LEVEL] של SNARE 2 לשעה 1: המחיאה נכנסת."},
+   {b:1,e:8,d:"t8",t:"[RESO] של הטי־8 עולה",r:[12,2]},
+   {b:9,e:12,d:"cr",t:"[VOLUME] של הכתום עולה: הקו העליון נכנס",r:[7,12]},
+   {b:13,e:24,d:"t8",t:"יד חופשית על הבס: [CUTOFF], [ENV MOD], [DECAY]. לאט, ולא הכל יחד.",soft:1},
+   {b:17,d:"cr",t:"[SHIFT] + [ARP] + 7: הקו של הכתום נגמר בצעד 7, ומסתובב מול הבס."},
+   {b:25,e:32,d:"t8",t:"[CUTOFF] של הטי־8 נפתח לשיא",r:[11,1]},
+   {b:32,d:"imp",t:"אצבע מוכנה על [MUTE]."}]},
+ {k:"break",n:"שבירה",bars:16,c:"#7d5fd6",
+  why:"השבירה עובדת בגלל מה שחסר. אחרי 16 תיבות בלי קיק, הוא חוזר ומרגיש פי שניים.",
+  ev:[{b:1,d:"imp",t:"[MUTE], ואז הפדים [KICK], [CLOSED HAT] ו־[SNARE 2]. נשארים ה״צ״, הבס, הקו והסגול."},
+   {b:1,e:4,d:"t8",t:"[CUTOFF] של הטי־8 יורד",r:[1,9]},
+   {b:9,e:16,d:"cr",t:"רעש עולה: [MIX] של הכתום ימינה, לכיוון EXT/NOISE",r:[7,3]},
+   {b:15,d:"imp",t:"גלגול: אצבע על 1/16 בפס, ונוגעים בפד [SNARE 1]."},
+   {b:16,d:"imp",t:"אצבע על 1/32, הכי מהיר. בסוף התיבה עוזבים, והיד על [SHIFT] + [MUTE]."}]},
+ {k:"end",n:"סיום",bars:32,c:"#2f9e72",
+  why:"הסיום הוא הפתיחה הפוך: יוצאים לפי הסדר, והקיק אחרון.",
+  ev:[{b:1,d:"imp",t:"[SHIFT] + [MUTE] בדיוק על ה־1: הכל חוזר. ביד השנייה: [MIX] של הכתום חזרה עד הסוף שמאלה."},
+   {b:1,e:16,d:"t8",t:"שיא שני: היד על הבס, כמו בשיא.",soft:1},
+   {b:17,e:20,d:"cr",t:"[VOLUME] של הכתום יורד לאט",r:[12,7]},
+   {b:21,e:24,d:"t8",t:"[CUTOFF] של הטי־8 נסגר לאט",r:[11,8]},
+   {b:25,d:"t8",t:"[SHIFT] + [BASS]: הבס יוצא."},
+   {b:25,e:28,d:"ed",t:"[VOLUME] של הסגול יורד לאט",r:[12,7]},
+   {b:29,d:"imp",t:"[LEVEL] של SNARE 2 ושל OPEN HAT עד הסוף שמאלה. נשארו הקיק וההיי־האט הסגור."},
+   {b:33,d:"imp",t:"[STOP]. זה הסוף."}]}
+];
+/* who plays when, in bars of the whole track (1 to 112), for the map */
+const LAYERS=[
+ ["imp","קיק",[[1,64,"on"],[81,112,"on"]]],
+ ["imp","האט סגור",[[1,64,"on"],[81,112,"on"]]],
+ ["imp","האט פתוח",[[25,108,"on"]]],
+ ["imp","מחיאה",[[33,64,"on"],[81,108,"on"]]],
+ ["t8","בס",[[17,32,"in"],[33,64,"on"],[65,80,"low"],[81,100,"on"],[101,104,"out"]]],
+ ["cr","קו עליון",[[41,44,"in"],[45,72,"on"],[73,80,"rise"],[81,96,"on"],[97,100,"out"]]],
+ ["ed","הקשה",[[9,12,"in"],[13,104,"on"],[105,108,"out"]]]
+];
+const AFTER=[
+ ["🔴 מקליטים","הטלפון ליד הרמקול, או אוזנייה אחת על המיקרופון שלו. מתחילים להקליט, ורק אז ▶. האיכות לא חשובה, רק לשמוע מה קרה."],
+ ["💡 סאונד שלא חשבת עליו","לכוון את הקיק לבס: [PITCH] של הקיק לאט, עד שהקיק והבס נשמעים כמו צליל אחד ולא כמו שניים שרבים. הכי טוב לשמוע את זה בשבירה, כשהקיק חוזר."],
+ ["💡 ועוד אחד","שאלה ותשובה: בשיא השני, הכתום מנגן תיבה ושותק תיבה ([VOLUME] למעלה ולמטה), והבס ״עונה״ בתיבה השקטה."],
+ ["🔁 אחרי","[SHIFT] + [ARP] + 8 בכתום מחזיר את הקו ל־8 צעדים. כל השאר שמור בתבניות."]
+];
+
+/* ---------- state ---------- */
+const KEY="track1",$=s=>document.querySelector(s);
+let st;try{st=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!st||typeof st!=="object")st={};
+st.prep=st.prep||{};if(!(st.bpm>=60&&st.bpm<=200))st.bpm=BPM0;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+
+/* ---------- text ---------- */
+const WAVE={"⎍":'<svg class="wv" viewBox="-2 -10 16 12" aria-label="פולס"><path d="M0,0 h3 v-8 h6 v8 h3"/></svg>'};
+const tx=s=>s.replace(/\[([^\]]+)\]/g,(m,t)=>`<span class="en">${WAVE[t]||t}</span>`);
+const HRS=[7,8,9,10,11,12,1,2,3,4,5];
+const hour=h=>h===7?"עד הסוף שמאלה":h===5?"עד הסוף ימינה":"שעה "+h;
+const toHour=h=>h===7||h===5?hour(h):"עד שעה "+h;
+const hourAt=(r,f)=>{const a=HRS.indexOf(r[0]),b=HRS.indexOf(r[1]);return HRS[Math.round(a+(b-a)*Math.max(0,Math.min(1,f)))]};
+const dv=d=>`<span class="dv" style="--c:${DEV[d].c}" aria-label="${DEV[d].n}">${DEV[d].e}</span>`;
+
+/* the whole track in one list: each event with its bar in the whole track */
+let acc=0;const START=SEC.map(s=>{const a=acc+1;acc+=s.bars;return a});const TOTAL=acc;
+const EV=[];SEC.forEach((s,i)=>s.ev.forEach(e=>EV.push(Object.assign({s:i,g:START[i]+e.b-1,ge:e.e?START[i]+e.e-1:START[i]+e.b-1},e))));
+EV.sort((a,b)=>a.g-b.g);
+const secOf=g=>{let i=SEC.length-1;while(i>0&&g<START[i])i--;return i};
+const evText=e=>tx(e.t)+(e.r?`, ${toHour(e.r[1])}.`:"");
+const barsTxt=e=>e.b>SEC[e.s].bars?"בסוף":(e.e?"תיבות ":"תיבה ")+(e.e?`${e.b}-${e.e}`:e.b);
+
+/* ---------- prepare ---------- */
+function cellRow(label,cells,n,c,lw){
+  const out=[];cells.forEach((x,i)=>{if(n===16&&i&&i%4===0||n===8&&i===4)out.push("<span></span>");out.push(x)});
+  return `<div class="grow"><span class="lb" style="flex-basis:${lw||"3.4em"}">${label}</span><div class="cells n${n}" style="--c:${c}">${out.join("")}</div></div>`;
+}
+const nums=n=>Array.from({length:n},(_,i)=>`<div class="cell num">${i+1}</div>`);
+function gridHtml(p){
+  const c=DEV[p.d].c;let r="";
+  if(p.grid){r+=cellRow("",nums(16),16,c,"7.2em");p.grid.rows.forEach(([l,on])=>{r+=cellRow(l,Array.from({length:16},(_,i)=>`<div class="cell${on.indexOf(i+1)>=0?" on":""}"></div>`),16,c,"7.2em")});
+    return `<div class="grid">${r}</div>`}
+  if(p.bass){r+=cellRow("",nums(16),16,c)+cellRow("BASS",BASS.map(x=>`<div class="cell on">${x[0]}${x[1]?`<span class="m">${x[1]}</span>`:""}${x[2]?`<span class="s">${x[2]}</span>`:""}</div>`),16,c);
+    return `<div class="grid">${r}<p class="legend">↑ אוקטבה למעלה ([OCT+]) · S גלישה ([SLIDE]) · ▲ הדגשה</p></div>`.replace(/\[([^\]]+)\]/g,(m,t)=>`<span class="en">${t}</span>`)}
+  if(p.line){r+=cellRow("",nums(8),8,c)+cellRow("NOTE",LINE.map(x=>`<div class="cell${x[0]?" on":""}">${x[0]}</div>`),8,c)+cellRow("KEY",LINE.map(x=>`<div class="cell num">${x[1]||"·"}</div>`),8,c);
+    return `<div class="grid">${r}<p class="legend">ריבוע ריק: [HOLD/REST]. בשורה התחתונה: איזה קליד לוחצים.</p></div>`.replace(/\[([^\]]+)\]/g,(m,t)=>`<span class="en">${t}</span>`)}
+  if(p.perc){r+=cellRow("",nums(8),8,c)+cellRow("VEL",PERC.map(x=>x[0]?`<div class="cell on"><i style="width:${6+x[0]*3}px;height:${6+x[0]*3}px"></i>${x[1]?`<span class="m">${x[1]}</span>`:""}</div>`:`<div class="cell">✕</div>`),8,c);
+    return `<div class="grid">${r}<p class="legend">✕ שקט · עיגול גדול: חזק · ↑ צליל גבוה יותר ([PITCH])</p></div>`.replace(/\[([^\]]+)\]/g,(m,t)=>`<span class="en">${t}</span>`)}
+  return "";
+}
+function drawPrep(){
+  let h=`<span class="tag">135 · לה (A) · בערך 3:20 דקות</span>
+<h2>קטע שלם, לא ג׳אם</h2>
+<p class="lead">בכל מכשיר לולאה אחת, מוכנה מראש. את הקטע בונים ממה שנכנס ויוצא: השתקות, כניסות וסיבובים, כל 8 או 16 תיבות.</p>
+<div class="box"><strong class="h">מי מנגן מה</strong><ul>${PREP.map(p=>`<li>${DEV[p.d].e} <b>${DEV[p.d].n}</b>: ${p.t}</li>`).join("")}</ul></div>
+<p class="back">כולם בקצב של האימפקט, 135. החיבורים כמו שאתה רגיל.</p>
+<div class="why">💡 ככה בונים טכנו ואסיד גם באולפן: החומר קבוע, והקטע נבנה ממה שנכנס ויוצא.</div>`;
+  PREP.forEach(p=>{const on=!!st.prep[p.d];
+    h+=`<div class="box" style="display:flex;flex-direction:column;gap:10px;border-color:${DEV[p.d].c}">
+<div class="devhead">${dv(p.d)}<div><h2>${DEV[p.d].n}: ${p.t}</h2><small>${p.sub}</small></div></div>
+${gridHtml(p)}
+<ol class="steps">${p.steps.map(s=>`<li>${tx(s)}</li>`).join("")}</ol>
+<p class="back">💡 ${tx(p.why)}</p>
+<button class="ready${on?" on":""}" data-ready="${p.d}">${on?"✓ מוכן":"סמן שמוכן"}</button></div>`});
+  h+=`<button class="go" data-goto="map">הכל מוכן? למפה של הקטע ←</button>`;
+  $("#prep").innerHTML=h;
+  document.querySelectorAll("[data-ready]").forEach(b=>b.onclick=()=>{const d=b.dataset.ready;if(st.prep[d])delete st.prep[d];else st.prep[d]=1;save();drawPrep();drawTabs()});
+  document.querySelectorAll("#prep [data-goto]").forEach(b=>b.onclick=()=>go(b.dataset.goto));
+}
+
+/* ---------- the map ---------- */
+const pct=g=>(g-1)/TOTAL*100;
+function mapHtml(){
+  let secs=SEC.map((s,i)=>`<button style="--sc:${s.c};left:${pct(START[i])}%;width:calc(${s.bars/TOTAL*100}% - 2px)" data-sec="${i}">${s.n}<small>${s.bars}</small></button>`).join("");
+  let h=`<div class="map"><div class="mrow"><span class="lb"></span><div class="secs">${secs}</div></div>`;
+  const divs=START.slice(1).map(g=>`<span class="div" style="left:${pct(g)}%"></span>`).join("");
+  LAYERS.forEach(([d,n,segs])=>{
+    h+=`<div class="mrow"><span class="lb">${DEV[d].e} ${n}</span><div class="track" style="--c:${DEV[d].c}">${divs}${segs.map(([a,b,k])=>`<span class="sg ${k}" style="left:${pct(a)}%;width:${(b-a+1)/TOTAL*100}%"></span>`).join("")}</div></div>`});
+  return h+`</div><p class="legend">הזמן רץ משמאל לימין, כמו הצעדים במכשירים. שיפוע: נכנס או יוצא לאט. פסים: הרעש שעולה.</p>`;
+}
+function playsIn(i){const a=START[i],b=a+SEC[i].bars-1;
+  return LAYERS.filter(l=>l[2].some(s=>s[0]<=b&&s[1]>=a)).map(l=>`<span style="--c:${DEV[l[0]].c}">${DEV[l[0]].e} ${l[1]}</span>`).join("")}
+function drawMap(){
+  let h=`<h2>המפה: חמישה חלקים</h2><p class="lead">${TOTAL} תיבות, בערך ${mmss(TOTAL*4*60/st.bpm)} דקות ב־${st.bpm}. נוגעים בחלק, ויורדים אליו.</p>${mapHtml()}`;
+  SEC.forEach((s,i)=>{
+    h+=`<div class="box sec" id="sec-${i}" style="--sc:${s.c};display:flex;flex-direction:column;gap:9px">
+<h2>${i+1}. ${s.n} <small>${s.bars} תיבות · ${START[i]}-${START[i]+s.bars-1}</small></h2>
+<div class="plays">${playsIn(i)}</div>
+<ul class="evs">${EV.filter(e=>e.s===i).map(e=>`<li class="${e.soft?"free":""}"><span class="b">${barsTxt(e)}</span>${dv(e.d)}<span>${evText(e)}</span></li>`).join("")}</ul>
+<p class="why">💡 ${s.why}</p>
+<button class="ghost" data-from="${i}">🎬 לנגן מכאן</button></div>`});
+  $("#map").innerHTML=h;
+  document.querySelectorAll("#map [data-sec]").forEach(b=>b.onclick=()=>{const el=$("#sec-"+b.dataset.sec);if(el)$("#mapScroll").scrollTo({top:el.offsetTop-8,behavior:"smooth"})});
+  document.querySelectorAll("#map [data-from]").forEach(b=>b.onclick=()=>{stop();from=+b.dataset.from;go("play");drawPlay()});
+}
+const mmss=s=>Math.floor(s/60)+":"+String(Math.round(s%60)).padStart(2,"0");
+
+/* ---------- play: the conductor ---------- */
+/* The page counts bars from the moment ▶ is pressed, together with PLAY on the Impact, at the same tempo.
+   It does not hear the devices: ± bar fixes a slip. Counted from the clock, so a busy screen does not drift. */
+let from=0,t0=0,off=0,running=false,raf=null,lock=null,lastBar=0;
+const beatMs=()=>60000/st.bpm;
+function pos(){const b=(performance.now()-t0)/beatMs();const g=Math.floor(b/4)+START[from]+off;return {g,beat:Math.floor(b)%4+1,frac:b/4-Math.floor(b/4)}}
+function drawPlay(){
+  const s=SEC[from];
+  $("#play").innerHTML=`<div class="cond">
+<div class="prog5" id="prog5">${SEC.map((x,i)=>`<div style="--sc:${x.c};flex:${x.bars}"><i style="width:0"></i><span>${x.n}</span></div>`).join("")}</div>
+<div class="stage" id="stage" style="--sc:${s.c}">
+ <div class="top"><span class="sn" id="sn">${s.n}</span><span class="bars" id="bars">תיבה <b>·</b> / ${s.bars}</span></div>
+ <div class="beats" id="beats"><i></i><i></i><i></i><i></i></div>
+ <div class="now" id="now"></div>
+ <div class="next" id="next"></div>
+</div>
+<div id="ctl"></div>
+</div>
+<div class="box"><strong class="h">לפני ▶</strong><ul class="check">
+<li>${dv("imp")}<span>${tx("[LEVEL] של OPEN HAT ושל SNARE 2 למטה. לחצן 9 דולק, לגלגול.")}</span></li>
+<li>${dv("t8")}<span>${tx("[BASS] מהבהב, מושתק. [CUTOFF] על שעה 8.")}</span></li>
+<li>${dv("cr")}<span>${tx("[VOLUME] למטה. [MIX] עד הסוף שמאלה.")}</span></li>
+<li>${dv("ed")}<span>${tx("[VOLUME] למטה.")}</span></li>
+<li><span class="dv" style="--c:#c0392b">🔴</span><span>הטלפון מקליט.</span></li></ul></div>
+${AFTER.map(a=>`<div class="box${a[0].indexOf("💡")===0?" hear":""}"><strong class="h">${a[0]}</strong>${tx(a[1])}</div>`).join("")}
+<div class="box"><strong class="h">📌 אחרי ההקלטה: מקשיבים פעם אחת, ורושמים דבר אחד</strong>
+<textarea id="note" placeholder="מה עבד, ומה הפריע? למשל: השבירה הייתה ארוכה מדי, הקו של הכתום הסתיר את הבס" aria-label="דבר אחד מההקלטה"></textarea>
+<p class="saved" id="saved" role="status"></p>
+<p class="back">בפעם הבאה מתחילים מזה.</p></div>`;
+  const n=$("#note");n.value=st.note||"";let tm=null;
+  n.oninput=()=>{st.note=n.value;save();$("#saved").textContent="";clearTimeout(tm);tm=setTimeout(()=>{$("#saved").textContent=n.value.trim()?"✓ נשמר":""},600)};
+  drawCtl();show();
+}
+function drawCtl(){
+  const c=$("#ctl");if(!c)return;
+  if(running)c.innerHTML=`<div class="ctl"><button id="minus">− תיבה</button><button id="stop">■ עצור</button><button id="plus">+ תיבה</button></div>
+<p class="back" style="text-align:center">הדף לא שומע את המכשירים. אם הוא מקדים או מאחר בתיבה: − או +.</p>`;
+  else c.innerHTML=`<div class="bpm"><button id="bdn" aria-label="לאט יותר">−</button><div style="text-align:center"><b id="bpmv">${st.bpm}</b><br><small>כמו ב־<span class="en">RATE</span> של האימפקט</small></div><button id="bup" aria-label="מהר יותר">+</button></div>
+${from?`<p class="startfrom">מתחילים מ${SEC[from].n}. <button class="ghost" id="fromstart" style="padding:4px 10px">מההתחלה</button></p>`:""}
+<button class="go" id="start">▶ עכשיו<small>ביחד עם ${tx("[PLAY/PAUSE]")} באימפקט</small></button>`;
+  if(running){$("#minus").onclick=()=>{off--;show()};$("#plus").onclick=()=>{off++;show()};$("#stop").onclick=()=>{stop();drawCtl();show()}}
+  else{$("#bdn").onclick=()=>setBpm(st.bpm-1);$("#bup").onclick=()=>setBpm(st.bpm+1);$("#start").onclick=start;
+    const fs=$("#fromstart");if(fs)fs.onclick=()=>{from=0;drawCtl();show()}}
+}
+function setBpm(v){st.bpm=Math.max(60,Math.min(200,v));save();const b=$("#bpmv");if(b)b.textContent=st.bpm;drawMap()}
+function start(){t0=performance.now();off=0;running=true;lastBar=0;
+  if(navigator.wakeLock)navigator.wakeLock.request("screen").then(l=>{if(running)lock=l;else l.release()}).catch(()=>{});
+  drawCtl();loop()}
+function stop(){running=false;cancelAnimationFrame(raf);raf=null;if(lock){try{lock.release()}catch(e){}lock=null}}
+function loop(){show();if(running)raf=requestAnimationFrame(loop)}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&running&&!lock&&navigator.wakeLock)navigator.wakeLock.request("screen").then(l=>{lock=l}).catch(()=>{})});
+
+function evRow(e,g,frac,cls){
+  let hr="";
+  if(e.r&&g>=e.g&&g<=e.ge){const f=(g-e.g+frac)/(e.ge-e.g+1);hr=`<span class="hr">עכשיו: ${hour(hourAt(e.r,f))} · ${toHour(e.r[1])} בתיבה ${e.e}</span>`}
+  return `<div class="${cls}${e.soft?" free":""}">${dv(e.d)}<div>${tx(e.t)}${e.r&&!hr?`, ${toHour(e.r[1])}.`:""}${hr}</div></div>`;
+}
+function show(){
+  const stage=$("#stage");if(!stage)return;
+  let g,beat=0,frac=0;
+  if(running){const p=pos();g=p.g;beat=p.beat;frac=p.frac;if(g>TOTAL+1){stop();drawCtl();g=TOTAL+1}}
+  else g=START[from];
+  const i=secOf(Math.min(g,TOTAL)),s=SEC[i],inBar=Math.min(g,TOTAL)-START[i]+1;
+  stage.style.setProperty("--sc",s.c);
+  $("#sn").textContent=g>TOTAL?"הסוף":s.n;
+  $("#bars").innerHTML=g>TOTAL?"תיבה <b>"+TOTAL+"</b> / "+TOTAL:`תיבה <b>${running?inBar:"·"}</b> / ${s.bars}`;
+  document.querySelectorAll("#beats i").forEach((x,k)=>x.classList.toggle("on",running&&k<beat));
+  document.querySelectorAll("#prog5>div").forEach((x,k)=>{const a=START[k],n=SEC[k].bars,f=running?Math.max(0,Math.min(1,(g-a+frac)/n)):0;
+    x.querySelector("i").style.width=(f*100)+"%";x.classList.toggle("cur",k===i)});
+  /* now: what starts on this bar, and anything slow that is still going */
+  const now=EV.filter(e=>running?(e.g===g||(e.ge>e.g&&g>=e.g&&g<=e.ge)):e.g===START[from]&&e.b===1);
+  $("#now").innerHTML=now.length?now.map(e=>evRow(e,g,frac,"ev")).join(""):`<p class="idle">${running?"מנגנים. אין מה לשנות בתיבה הזו.":"מוכן? ▶ למטה, ביחד עם PLAY באימפקט."}</p>`;
+  /* next: the first thing that starts after this bar */
+  const nx=EV.find(e=>e.g>g&&!e.soft);
+  if(nx){const d=nx.g-g;let w=d===1?"בתיבה הבאה":`בעוד <b>${d}</b> תיבות`;
+    if(d===1&&running&&beat>=2)w=`עוד <b>${5-beat}</b>`;
+    $("#next").innerHTML=`<span class="w">הבא · ${w}</span><div class="t">${dv(nx.d)}<div>${evText(nx)}</div></div>`}
+  else $("#next").innerHTML=`<span class="w">זהו. עצור את ההקלטה, ותקשיב.</span>`;
+  /* a flash on the first beat of a bar where something happens */
+  if(running&&g!==lastBar){lastBar=g;if(EV.some(e=>e.g===g&&!e.soft)){stage.classList.add("flash");setTimeout(()=>stage.classList.remove("flash"),350)}}
+}
+
+/* ---------- tabs ---------- */
+function drawTabs(){const n=Object.keys(st.prep).length;const b=document.querySelector('.tabs [data-v="prep"]');b.classList.toggle("done",n===PREP.length)}
+function go(v){st.tab=v;save();
+  document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v))}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+
+drawPrep();drawMap();drawPlay();drawTabs();
+go(/^(prep|map|play)$/.test(st.tab)?st.tab:"prep");
+/* for tests: jump the clock to bar g of the whole track */
+window.TRACK_TEST={at:(g,beat)=>{if(!running)start();t0=performance.now()-((g-START[from])*4+((beat||1)-1)+.2)*beatMs();off=0;show()},SEC,EV,START,TOTAL};
+</script>
+</body>
+</html>
