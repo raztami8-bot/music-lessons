@@ -42,12 +42,18 @@ const D=window.DOORS, $=s=>document.querySelector(s);
 const E=Object.assign({},D.panel,{names:Object.assign({},D.panel.names,D.names||{})});
 const st=(()=>{try{return JSON.parse(localStorage.getItem(D.key))||{}}catch(e){return {}}})();
 const save=()=>{try{localStorage.setItem(D.key,JSON.stringify(st))}catch(e){}};
+/* swRename {id:{old:new}}: a switch position renamed to match the board. Sounds saved under the old name keep working */
+if(D.swRename){let n=0;const fix=p=>{if(p&&p.s)Object.keys(p.s).forEach(i=>{const m=D.swRename[i];if(m&&m[p.s[i]]!==undefined){p.s[i]=m[p.s[i]];n++}})};
+  (st.mine||[]).forEach(fix);fix(st.draft);if(n)save()}
 const HOME=D.home.knobs, HOMESW=D.home.sw||{};
 const hour=h=>h===7?"עד הסוף שמאלה":h===5?"עד הסוף ימינה":"שעה "+h;
 const he=id=>D.he[id]||[E.info[id]&&E.info[id].indexOf("יציאה")===0?"יציאה":"כניסה","שקע"];
 const nm=id=>`<button class="en" data-c="${id}">${E.names[id]}</button>`;
-/* a switch position the board prints as a picture, not a word: [⊓] square wave, [∧] triangle (the fonts draw ⊓ like a Hebrew letter) */
-const WAVE={"⊓":'<svg class="wv" viewBox="-2 -10 16 12" aria-label="ריבוע"><path d="M0,0 v-8 h6 v8 h6 v-8"/></svg>',"∧":'<svg class="wv" viewBox="-2 -10 16 12" aria-label="משולש"><path d="M0,0 l6,-8 l6,8"/></svg>'};
+/* a switch position the board prints as a picture, not a word: [⊓] square wave, [∧] triangle, [⎍] pulse, [⊿] saw (the fonts draw ⊓ like a Hebrew letter) */
+const wvs=(d,l)=>`<svg class="wv" viewBox="-2 -10 16 12" aria-label="${l}"><path d="${d}"/></svg>`;
+const WAVE={"⊓":wvs("M0,0 v-8 h6 v8 h6 v-8","ריבוע"),"∧":wvs("M0,0 l6,-8 l6,8","משולש"),"⎍":wvs("M0,0 h3 v-8 h6 v8 h3","פולס"),"⊿":wvs("M0,0 v-8 l12,8","מסור")};
+const WORD={"⊓":"ציור ריבוע","∧":"ציור משולש","⎍":"ציור פולס","⊿":"ציור מסור"};  /* the same, in copied text */
+const wv=t=>WAVE[t]||String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const tx=s=>s.replace(/\{(\w+)\}/g,(m,id)=>E.names[id]?nm(id):m).replace(/\[([^\]]+)\]/g,(m,t)=>`<span class="en">${WAVE[t]||t}</span>`);
 
 /* ---------- the board, and crops of it ---------- */
@@ -117,7 +123,7 @@ function ctlHtml(id,short){
   else s+=`<p>${o.info||E.info[id]||""}</p>`;
   if(h[2])s+=`<ul class="opts">${h[2].map(x=>`<li><b>${WAVE[x[0]]||x[0]}</b><span>${x[1]}</span></li>`).join("")}</ul>`;
   if(HOME[id]!==undefined)s+=`<span class="athome">🏠 בבית: ${hour(HOME[id])}</span>`;
-  else if(HOMESW[id])s+=`<span class="athome">🏠 בבית: <span class="en">${HOMESW[id]}</span></span>`;
+  else if(HOMESW[id])s+=`<span class="athome">🏠 בבית: <span class="en">${wv(HOMESW[id])}</span></span>`;
   return s;
 }
 const rowKey=id=>D.rowKey?D.rowKey(id):id;
@@ -176,7 +182,7 @@ if(D.checks&&D.checks.length)F.push({id:"chk",tab:"🔍 לבדוק",chk:true});
 let fi=Math.max(0,F.findIndex(f=>f.id===st.find));
 F.forEach((f,i)=>{const b=document.createElement("button");b.className="chip";b.textContent=f.tab;b.onclick=()=>{fi=i;drawFind()};$("#chips").appendChild(b)});
 const qa=(t,a)=>`<div class="row"><div class="he">${t}</div><p>${tx(a)}</p></div>`;
-const plain=s=>tx(s).replace(/<[^>]+>/g,"");
+const plain=s=>tx(s.replace(/\[([^\]]+)\]/g,(m,t)=>WORD[t]?`[${WORD[t]}]`:m)).replace(/<[^>]+>/g,"");
 function drawFind(q){
   const f=F[fi],el=$("#find");el.innerHTML="";st.find=f.id;save();
   [...$("#chips").children].forEach((b,i)=>b.setAttribute("aria-selected",i===fi&&!q));
@@ -292,7 +298,7 @@ const sum=p=>{const n=Object.keys(p.k).length+Object.keys(p.s).length,c=p.c.leng
 /* the lines of a sound, in the order of the board. name(id) draws the control's name */
 function pLines(p,name){const a=[];
   Object.keys(E.names).forEach(i=>{if(p.k[i]!==undefined)a.push([i,`${name(i)} <b class="hr">${hour(p.k[i])}</b>`]);
-    if(p.s[i]!==undefined)a.push([i,`מתג ${name(i)} על <span class="en">${esc(p.s[i])}</span>`])});
+    if(p.s[i]!==undefined)a.push([i,`מתג ${name(i)} על <span class="en">${wv(p.s[i])}</span>`])});
   p.c.forEach((c,n)=>a.push(["c"+n,`🔌 כבל מ־${name(c[0])} אל ${name(c[1])}`]));return a}
 function drawMine(f,el){
   const P=st.mine=st.mine||[],sc=$("#findScroll");
@@ -353,7 +359,7 @@ function drawEdit(f,el){
     if(h[2]){/* a switch */
       const cur=ed.s[id]||HOMESW[id];
       h[2].forEach(x=>{const b=document.createElement("button");b.className="row pickrow pos"+(x[0]===cur?" cur":"");
-        b.innerHTML=`<span><span class="en">${x[0]}</span> ${x[1]}</span><span class="n">${x[0]===HOMESW[id]?"🏠":""}</span>`;
+        b.innerHTML=`<span><span class="en">${wv(x[0])}</span> ${x[1]}</span><span class="n">${x[0]===HOMESW[id]?"🏠":""}</span>`;
         b.onclick=()=>{if(x[0]===HOMESW[id])delete ed.s[id];else ed.s[id]=x[0];done()};sh.appendChild(b)});
     }else if(isJack(id)&&id.indexOf("midi")!==0){/* a jack: one cable, from an output to an input */
       const out=isOut(id),old=ed.c.findIndex(c=>c[0]===id||c[1]===id);

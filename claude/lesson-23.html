@@ -11,9 +11,9 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>הטי־8, הקרייב והאדג׳ בקצב אחד · ביחד · שיעור 3</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="app.css?v=1795411974">
-<link rel="stylesheet" href="kit.css?v=1795411974">
-<link rel="stylesheet" href="nav.css?v=1795411974">
+<link rel="stylesheet" href="app.css?v=1795533588">
+<link rel="stylesheet" href="kit.css?v=1795533588">
+<link rel="stylesheet" href="nav.css?v=1795533588">
 </head>
 <body data-lesson="23">
 <div class="toolbar"><div class="in"><a class="tb" href="index.html">⌂ הבית</a><a class="tb" href="lesson-8.html">שיעור 1</a><a class="tb" href="lesson-12.html">שיעור 2</a><a class="tb cur" href="lesson-23.html" aria-current=page>שיעור 3</a><a class="tb" href="connections.html">🔌 חיבורים</a><button class="tb play" id="playmode" type="button">▶ מצב נגינה</button><a class="tb" href="notebook.html">☆ פנקס</a><a class="tb" href="glossary.html">א־ת מילון</a><span class="sp"></span><span class="ver">גרסת קלוד</span><button class="tb" id="wake" type="button">☀ מסך דלוק</button></div></div>
@@ -84,15 +84,15 @@
 
   <div class="essence">
     <span class="essence-tag">💡 המהות: מנצח אחד</span>
-    <p>הטי־8 הוא המנצח. דרך כבל מידי הוא שולח שלושה דברים: <b>שעון</b> (כמה מהר), <b>התחלה</b> ו<b>עצירה</b>. הקרייב מקבל אותם, ומעביר עותק לאדג׳ בשקע <kbd>MIDI THRU</kbd>. ככה מספיקה שרשרת אחת.</p>
+    <p>הטי־8 הוא המנצח. דרך כבל מידי הוא שולח שלושה דברים: <b>שעון</b> (כמה מהר), <b>התחלה</b> ו<b>עצירה</b>. הקרייב מקבל אותם, ומעביר אותם לאדג׳ בשקע <kbd>MIDI OUT/THRU</kbd>. ככה מספיקה שרשרת אחת.</p>
   </div>
 
-  <article class="card split" data-id="l23:2.1" id="l23-2-1"><div class="card-head"><span class="num">2.1</span><h3>שני כבלים</h3><span class="label">MIDI OUT → MIDI IN → MIDI THRU → MIDI IN</span></div><div class="col-do">
+  <article class="card split" data-id="l23:2.1" id="l23-2-1"><div class="card-head"><span class="num">2.1</span><h3>שני כבלים</h3><span class="label">MIDI OUT → MIDI IN → MIDI OUT/THRU → MIDI IN</span></div><div class="col-do">
     
     <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>כל המכשירים כבויים</span></div>
     <ol class="steps">
       <li><div><span class="dv t8">טי־8</span> <kbd>MIDI OUT</kbd> בגב, בכבל של בוס <code>BMIDI-2-35</code> (60 ס״מ), אל <span class="dv cr">קרייב</span> <kbd>MIDI IN</kbd>.<span class="where">בטי־8 זה מיני־ג׳ק, ליד <kbd>MIDI IN</kbd> שנראה אותו דבר: צריך את OUT. בקרייב שקע עגול גדול, השמאלי.</span></div></li>
-      <li><div><span class="dv cr">קרייב</span> <kbd>MIDI THRU</kbd>, בכבל מידי רגיל, עגול לעגול (<code>Bespeco CM150</code>), אל <span class="dv ed">אדג׳</span> <kbd>MIDI IN</kbd>.</div></li>
+      <li><div><span class="dv cr">קרייב</span> <kbd>MIDI OUT/THRU</kbd>, בכבל מידי רגיל, עגול לעגול (<code>Bespeco CM150</code>), אל <span class="dv ed">אדג׳</span> <kbd>MIDI IN</kbd>.</div></li>
     </ol>
     <div class="ok"><b>הצלחת אם:</b> כבל אחד יוצא מהטי־8, נכנס לקרייב, וממשיך מהקרייב לאדג׳.</div>
     
@@ -100,7 +100,7 @@
       <p>במיני־ג׳ק של מידי יש שתי שיטות חיווט, A ו־B. הטי־8 והכבל של בוס הם בשיטה A, ולכן כבל אחר לא בהכרח היה עובד. בתקע העגול יש רק חיווט אחד.</p>
     </div></div></article>
 
-  <figure class="photo"><div class="imgs"><img src="img/cr-49.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי צילום של הקרייב והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>HOLD/REST</b> עם SHIFT ו־STEP 8: הגדרות</li><li><b>STEP ▶</b> פעמיים: עמוד 3</li><li><b>STEP 2</b> ערך 2: MIDI</li><li><b>נורות OCTAVE/LOCATION</b> נורה 2 ירוקה</li><li><b>MIDI IN</b> מהטי־8</li><li><b>MIDI THRU</b> לאדג׳</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
+  <figure class="photo"><div class="imgs"><img src="img/cr-49.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי צילום של הקרייב והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>HOLD/REST</b> עם SHIFT ו־STEP 8: הגדרות</li><li><b>STEP ▶</b> פעמיים: עמוד 3</li><li><b>STEP 2</b> ערך 2: MIDI</li><li><b>נורות OCTAVE/LOCATION</b> נורה 2 ירוקה</li><li><b>MIDI IN</b> מהטי־8</li><li><b>MIDI OUT/THRU</b> לאדג׳</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
 <article class="card split" data-id="l23:2.2" id="l23-2-2"><div class="card-head"><span class="num">2.2</span><h3>הקרייב מקשיב למידי</h3><span class="label">SHIFT + HOLD/REST + 8 · עמוד 3</span></div><div class="col-do">
     
     <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>הקרייב דלוק</span></div>
@@ -126,7 +126,7 @@
       <p>באוטומטי (5) הקרייב בוחר לבד: כבל קטן, אחר כך USB, אחר כך השקע העגול, ואחרון השעון שלו. גם זה יעבוד, אבל 2 ברור יותר. כדי לנגן את הקרייב לבד בקצב שלו, מחזירים ל־1.</p>
     </div></div></article>
 
-  <figure class="photo"><div class="imgs"><img src="img/ed-41.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי צילום של האדג׳ והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>MIDI IN</b> מהקרייב, MIDI THRU</li><li><b>CLOCK</b> MIDI, למעלה</li><li><b>SCALE</b> 1/16</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
+  <figure class="photo"><div class="imgs"><img src="img/ed-41.svg" width="1000" height="606" loading="lazy" alt="תרשים הלוח עם סימונים"></div><figcaption><p>תרשים מצויר לפי צילום של האדג׳ והמדריך הרשמי, לא צילום</p><ol class="marks"><li><b>MIDI IN</b> מהקרייב, MIDI OUT/THRU</li><li><b>CLOCK</b> MIDI, למעלה</li><li><b>SCALE</b> 1/16</li></ol><p>אפשר לגעת בתמונה כדי להגדיל.</p></figcaption></figure>
 <article class="card split" data-id="l23:2.3" id="l23-2-3"><div class="card-head"><span class="num">2.3</span><h3>האדג׳ מקשיב למידי</h3><span class="label">CLOCK · SCALE</span></div><div class="col-do">
     
     <div class="state"><b>מתחילים כש:</b><span>■ עצור</span><span>האדג׳ דלוק</span></div>
@@ -285,9 +285,9 @@
 </section>
 
 </div>
-<script src="app.js?v=1795411974"></script>
-<script src="extras.js?v=1795411974"></script>
-<script src="kit.js?v=1795411974"></script>
-<script src="nav.js?v=1795411974"></script>
+<script src="app.js?v=1795533588"></script>
+<script src="extras.js?v=1795533588"></script>
+<script src="kit.js?v=1795533588"></script>
+<script src="nav.js?v=1795533588"></script>
 </body>
 </html>

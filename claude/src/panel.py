@@ -19,17 +19,22 @@ def flat(label):
     """The label as one line, the way it is written in the lessons: "PLAY/\nSTOP" -> "PLAY/STOP", "OSC\nCV" -> "OSC CV"."""
     out = ""
     for t in _lines(label):
-        out += t if (not out or out.endswith("/")) else " " + t
+        boxed, t = t.startswith(BOX), t.lstrip(BOX)
+        out += t if (not out or out.endswith("/")) else ("/" if boxed else " ") + t
     return out
 
 
-WAVES = {"⊓": "M0,0 v-8 h6 v8 h6 v-8", "∧": "M0,0 l6,-8 l6,8"}  # square and triangle, printed on the board as pictures, not words
+BOX = "□"  # a label line that starts with this is printed in a white box on the board (on the Crave: the SHIFT function)
+
+
+# switch positions printed on the board as pictures, not words: square, triangle, pulse, saw (Raz's photos, 2026-11-23/24)
+WAVES = {"⊓": "M0,0 v-8 h6 v8 h6 v-8", "∧": "M0,0 l6,-8 l6,8", "⎍": "M0,0 h3 v-8 h6 v8 h3", "⊿": "M0,0 v-8 l12,8"}
 
 
 def _poslabel(x, y, t, anchor):
     """a switch position: a word, or a small wave picture when the board prints a picture (⊓ square, ∧ triangle)"""
     if t in WAVES:
-        x0 = x - 12 if anchor == "end" else x
+        x0 = x - 12 if anchor == "end" else x - 6 if anchor == "middle" else x
         return f'<path d="{WAVES[t]}" transform="translate({x0},{y})" fill="none" stroke="#bdbdbd" stroke-width="1.6" stroke-linejoin="round"/>'
     return f'<text x="{x}" y="{y}" class="p" style="text-anchor:{anchor}">{html.escape(t)}</text>'
 
@@ -56,8 +61,9 @@ class Panel:
     def btn(self, id, x, y, w, h, label, where="under", tone="#3b3b3b"):
         self.C[id] = ("btn", x, y, w, h, label, {"where": where, "tone": tone})
 
-    def key(self, id, x, y, w, h, label, black=False, num=""):
-        self.C[id] = ("key", x, y, w, h, label, {"black": black, "num": num})
+    def key(self, id, x, y, w, h, label, black=False, num="", faint=False):
+        """faint: the label is a hint of ours, not printed on the board (the Crave's note names)"""
+        self.C[id] = ("key", x, y, w, h, label, {"black": black, "num": num, "faint": faint})
 
     def jack(self, id, x, y, label, out=False):
         self.C[id] = ("jack", x, y, 11, 11, label, {"out": out})
@@ -144,20 +150,27 @@ class Panel:
             if "r" in pos:
                 s += _poslabel(x + 15, y + 4, pos["r"], "start")
             if "t" in pos:
-                s += f'<text x="{x}" y="{y - 15}" class="p">{html.escape(pos["t"])}</text>'
+                s += _poslabel(x, y - 15, pos["t"], "middle")
             if "b" in pos:
-                s += f'<text x="{x}" y="{y + 22}" class="p">{html.escape(pos["b"])}</text>'
+                s += _poslabel(x, y + 22, pos["b"], "middle")
         elif k == "btn":
             lit = ' stroke="#ff5040"' if label == "PLAY/STOP" else ' stroke="#6a6a6a"'
             s += f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="5" fill="{extra["tone"]}"{lit} stroke-width="1.5"/>'
             ls = _lines(label)
             ty = y + h + 13 if extra["where"] == "under" else y - 7 - (len(ls) - 1) * 12
             for i, t in enumerate(ls):
-                s += f'<text x="{x + w / 2}" y="{ty + i * 12}" class="l s">{html.escape(t)}</text>'
+                if t.startswith(BOX):  # white box, dark letters, as on the board
+                    t = t.lstrip(BOX)
+                    bw = len(t) * 6.6 + 8
+                    s += (f'<rect x="{x + w / 2 - bw / 2:.1f}" y="{ty + i * 12 - 10}" width="{bw:.1f}" height="13" rx="2" fill="#e6e6e6"/>'
+                          f'<text x="{x + w / 2}" y="{ty + i * 12}" class="l s" style="fill:#1d1d1d">{html.escape(t)}</text>')
+                else:
+                    s += f'<text x="{x + w / 2}" y="{ty + i * 12}" class="l s">{html.escape(t)}</text>'
         elif k == "key":
             black = extra["black"]
             s += f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="5" fill="{"#262626" if black else "#ececec"}" stroke="{"#6a6a6a" if black else "#9a9a9a"}" stroke-width="1.5"/>'
-            s += f'<text x="{x + w / 2}" y="{y + 15}" class="p" style="fill:{"#bdbdbd" if black else "#555"}">{html.escape(label)}</text>'
+            col = ("#6a6a6a" if black else "#ababab") if extra.get("faint") else ("#bdbdbd" if black else "#555")
+            s += f'<text x="{x + w / 2}" y="{y + 15}" class="p" style="fill:{col}{";font-weight:600" if extra.get("faint") else ""}">{html.escape(label)}</text>'
             if extra["num"]:
                 s += f'<text x="{x + w / 2}" y="{y + h - 10}" class="b">{extra["num"]}</text>'
         elif k == "jack":

@@ -66,7 +66,7 @@ FIGS = {
     "ed-39": (V, [("j_velout", "יוצא"), ("j_tempo", "נכנס"), ("clock", "INT/EXT")]),
     "ed-40": ((), [("j_osc2", "יוצא"), ("j_osc1cv", "נכנס"), ("osc2freq", "צבע הנהמה")]),
     # together lesson 3 (file 23)
-    "ed-41": ((), [("midiin", "מהקרייב, MIDI THRU"), ("clock", "MIDI, למעלה"), ("scale", "1/16")]),
+    "ed-41": ((), [("midiin", "מהקרייב, MIDI OUT/THRU"), ("clock", "MIDI, למעלה"), ("scale", "1/16")]),
     "ed-42": ((), [("j_adv", "נכנס מהקרייב: ASSIGN"), ("clock", "INT/EXT")]),
     "ed-43": ((), [("j_play", "נכנס מהקרייב: GATE"), ("clock", "INT/EXT"), ("tempo", "הקצב של האדג׳")]),
     "ed-44": ((), [("j_vca", "לערוץ 2 במיקסר"), ("j_phones", "או אוזניות"), ("volume", "שעה 12")]),

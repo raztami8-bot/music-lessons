@@ -23,9 +23,9 @@ P.bar(552, 690, 158, "NOISE")
 P.bar(778, 984, 158, "OUTPUT (VCA)")
 Y1 = 232
 P.knob("osc1freq", 66, Y1, 26, "FREQUENCY")
-P.sw("osc1shape", 150, Y1 + 8, "SHAPE", {"t": "PULSE", "b": "TRI"})
+P.sw("osc1shape", 150, Y1 + 8, "SHAPE", {"t": "⎍", "b": "∧"})  # pictures on the board: pulse, triangle (Raz's photos, 2026-11-24)
 P.knob("osc1env", 232, Y1, 22, "ENVELOPE", bip=True)
-P.sw("seqpitch", 322, Y1 + 8, "SEQ PITCH MOD", {"t": "VCO 1&2", "r": "OFF", "b": "VCO 2"})
+P.sw("seqpitch", 322, Y1 + 8, "SEQ PITCH MOD", {"t": "OSC 1 & 2", "r": "OFF", "b": "OSC 2"})
 P.knob("osc1lvl", 406, Y1, 22, "LEVEL")
 P.knob("egdec", 493, Y1, 22, "DECAY")
 P.sw("noisecolor", 580, Y1 + 8, "COLOR", {"t": "PINK", "b": "WHITE"})
@@ -41,7 +41,7 @@ P.bar(16, 536, 276, "OSCILLATOR (VCO 2)")
 P.bar(542, 984, 276, "FILTER (VCF)")
 Y2 = 352
 P.knob("osc2freq", 66, Y2, 26, "FREQUENCY")
-P.sw("osc2shape", 150, Y2 + 8, "SHAPE", {"t": "PULSE", "b": "TRI"})
+P.sw("osc2shape", 150, Y2 + 8, "SHAPE", {"t": "⎍", "b": "∧"})
 P.knob("osc2env", 232, Y2, 22, "ENVELOPE", bip=True)
 P.sw("hardsync", 322, Y2 + 8, "HARD SYNC", {"t": "ON", "b": "OFF"})
 P.knob("osc2lvl", 406, Y2, 22, "LEVEL")
@@ -58,7 +58,8 @@ P.bar(16, 984, 396, "SEQUENCER")
 P.knob("tempo", 64, 466, 26, "TEMPO")
 P.sw("clock", 150, 470, "CLOCK", {"t": "MIDI", "r": "USB", "b": "INT/EXT"})
 P.knob("scale", 240, 466, 22, "SCALE")
-P.text(240, 506, "1/4 … 1/32 · T", "p")
+P.text(240, 505, "1/4 · 1/8 · 1/16 · 1/32", "p")  # all eight, as printed around the knob
+P.text(240, 516, "1/4T · 1/8T · 1/16T · 1/32T", "p")
 P.btn("trigger", 30, 560, 58, 34, "TRIGGER", where="above")
 P.btn("play", 98, 560, 58, 34, "PLAY/\nSTOP", where="above")
 P.btn("advance", 166, 560, 58, 34, "ADVANCE", where="above")
@@ -86,7 +87,7 @@ P.NAMES.update({
     "osc1env": "ENVELOPE (VCO 1)", "osc2env": "ENVELOPE (VCO 2)", "vcfenv": "ENVELOPE (VCF)",
     "osc1lvl": "LEVEL (VCO 1)", "osc2lvl": "LEVEL (VCO 2)",
     "egdec": "DECAY (EG)", "vcadec": "DECAY (VCA)", "vcfdec": "DECAY (VCF)",
-    "noisecolor": "NOISE COLOR", "vcfsel": "VCF SELECT", "led": "נורית ההפעלה",
+    "noisecolor": "COLOR", "vcfsel": "VCF", "led": "נורית ההפעלה",
     "j_trigin": "TRIGGER (שקע כניסה)", "j_trigout": "TRIGGER (שקע יציאה)", "j_velin": "VELOCITY (שקע כניסה)",
     "j_velout": "VELOCITY (שקע יציאה)", "j_tempo": "TEMPO (שקע)", "j_play": "PLAY/STOP (שקע)",
     "j_fmin": "1-2 FM AMT (שקע)", "j_pitchout": "PITCH (שקע)", "j_vca": "VCA (יציאה ראשית)",
@@ -95,6 +96,7 @@ P.EXTRA.update({
     "EG (VCO 1&2) DECAY": ["egdec"], "EG DECAY": ["egdec"], "NOISE / EXT": ["noise"], "NOISE / VCF MOD": ["noisevcf"],
     "PITCH": [f"p{i}" for i in range(1, 9)] + ["j_pitchout"], "VEL": [f"v{i}" for i in range(1, 9)],
     "ADV": ["j_adv"], "CLOCK": ["clock"],
+    "NOISE COLOR": ["noisecolor"], "VCF SELECT": ["vcfsel"],  # the old names, still in the archived lessons
 })
 
 # ---------- what each control does (official quick start guide) ----------
@@ -128,11 +130,11 @@ P.INFO.update({
     "j_vcaeg": "יציאה: דעיכת העוצמה, כמתח.",
     "osc1freq": "הגובה של מתנד 1, בטווח של 10 אוקטבות. נמוך: קיק. גבוה: טום וטיק.",
     "osc2freq": "הגובה של מתנד 2. מול מתנד 1 הוא נותן צלצול, כמו פעמון.",
-    "osc1shape": "ריבוע או משולש. משולש רך, טוב לקיק. ריבוע חד, טוב לטום ולמתכת.",
-    "osc2shape": "ריבוע או משולש, למתנד 2.",
+    "osc1shape": "פולס או משולש, מצוירים על הלוח (⎍ למעלה, ∧ למטה). משולש רך, טוב לקיק. פולס חד, טוב לטום ולמתכת.",
+    "osc2shape": "פולס (⎍) או משולש (∧), למתנד 2.",
     "osc1env": "כמה הגובה של מתנד 1 צונח בכל מכה. שעה 12: כלום. ימינה: צונח, זה הבום. שמאלה: עולה.",
     "osc2env": "כמה הגובה של מתנד 2 צונח בכל מכה. שעה 12: כלום.",
-    "seqpitch": "לאן שורת PITCH הולכת: לשני המתנדים (VCO 1&2), רק למתנד 2, או לאף אחד (OFF).",
+    "seqpitch": "לאן שורת PITCH הולכת: לשני המתנדים (OSC 1 & 2), רק למתנד 2 (OSC 2), או לאף אחד (OFF).",
     "osc1lvl": "כמה ממתנד 1 נשמע.",
     "osc2lvl": "כמה ממתנד 2 נשמע.",
     "egdec": "כמה מהר הגובה צונח, לשני המתנדים יחד. קצר: בום הדוק. ארוך: לייזר.",
@@ -144,7 +146,7 @@ P.INFO.update({
     "vcamode": "FAST: המכה נכנסת חדה, תוך אלפית שנייה. SLOW: רכה, תוך עשירית.",
     "vcadec": "אורך המכה. קצר: טיק. ארוך: בום.",
     "volume": "העוצמה ביציאה הראשית ובאוזניות.",
-    "vcfsel": "LP חותך את הגבוהים. HP חותך את הנמוכים: טוב להיי־האט.",
+    "vcfsel": "המתג VCF. LP חותך את הגבוהים. HP חותך את הנמוכים: טוב להיי־האט.",
     "cutoff": "כמה המסנן פתוח. שמאלה עמום, ימינה בהיר.",
     "reso": "שריקה סביב נקודת החיתוך.",
     "vcfdec": "כמה מהר המסנן נסגר אחרי כל מכה.",
