@@ -544,6 +544,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
   background:linear-gradient(145deg,#7d6bf2,#4a3fb0);box-shadow:0 5px 0 #2f2878;transition:transform .08s}}
 .wkbtn:active{{transform:translateY(3px)}}
 .wkbtn.trk{{background:linear-gradient(145deg,#d6336c,#8a1f48);box-shadow:0 5px 0 #5c1430;margin-top:-4px}}
+.wkbtn.snd{{background:linear-gradient(145deg,#1fa39a,#0f5f59);box-shadow:0 5px 0 #0a3f3b;margin-top:-4px}}
 .wkbtn .e{{font-size:1.9rem;line-height:1}}
 .wkbtn .t{{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}}
 .wkbtn b{{font-family:var(--f-display);font-weight:400;font-size:1.3rem}}
@@ -597,6 +598,7 @@ def hub(totals, mtotal, vbtotal=0, devmaps=None, ntotal=0):
 </nav>
 <a class="wkbtn" href="week.html" id="wkbtn"><span class="e" aria-hidden="true">📅</span><span class="t"><b>האימון השבועי</b><small id="wkbtn-t">כלי אחד, זוג, וסט מוקלט</small></span><span class="go" aria-hidden="true">←</span></a>
 <a class="wkbtn trk" href="track.html"><span class="e" aria-hidden="true">🎬</span><span class="t"><b>לבנות קטע שלם</b><small>קטע 1: אסיד · כל ארבעת המכשירים</small></span><span class="go" aria-hidden="true">←</span></a>
+<a class="wkbtn snd" href="sound.html"><span class="e" aria-hidden="true">🎨</span><span class="t"><b>חמש השאלות של הצליל</b><small>להבין צליל, ואז לשחק חופשי · ניסיון: צבע</small></span><span class="go" aria-hidden="true">←</span></a>
 <button class="ckbtn" id="ckbtn" type="button" hidden><span><b id="ckbtn-t"></b><small>מה שסימנת ב״🔍 לבדוק״. נוגעים, ומדביקים בשיחה עם קלוד.</small></span><span aria-hidden="true">📋</span></button>
 <p class="ckmsg" id="ckmsg" aria-live="polite"></p>
 <h2 class="tog">🔗 ביחד</h2>

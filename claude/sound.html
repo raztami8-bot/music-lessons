@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#121a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="חמש השאלות">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>חמש השאלות של הצליל · גרסת קלוד</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="doors.css?v=8">
+<style>
+/* Five questions of sound: every sound is pitch, color, shape in time, movement, space and dirt.
+   Each question: "see" (one small simulation you can touch and hear) and "play" (short missions on any real device).
+   Trial: only "color" (the filter) is built. Same shell as week.html (doors.css, own colors, no doors.js). Saved under sound1. */
+:root{--bg:#111818;--panel:#182222;--card:#1f2b2b;--line:#33474a;
+  --magenta:#1fa39a;--magenta-soft:#173a37;--chipline:#2f6f69;--chipfg:#cff5f0}
+.chips{justify-content:flex-start}
+.chip.soon{opacity:.55}
+.helpbtn{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:700;font-size:.9rem}
+.scope{background:#0b1111;border:1px solid var(--line);border-radius:14px;padding:8px}
+.scope canvas{display:block;width:100%;height:150px}
+.axis{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;padding:2px 4px 0;direction:ltr}
+.ctl{display:flex;flex-direction:column;gap:4px}
+.ctl .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl .top b{font-size:1rem}
+.ctl .top span{color:var(--muted);font-size:.85rem}
+input[type=range]{width:100%;accent-color:var(--magenta);height:34px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{border-radius:999px;padding:10px;font-weight:700;border:1px solid var(--line);background:var(--card)}
+.seg button.on{background:var(--magenta-soft);border-color:var(--magenta);color:var(--chipfg)}
+.play.on{background:#3a2a1a;color:var(--gold)}
+.knobs{width:100%;border-collapse:collapse;font-size:.95rem}
+.knobs td{padding:7px 4px;border-top:1px solid var(--line);vertical-align:top}
+.knobs tr:first-child td{border-top:0}
+.knobs td:first-child{color:var(--muted);padding-inline-end:6px}
+.knobs .en{white-space:normal}
+.mis{display:flex;flex-direction:column;gap:6px}
+.mis h3{margin:0;font-family:var(--display);font-weight:400;font-size:1.25rem}
+.mis ol{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:4px}
+.mis .ear{color:var(--chipfg);font-size:.95rem}
+.mis .okb{align-self:flex-start;border-radius:999px;padding:8px 14px;font-weight:700;border:1px solid var(--line);background:var(--panel)}
+.mis .okb.on{background:#1f3a2b;border-color:var(--green);color:var(--green)}
+.mis.done{border-color:var(--green)}
+.qrow{display:flex;gap:10px;align-items:baseline}
+.qrow b{flex:none;min-width:5.6em}
+.qrow span{color:var(--muted)}
+.sheet p{margin:0}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="index.html">→ הבית</a>
+  <h1>חמש השאלות</h1>
+  <button class="helpbtn" id="help">❓ מה זה</button>
+</div>
+<div class="chips" id="chips" role="tablist" aria-label="השאלות"></div>
+
+<main>
+  <section class="view" id="v-see"><div class="scroll"><div class="inner" id="see"></div></div></section>
+  <section class="view" id="v-play"><div class="scroll"><div class="inner" id="play"></div></div></section>
+</main>
+
+<nav class="tabs" role="tablist">
+  <button data-v="see"><span>👀</span>לראות</button>
+  <button data-v="play"><span>🎛️</span>לשחק</button>
+</nav>
+
+<div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
+
+<script>
+"use strict";
+const en=s=>`<span class="en">${s}</span>`;
+/* ---------- the five questions. Only "color" is built (trial, 2026-11-26). ---------- */
+const Q=[
+ {k:"pitch",e:"🎵",n:"גובה",q:"כמה גבוה או נמוך?",who:"המתנד והכיוון"},
+ {k:"color",e:"🎨",n:"צבע",q:"כמה בהיר, כהה או צורם?",who:"צורת הגל והמסנן",built:true},
+ {k:"time",e:"⏳",n:"צורה בזמן",q:"איך הצליל נולד ואיך הוא מת?",who:"המעטפת"},
+ {k:"move",e:"🌊",n:"תנועה",q:"מה זז בתוך הצליל לבד?",who:"מתנד איטי, הדגשה, גלישה"},
+ {k:"space",e:"🌫️",n:"מרחב ולכלוך",q:"איפה הצליל עומד, ועד כמה הוא נקי?",who:"עיוות, השהיה, הד"}
+];
+/* where the color knobs are on each device: names exactly as printed on the panel (from the *-data.js names) */
+const KNOBS=[
+ ["🥁 הטי־8 (הבס)",[en("CUTOFF"),en("RESO"),en("ENV MOD")]],
+ ["🎛️ הוולקה בס",[en("CUTOFF"),en("PEAK"),en("CUTOFF EG INT")]],
+ ["🧡 הכתום",[en("CUTOFF"),en("RESONANCE"),en("VCF MOD")]],
+ ["💗 הסגול",[en("CUTOFF"),en("RESONANCE"),en("ENVELOPE (VCF)")]]
+];
+/* missions: [title, steps, what to listen for]. Any device: "brightness" = the first knob in the table, "squeak" = the second. */
+const MIS=[
+ ["מעמום לבהיר",["קו אחד רץ. לא נוגעים בתווים.","בהירות לגמרי שמאלה.","מסובבים ימינה לאט, במשך 8 תיבות, עד הסוף."],
+  "איפה בדרך הצליל ״נפתח״? זו השעה שבה הכפתור הכי חי אצלך."],
+ ["הצפצוף רודף אחרי היד",["בהירות באמצע.","צפצוף עולה לאט, עד שנשמע ציוץ.","עכשיו מזיזים שוב את הבהירות, למעלה ולמטה."],
+  "הציוץ זז יחד עם הבהירות. ככה נשמע אסיד: צפצוף גבוה, ויד על הבהירות."],
+ ["שלושה צבעים מאותו קו",["מוצאים צבע עמוק וכהה, ורושמים את השעות.","מוצאים צבע אסיד: באמצע, עם צפצוף.","מוצאים צבע צורם ופתוח לגמרי."],
+  "אותם תווים בדיוק, ושלושה צלילים שונים. רק צבע השתנה."],
+ ["המסנן מפנה מקום",["תופים ובס מנגנים יחד.","סוגרים את הבהירות של הבס עד שהוא עמום.","פותחים בחזרה."],
+  "כשהבס עמום, המצילות והקלאפ פתאום ברורים. בס פתוח ממלא את כל המקום למעלה."],
+ ["להעלים בלי ווליום",["בשבירה, סוגרים את הבהירות לאט עד שהכלי כמעט נעלם.","לפני החזרה, פותחים בבת אחת על ה־1."],
+  "הכלי לא שקט, הוא רחוק. זה כלי לבנות מתח בלי לגעת בעוצמה."]
+];
+
+/* ---------- state ---------- */
+const KEY="sound1",$=s=>document.querySelector(s);
+let st;try{st=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!st||typeof st!=="object")st={};
+st.q=st.q||"color";st.tab=st.tab||"see";st.done=st.done||{};st.wave=st.wave||"saw";
+if(st.cut===undefined)st.cut=55;if(st.res===undefined)st.res=20;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+
+/* ---------- drawing ---------- */
+function drawChips(){
+  $("#chips").innerHTML=Q.map(q=>`<button class="chip${q.built?"":" soon"}" role="tab" data-q="${q.k}" aria-selected="${q.k===st.q}">${q.e} ${q.n}</button>`).join("");
+  document.querySelectorAll("#chips .chip").forEach(b=>b.onclick=()=>{const q=Q.find(x=>x.k===b.dataset.q);if(q.built){st.q=q.k;save();drawChips()}else soon(q)});
+}
+function drawSee(){
+  $("#see").innerHTML=`<span class="tag">שאלה 2 מתוך 5 · 🎨 צבע</span>
+<h2>כמה בהיר או כהה?</h2>
+<p class="lead">כל צליל הוא תו אחד, ועוד הרבה צלילים גבוהים וחלשים מעליו. ככל שיש יותר מהם, הצליל בהיר וצורם. המסנן מוריד אותם מלמעלה.</p>
+<div class="scope"><canvas id="spec" aria-label="העמודות: התו והצלילים שמעליו. הקו: המסנן"></canvas>
+<div class="axis"><span>התו</span><span>גבוהים יותר ←</span></div></div>
+<button class="big play" id="playbtn">▶ להשמיע קו</button>
+<div class="seg" id="wave"><button data-w="saw">מסור · עשיר</button><button data-w="sq">ריבוע · חלול</button></div>
+<div class="ctl"><div class="top"><b>בהירות</b><span id="cutO"></span></div>
+<input type="range" id="cut" min="0" max="100" step="1" aria-label="בהירות"></div>
+<div class="ctl"><div class="top"><b>צפצוף</b><span id="resO"></span></div>
+<input type="range" id="res" min="0" max="100" step="1" aria-label="צפצוף"></div>
+<div class="box hear"><strong class="h">👂 להקשיב ל</strong>כשסוגרים בהירות, העמודות הגבוהות נעלמות והצליל עמום. כשמעלים צפצוף, העמודות ליד הקו קופצות למעלה: זה הציוץ.</div>
+<div class="box"><strong class="h">💡 לזכור</strong>צבע הוא לא עוצמה. סוגרים את המסנן והצליל נשמע רחוק, בלי לגעת בווליום.</div>
+<p class="back">במסור יש כל הצלילים שמעל התו, ובריבוע רק כל שני. לכן הריבוע נשמע חלול.</p>`;
+  $("#cut").value=st.cut;$("#res").value=st.res;
+  $("#cut").oninput=e=>{st.cut=+e.target.value;save();apply()};
+  $("#res").oninput=e=>{st.res=+e.target.value;save();apply()};
+  document.querySelectorAll("#wave button").forEach(b=>b.onclick=()=>{st.wave=b.dataset.w;save();apply()});
+  $("#playbtn").onclick=toggle;
+  apply();
+}
+function drawPlay(){
+  $("#play").innerHTML=`<span class="tag">🎨 צבע · על המכשיר</span>
+<h2>משימות של 5 דקות</h2>
+<p class="lead">כל משימה עובדת על כל מכשיר. כפתור אחד בכל פעם, ומקשיבים.</p>
+<div class="box"><strong class="h">🧭 איפה זה אצלך</strong>
+<table class="knobs"><tr><td></td><td><b>בהירות</b></td><td><b>צפצוף</b></td></tr>
+${KNOBS.map(r=>`<tr><td>${r[0]}</td><td>${r[1][0]}</td><td>${r[1][1]}</td></tr>`).join("")}</table>
+<p class="back" style="margin-top:6px">בסגול, המתג ${en("VCF")} בוחר אם המסנן מוריד את הגבוהים או את הנמוכים.</p></div>
+${MIS.map((m,i)=>`<div class="box mis${st.done[i]?" done":""}"><h3>${i+1}. ${m[0]}</h3><ol>${m[1].map(s=>`<li>${s}</li>`).join("")}</ol>
+<p class="ear" style="margin:0">👂 ${m[2]}</p><button class="okb${st.done[i]?" on":""}" data-i="${i}">${st.done[i]?"✓ עשיתי":"✓ סמן שעשיתי"}</button></div>`).join("")}
+<p class="back">את ${KNOBS.map(r=>r[1][2]).join(" / ")} (״וואו״ בכל תו) מורידים כך שלא ישפיע. הוא שייך לשאלה הבאה, תנועה.</p>`;
+  document.querySelectorAll(".okb").forEach(b=>b.onclick=()=>{const i=b.dataset.i;if(st.done[i])delete st.done[i];else st.done[i]=1;save();drawPlay()});
+}
+
+/* ---------- the filter: one slider value -> frequency and Q, shared by the picture and the sound ---------- */
+const F0=110,NH=32;
+const cutHz=()=>80*Math.pow(2,st.cut/100*Math.log2(5000/80));
+const qOf=()=>0.7+Math.pow(st.res/100,1.6)*17;
+function mag(f,fc,q){const r=f/fc;return 1/Math.sqrt(Math.pow(1-r*r,2)+Math.pow(r/q,2))}
+const db=a=>Math.max(0,Math.min(1.25,(20*Math.log10(a)+42)/42));
+function drawSpec(){
+  const c=$("#spec");if(!c)return;const W=c.width=c.clientWidth*2,H=c.height=300,x=c.getContext("2d");
+  const fc=cutHz(),q=qOf(),bw=W/NH,base=H-8,top=40;
+  x.clearRect(0,0,W,H);
+  for(let n=1;n<=NH;n++){
+    const a=(st.wave==="sq"&&n%2===0)?0:1/n;if(!a)continue;
+    const v=db(a*mag(F0*n,fc,q)),h=v*(base-top);
+    x.fillStyle=v>0.02?"#1fa39a":"#33474a";x.fillRect((n-1)*bw+bw*0.18,base-h,bw*0.64,Math.max(2,h));
+  }
+  x.strokeStyle="#f2c94c";x.lineWidth=4;x.beginPath();
+  for(let i=0;i<=W;i+=4){const f=F0*(1+i/bw-0.5);const y=base-db(mag(Math.max(F0*0.5,f),fc,q))*(base-top);i?x.lineTo(i,y):x.moveTo(i,y)}
+  x.stroke();
+}
+function apply(){
+  document.querySelectorAll("#wave button").forEach(b=>b.classList.toggle("on",b.dataset.w===st.wave));
+  const co=$("#cutO"),ro=$("#resO");
+  if(co)co.textContent=st.cut<25?"עמום":st.cut<55?"חם":st.cut<80?"בהיר":"פתוח לגמרי";
+  if(ro)ro.textContent=st.res<15?"בלי":st.res<50?"קצת ציוץ":st.res<80?"אסיד":"צווחה";
+  drawSpec();
+  if(A.ctx){A.osc.type=st.wave==="sq"?"square":"sawtooth";const t=A.ctx.currentTime;
+    A.flt.frequency.setTargetAtTime(cutHz(),t,0.02);A.flt.Q.setTargetAtTime(qOf(),t,0.02)}
+}
+
+/* ---------- the sound: one oscillator through the filter, a 16-step line at 132, short notes ---------- */
+const A={};
+const LINE=[55,55,110,55,0,55,82.41,55,55,0,110,98,55,55,73.42,55];
+function initAudio(){
+  const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
+  A.ctx=new C();A.osc=A.ctx.createOscillator();A.flt=A.ctx.createBiquadFilter();A.flt.type="lowpass";
+  A.amp=A.ctx.createGain();A.amp.gain.value=0;const out=A.ctx.createGain();out.gain.value=0.35;
+  A.osc.connect(A.flt);A.flt.connect(A.amp);A.amp.connect(out);out.connect(A.ctx.destination);A.osc.start();return true}
+let timer=null,step=0,next=0;
+function sched(){const d=60/132/4;
+  while(next<A.ctx.currentTime+0.12){const f=LINE[step%16];
+    if(f){A.osc.frequency.setValueAtTime(f,next);A.amp.gain.cancelScheduledValues(next);A.amp.gain.setValueAtTime(0,next);
+      A.amp.gain.linearRampToValueAtTime(1,next+0.004);A.amp.gain.setTargetAtTime(0,next+d*0.55,0.03)}
+    step++;next+=d}}
+function toggle(){
+  if(!A.ctx&&!initAudio())return;if(A.ctx.state==="suspended")A.ctx.resume();
+  const b=$("#playbtn");
+  if(timer){clearInterval(timer);timer=null;A.amp.gain.cancelScheduledValues(A.ctx.currentTime);A.amp.gain.setTargetAtTime(0,A.ctx.currentTime,0.02);
+    b.classList.remove("on");b.textContent="▶ להשמיע קו";return}
+  apply();step=0;next=A.ctx.currentTime+0.05;sched();timer=setInterval(sched,25);b.classList.add("on");b.textContent="■ לעצור";
+}
+
+/* ---------- tabs, sheets ---------- */
+function go(v){st.tab=v;save();
+  document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===v));
+  if(v==="see")requestAnimationFrame(drawSpec)}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+const shade=$("#shade"),sheet=$("#sheet");
+const closeSheet=()=>shade.classList.remove("on");
+shade.onclick=e=>{if(e.target===shade)closeSheet()};
+function soon(q){
+  sheet.innerHTML=`<button class="x">✕ סגור</button><h2>${q.e} ${q.n}</h2><p class="lead">${q.q}</p>
+<div class="box"><strong class="h">מי עונה על זה</strong>${q.who}</div>
+<p class="back">השאלה הזו עוד לא בנויה. מתחילים מהצבע, ואם השיטה עובדת לך, ממשיכים לשאר.</p>`;
+  sheet.querySelector(".x").onclick=closeSheet;shade.classList.add("on")}
+$("#help").onclick=()=>{
+  sheet.innerHTML=`<button class="x">✕ סגור</button><h2>חמש השאלות</h2>
+<p class="lead">כל צליל, מבס אסיד ועד כינור, מתפרק לחמש שאלות. כל כפתור בכל מכשיר עונה על אחת מהן.</p>
+<div class="box" style="display:flex;flex-direction:column;gap:6px">${Q.map(q=>`<div class="qrow"><b>${q.e} ${q.n}</b><span>${q.q}</span></div>`).join("")}</div>
+<div class="box"><strong class="h">איך לומדים שאלה</strong><ul><li>👀 לראות: הדמיה אחת שנוגעים בה ושומעים.</li><li>🎛️ לשחק: משימה של 5 דקות על המכשיר. כפתור אחד, מקשיבים, ונותנים שם למה שקרה.</li></ul></div>
+<p class="back">אחרי חמש השאלות, כל צליל ששומעים אפשר לפרק לבד: ״כהה, קצר, זז מהר, קצת מלוכלך״, ולבנות אותו.</p>`;
+  sheet.querySelector(".x").onclick=closeSheet;shade.classList.add("on")};
+window.addEventListener("resize",drawSpec);
+
+/* the screen stays on while the page is open (both hands are on the instrument) */
+(()=>{if(!("wakeLock" in navigator))return;let lock=null;
+  const get=()=>{if(lock||document.visibilityState!=="visible")return;navigator.wakeLock.request("screen").then(l=>{lock=l;l.addEventListener("release",()=>{lock=null})}).catch(()=>{})};
+  document.addEventListener("visibilitychange",get);document.addEventListener("pointerdown",get,{once:true});get()})();
+
+drawChips();drawSee();drawPlay();go(st.tab==="play"?"play":"see");
+window.SOUND_TEST={st:()=>st,cutHz,qOf};
+</script>
+</body>
+</html>
